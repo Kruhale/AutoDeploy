@@ -1,0 +1,80 @@
+.boton--primario {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background-color: var(--color-primario);
+  color: #1c1b19;
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton--primario:hover {
+  background-color: var(--color-primario-hover);
+}
+
+.boton--secundario {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background: rgba(240, 236, 226, 0.03);
+  color: var(--color-texto-claro);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.boton--secundario:hover {
+  border-color: rgba(240, 236, 226, 0.2);
+}
+
+.boton--ghost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background: transparent;
+  color: var(--color-texto-medio);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.boton--ghost:hover {
+  color: var(--color-texto-claro);
+  border-color: rgba(240, 236, 226, 0.2);
+}
+
+.boton--peligro {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.boton--peligro:hover {
+  background: rgba(239, 68, 68, 0.2);
+}

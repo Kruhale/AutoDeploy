@@ -1,0 +1,18 @@
+.disposicion-app {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--color-fondo);
+}
+
+.disposicion-app__contenido {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.disposicion-app__principal {
+  flex: 1;
+  padding: var(--spacing-xl);
+  overflow-y: auto;
+}

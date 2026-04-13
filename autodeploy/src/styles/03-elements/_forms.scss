@@ -1,0 +1,98 @@
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.campo__etiqueta {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-texto-apagado);
+}
+
+.campo__input {
+  padding: 0.625rem var(--spacing-m);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-s);
+  color: var(--color-texto-claro);
+  font-family: var(--font-familia);
+  font-size: var(--font-size-md);
+  transition: border-color 0.2s ease;
+}
+
+.campo__input::placeholder {
+  color: var(--color-texto-apagado);
+}
+
+.campo__input:focus {
+  outline: none;
+  border-color: var(--color-primario);
+}
+
+.campo__select {
+  padding: 0.625rem var(--spacing-m);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-s);
+  color: var(--color-texto-claro);
+  font-family: var(--font-familia);
+  font-size: var(--font-size-md);
+  appearance: none;
+  cursor: pointer;
+}
+
+.toggle {
+  display: flex;
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-s);
+  overflow: hidden;
+}
+
+.toggle__opcion {
+  padding: 0.5rem 1.25rem;
+  background: transparent;
+  color: var(--color-texto-medio);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.toggle__opcion--activa {
+  background-color: rgba(245, 214, 35, 0.1);
+  color: var(--color-primario);
+  border-left: 2px solid var(--color-primario);
+}
+
+.interruptor {
+  position: relative;
+  width: 2.75rem;
+  height: 1.5rem;
+  background: rgba(240, 236, 226, 0.1);
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.interruptor--activo {
+  background-color: var(--color-primario);
+}
+
+.interruptor__circulo {
+  position: absolute;
+  top: 0.1875rem;
+  left: 0.1875rem;
+  width: 1.125rem;
+  height: 1.125rem;
+  background-color: white;
+  border-radius: 50%;
+  transition: transform 0.2s ease;
+}
+
+.interruptor__circulo--activo {
+  transform: translateX(1.25rem);
+}

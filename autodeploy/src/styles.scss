@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+@use "styles/00-settings/fonts";
+@use "styles/00-settings/css-variables";
+@use "styles/02-generic/reset";
+@use "styles/03-elements/buttons";
+@use "styles/03-elements/forms";
+@use "styles/04-layout/layout";
+@use "styles/05-components/seccion-bienvenida";
+@use "styles/05-components/seccion-funcionalidades";
+@use "styles/05-components/workflow";
+@use "styles/05-components/seccion-llamada-accion";
+@use "styles/05-components/barra-lateral";
+@use "styles/05-components/barra-pie-app";
+@use "styles/05-components/tarjeta-estadistica";
+@use "styles/05-components/migas-pan";
+@use "styles/05-components/panel-principal";
+@use "styles/05-components/tarjeta-servidor";
+@use "styles/05-components/tabla-sitios";
+@use "styles/05-components/actividad-reciente";
+@use "styles/05-components/gestion-servidor";
+@use "styles/05-components/nuevo-despliegue";
+@use "styles/05-components/onboarding";
+@use "styles/05-components/logs-terminal";
+@use "styles/05-components/visor-eventos";
+@use "styles/05-components/terminal-interactiva";
+@use "styles/05-components/pagina-login";
+@use "styles/05-components/pagina-registro";

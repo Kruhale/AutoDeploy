@@ -1,0 +1,157 @@
+// Animaciones reutilizables: keyframes y clases helpers.
+// Las animaciones especificas de un componente viven con ese componente.
+//
+// Accesibilidad (WCAG 2.3.3):
+//   El proyecto sigue el patrón invertido recomendado por web.dev y la
+//   comunidad de accesibilidad: las clases helper definen sus animaciones
+//   SOLO dentro de `@media (prefers-reduced-motion: no-preference)`. Cuando
+//   el usuario activa "reducir movimiento" en su sistema, esos estilos ni
+//   siquiera se generan, así que no hay nada que anular ni se contamina la
+//   cascada con sobrescrituras de mayor especificidad.
+//
+//   El spinner se queda siempre activo (un spinner sin movimiento no
+//   informa de nada) pero su duración cambia vía `--duration-spinner`,
+//   variable redefinida en `_variables.scss` con `prefers-reduced-motion`.
+
+@use "./mixins" as *;
+
+// Keyframes globales
+
+@keyframes entrar-abajo {
+  from { opacity: 0; transform: translateY(28px); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
+}
+
+@keyframes entrar-derecha {
+  from { opacity: 0; transform: translateX(36px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes entrar-escala {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes parpadeo-cursor {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@keyframes pulso-estado {
+  0%   { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+  70%  { box-shadow: 0 0 0 7px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+@keyframes latido {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.25); }
+}
+
+@keyframes giro-spinner {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fade-arriba {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// Spinner global de carga.
+// El spinner SÍ se renderiza siempre porque indica estado de carga, pero
+// su duración la controla `--duration-spinner` (más lenta con
+// prefers-reduced-motion).
+
+.spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--borde-normal);
+  border-top-color: var(--amarillo-normal);
+  border-radius: var(--radius-full);
+  animation: giro-spinner var(--duration-spinner) linear infinite;
+  vertical-align: middle;
+}
+
+.spinner--grande {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
+}
+
+.spinner--cyan {
+  border-top-color: var(--cyan-normal);
+}
+
+.spinner--verde {
+  border-top-color: var(--verde-normal);
+}
+
+// Clases helper de animación. Solo se aplican si el usuario NO ha pedido
+// reducir movimiento. Envolverlas en este media query es lo que evita
+// tener que pelearse con la cascada después: si el usuario prefiere
+// menos movimiento, estas reglas ni se cargan.
+
+@media (prefers-reduced-motion: no-preference) {
+  // Animaciones de carga al cargar la pagina
+
+  .animar {
+    animation-fill-mode: both;
+    animation-timing-function: var(--ease-suave);
+    animation-duration: var(--duration-entrada);
+    animation-delay: var(--retraso, 0ms);
+  }
+
+  .animar--subir   { animation-name: entrar-abajo; }
+  .animar--derecha { animation-name: entrar-derecha; }
+  .animar--escala  { animation-name: entrar-escala; }
+
+  // Retrasos para animar elementos uno detras de otro.
+  .animar--retraso-0   { --retraso: 0ms;   }
+  .animar--retraso-100 { --retraso: 100ms; }
+  .animar--retraso-150 { --retraso: 150ms; }
+  .animar--retraso-200 { --retraso: 200ms; }
+  .animar--retraso-300 { --retraso: 300ms; }
+  .animar--retraso-400 { --retraso: 400ms; }
+
+  // Scroll reveal (lo activa la directiva con IntersectionObserver)
+
+  .revelar {
+    opacity: 0;
+    transition:
+      opacity   var(--duration-reveal) var(--ease-suave) var(--retraso, 0ms),
+      transform var(--duration-reveal) var(--ease-suave) var(--retraso, 0ms),
+      filter    var(--duration-reveal) var(--ease-suave) var(--retraso, 0ms);
+    filter: blur(5px);
+  }
+
+  .revelar--arriba    { transform: translateY(36px); }
+  .revelar--izquierda { transform: translateX(-36px); }
+  .revelar--derecha   { transform: translateX(36px); }
+  .revelar--escala    { transform: scale(0.92); }
+
+  .revelar--visible {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+
+  // Anima los hijos de un contenedor en cascada.
+
+  .animar-hijos > * {
+    opacity: 0;
+    animation: entrar-abajo var(--duration-entrada) var(--ease-suave) both;
+  }
+
+  .animar-hijos > *:nth-child(1) { animation-delay: 60ms;  }
+  .animar-hijos > *:nth-child(2) { animation-delay: 150ms; }
+  .animar-hijos > *:nth-child(3) { animation-delay: 240ms; }
+  .animar-hijos > *:nth-child(4) { animation-delay: 330ms; }
+  .animar-hijos > *:nth-child(5) { animation-delay: 420ms; }
+  .animar-hijos > *:nth-child(6) { animation-delay: 510ms; }
+
+  // Fade desde abajo para feedback puntual (toasts, items nuevos).
+  .aparecer {
+    animation: fade-arriba var(--duration-base) var(--ease-suave) both;
+  }
+}

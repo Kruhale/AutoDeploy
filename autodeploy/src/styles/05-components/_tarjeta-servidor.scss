@@ -1,0 +1,123 @@
+.tarjeta-servidor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-s);
+  flex: 1;
+  padding: var(--spacing-l);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-m);
+}
+
+.tarjeta-servidor__cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+.tarjeta-servidor__indicador {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tarjeta-servidor__indicador--verde {
+  background-color: var(--color-exito);
+}
+
+.tarjeta-servidor__indicador--naranja {
+  background-color: var(--color-advertencia);
+}
+
+.tarjeta-servidor__indicador--rojo {
+  background-color: var(--color-error);
+}
+
+.tarjeta-servidor__nombre {
+  font-family: var(--font-familia-titulos);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-texto-claro);
+}
+
+.tarjeta-servidor__ip {
+  font-size: var(--font-size-xs);
+  font-family: var(--font-familia-mono);
+  color: var(--color-texto-apagado);
+  margin-left: auto;
+}
+
+.tarjeta-servidor__metricas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.tarjeta-servidor__metrica {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tarjeta-servidor__metrica__etiqueta {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--color-texto-apagado);
+}
+
+.tarjeta-servidor__metrica__valor {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-texto-claro);
+}
+
+.tarjeta-servidor__barra {
+  height: 0.25rem;
+  background: rgba(240, 236, 226, 0.06);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.tarjeta-servidor__barra__relleno {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--color-primario);
+}
+
+.tarjeta-servidor__barra--info {
+  background-color: var(--color-info);
+}
+
+.tarjeta-servidor__barra--exito {
+  background-color: var(--color-exito);
+}
+
+.tarjeta-servidor__pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+}
+
+.tarjeta-servidor__iconos {
+  display: flex;
+  gap: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-texto-apagado);
+}
+
+.tarjeta-servidor__enlace {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primario);
+  transition: opacity 0.2s ease;
+}
+
+.tarjeta-servidor__enlace:hover {
+  opacity: 0.8;
+}

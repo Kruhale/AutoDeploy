@@ -1,0 +1,107 @@
+.tarjeta-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-s);
+  padding: var(--spacing-l);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-m);
+}
+
+.tarjeta-stat__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tarjeta-stat__etiqueta {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-texto-apagado);
+}
+
+.tarjeta-stat__icono {
+  font-size: var(--font-size-lg);
+  color: var(--color-primario);
+}
+
+.tarjeta-stat__icono--primario {
+  color: var(--color-primario);
+}
+
+.tarjeta-stat__icono--morado {
+  color: var(--color-morado);
+}
+
+.tarjeta-stat__icono--cyan {
+  color: var(--color-cyan);
+}
+
+.tarjeta-stat__icono--exito {
+  color: var(--color-exito);
+}
+
+.tarjeta-stat__icono--advertencia {
+  color: var(--color-advertencia);
+}
+
+.tarjeta-stat__valor {
+  font-family: var(--font-familia-titulos);
+  font-size: 1.75rem;                   /* 28px */
+  font-weight: 800;
+  color: var(--color-texto-claro);
+}
+
+.tarjeta-stat__barra {
+  height: 0.25rem;
+  background: rgba(240, 236, 226, 0.06);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.tarjeta-stat__barra__relleno {
+  display: block;
+  height: 100%;
+  border-radius: 9999px;
+  background-color: var(--color-primario);
+  transition: width 0.3s ease;
+}
+
+.tarjeta-stat__barra--exito {
+  background-color: var(--color-exito);
+}
+
+.tarjeta-stat__barra--info {
+  background-color: var(--color-info);
+}
+
+.tarjeta-stat__subtexto {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  color: var(--color-exito);
+}
+
+.tarjeta-stat__subtexto--primario {
+  color: var(--color-exito);
+}
+
+.tarjeta-stat__subtexto--exito {
+  color: var(--color-exito);
+}
+
+.tarjeta-stat__subtexto--advertencia {
+  color: var(--color-advertencia);
+}
+
+.tarjeta-stat__subtexto--morado {
+  color: var(--color-exito);
+}
+
+.tarjeta-stat__subtexto--cyan {
+  color: var(--color-exito);
+}

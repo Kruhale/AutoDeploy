@@ -1,0 +1,112 @@
+.seccion-llamada-accion {
+  position: relative;
+  max-width: 56rem;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.seccion-llamada-accion__brillo {
+  position: absolute;
+  inset: -2px;
+  background-color: var(--color-primario);
+  opacity: 0.15;
+  filter: blur(6px);
+  border-radius: 2.5rem;
+}
+
+.seccion-llamada-accion__contenedor {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 4rem 3rem;
+  background: rgba(22, 21, 19, 0.95);
+  border: 1px solid rgba(240, 236, 226, 0.1);
+  border-radius: 2.5rem;
+  overflow: hidden;
+  text-align: center;
+}
+
+.seccion-llamada-accion__destello {
+  position: absolute;
+  width: 16rem;
+  height: 16rem;
+  background: rgba(245, 214, 35, 0.05);
+  filter: blur(40px);
+  border-radius: 9999px;
+  pointer-events: none;
+}
+
+.seccion-llamada-accion__destello--arriba {
+  top: -5rem;
+  right: -5rem;
+}
+
+.seccion-llamada-accion__destello--abajo {
+  bottom: -5rem;
+  left: -5rem;
+}
+
+.seccion-llamada-accion__titulo {
+  font-family: var(--font-familia-titulos);
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--color-texto-claro);
+  max-width: 28rem;
+  line-height: 1.15;
+}
+
+.seccion-llamada-accion__descripcion {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-texto-medio);
+  max-width: 32rem;
+}
+
+.seccion-llamada-accion__botones {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.seccion-llamada-accion__boton--primario {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 2rem;
+  background-color: var(--color-texto-claro);
+  color: #111;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  border-radius: var(--radius-m);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease;
+}
+
+.seccion-llamada-accion__boton--primario:hover {
+  background-color: #e0ddd4;
+}
+
+.seccion-llamada-accion__boton--secundario {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 2rem;
+  background: rgba(240, 236, 226, 0.04);
+  border: 1px solid rgba(240, 236, 226, 0.2);
+  border-radius: var(--radius-m);
+  color: var(--color-texto-claro);
+  font-size: 0.6875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.2px;
+  transition: border-color 0.2s ease;
+}
+
+.seccion-llamada-accion__boton--secundario:hover {
+  border-color: rgba(240, 236, 226, 0.4);
+}

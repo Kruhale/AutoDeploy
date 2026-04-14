@@ -1,0 +1,120 @@
+.tabla-sitios {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+  padding: var(--spacing-l);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-m);
+}
+
+.tabla-sitios__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.tabla-sitios__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-family: var(--font-familia-titulos);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--color-texto-claro);
+}
+
+.tabla-sitios__ver-todo {
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  color: var(--color-primario);
+}
+
+.tabla-sitios__tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla-sitios__th {
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--color-texto-apagado);
+  text-align: left;
+  padding: var(--spacing-s) var(--spacing-m);
+  border-bottom: 1px solid var(--color-borde);
+}
+
+.tabla-sitios__fila {
+  border-bottom: 1px solid var(--color-borde-suave);
+}
+
+.tabla-sitios__td {
+  padding: var(--spacing-m);
+  font-size: var(--font-size-md);
+  color: var(--color-texto-claro);
+  vertical-align: middle;
+}
+
+.tabla-sitios__td--mono {
+  font-family: var(--font-familia-mono);
+  font-size: var(--font-size-sm);
+  color: var(--color-texto-medio);
+}
+
+.tabla-sitios__icono-sitio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-s);
+  margin-right: var(--spacing-xs);
+  font-size: var(--font-size-sm);
+  vertical-align: middle;
+}
+
+.tabla-sitios__icono-sitio--cyan {
+  background: rgba(0, 212, 255, 0.1);
+  color: var(--color-cyan);
+}
+
+.tabla-sitios__icono-sitio--amarillo {
+  background: rgba(245, 214, 35, 0.1);
+  color: var(--color-primario);
+}
+
+.tabla-sitios__icono-sitio--rojo {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+}
+
+.tabla-sitios__icono-sitio--verde {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--color-exito);
+}
+
+.tabla-sitios__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.625rem;
+  font-size: var(--font-size-xs);
+  font-weight: 700;
+  border-radius: 9999px;
+}
+
+.tabla-sitios__badge--operativo {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--color-exito);
+}
+
+.tabla-sitios__badge--error {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--color-error);
+}
+
+.tabla-sitios__badge--desplegando {
+  background: rgba(245, 214, 35, 0.1);
+  color: var(--color-primario);
+}

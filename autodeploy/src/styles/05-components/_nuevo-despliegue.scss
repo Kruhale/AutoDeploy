@@ -1,0 +1,194 @@
+.nuevo-despliegue {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.nuevo-despliegue__barra-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nuevo-despliegue__barra-acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-m);
+  color: var(--color-texto-medio);
+  font-size: var(--font-size-base);
+}
+
+.nuevo-despliegue__contenido {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+.nuevo-despliegue__titulo {
+  font-family: var(--font-familia-titulos);
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-texto-claro);
+}
+
+.nuevo-despliegue__descripcion {
+  font-size: var(--font-size-md);
+  color: var(--color-texto-medio);
+  margin-top: -0.75rem;
+}
+
+.nuevo-despliegue__paso {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-m);
+}
+
+.nuevo-despliegue__paso__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  font-family: var(--font-familia-titulos);
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-texto-claro);
+}
+
+.nuevo-despliegue__paso__icono {
+  color: var(--color-primario);
+}
+
+.nuevo-despliegue__tecnologias {
+  display: flex;
+  gap: var(--spacing-m);
+}
+
+.nuevo-despliegue__tech {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  flex: 1;
+  padding: var(--spacing-l);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-m);
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.nuevo-despliegue__tech:hover {
+  border-color: rgba(240, 236, 226, 0.15);
+}
+
+.nuevo-despliegue__tech--activa {
+  border-color: var(--color-primario);
+  background: rgba(245, 214, 35, 0.05);
+}
+
+.nuevo-despliegue__tech__icono {
+  font-size: var(--font-size-lg);
+  color: var(--color-primario);
+}
+
+.nuevo-despliegue__tech__label {
+  font-size: var(--font-size-xs);
+  font-weight: 800;
+  color: var(--color-texto-apagado);
+  text-transform: uppercase;
+}
+
+.nuevo-despliegue__tech__nombre {
+  font-size: var(--font-size-base);
+  font-weight: 700;
+  color: var(--color-texto-claro);
+}
+
+.nuevo-despliegue__tech__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-texto-apagado);
+}
+
+.nuevo-despliegue__columnas {
+  display: flex;
+  gap: var(--spacing-xl);
+}
+
+.nuevo-despliegue__paso--columna {
+  flex: 1;
+}
+
+.nuevo-despliegue__fila-inputs {
+  display: flex;
+  gap: var(--spacing-m);
+}
+
+.nuevo-despliegue__campo--mitad {
+  flex: 1;
+}
+
+.nuevo-despliegue__ssl {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-m);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-s);
+}
+
+.nuevo-despliegue__ssl__info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-s);
+}
+
+.nuevo-despliegue__ssl__icono {
+  font-size: var(--font-size-lg);
+  color: var(--color-exito);
+}
+
+.nuevo-despliegue__ssl__texto {
+  display: flex;
+  flex-direction: column;
+}
+
+.nuevo-despliegue__ssl__titulo {
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  color: var(--color-texto-claro);
+}
+
+.nuevo-despliegue__ssl__desc {
+  font-size: var(--font-size-sm);
+  color: var(--color-texto-apagado);
+}
+
+.nuevo-despliegue__nota {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-m);
+  background: rgba(59, 130, 246, 0.05);
+  border: 1px solid rgba(59, 130, 246, 0.15);
+  border-radius: var(--radius-s);
+}
+
+.nuevo-despliegue__nota__icono {
+  color: var(--color-info);
+  font-size: var(--font-size-md);
+  margin-top: 0.125rem;
+  flex-shrink: 0;
+}
+
+.nuevo-despliegue__nota__texto {
+  font-size: var(--font-size-sm);
+  color: var(--color-texto-medio);
+  line-height: 1.5;
+}
+
+.nuevo-despliegue__pie {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-m);
+  padding-top: var(--spacing-l);
+  border-top: 1px solid var(--color-borde);
+}

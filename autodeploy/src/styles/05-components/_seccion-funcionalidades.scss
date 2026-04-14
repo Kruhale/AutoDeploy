@@ -1,0 +1,105 @@
+.seccion-funcionalidades {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3.5rem;
+  padding: 4rem 0;
+  position: relative;
+}
+
+.seccion-funcionalidades__separador {
+  position: absolute;
+  top: 0;
+  left: 16%;
+  right: 16%;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(245, 214, 35, 0) 0%, rgba(245, 214, 35, 0.3) 50%, rgba(245, 214, 35, 0) 100%);
+}
+
+.seccion-funcionalidades__cabecera {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  text-align: center;
+}
+
+.seccion-funcionalidades__subtitulo {
+  font-size: 0.625rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  color: var(--color-primario);
+}
+
+.seccion-funcionalidades__titulo {
+  font-family: var(--font-familia-titulos);
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: var(--color-texto-claro);
+  line-height: 1.1;
+}
+
+.seccion-funcionalidades__descripcion {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-texto-medio);
+  max-width: 38rem;
+}
+
+.seccion-funcionalidades__grid {
+  display: flex;
+  gap: 1.25rem;
+  width: 100%;
+}
+
+.seccion-funcionalidades__tarjeta {
+  flex: 1;
+  padding: 2rem;
+  background: rgba(240, 236, 226, 0.03);
+  backdrop-filter: blur(6px);
+  border: 1px solid var(--color-borde);
+  border-radius: var(--radius-l);
+}
+
+.seccion-funcionalidades__tarjeta__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  margin-bottom: 1.25rem;
+  background-color: var(--color-fondo-tarjeta);
+  border-left: 3px solid var(--color-primario);
+  border-radius: var(--radius-m);
+  color: var(--color-primario);
+  font-size: 1.125rem;
+}
+
+.seccion-funcionalidades__tarjeta__icono--cyan {
+  background-color: rgba(0, 212, 255, 0.1);
+  border-left-color: rgb(0, 212, 255);
+  color: rgb(0, 212, 255);
+}
+
+.seccion-funcionalidades__tarjeta__icono--amarillo {
+  background-color: rgba(255, 229, 0, 0.15);
+  border-left-color: var(--color-primario);
+  color: var(--color-primario);
+}
+
+.seccion-funcionalidades__tarjeta__titulo {
+  font-family: var(--font-familia-titulos);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-texto-claro);
+  margin-bottom: 0.625rem;
+  line-height: 1.4;
+}
+
+.seccion-funcionalidades__tarjeta__descripcion {
+  font-size: 0.8125rem;
+  line-height: 1.65;
+  color: var(--color-texto-medio);
+}

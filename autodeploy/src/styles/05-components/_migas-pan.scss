@@ -1,0 +1,25 @@
+.migas-pan {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--color-texto-apagado);
+}
+
+.migas-pan__enlace {
+  color: var(--color-texto-apagado);
+  transition: color 0.2s ease;
+}
+
+.migas-pan__enlace:hover {
+  color: var(--color-texto-claro);
+}
+
+.migas-pan__separador {
+  color: var(--color-texto-apagado);
+}
+
+.migas-pan__actual {
+  color: var(--color-texto-claro);
+  font-weight: 600;
+}

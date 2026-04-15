@@ -1,0 +1,112 @@
+<section class="onboarding">
+  <header class="onboarding__cabecera">
+    <section class="onboarding__cabecera__izquierda">
+      <span class="onboarding__etiqueta">
+        <span class="onboarding__etiqueta__punto"></span>
+        Initial Setup
+      </span>
+      <h1 class="onboarding__titulo">Connect Your Infrastructure</h1>
+      <p class="onboarding__descripcion">Link your server to start managing deployments, monitoring and backups powered by our AI.</p>
+    </section>
+    <section class="onboarding__cabecera__derecha">
+      <span class="onboarding__estado-conexion">
+        <span class="onboarding__estado-conexion__label">EST</span>
+        <span class="onboarding__estado-conexion__texto">Waiting for connection</span>
+      </span>
+      <i class="fa-solid fa-network-wired onboarding__estado-conexion__icono"></i>
+    </section>
+  </header>
+
+  <section class="onboarding__cuerpo">
+    <section class="onboarding__seguridad">
+      <article class="onboarding__seguridad__card">
+        <h2 class="onboarding__seguridad__titulo">
+          <i class="fa-solid fa-shield-halved onboarding__seguridad__titulo__icono"></i>
+          Enterprise Grade Security
+        </h2>
+
+        <article class="onboarding__seguridad__item">
+          <span class="onboarding__seguridad__barra"></span>
+          <section class="onboarding__seguridad__info">
+            <h3 class="onboarding__seguridad__nombre">
+              <i class="fa-solid fa-lock"></i>
+              AES-256 Encryption
+            </h3>
+            <p class="onboarding__seguridad__desc">Your credentials are encrypted locally before being securely transmitted.</p>
+          </section>
+        </article>
+
+        <article class="onboarding__seguridad__item">
+          <span class="onboarding__seguridad__barra"></span>
+          <section class="onboarding__seguridad__info">
+            <h3 class="onboarding__seguridad__nombre">
+              <i class="fa-solid fa-bolt"></i>
+              Instant Connection
+            </h3>
+            <p class="onboarding__seguridad__desc">Optimized protocols for server linking in under 30 seconds.</p>
+          </section>
+        </article>
+      </article>
+    </section>
+
+    <section class="onboarding__formulario">
+      <section class="onboarding__formulario__fila">
+        <section class="campo onboarding__campo--mitad">
+          <label class="campo__etiqueta">Server Nickname</label>
+          <input class="campo__input" type="text" placeholder="e.g. API Production">
+        </section>
+        <section class="campo onboarding__campo--mitad">
+          <label class="campo__etiqueta">IP Address</label>
+          <input class="campo__input" type="text" placeholder="123.456.78.90">
+        </section>
+      </section>
+      <section class="onboarding__formulario__fila">
+        <section class="campo onboarding__campo--mitad">
+          <label class="campo__etiqueta">SSH Port</label>
+          <input class="campo__input" type="text" value="22">
+        </section>
+        <section class="campo onboarding__campo--mitad">
+          <label class="campo__etiqueta">User</label>
+          <input class="campo__input" type="text" value="root">
+        </section>
+      </section>
+      <section class="campo">
+        <label class="campo__etiqueta">Authentication Method</label>
+        <section class="toggle">
+          <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'ssh'" (click)="cambiarMetodoAuth('ssh')">
+            <i class="fa-solid fa-key"></i> SSH Key
+          </button>
+          <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'password'" (click)="cambiarMetodoAuth('password')">
+            <i class="fa-solid fa-lock"></i> Password
+          </button>
+        </section>
+      </section>
+      @if (metodoAutenticacion() === 'password') {
+        <section class="campo">
+          <label class="campo__etiqueta">Password</label>
+          <input class="campo__input" type="password" placeholder="Enter server password">
+        </section>
+      }
+    </section>
+  </section>
+
+  <section class="onboarding__ayuda">
+    <span class="onboarding__ayuda__icono"><i class="fa-solid fa-robot"></i></span>
+    <section class="onboarding__ayuda__info">
+      <h3 class="onboarding__ayuda__titulo">Need help?</h3>
+      <p class="onboarding__ayuda__desc">AI can help you find your IP or SSH port.</p>
+    </section>
+    <i class="fa-solid fa-arrow-right onboarding__ayuda__flecha"></i>
+  </section>
+
+  <button class="onboarding__boton-conectar">
+    Connect Server
+    <i class="fa-solid fa-link"></i>
+  </button>
+
+  <footer class="onboarding__cifrado">
+    <span class="onboarding__cifrado__punto"></span>
+    <span class="onboarding__cifrado__texto">Encrypted Session Active</span>
+    <i class="fa-solid fa-shield-halved onboarding__cifrado__icono"></i>
+  </footer>
+</section>

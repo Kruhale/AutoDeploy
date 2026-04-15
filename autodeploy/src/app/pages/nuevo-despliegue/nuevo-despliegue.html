@@ -1,0 +1,105 @@
+<section class="nuevo-despliegue">
+  <header class="nuevo-despliegue__barra-superior">
+    <app-migas-pan [migas]="[{ etiqueta: 'Home', enlace: '/app/dashboard' }, { etiqueta: 'New Deployment' }]"></app-migas-pan>
+    <section class="nuevo-despliegue__barra-acciones">
+      <i class="fa-solid fa-bell"></i>
+      <button class="boton--primario">Deploy Now</button>
+    </section>
+  </header>
+
+  <section class="nuevo-despliegue__contenido">
+    <h1 class="nuevo-despliegue__titulo">Configure New Service</h1>
+    <p class="nuevo-despliegue__descripcion">Complete the technical details to put your application online.</p>
+
+    <section class="nuevo-despliegue__paso">
+      <h2 class="nuevo-despliegue__paso__titulo">
+        <i class="fa-solid fa-cog nuevo-despliegue__paso__icono"></i>
+        1. Selección de Tecnología
+      </h2>
+      <section class="nuevo-despliegue__tecnologias">
+        @for (tech of opcionesDeTecnologia(); track tech.nombre) {
+          <article class="nuevo-despliegue__tech" [class.nuevo-despliegue__tech--activa]="tecnologiaSeleccionada() === tech.nombre" (click)="seleccionarTecnologia(tech.nombre)">
+            @if (tech.icono) {
+              <i class="nuevo-despliegue__tech__icono {{ tech.icono }}"></i>
+            } @else {
+              <span class="nuevo-despliegue__tech__label">{{ tech.etiquetaTexto }}</span>
+            }
+            <h3 class="nuevo-despliegue__tech__nombre">{{ tech.nombre }}</h3>
+            <p class="nuevo-despliegue__tech__desc">{{ tech.descripcion }}</p>
+          </article>
+        }
+      </section>
+    </section>
+
+    <section class="nuevo-despliegue__columnas">
+      <section class="nuevo-despliegue__paso nuevo-despliegue__paso--columna">
+        <h2 class="nuevo-despliegue__paso__titulo">
+          <i class="fa-solid fa-code nuevo-despliegue__paso__icono"></i>
+          2. Origen del Código
+        </h2>
+        <section class="toggle">
+          <button class="toggle__opcion" [class.toggle__opcion--activa]="origenCodigo() === 'git'" (click)="cambiarOrigenCodigo('git')">
+            <i class="fa-brands fa-github"></i> Git / GitHub
+          </button>
+          <button class="toggle__opcion" [class.toggle__opcion--activa]="origenCodigo() === 'zip'" (click)="cambiarOrigenCodigo('zip')">
+            <i class="fa-solid fa-lock"></i> Subir ZIP
+          </button>
+        </section>
+        @if (origenCodigo() === 'git') {
+          <section class="campo">
+            <label class="campo__etiqueta">Repository URL</label>
+            <input class="campo__input" type="text" placeholder="https://github.com/user/repo.git">
+          </section>
+          <section class="nuevo-despliegue__fila-inputs">
+            <section class="campo nuevo-despliegue__campo--mitad">
+              <label class="campo__etiqueta">Branch</label>
+              <select class="campo__select">
+                <option>main</option>
+              </select>
+            </section>
+            <section class="campo nuevo-despliegue__campo--mitad">
+              <label class="campo__etiqueta">Root Directory</label>
+              <input class="campo__input" type="text" placeholder="./">
+            </section>
+          </section>
+        }
+      </section>
+
+      <section class="nuevo-despliegue__paso nuevo-despliegue__paso--columna">
+        <h2 class="nuevo-despliegue__paso__titulo">
+          <i class="fa-solid fa-network-wired nuevo-despliegue__paso__icono"></i>
+          3. Configuración de Red & SSL
+        </h2>
+        <section class="nuevo-despliegue__ssl">
+          <section class="nuevo-despliegue__ssl__info">
+            <i class="fa-solid fa-lock nuevo-despliegue__ssl__icono"></i>
+            <section class="nuevo-despliegue__ssl__texto">
+              <span class="nuevo-despliegue__ssl__titulo">SSL Let's Encrypt</span>
+              <span class="nuevo-despliegue__ssl__desc">Firewall enabled</span>
+            </section>
+          </section>
+          <span class="interruptor" [class.interruptor--activo]="sslActivo()" (click)="alternarSsl()">
+            <span class="interruptor__circulo" [class.interruptor__circulo--activo]="sslActivo()"></span>
+          </span>
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta">Application Port</label>
+          <input class="campo__input" type="text" value="8080">
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta">Domain / Subdomain</label>
+          <input class="campo__input" type="text" placeholder="miapp.autodeploy.sh">
+        </section>
+        <section class="nuevo-despliegue__nota">
+          <i class="fa-solid fa-circle-info nuevo-despliegue__nota__icono"></i>
+          <p class="nuevo-despliegue__nota__texto">We'll automatically configure an Nginx instance as a reverse proxy for this service.</p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <footer class="nuevo-despliegue__pie">
+    <button class="boton--ghost">Cancel</button>
+    <button class="boton--primario">Launch Deployment</button>
+  </footer>
+</section>

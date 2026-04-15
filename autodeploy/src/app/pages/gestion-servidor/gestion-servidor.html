@@ -1,0 +1,112 @@
+<section class="gestion-servidor">
+  <header class="gestion-servidor__barra-superior">
+    <app-migas-pan [migas]="[{ etiqueta: 'Servers', enlace: '/app/dashboard' }, { etiqueta: 'VPS-Alpha-01' }]"></app-migas-pan>
+    <section class="gestion-servidor__barra-busqueda">
+      <section class="gestion-servidor__busqueda">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input class="gestion-servidor__busqueda__input" type="text" placeholder="Search commands...">
+      </section>
+      <section class="gestion-servidor__barra-iconos">
+        <i class="fa-solid fa-bell"></i>
+        <i class="fa-solid fa-circle-question"></i>
+      </section>
+    </section>
+  </header>
+
+  <header class="gestion-servidor__cabecera">
+    <section class="gestion-servidor__cabecera__info">
+      <h1 class="gestion-servidor__nombre">VPS-Alpha-01</h1>
+      <span class="gestion-servidor__badge gestion-servidor__badge--online">
+        <span class="gestion-servidor__badge__punto"></span>
+        Online
+      </span>
+      <section class="gestion-servidor__detalles">
+        <span class="gestion-servidor__detalle"><i class="fa-solid fa-server"></i> 105</span>
+        <span class="gestion-servidor__detalle">Frankfurt (FRA-1)</span>
+        <span class="gestion-servidor__detalle">Ubuntu 22.04 LTS</span>
+      </section>
+    </section>
+    <section class="gestion-servidor__cabecera__acciones">
+      <button class="boton--ghost">SSH</button>
+      <button class="boton--peligro">Reboot Server</button>
+    </section>
+  </header>
+
+  <section class="gestion-servidor__metricas">
+    <app-tarjeta-estadistica class="gestion-servidor__metricas__item" etiqueta="CPU Load" valor="12.4%" icono="fa-solid fa-microchip" [barraProgreso]="12.4" variante="primario"></app-tarjeta-estadistica>
+    <app-tarjeta-estadistica class="gestion-servidor__metricas__item" etiqueta="Memory (RAM)" valor="2.4" icono="fa-solid fa-memory" subtexto="/ 8 GB" [barraProgreso]="30" variante="exito"></app-tarjeta-estadistica>
+    <app-tarjeta-estadistica class="gestion-servidor__metricas__item" etiqueta="Bandwidth" valor="450" icono="fa-solid fa-wifi" subtexto="KB/s" variante="primario"></app-tarjeta-estadistica>
+  </section>
+
+  <section class="gestion-servidor__aplicaciones">
+    <header class="gestion-servidor__aplicaciones__cabecera">
+      <h2 class="gestion-servidor__aplicaciones__titulo">
+        <i class="fa-solid fa-cubes"></i>
+        Hosted Applications
+        <span class="gestion-servidor__aplicaciones__conteo">({{ listaDeAplicaciones().length }} Active)</span>
+      </h2>
+      <button class="boton--primario">Deploy New</button>
+    </header>
+
+    @for (app of listaDeAplicaciones(); track app.nombre) {
+      <article class="gestion-servidor__app">
+        <section class="gestion-servidor__app__info">
+          <span class="gestion-servidor__app__icono gestion-servidor__app__icono--{{ app.colorIcono }}">
+            @if (app.icono) {
+              <i [class]="app.icono"></i>
+            } @else {
+              {{ app.textoIcono }}
+            }
+          </span>
+          <section class="gestion-servidor__app__detalle">
+            <h3 class="gestion-servidor__app__nombre">{{ app.nombre }}</h3>
+            <span class="gestion-servidor__app__meta">{{ app.meta }}</span>
+          </section>
+        </section>
+        <section class="gestion-servidor__app__acciones">
+          <span class="gestion-servidor__app__badge gestion-servidor__app__badge--ok">HTTP 200</span>
+          <span class="gestion-servidor__app__version">{{ app.version }}</span>
+          <i class="fa-solid fa-gear gestion-servidor__app__btn"></i>
+          <i class="fa-solid fa-file gestion-servidor__app__btn"></i>
+          <i class="fa-solid fa-trash gestion-servidor__app__btn gestion-servidor__app__btn--peligro"></i>
+        </section>
+      </article>
+    }
+  </section>
+
+  <section class="gestion-servidor__config-rapida">
+    <article class="gestion-servidor__config-card">
+      <span class="gestion-servidor__config-card__icono gestion-servidor__config-card__icono--verde"><i class="fa-solid fa-lock"></i></span>
+      <section class="gestion-servidor__config-card__info">
+        <h3 class="gestion-servidor__config-card__titulo">Auto-SSL (Let's Encrypt)</h3>
+        <p class="gestion-servidor__config-card__desc">All 3 domains secured. Auto-renewal active.</p>
+      </section>
+      <i class="fa-solid fa-chevron-right gestion-servidor__config-card__flecha"></i>
+    </article>
+    <article class="gestion-servidor__config-card">
+      <span class="gestion-servidor__config-card__icono gestion-servidor__config-card__icono--amarillo"><i class="fa-solid fa-bolt"></i></span>
+      <section class="gestion-servidor__config-card__info">
+        <h3 class="gestion-servidor__config-card__titulo">Gzip Compression</h3>
+        <p class="gestion-servidor__config-card__desc">Enabled globally for all assets.</p>
+      </section>
+      <i class="fa-solid fa-chevron-right gestion-servidor__config-card__flecha"></i>
+    </article>
+  </section>
+
+  <footer class="gestion-servidor__inferior">
+    <section class="gestion-servidor__inferior__item">
+      <span class="gestion-servidor__inferior__etiqueta">Last Backup</span>
+      <span class="gestion-servidor__inferior__valor">2 hours ago</span>
+    </section>
+    <section class="gestion-servidor__inferior__item">
+      <span class="gestion-servidor__inferior__etiqueta">System Uptime</span>
+      <span class="gestion-servidor__inferior__valor">45 days, 12:40:02</span>
+    </section>
+    <section class="gestion-servidor__inferior__item gestion-servidor__inferior__item--derecha">
+      <span class="gestion-servidor__inferior__badge">
+        <span class="gestion-servidor__inferior__badge__punto"></span>
+        Automation Agent V3.4
+      </span>
+    </section>
+  </footer>
+</section>

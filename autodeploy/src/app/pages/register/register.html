@@ -1,0 +1,56 @@
+<main class="pagina-registro">
+  <section class="pagina-registro__tarjeta">
+
+    <header class="pagina-registro__cabecera">
+      <span class="pagina-registro__logo">AutoDeployService</span>
+      <h1 class="pagina-registro__titulo">Crear cuenta</h1>
+      <p class="pagina-registro__subtitulo">Empieza a gestionar tu infraestructura</p>
+    </header>
+
+    <form class="pagina-registro__formulario">
+
+      @if (mensajeDeErrorVisible()) {
+        <p class="pagina-registro__error">Ha ocurrido un error. Inténtalo de nuevo.</p>
+      }
+
+      <section class="campo">
+        <label class="campo__etiqueta" for="nombre">Nombre completo</label>
+        <input class="campo__input" id="nombre" type="text" placeholder="Tu nombre" autocomplete="name">
+      </section>
+
+      <section class="campo">
+        <label class="campo__etiqueta" for="email">Email</label>
+        <input class="campo__input" id="email" type="email" placeholder="tu@email.com" autocomplete="email">
+      </section>
+
+      <section class="campo">
+        <label class="campo__etiqueta" for="password">Contraseña</label>
+        <section class="pagina-registro__campo-password">
+          <input class="campo__input" id="password" [type]="passwordEsVisible() ? 'text' : 'password'" placeholder="••••••••" autocomplete="new-password">
+          <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()">
+            {{ passwordEsVisible() ? 'Ocultar' : 'Ver' }}
+          </button>
+        </section>
+      </section>
+
+      <section class="campo">
+        <label class="campo__etiqueta" for="confirmar-password">Confirmar contraseña</label>
+        <section class="pagina-registro__campo-password">
+          <input class="campo__input" id="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'" placeholder="••••••••" autocomplete="new-password">
+          <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadConfirmPassword()">
+            {{ confirmPasswordEsVisible() ? 'Ocultar' : 'Ver' }}
+          </button>
+        </section>
+      </section>
+
+      <button class="boton--primario pagina-registro__boton-enviar" type="button" (click)="crearCuenta()">Crear cuenta</button>
+
+    </form>
+
+    <footer class="pagina-registro__pie">
+      <span>¿Ya tienes cuenta?</span>
+      <a class="pagina-registro__enlace" routerLink="/login">Inicia sesión</a>
+    </footer>
+
+  </section>
+</main>

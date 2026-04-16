@@ -1,1 +1,19 @@
-<p>header works!</p>
+<header class="cabecera">
+  <a class="cabecera__logo" routerLink="/">
+    <img class="cabecera__logo__imagen" [class.cabecera__logo__imagen--visible]="logotipoVisible()" src="assets/images/logo.png" alt="AutoDeployService" (load)="mostrarLogotipo()">
+    <span class="cabecera__logo__texto">AutoDeployService</span>
+  </a>
+
+  <nav class="cabecera__navegacion">
+    <ul class="cabecera__navegacion__lista">
+      <li><a class="cabecera__enlace" href="#features">Features</a></li>
+      <li><a class="cabecera__enlace" href="#how-it-works">How It Works</a></li>
+      <li><a class="cabecera__enlace" href="#pricing">Pricing</a></li>
+    </ul>
+  </nav>
+
+  <section class="cabecera__acciones">
+    <a class="cabecera__enlace" routerLink="/login">Login</a>
+    <a class="cabecera__boton-app" routerLink="/app">Go to App</a>
+  </section>
+</header>

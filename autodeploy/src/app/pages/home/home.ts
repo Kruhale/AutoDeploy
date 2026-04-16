@@ -1,12 +1,11 @@
-import { Component } from '@angular/core';
-import { Footer } from "../../components/layout/footer/footer";
-import { Header } from "../../components/layout/header/header";
+import { Component } from "@angular/core";
+import { RouterLink } from "@angular/router";
 
 @Component({
-  selector: 'app-home',
-  imports: [Footer, Header],
-  templateUrl: './home.html',
-  styleUrl: './home.scss',
+  selector: "app-home",
+  imports: [RouterLink],
+  templateUrl: "./home.html",
+  styleUrl: "./home.scss",
 })
 export class Home {
 

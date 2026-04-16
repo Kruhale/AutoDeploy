@@ -1,2 +1,160 @@
-<p>home works!</p>
-<app-header></app-header>
+<main class="landing">
+
+  <!-- SECCIÓN BIENVENIDA -->
+  <section class="seccion-bienvenida">
+    <section class="seccion-bienvenida__contenido">
+      <section class="seccion-bienvenida__etiqueta">
+        <span class="seccion-bienvenida__etiqueta__punto"></span>
+        <span class="seccion-bienvenida__etiqueta__texto">Premium Infrastructure Solutions</span>
+      </section>
+
+      <h1 class="seccion-bienvenida__titulo">Manage Your VPS Easily—No Terminal Needed</h1>
+
+      <p class="seccion-bienvenida__descripcion">
+        Skip complicated commands. Connect via SSH and deploy your apps instantly using a sleek, powerful interface.
+      </p>
+
+      <section class="seccion-bienvenida__botones">
+        <a class="seccion-bienvenida__boton--primario" routerLink="/register">
+          Get Started
+          <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a class="seccion-bienvenida__boton--secundario" href="#demo">Watch Demo</a>
+      </section>
+    </section>
+
+    <section class="seccion-bienvenida__mockup">
+      <section class="seccion-bienvenida__mockup__brillo"></section>
+      <section class="seccion-bienvenida__mockup__ventana">
+        <section class="seccion-bienvenida__mockup__barra">
+          <section class="seccion-bienvenida__mockup__semaforo">
+            <span class="seccion-bienvenida__mockup__punto seccion-bienvenida__mockup__punto--rojo"></span>
+            <span class="seccion-bienvenida__mockup__punto seccion-bienvenida__mockup__punto--naranja"></span>
+            <span class="seccion-bienvenida__mockup__punto seccion-bienvenida__mockup__punto--verde"></span>
+          </section>
+          <span class="seccion-bienvenida__mockup__url"></span>
+        </section>
+        <section class="seccion-bienvenida__mockup__cuerpo">
+          <section class="seccion-bienvenida__mockup__fila">
+            <section class="seccion-bienvenida__mockup__bloque">
+              <span class="seccion-bienvenida__mockup__linea seccion-bienvenida__mockup__linea--dorada"></span>
+              <span class="seccion-bienvenida__mockup__linea seccion-bienvenida__mockup__linea--ancha"></span>
+            </section>
+            <section class="seccion-bienvenida__mockup__bloque">
+              <span class="seccion-bienvenida__mockup__linea seccion-bienvenida__mockup__linea--dorada"></span>
+              <span class="seccion-bienvenida__mockup__linea seccion-bienvenida__mockup__linea--media"></span>
+            </section>
+          </section>
+          <section class="seccion-bienvenida__mockup__bloque seccion-bienvenida__mockup__bloque--grande">
+            <span class="seccion-bienvenida__mockup__linea seccion-bienvenida__mockup__linea--ancha"></span>
+            <span class="seccion-bienvenida__mockup__linea seccion-bienvenida__mockup__linea--fina"></span>
+            <span class="seccion-bienvenida__mockup__linea seccion-bienvenida__mockup__linea--fina seccion-bienvenida__mockup__linea--corta"></span>
+          </section>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- SECCIÓN FUNCIONALIDADES -->
+  <section class="seccion-funcionalidades" id="features">
+    <section class="seccion-funcionalidades__separador"></section>
+
+    <section class="seccion-funcionalidades__cabecera">
+      <span class="seccion-funcionalidades__subtitulo">Enterprise-Grade System</span>
+      <h2 class="seccion-funcionalidades__titulo">All You Need to Scale Seamlessly</h2>
+      <p class="seccion-funcionalidades__descripcion">Smooth, fast workflows designed for teams that prioritize speed.</p>
+    </section>
+
+    <section class="seccion-funcionalidades__grid">
+      <article class="seccion-funcionalidades__tarjeta">
+        <section class="seccion-funcionalidades__tarjeta__icono">
+          <i class="fa-solid fa-display"></i>
+        </section>
+        <h3 class="seccion-funcionalidades__tarjeta__titulo">No Installation Needed</h3>
+        <p class="seccion-funcionalidades__tarjeta__descripcion">Connect to your server securely via SSH—no intrusive scripts or heavy agents required.</p>
+      </article>
+
+      <article class="seccion-funcionalidades__tarjeta">
+        <section class="seccion-funcionalidades__tarjeta__icono">
+          <i class="fa-solid fa-robot"></i>
+        </section>
+        <h3 class="seccion-funcionalidades__tarjeta__titulo">AI Assistant</h3>
+        <p class="seccion-funcionalidades__tarjeta__descripcion">Easily optimize settings and resolve issues with our infrastructure copilot.</p>
+      </article>
+
+      <article class="seccion-funcionalidades__tarjeta">
+        <section class="seccion-funcionalidades__tarjeta__icono seccion-funcionalidades__tarjeta__icono--cyan">
+          <i class="fa-solid fa-file-zipper"></i>
+        </section>
+        <h3 class="seccion-funcionalidades__tarjeta__titulo">ZIP Deploy</h3>
+        <p class="seccion-funcionalidades__tarjeta__descripcion">Quickly upload compressed projects—ideal for prototypes without complex CI/CD.</p>
+      </article>
+
+      <article class="seccion-funcionalidades__tarjeta">
+        <section class="seccion-funcionalidades__tarjeta__icono seccion-funcionalidades__tarjeta__icono--amarillo">
+          <i class="fa-solid fa-lock"></i>
+        </section>
+        <h3 class="seccion-funcionalidades__tarjeta__titulo">100% End-to-End Encrypted Security</h3>
+        <p class="seccion-funcionalidades__tarjeta__descripcion">Complete encryption ensures your infrastructure management is fully secure and private.</p>
+      </article>
+    </section>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="workflow" id="how-it-works">
+    <section class="workflow__cabecera">
+      <h2 class="workflow__titulo">Streamlined Workflow</h2>
+      <p class="workflow__descripcion">From code to production in three simple steps</p>
+    </section>
+
+    <section class="workflow__pasos">
+      <section class="workflow__linea"></section>
+
+      <section class="workflow__paso">
+        <section class="workflow__paso__icono">
+          <i class="fa-solid fa-server"></i>
+        </section>
+        <section class="workflow__paso__contenido">
+          <h3 class="workflow__paso__titulo">1. Connect Your Server</h3>
+          <p class="workflow__paso__descripcion">Secure SSH credentials. Our platform auto-configures your environment to meet current security standards.</p>
+        </section>
+      </section>
+
+      <section class="workflow__paso workflow__paso--invertido">
+        <section class="workflow__paso__contenido workflow__paso__contenido--derecha">
+          <h3 class="workflow__paso__titulo">2. Upload Your Code</h3>
+          <p class="workflow__paso__descripcion">Drag and drop ZIP files or link Git repos—choose what fits your workflow best.</p>
+        </section>
+        <section class="workflow__paso__icono">
+          <i class="fa-solid fa-cloud-arrow-up"></i>
+        </section>
+      </section>
+
+      <section class="workflow__paso">
+        <section class="workflow__paso__icono workflow__paso__icono--cyan">
+          <i class="fa-solid fa-rocket"></i>
+        </section>
+        <section class="workflow__paso__contenido">
+          <h3 class="workflow__paso__titulo">3. Deploy with One Click</h3>
+          <p class="workflow__paso__descripcion">We handle Nginx, SSL via Let's Encrypt, and process management with PM2 or Docker. Your app is live instantly.</p>
+        </section>
+      </section>
+    </section>
+  </section>
+
+  <!-- SECCIÓN LLAMADA A ACCIÓN -->
+  <section class="seccion-llamada-accion">
+    <section class="seccion-llamada-accion__brillo"></section>
+    <section class="seccion-llamada-accion__contenedor">
+      <section class="seccion-llamada-accion__destello seccion-llamada-accion__destello--arriba"></section>
+      <section class="seccion-llamada-accion__destello seccion-llamada-accion__destello--abajo"></section>
+      <h2 class="seccion-llamada-accion__titulo">Ready to Simplify Your Infrastructure?</h2>
+      <p class="seccion-llamada-accion__descripcion">Join hundreds of developers who've ditched terminal hassles. Start free and scale up today.</p>
+      <section class="seccion-llamada-accion__botones">
+        <a class="seccion-llamada-accion__boton--primario" routerLink="/register">Start Free Now</a>
+        <a class="seccion-llamada-accion__boton--secundario" href="#demo">Schedule a Demo</a>
+      </section>
+    </section>
+  </section>
+
+</main>

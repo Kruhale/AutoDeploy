@@ -1,0 +1,30 @@
+// Enlace "Saltar al contenido" para accesibilidad: oculto hasta que alguien lo enfoca con el teclado
+
+@use "../01-tools/mixins" as *;
+
+.u-saltar-contenido {
+  @include visualmente-oculto;
+
+  // Al enfocarlo con el tabulador aparece arriba a la izquierda para poder activarlo con Enter
+  &:focus-visible {
+    position: fixed;
+    top: var(--spacing-size-l);
+    left: var(--spacing-size-l);
+    width: auto;
+    height: auto;
+    padding: var(--spacing-size-s) var(--spacing-size-l);
+    margin: 0;
+    overflow: visible;
+    clip: auto;
+    white-space: normal;
+    background-color: var(--amarillo-normal);
+    color: var(--fondo-oscuro);
+    font-weight: var(--font-weight-bold);
+    text-decoration: none;
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow-md);
+    z-index: 9999;
+    outline: 2px solid var(--fondo-oscuro);
+    outline-offset: 2px;
+  }
+}

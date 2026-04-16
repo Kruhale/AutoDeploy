@@ -1,0 +1,7 @@
+// Clases utilidad para usar los z-index del proyecto sin escribir numeros sueltos
+
+.u-z-sidebar   { z-index: var(--z-sidebar); }
+.u-z-header    { z-index: var(--z-header); }
+.u-z-dropdown  { z-index: var(--z-dropdown); }
+.u-z-modal     { z-index: var(--z-modal); }
+.u-z-toast     { z-index: var(--z-toast); }

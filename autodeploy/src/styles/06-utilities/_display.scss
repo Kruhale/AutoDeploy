@@ -1,0 +1,13 @@
+// Clases utilidad para cambiar el display de un elemento sin tocar su componente
+
+@use "../01-tools/mixins" as *;
+
+.u-bloque          { display: block; }
+.u-en-linea        { display: inline; }
+.u-en-linea-bloque { display: inline-block; }
+.u-grid            { display: grid; }
+
+// Ocultar segun el tamaño de pantalla (movil, tablet, escritorio)
+.u-oculto-movil      { @include movil      { display: none; } }
+.u-oculto-tablet     { @include tablet     { display: none; } }
+.u-oculto-escritorio { @include escritorio { display: none; } }

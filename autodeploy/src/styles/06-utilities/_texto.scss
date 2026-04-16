@@ -1,0 +1,28 @@
+// Clases utilidad para alinear, truncar y poner el texto en mayusculas rapidamente
+
+.u-texto-centrado {
+  text-align: center;
+}
+
+.u-texto-derecha {
+  text-align: right;
+}
+
+.u-texto-izquierda {
+  text-align: left;
+}
+
+.u-texto-truncado {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.u-mayusculas {
+  text-transform: uppercase;
+}
+
+.u-romper-palabra {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

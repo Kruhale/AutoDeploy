@@ -1,0 +1,14 @@
+// Clases utilidad de flexbox (.u-flex, .u-flex-centro, .u-gap-s, etc) para casos rapidos
+
+.u-flex            { display: flex; }
+.u-flex-centro     { display: flex; align-items: center; justify-content: center; }
+.u-flex-entre      { display: flex; align-items: center; justify-content: space-between; }
+.u-flex-columna    { display: flex; flex-direction: column; }
+.u-flex-envoltura  { display: flex; flex-wrap: wrap; }
+
+// Hueco entre hijos en distintos tamaños
+.u-gap-xs { gap: var(--spacing-size-xs); }
+.u-gap-s  { gap: var(--spacing-size-s); }
+.u-gap-m  { gap: var(--spacing-size-m); }
+.u-gap-l  { gap: var(--spacing-size-l); }
+.u-gap-xl { gap: var(--spacing-size-xl); }

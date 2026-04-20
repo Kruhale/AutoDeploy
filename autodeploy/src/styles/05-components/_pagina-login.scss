@@ -1,0 +1,575 @@
+// Login editorial: espejo del registro — marca a la izquierda, formulario a
+// la derecha, y la constelacion 3D respirando detras de ambos.
+
+.pagina-login {
+  --fondo-editorial: hsl(230, 8%, 4%);
+  --tinta: hsl(40, 20%, 92%);
+  --tinta-suave: hsl(40, 6%, 60%);
+  --tinta-apagada: hsl(40, 5%, 52%);
+  --acento: hsl(42, 62%, 62%);
+  --linea: hsla(40, 20%, 92%, 0.09);
+
+  position: relative;
+  display: flex;
+  min-height: 100dvh;
+  background-color: var(--fondo-editorial);
+  color: var(--tinta);
+  overflow: hidden;
+}
+
+html.tema-claro .pagina-login {
+  --fondo-editorial: hsl(40, 30%, 95%);
+  --tinta: hsl(230, 14%, 13%);
+  --tinta-suave: hsl(230, 7%, 38%);
+  --tinta-apagada: hsl(230, 6%, 44%);
+  --acento: hsl(38, 80%, 30%);
+  --linea: hsla(230, 14%, 13%, 0.14);
+}
+
+.pagina-login__velo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 50% 40%, transparent 55%, hsla(230, 8%, 2%, 0.55) 100%);
+}
+
+html.tema-claro .pagina-login__velo {
+  background: radial-gradient(120% 120% at 50% 40%, transparent 60%, hsla(40, 30%, 85%, 0.55) 100%);
+}
+
+// ------------------------------------------------ COLUMNA DE MARCA
+
+.pagina-login__panel-marca {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2rem;                     /* 32px */
+  padding: 1.75rem 4rem 2.5rem;  /* 28px 64px 40px */
+  border-right: 1px solid var(--linea);
+  z-index: 2;
+}
+
+.pagina-login__panel-marca__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+}
+
+.pagina-login__panel-marca__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;                  /* 28px */
+  max-width: 30rem;              /* 480px */
+}
+
+.pagina-login__panel-marca__titular {
+  font-family: var(--font-display);
+  font-size: 4.1rem;             /* 66px */
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 0.98;
+  color: var(--tinta);
+}
+
+.pagina-login__panel-marca__titular__punto {
+  color: var(--acento);
+}
+
+.pagina-login__panel-marca__texto {
+  font-size: 0.95rem;            /* 15px */
+  line-height: 1.7;
+  color: var(--tinta-suave);
+  max-width: 26rem;              /* 416px */
+}
+
+.pagina-login__panel-marca__lista {
+  display: flex;
+  flex-direction: column;
+  margin-top: 0.5rem;            /* 8px */
+  border-top: 1px solid var(--linea);
+}
+
+.pagina-login__panel-marca__item {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;                  /* 20px */
+  padding: 1rem 0;               /* 16px */
+  border-bottom: 1px solid var(--linea);
+}
+
+// Icono plano en ambar: el chip con fondo y borde era del lenguaje viejo.
+.pagina-login__panel-marca__item__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.5rem;                 /* 24px */
+  flex-shrink: 0;
+  color: var(--acento);
+  font-size: 0.8rem;             /* 13px */
+}
+
+.pagina-login__panel-marca__item__texto {
+  font-size: 0.95rem;            /* 15px */
+  color: var(--tinta);
+  letter-spacing: -0.005em;
+}
+
+.pagina-login__panel-marca__pie {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  padding-top: var(--spacing-size-l);
+  border-top: 1px solid var(--linea);
+}
+
+.pagina-login__panel-marca__pie__codigo {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;             /* 11px */
+  letter-spacing: 0.16em;
+  color: var(--tinta-suave);
+}
+
+.pagina-login__panel-marca__pie__separador {
+  flex: 1;
+  height: 1px;
+  background-color: var(--linea);
+}
+
+.pagina-login__panel-marca__pie__texto {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;           /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  font-style: italic;
+}
+
+.pagina-login__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;                  /* 9px */
+}
+
+.pagina-login__logo:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+.pagina-login__logo__imagen {
+  height: 1.85rem;               /* 30px */
+  width: auto;
+}
+
+.pagina-login__logo__texto {
+  font-family: var(--font-secondary);
+  font-size: 1.125rem;           /* 18px */
+  font-weight: var(--font-weight-bold);
+  color: var(--tinta);
+  letter-spacing: -0.025em;
+}
+
+.pagina-login__logo__texto--acento {
+  color: var(--acento);
+}
+
+.pagina-login__sello {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;                   /* 8px */
+  font-family: var(--font-mono);
+  font-size: 0.625rem;           /* 10px */
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+}
+
+.pagina-login__sello__punto {
+  width: 0.4rem;                 /* 6px */
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--acento);
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pagina-login__sello__punto {
+    animation: login-respirar 2.4s ease-in-out infinite;
+  }
+}
+
+// ------------------------------------------------ COLUMNA DEL FORMULARIO
+
+.pagina-login__panel-formulario {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem 4rem 3rem;    /* 28px 64px 48px */
+  z-index: 2;
+}
+
+// Alineado a la izquierda, al mismo eje que VOLVER y el panel de marca.
+.pagina-login__panel-formulario__contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 1.85rem;                  /* 30px */
+  width: 100%;
+  max-width: 26rem;              /* 416px */
+  margin: auto 0;
+}
+
+.pagina-login__volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;                  /* 9px */
+  align-self: flex-start;
+  padding: 0.5rem 0;             /* 8px */
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;          /* 11px */
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  transition-property: color, transform;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-login__volver:hover {
+  color: var(--tinta);
+  transform: translateX(-0.1875rem);   /* -3px */
+}
+
+.pagina-login__volver:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+.pagina-login__volver__flecha {
+  font-size: 0.8rem;             /* 13px */
+}
+
+.pagina-login__cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;                   /* 10px */
+}
+
+.pagina-login__cabecera__numero {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;          /* 11px */
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  margin-bottom: 0.5rem;         /* 8px */
+}
+
+.pagina-login__titulo {
+  font-family: var(--font-display);
+  font-size: 3.4rem;             /* 54px */
+  font-weight: 400;
+  letter-spacing: -0.028em;
+  line-height: 1;
+  color: var(--tinta);
+}
+
+.pagina-login__titulo__punto {
+  color: var(--acento);
+}
+
+.pagina-login__subtitulo {
+  font-size: 0.95rem;            /* 15px */
+  color: var(--tinta-suave);
+  line-height: 1.6;
+  margin-top: 0.25rem;           /* 4px */
+}
+
+.pagina-login__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;                   /* 22px */
+}
+
+// Aviso de error editorial: linea roja al margen, sin caja redondeada.
+.pagina-login__error {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;                   /* 10px */
+  padding: 0.35rem 0 0.35rem 1rem;   /* 6px 16px */
+  border-left: 2px solid var(--rojo-normal);
+  font-size: 0.875rem;           /* 14px */
+  color: var(--rojo-normal);
+}
+
+.pagina-login__error__punto {
+  width: 0.45rem;                /* 7px */
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: var(--rojo-normal);
+  flex-shrink: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pagina-login__error__punto {
+    animation: login-respirar 1.8s ease-in-out infinite;
+  }
+}
+
+// Campos de subrayado: los inputs en caja rompian el lenguaje editorial.
+.pagina-login .campo__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;          /* 11px */
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+}
+
+.pagina-login .campo__etiqueta__numero {
+  color: var(--acento);
+  margin-right: 0.35rem;         /* 6px */
+}
+
+.pagina-login .campo__input {
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--linea);
+  border-radius: 0;
+  padding: 0.75rem 0;            /* 12px */
+  font-size: 1rem;               /* 16px */
+  color: var(--tinta);
+  transition-property: border-color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+.pagina-login .campo__input::placeholder {
+  color: var(--tinta-apagada);
+}
+
+.pagina-login .campo__input:focus {
+  outline: none;
+  border-bottom: 1px solid var(--acento);
+  box-shadow: 0 1px 0 var(--acento);
+}
+
+.pagina-login .campo__input[aria-invalid="true"] {
+  border-bottom-color: var(--rojo-normal);
+}
+
+.pagina-login .campo__error {
+  font-size: 0.8rem;             /* 13px */
+  color: var(--rojo-normal);
+  margin-top: 0.4rem;            /* 6px */
+}
+
+.pagina-login__campo-password {
+  position: relative;
+  display: flex;
+}
+
+.pagina-login__campo-password .campo__input {
+  flex: 1;
+  padding-right: 2.75rem;        /* 44px, hueco para el boton del ojo */
+}
+
+.pagina-login__boton-ver {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.75rem;                /* 44px */
+  height: 2.75rem;               /* 44px */
+  background: transparent;
+  border: 0;
+  color: var(--tinta-apagada);
+  font-size: 0.875rem;           /* 14px */
+  cursor: pointer;
+  transition-property: color;
+  transition-duration: 0.25s;
+  transition-timing-function: ease;
+}
+
+.pagina-login__boton-ver:hover {
+  color: var(--tinta);
+}
+
+.pagina-login__boton-ver:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+// CTA outline tipo pill, el mismo lenguaje que la home y confirmar-free.
+.pagina-login__boton-enviar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;                  /* 14px */
+  height: 3.4rem;                /* 54px */
+  padding: 0 2.25rem;            /* 36px */
+  margin-top: 0.5rem;            /* 8px */
+  background-color: hsla(230, 8%, 4%, 0.45);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--acento);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;            /* 15px */
+  font-weight: var(--font-weight-semibold);
+  color: var(--acento);
+  transition-property: background-color, color, gap, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.tema-claro .pagina-login__boton-enviar {
+  background-color: hsla(40, 30%, 95%, 0.5);
+}
+
+.pagina-login__boton-enviar:hover:not(:disabled) {
+  background-color: var(--acento);
+  color: var(--fondo-editorial);
+  gap: 1.1rem;                   /* 18px */
+}
+
+html.tema-claro .pagina-login__boton-enviar:hover:not(:disabled) {
+  background-color: var(--acento);
+}
+
+.pagina-login__boton-enviar:hover:not(:disabled) .pagina-login__boton-enviar__flecha {
+  transform: translateX(0.1875rem);    /* 3px */
+}
+
+.pagina-login__boton-enviar:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.pagina-login__boton-enviar:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+.pagina-login__boton-enviar:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+.pagina-login__boton-enviar__flecha {
+  font-family: var(--font-mono);
+  transition-property: transform;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-login__pie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-size-s);
+  padding-top: var(--spacing-size-xl);
+  border-top: 1px solid var(--linea);
+  font-size: 0.875rem;           /* 14px */
+  color: var(--tinta-suave);
+}
+
+.pagina-login__enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;                  /* 6px */
+  padding: 0.5rem 0;             /* 8px */
+  color: var(--acento);
+  font-weight: var(--font-weight-semibold);
+  transition-property: gap;
+  transition-duration: 0.3s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-login__enlace:hover {
+  gap: 0.55rem;                  /* 9px */
+}
+
+.pagina-login__enlace:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 2px;
+}
+
+@keyframes login-respirar {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.82); }
+}
+
+// ------------------------------------------------ RESPONSIVE
+
+@media (max-width: 60rem) {
+
+  .pagina-login {
+    flex-direction: column;
+  }
+
+  // En movil el formulario va primero: es a lo que se viene.
+  .pagina-login__panel-formulario {
+    order: 1;
+    padding: 1.25rem 1.5rem 2.5rem;    /* 20px 24px 40px */
+  }
+
+  .pagina-login__panel-formulario__contenido {
+    margin: 2rem auto 0;               /* 32px */
+  }
+
+  .pagina-login__panel-marca {
+    order: 2;
+    border-right: 0;
+    border-top: 1px solid var(--linea);
+    padding: 2rem 1.5rem 2rem;         /* 32px 24px */
+  }
+
+  .pagina-login__panel-marca__cuerpo {
+    max-width: 26rem;                  /* 416px */
+    margin: 0 auto;
+  }
+
+  .pagina-login__panel-marca__cabecera {
+    max-width: 26rem;                  /* 416px */
+    margin: 0 auto;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 0.75rem 1rem;                 /* 12px 16px */
+  }
+
+  .pagina-login__panel-marca__pie {
+    max-width: 26rem;                  /* 416px */
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .pagina-login__titulo {
+    font-size: 2.5rem;                 /* 40px */
+  }
+
+  .pagina-login__panel-marca__titular {
+    font-size: 2.75rem;                /* 44px */
+  }
+}
+
+@media (max-width: 30rem) {
+
+  .pagina-login__titulo {
+    font-size: 2.1rem;                 /* 34px */
+  }
+
+  .pagina-login__panel-marca__titular {
+    font-size: 2.25rem;                /* 36px */
+  }
+}
+
+// Figura terminal del panel de marca: misma pieza que el hero, contenida.
+.pagina-login__terminal {
+  display: block;
+  margin-top: 2.5rem;
+  max-width: 26rem;
+}

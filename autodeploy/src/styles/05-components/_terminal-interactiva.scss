@@ -1,19 +1,19 @@
 .terminal-interactiva {
   display: flex;
   flex-direction: column;
-  background-color: #0d0d0d;
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radius-m);
+  background-color: var(--fondo-negro);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l);
   overflow: hidden;
 }
 
 .terminal-interactiva__barra {
   display: flex;
   align-items: center;
-  gap: var(--spacing-s);
-  padding: var(--spacing-s) var(--spacing-m);
+  gap: var(--spacing-size-m);
+  padding: var(--spacing-size-m) var(--spacing-size-l);
   background: rgba(240, 236, 226, 0.04);
-  border-bottom: 1px solid var(--color-borde);
+  border-bottom: 1px solid var(--borde-normal);
 }
 
 .terminal-interactiva__semaforo {
@@ -42,15 +42,15 @@
 .terminal-interactiva__titulo {
   flex: 1;
   font-size: var(--font-size-xs);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
   text-align: center;
 }
 
 .terminal-interactiva__expandir {
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
   font-size: var(--font-size-sm);
   cursor: pointer;
 }
@@ -59,8 +59,8 @@
   display: flex;
   flex-direction: column;
   gap: 0.125rem;
-  padding: var(--spacing-m) var(--spacing-l);
-  font-family: var(--font-familia-mono);
+  padding: var(--spacing-size-l) var(--spacing-size-2xl);
+  font-family: var(--font-mono);
   font-size: var(--font-size-sm);
   line-height: 1.6;
   min-height: 12rem;
@@ -68,20 +68,20 @@
 
 .terminal-interactiva__linea {
   display: flex;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-size-s);
 }
 
 .terminal-interactiva__prompt {
-  color: var(--color-exito);
+  color: var(--verde-normal);
   white-space: nowrap;
 }
 
 .terminal-interactiva__comando {
-  color: var(--color-texto-claro);
+  color: var(--texto-claro);
 }
 
 .terminal-interactiva__salida {
-  color: var(--color-texto-medio);
+  color: var(--texto-medio);
   padding-left: 0;
 }
 
@@ -89,7 +89,7 @@
   display: inline-block;
   width: 0.5rem;
   height: 1rem;
-  background-color: var(--color-primario);
+  background-color: var(--amarillo-normal);
   animation: parpadeo-cursor 1s step-end infinite;
 }
 

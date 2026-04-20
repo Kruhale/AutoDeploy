@@ -1,5 +1,6 @@
 @use "styles/00-settings/fonts";
 @use "styles/00-settings/css-variables";
+@use "styles/00-settings/variables";
 @use "styles/02-generic/reset";
 @use "styles/03-elements/buttons";
 @use "styles/03-elements/forms";
@@ -8,6 +9,7 @@
 @use "styles/05-components/seccion-funcionalidades";
 @use "styles/05-components/workflow";
 @use "styles/05-components/seccion-llamada-accion";
+@use "styles/05-components/seccion-precios";
 @use "styles/05-components/barra-lateral";
 @use "styles/05-components/barra-pie-app";
 @use "styles/05-components/tarjeta-estadistica";
@@ -24,3 +26,4 @@
 @use "styles/05-components/terminal-interactiva";
 @use "styles/05-components/pagina-login";
 @use "styles/05-components/pagina-registro";
+@use "styles/05-components/animaciones";

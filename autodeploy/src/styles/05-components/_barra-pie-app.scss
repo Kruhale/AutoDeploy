@@ -2,14 +2,14 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-s) var(--spacing-xl);
-  border-top: 1px solid var(--color-borde);
-  background-color: var(--color-fondo);
+  padding: var(--spacing-size-m) var(--spacing-size-3xl);
+  border-top: 1px solid var(--borde-normal);
+  background-color: var(--fondo-normal);
 }
 
 .barra-pie-app__copyright {
   font-size: var(--font-size-xs);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .barra-pie-app__estado {
@@ -17,17 +17,17 @@
   align-items: center;
   gap: 0.375rem;
   font-size: var(--font-size-xs);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .barra-pie-app__estado__punto {
   width: 0.375rem;
   height: 0.375rem;
   border-radius: 50%;
-  background-color: var(--color-exito);
+  background-color: var(--verde-normal);
 }
 
 .barra-pie-app__version {
   font-size: var(--font-size-xs);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }

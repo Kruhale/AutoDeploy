@@ -7,10 +7,12 @@
 }
 
 body {
-  font-family: var(--font-familia);
-  background-color: var(--color-fondo);
-  color: var(--color-texto-claro);
+  font-family: var(--font-primary);
+  background-color: var(--fondo-normal);
+  color: var(--texto-claro);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 ul {
@@ -25,4 +27,12 @@ a {
 img {
   max-width: 100%;
   display: block;
+}
+
+button {
+  font-family: var(--font-primary);
+}
+
+input {
+  font-family: var(--font-primary);
 }

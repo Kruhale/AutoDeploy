@@ -1,8 +1,9 @@
 <header class="cabecera">
   <a class="cabecera__logo" routerLink="/">
-    <img class="cabecera__logo__imagen" [class.cabecera__logo__imagen--visible]="logotipoVisible()" src="assets/images/logo.png" alt="AutoDeployService" (load)="mostrarLogotipo()">
-    <span class="cabecera__logo__texto">AutoDeployService</span>
+    <img class="cabecera__logo__imagen" src="logo.png" alt="">
+    <span class="cabecera__logo__texto">Auto<span class="cabecera__logo__texto--acento">Deploy</span></span>
   </a>
+
 
   <nav class="cabecera__navegacion">
     <ul class="cabecera__navegacion__lista">
@@ -13,7 +14,17 @@
   </nav>
 
   <section class="cabecera__acciones">
+    @if (authService.estaLogueado()) {
+    <a class="cabecera__cuenta" routerLink="/app/cuenta">
+      <svg class="cabecera__cuenta__icono" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <circle cx="12" cy="8" r="4" />
+        <path d="M4 20c0-4 3.582-6 8-6s8 2 8 6" />
+      </svg>
+      <span class="cabecera__cuenta__texto">Account</span>
+    </a>
+    } @else {
     <a class="cabecera__enlace" routerLink="/login">Login</a>
+    }
     <a class="cabecera__boton-app" routerLink="/app">Go to App</a>
   </section>
 </header>

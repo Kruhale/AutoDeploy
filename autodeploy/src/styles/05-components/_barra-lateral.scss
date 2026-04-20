@@ -3,36 +3,41 @@
   flex-direction: column;
   width: var(--sidebar-ancho);
   min-height: 100vh;
-  background-color: var(--color-fondo);
-  border-right: 1px solid var(--color-borde);
-  padding: var(--spacing-l) 0;
+  background-color: var(--fondo-normal);
+  border-right: 1px solid var(--borde-normal);
+  padding: var(--spacing-size-2xl) 0;
   flex-shrink: 0;
 }
 
 .barra-lateral__logo {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: 0 var(--spacing-m);
-  margin-bottom: var(--spacing-2xl);
+  gap: var(--spacing-size-s);
+  padding: 0 var(--spacing-size-l);
+  margin-bottom: var(--spacing-size-5xl);
 }
 
-.barra-lateral__logo__icono {
-  font-size: var(--font-size-lg);
-  color: var(--color-primario);
+.barra-lateral__logo__imagen {
+  height: 1.75rem;
+  width: auto;
 }
 
 .barra-lateral__logo__texto {
-  font-family: var(--font-familia-titulos);
-  font-size: var(--font-size-md);
-  font-weight: 700;
-  color: var(--color-texto-claro);
+  font-family: var(--font-secondary);
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+  letter-spacing: -0.5px;
+}
+
+.barra-lateral__logo__texto--acento {
+  color: var(--amarillo-normal);
 }
 
 .barra-lateral__navegacion {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-size-3xl);
   flex: 1;
 }
 
@@ -44,12 +49,12 @@
 
 .barra-lateral__seccion__titulo {
   font-size: var(--font-size-xs);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: var(--color-texto-apagado);
-  padding: 0 var(--spacing-m);
-  margin-bottom: var(--spacing-xs);
+  color: var(--texto-apagado);
+  padding: 0 var(--spacing-size-l);
+  margin-bottom: var(--spacing-size-s);
 }
 
 .barra-lateral__lista {
@@ -61,23 +66,30 @@
 .barra-lateral__enlace {
   display: flex;
   align-items: center;
-  gap: var(--spacing-s);
-  padding: 0.625rem var(--spacing-m);
-  color: var(--color-texto-medio);
+  gap: var(--spacing-size-m);
+  padding: 0.625rem var(--spacing-size-l);
+  color: var(--texto-medio);
   font-size: var(--font-size-md);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   border-left: 3px solid transparent;
-  transition: color 0.2s ease, background-color 0.2s ease;
+  background: none;
+  border-top: none;
+  border-right: none;
+  border-bottom: none;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  transition: color var(--duration-base) ease, background-color var(--duration-base) ease;
 }
 
 .barra-lateral__enlace:hover {
-  color: var(--color-texto-claro);
+  color: var(--texto-claro);
   background-color: rgba(240, 236, 226, 0.03);
 }
 
 .barra-lateral__enlace--activo {
-  color: var(--color-primario);
-  border-left-color: var(--color-primario);
+  color: var(--amarillo-normal);
+  border-left-color: var(--amarillo-normal);
   background-color: rgba(245, 214, 35, 0.05);
 }
 
@@ -94,27 +106,27 @@
 .barra-lateral__inferior {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-m);
-  padding: 0 var(--spacing-m);
+  gap: var(--spacing-size-l);
+  padding: 0 var(--spacing-size-l);
   margin-top: auto;
 }
 
 .barra-lateral__colapsar {
   display: flex;
   align-items: center;
-  gap: var(--spacing-s);
+  gap: var(--spacing-size-m);
   padding: 0.625rem 0;
-  color: var(--color-texto-medio);
+  color: var(--texto-medio);
   font-size: var(--font-size-md);
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   background: none;
   border: none;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--duration-base) ease;
 }
 
 .barra-lateral__colapsar:hover {
-  color: var(--color-texto-claro);
+  color: var(--texto-claro);
 }
 
 .barra-lateral__colapsar__icono {
@@ -129,16 +141,16 @@
 .barra-lateral__usuario {
   display: flex;
   align-items: center;
-  gap: var(--spacing-s);
-  padding-top: var(--spacing-m);
-  border-top: 1px solid var(--color-borde);
+  gap: var(--spacing-size-m);
+  padding-top: var(--spacing-size-l);
+  border-top: 1px solid var(--borde-normal);
 }
 
 .barra-lateral__usuario__avatar {
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 50%;
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  background: linear-gradient(135deg, var(--naranja-normal), var(--rojo-normal));
   flex-shrink: 0;
 }
 
@@ -149,14 +161,14 @@
 
 .barra-lateral__usuario__nombre {
   font-size: var(--font-size-md);
-  font-weight: 600;
-  color: var(--color-texto-claro);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
 }
 
 .barra-lateral__usuario__plan {
   font-size: var(--font-size-xs);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }

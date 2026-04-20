@@ -3,23 +3,23 @@
   align-items: center;
   gap: 0.5rem;
   font-size: var(--font-size-sm);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .migas-pan__enlace {
-  color: var(--color-texto-apagado);
-  transition: color 0.2s ease;
+  color: var(--texto-apagado);
+  transition: color var(--duration-base) ease;
 }
 
 .migas-pan__enlace:hover {
-  color: var(--color-texto-claro);
+  color: var(--texto-claro);
 }
 
 .migas-pan__separador {
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .migas-pan__actual {
-  color: var(--color-texto-claro);
-  font-weight: 600;
+  color: var(--texto-claro);
+  font-weight: var(--font-weight-semibold);
 }

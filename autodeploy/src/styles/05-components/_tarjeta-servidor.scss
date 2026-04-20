@@ -1,18 +1,18 @@
 .tarjeta-servidor {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-s);
+  gap: var(--spacing-size-m);
   flex: 1;
-  padding: var(--spacing-l);
+  padding: var(--spacing-size-2xl);
   background: rgba(240, 236, 226, 0.03);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radius-m);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l);
 }
 
 .tarjeta-servidor__cabecera {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-size-s);
   flex-wrap: wrap;
 }
 
@@ -24,28 +24,28 @@
 }
 
 .tarjeta-servidor__indicador--verde {
-  background-color: var(--color-exito);
+  background-color: var(--verde-normal);
 }
 
 .tarjeta-servidor__indicador--naranja {
-  background-color: var(--color-advertencia);
+  background-color: var(--naranja-normal);
 }
 
 .tarjeta-servidor__indicador--rojo {
-  background-color: var(--color-error);
+  background-color: var(--rojo-normal);
 }
 
 .tarjeta-servidor__nombre {
-  font-family: var(--font-familia-titulos);
+  font-family: var(--font-secondary);
   font-size: var(--font-size-base);
-  font-weight: 700;
-  color: var(--color-texto-claro);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
 }
 
 .tarjeta-servidor__ip {
   font-size: var(--font-size-xs);
-  font-family: var(--font-familia-mono);
-  color: var(--color-texto-apagado);
+  font-family: var(--font-mono);
+  color: var(--texto-apagado);
   margin-left: auto;
 }
 
@@ -63,38 +63,38 @@
 
 .tarjeta-servidor__metrica__etiqueta {
   font-size: var(--font-size-xs);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 1px;
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .tarjeta-servidor__metrica__valor {
   font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-texto-claro);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
 }
 
 .tarjeta-servidor__barra {
   height: 0.25rem;
   background: rgba(240, 236, 226, 0.06);
-  border-radius: 9999px;
+  border-radius: var(--radius-full);
   overflow: hidden;
 }
 
 .tarjeta-servidor__barra__relleno {
   display: block;
   height: 100%;
-  border-radius: 9999px;
-  background-color: var(--color-primario);
+  border-radius: var(--radius-full);
+  background-color: var(--amarillo-normal);
 }
 
 .tarjeta-servidor__barra--info {
-  background-color: var(--color-info);
+  background-color: var(--azul-normal);
 }
 
 .tarjeta-servidor__barra--exito {
-  background-color: var(--color-exito);
+  background-color: var(--verde-normal);
 }
 
 .tarjeta-servidor__pie {
@@ -108,14 +108,14 @@
   display: flex;
   gap: 0.5rem;
   font-size: var(--font-size-sm);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .tarjeta-servidor__enlace {
   font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-primario);
-  transition: opacity 0.2s ease;
+  font-weight: var(--font-weight-semibold);
+  color: var(--amarillo-normal);
+  transition: opacity var(--duration-base) ease;
 }
 
 .tarjeta-servidor__enlace:hover {

@@ -1,7 +1,7 @@
 .gestion-servidor {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xl);
+  gap: var(--spacing-size-3xl);
 }
 
 .gestion-servidor__barra-superior {
@@ -13,18 +13,18 @@
 .gestion-servidor__barra-busqueda {
   display: flex;
   align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
 }
 
 .gestion-servidor__busqueda {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  padding: 0.5rem var(--spacing-m);
+  gap: var(--spacing-size-s);
+  padding: 0.5rem var(--spacing-size-l);
   background: rgba(240, 236, 226, 0.03);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radius-s);
-  color: var(--color-texto-apagado);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-m);
+  color: var(--texto-apagado);
   font-size: var(--font-size-sm);
   min-width: 12rem;
 }
@@ -32,23 +32,23 @@
 .gestion-servidor__busqueda__input {
   background: transparent;
   border: none;
-  color: var(--color-texto-claro);
-  font-family: var(--font-familia);
+  color: var(--texto-claro);
+  font-family: var(--font-primary);
   font-size: var(--font-size-sm);
   outline: none;
   width: 100%;
 }
 
 .gestion-servidor__busqueda__input::placeholder {
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .gestion-servidor__barra-iconos {
   display: flex;
   align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
   font-size: var(--font-size-base);
-  color: var(--color-texto-medio);
+  color: var(--texto-medio);
 }
 
 .gestion-servidor__cabecera {
@@ -60,14 +60,14 @@
 .gestion-servidor__cabecera__info {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-size-s);
 }
 
 .gestion-servidor__nombre {
-  font-family: var(--font-familia-titulos);
+  font-family: var(--font-secondary);
   font-size: 2rem;
-  font-weight: 800;
-  color: var(--color-texto-claro);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--texto-claro);
 }
 
 .gestion-servidor__badge {
@@ -76,27 +76,27 @@
   gap: 0.375rem;
   padding: 0.25rem 0.75rem;
   font-size: var(--font-size-xs);
-  font-weight: 700;
-  border-radius: 9999px;
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-full);
   width: fit-content;
 }
 
 .gestion-servidor__badge--online {
   background: rgba(34, 197, 94, 0.1);
-  color: var(--color-exito);
+  color: var(--verde-normal);
 }
 
 .gestion-servidor__badge__punto {
   width: 0.375rem;
   height: 0.375rem;
   border-radius: 50%;
-  background-color: var(--color-exito);
+  background-color: var(--verde-normal);
 }
 
 .gestion-servidor__detalles {
   display: flex;
   align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
 }
 
 .gestion-servidor__detalle {
@@ -104,18 +104,18 @@
   align-items: center;
   gap: 0.25rem;
   font-size: var(--font-size-sm);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .gestion-servidor__cabecera__acciones {
   display: flex;
   align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
 }
 
 .gestion-servidor__metricas {
   display: flex;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
 }
 
 .gestion-servidor__metricas__item {
@@ -125,49 +125,49 @@
 .gestion-servidor__aplicaciones {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
 }
 
 .gestion-servidor__aplicaciones__cabecera {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-l);
+  padding: var(--spacing-size-2xl);
   background: rgba(240, 236, 226, 0.03);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radius-m) var(--radius-m) 0 0;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
 }
 
 .gestion-servidor__aplicaciones__titulo {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  font-family: var(--font-familia-titulos);
+  gap: var(--spacing-size-s);
+  font-family: var(--font-secondary);
   font-size: var(--font-size-lg);
-  font-weight: 700;
-  color: var(--color-texto-claro);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
 }
 
 .gestion-servidor__aplicaciones__conteo {
   font-size: var(--font-size-sm);
-  font-weight: 400;
-  color: var(--color-texto-apagado);
+  font-weight: var(--font-weight-normal);
+  color: var(--texto-apagado);
 }
 
 .gestion-servidor__app {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: var(--spacing-l);
+  padding: var(--spacing-size-2xl);
   background: rgba(240, 236, 226, 0.02);
-  border: 1px solid var(--color-borde-suave);
-  border-radius: var(--radius-m);
+  border: 1px solid var(--borde-suave);
+  border-radius: var(--radius-l);
 }
 
 .gestion-servidor__app__info {
   display: flex;
   align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
 }
 
 .gestion-servidor__app__icono {
@@ -176,25 +176,25 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-m);
   font-size: var(--font-size-xs);
-  font-weight: 800;
+  font-weight: var(--font-weight-extrabold);
   flex-shrink: 0;
 }
 
 .gestion-servidor__app__icono--amarillo {
   background: rgba(245, 214, 35, 0.15);
-  color: var(--color-primario);
+  color: var(--amarillo-normal);
 }
 
 .gestion-servidor__app__icono--cyan {
   background: rgba(0, 212, 255, 0.15);
-  color: var(--color-cyan);
+  color: var(--cyan-normal);
 }
 
-.gestion-servidor__app__icono--morado {
-  background: rgba(139, 92, 246, 0.15);
-  color: var(--color-morado);
+.gestion-servidor__app__icono--teal {
+  background: rgba(45, 175, 140, 0.15);
+  color: var(--teal-normal);
 }
 
 .gestion-servidor__app__detalle {
@@ -205,13 +205,13 @@
 
 .gestion-servidor__app__nombre {
   font-size: var(--font-size-base);
-  font-weight: 700;
-  color: var(--color-texto-claro);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
 }
 
 .gestion-servidor__app__meta {
   font-size: var(--font-size-sm);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .gestion-servidor__app__badge {
@@ -219,38 +219,38 @@
   align-items: center;
   padding: 0.25rem 0.625rem;
   font-size: var(--font-size-xs);
-  font-weight: 700;
-  border-radius: 9999px;
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-full);
 }
 
 .gestion-servidor__app__badge--ok {
   background: rgba(34, 197, 94, 0.1);
-  color: var(--color-exito);
+  color: var(--verde-normal);
 }
 
 .gestion-servidor__app__acciones {
   display: flex;
   align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
 }
 
 .gestion-servidor__app__version {
   font-size: var(--font-size-sm);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
   padding: 0.25rem 0.5rem;
   background: rgba(240, 236, 226, 0.05);
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-m);
 }
 
 .gestion-servidor__app__btn {
   font-size: var(--font-size-base);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: color var(--duration-base) ease;
 }
 
 .gestion-servidor__app__btn:hover {
-  color: var(--color-texto-claro);
+  color: var(--texto-claro);
 }
 
 .gestion-servidor__app__btn--peligro {
@@ -258,25 +258,25 @@
 }
 
 .gestion-servidor__app__btn--peligro:hover {
-  color: var(--color-error);
+  color: var(--rojo-normal);
 }
 
 .gestion-servidor__config-rapida {
   display: flex;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
 }
 
 .gestion-servidor__config-card {
   display: flex;
   align-items: center;
-  gap: var(--spacing-m);
+  gap: var(--spacing-size-l);
   flex: 1;
-  padding: var(--spacing-l);
+  padding: var(--spacing-size-2xl);
   background: rgba(240, 236, 226, 0.03);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radius-m);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l);
   cursor: pointer;
-  transition: border-color 0.2s ease;
+  transition: border-color var(--duration-base) ease;
 }
 
 .gestion-servidor__config-card:hover {
@@ -289,19 +289,19 @@
   justify-content: center;
   width: 2.5rem;
   height: 2.5rem;
-  border-radius: var(--radius-s);
+  border-radius: var(--radius-m);
   font-size: var(--font-size-base);
   flex-shrink: 0;
 }
 
 .gestion-servidor__config-card__icono--verde {
   background: rgba(34, 197, 94, 0.15);
-  color: var(--color-exito);
+  color: var(--verde-normal);
 }
 
 .gestion-servidor__config-card__icono--amarillo {
   background: rgba(245, 214, 35, 0.15);
-  color: var(--color-primario);
+  color: var(--amarillo-normal);
 }
 
 .gestion-servidor__config-card__info {
@@ -313,26 +313,26 @@
 
 .gestion-servidor__config-card__titulo {
   font-size: var(--font-size-md);
-  font-weight: 700;
-  color: var(--color-texto-claro);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
 }
 
 .gestion-servidor__config-card__desc {
   font-size: var(--font-size-sm);
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .gestion-servidor__config-card__flecha {
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
   font-size: var(--font-size-sm);
 }
 
 .gestion-servidor__inferior {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xl);
-  padding: var(--spacing-l);
-  border-top: 1px solid var(--color-borde);
+  gap: var(--spacing-size-3xl);
+  padding: var(--spacing-size-2xl);
+  border-top: 1px solid var(--borde-normal);
 }
 
 .gestion-servidor__inferior__item {
@@ -347,16 +347,16 @@
 
 .gestion-servidor__inferior__etiqueta {
   font-size: var(--font-size-xs);
-  font-weight: 700;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: var(--color-texto-apagado);
+  color: var(--texto-apagado);
 }
 
 .gestion-servidor__inferior__valor {
   font-size: var(--font-size-base);
-  font-weight: 600;
-  color: var(--color-texto-claro);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
 }
 
 .gestion-servidor__inferior__badge {
@@ -365,16 +365,16 @@
   gap: 0.375rem;
   padding: 0.5rem 1rem;
   background: rgba(240, 236, 226, 0.03);
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radius-s);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-m);
   font-size: var(--font-size-sm);
-  font-weight: 600;
-  color: var(--color-exito);
+  font-weight: var(--font-weight-semibold);
+  color: var(--verde-normal);
 }
 
 .gestion-servidor__inferior__badge__punto {
   width: 0.375rem;
   height: 0.375rem;
   border-radius: 50%;
-  background-color: var(--color-exito);
+  background-color: var(--verde-normal);
 }

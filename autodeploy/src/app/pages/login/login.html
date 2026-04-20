@@ -2,7 +2,16 @@
   <section class="pagina-login__tarjeta">
 
     <header class="pagina-login__cabecera">
-      <span class="pagina-login__logo">AutoDeployService</span>
+      <a class="pagina-login__volver" routerLink="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M19 12H5M5 12l7 7M5 12l7-7" />
+        </svg>
+        Volver
+      </a>
+      <a class="pagina-login__logo" routerLink="/">
+        <img class="pagina-login__logo__imagen" src="logo.png" alt="">
+        <span class="pagina-login__logo__texto">Auto<span class="pagina-login__logo__texto--acento">Deploy</span></span>
+      </a>
       <h1 class="pagina-login__titulo">Iniciar sesión</h1>
       <p class="pagina-login__subtitulo">Accede a tu panel de control</p>
     </header>
@@ -10,7 +19,7 @@
     <form class="pagina-login__formulario">
 
       @if (mensajeDeErrorVisible()) {
-        <p class="pagina-login__error">Email o contraseña incorrectos</p>
+      <p class="pagina-login__error">Email o contraseña incorrectos</p>
       }
 
       <section class="campo">
@@ -21,14 +30,17 @@
       <section class="campo">
         <label class="campo__etiqueta" for="password">Contraseña</label>
         <section class="pagina-login__campo-password">
-          <input class="campo__input" id="password" [type]="passwordEsVisible() ? 'text' : 'password'" placeholder="••••••••" autocomplete="current-password">
-          <button class="pagina-login__boton-ver" type="button" (click)="alternarVisibilidadPassword()">
-            {{ passwordEsVisible() ? 'Ocultar' : 'Ver' }}
+          <input class="campo__input" id="password" [type]="passwordEsVisible() ? 'text' : 'password'"
+            placeholder="••••••••" autocomplete="current-password">
+          <button class="pagina-login__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
+            [attr.aria-label]="passwordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
+            <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
           </button>
         </section>
       </section>
 
-      <button class="boton--primario pagina-login__boton-enviar" type="button" (click)="iniciarSesion()">Iniciar sesión</button>
+      <button class="boton--primario pagina-login__boton-enviar" type="button" (click)="iniciarSesion()">Iniciar
+        sesión</button>
 
     </form>
 

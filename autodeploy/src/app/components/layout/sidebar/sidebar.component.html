@@ -1,7 +1,7 @@
 <aside class="barra-lateral">
-  <a class="barra-lateral__logo" routerLink="/app/dashboard">
-    <i class="fa-solid fa-bolt barra-lateral__logo__icono"></i>
-    <span class="barra-lateral__logo__texto">AutoDeployService</span>
+  <a class="barra-lateral__logo" routerLink="/">
+    <img class="barra-lateral__logo__imagen" src="logo.png" alt="">
+    <span class="barra-lateral__logo__texto">Auto<span class="barra-lateral__logo__texto--acento">Deploy</span></span>
   </a>
 
   <nav class="barra-lateral__navegacion">
@@ -9,13 +9,15 @@
       <span class="barra-lateral__seccion__titulo">Main Menu</span>
       <ul class="barra-lateral__lista">
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/dashboard" routerLinkActive="barra-lateral__enlace--activo" [routerLinkActiveOptions]="{ exact: true }">
+          <a class="barra-lateral__enlace" routerLink="/app/dashboard" routerLinkActive="barra-lateral__enlace--activo"
+            [routerLinkActiveOptions]="{ exact: true }">
             <i class="fa-solid fa-table-columns barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Dashboard</span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/servidor/vps-alpha-01" routerLinkActive="barra-lateral__enlace--activo">
+          <a class="barra-lateral__enlace" routerLink="/app/servidor/vps-alpha-01"
+            routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-server barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Servers</span>
           </a>
@@ -27,10 +29,10 @@
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" href="#">
+          <button class="barra-lateral__enlace">
             <i class="fa-solid fa-credit-card barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Billing</span>
-          </a>
+          </button>
         </li>
       </ul>
     </section>
@@ -39,34 +41,35 @@
       <span class="barra-lateral__seccion__titulo">Server Actions</span>
       <ul class="barra-lateral__lista">
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/nuevo-despliegue" routerLinkActive="barra-lateral__enlace--activo">
+          <a class="barra-lateral__enlace" routerLink="/app/nuevo-despliegue"
+            routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-grid-2 barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Applications</span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" href="#">
+          <button class="barra-lateral__enlace">
             <i class="fa-solid fa-globe barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Networking & SSL</span>
-          </a>
+          </button>
         </li>
         <li>
-          <a class="barra-lateral__enlace" href="#">
+          <button class="barra-lateral__enlace">
             <i class="fa-solid fa-shield-halved barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Firewall</span>
-          </a>
+          </button>
         </li>
         <li>
-          <a class="barra-lateral__enlace" href="#">
+          <button class="barra-lateral__enlace">
             <i class="fa-solid fa-hard-drive barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Backups</span>
-          </a>
+          </button>
         </li>
         <li>
-          <a class="barra-lateral__enlace" href="#">
+          <button class="barra-lateral__enlace">
             <i class="fa-solid fa-gear barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Settings</span>
-          </a>
+          </button>
         </li>
       </ul>
     </section>
@@ -80,8 +83,8 @@
     <section class="barra-lateral__usuario">
       <span class="barra-lateral__usuario__avatar"></span>
       <section class="barra-lateral__usuario__info">
-        <span class="barra-lateral__usuario__nombre">Alex Rivera</span>
-        <span class="barra-lateral__usuario__plan">PRO ACCOUNT</span>
+        <span class="barra-lateral__usuario__nombre">My Account</span>
+        <span class="barra-lateral__usuario__plan">—</span>
       </section>
     </section>
   </footer>

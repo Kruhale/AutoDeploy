@@ -1,5 +1,6 @@
-import { Component, signal } from "@angular/core";
+import { Component } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { AuthService } from "../../../services/auth.service";
 
 @Component({
   selector: "app-header",
@@ -8,9 +9,5 @@ import { RouterLink } from "@angular/router";
   styleUrl: "./header.scss",
 })
 export class Header {
-  logotipoVisible = signal(false);
-
-  mostrarLogotipo(): void {
-    this.logotipoVisible.set(true);
-  }
+  constructor(public authService: AuthService) {}
 }

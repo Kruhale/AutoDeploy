@@ -2,7 +2,16 @@
   <section class="pagina-registro__tarjeta">
 
     <header class="pagina-registro__cabecera">
-      <span class="pagina-registro__logo">AutoDeployService</span>
+      <a class="pagina-registro__volver" routerLink="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M19 12H5M5 12l7 7M5 12l7-7" />
+        </svg>
+        Volver
+      </a>
+      <a class="pagina-registro__logo" routerLink="/">
+        <img class="pagina-registro__logo__imagen" src="logo.png" alt="">
+        <span class="pagina-registro__logo__texto">Auto<span class="pagina-registro__logo__texto--acento">Deploy</span></span>
+      </a>
       <h1 class="pagina-registro__titulo">Crear cuenta</h1>
       <p class="pagina-registro__subtitulo">Empieza a gestionar tu infraestructura</p>
     </header>
@@ -10,7 +19,7 @@
     <form class="pagina-registro__formulario">
 
       @if (mensajeDeErrorVisible()) {
-        <p class="pagina-registro__error">Ha ocurrido un error. Inténtalo de nuevo.</p>
+      <p class="pagina-registro__error">Ha ocurrido un error. Inténtalo de nuevo.</p>
       }
 
       <section class="campo">
@@ -26,9 +35,11 @@
       <section class="campo">
         <label class="campo__etiqueta" for="password">Contraseña</label>
         <section class="pagina-registro__campo-password">
-          <input class="campo__input" id="password" [type]="passwordEsVisible() ? 'text' : 'password'" placeholder="••••••••" autocomplete="new-password">
-          <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()">
-            {{ passwordEsVisible() ? 'Ocultar' : 'Ver' }}
+          <input class="campo__input" id="password" [type]="passwordEsVisible() ? 'text' : 'password'"
+            placeholder="••••••••" autocomplete="new-password">
+          <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
+            [attr.aria-label]="passwordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
+            <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
           </button>
         </section>
       </section>
@@ -36,14 +47,17 @@
       <section class="campo">
         <label class="campo__etiqueta" for="confirmar-password">Confirmar contraseña</label>
         <section class="pagina-registro__campo-password">
-          <input class="campo__input" id="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'" placeholder="••••••••" autocomplete="new-password">
-          <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadConfirmPassword()">
-            {{ confirmPasswordEsVisible() ? 'Ocultar' : 'Ver' }}
+          <input class="campo__input" id="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'"
+            placeholder="••••••••" autocomplete="new-password">
+          <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadConfirmPassword()"
+            [attr.aria-label]="confirmPasswordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
+            <i [class]="confirmPasswordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
           </button>
         </section>
       </section>
 
-      <button class="boton--primario pagina-registro__boton-enviar" type="button" (click)="crearCuenta()">Crear cuenta</button>
+      <button class="boton--primario pagina-registro__boton-enviar" type="button" (click)="crearCuenta()">Crear
+        cuenta</button>
 
     </form>
 

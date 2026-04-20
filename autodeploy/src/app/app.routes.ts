@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -21,6 +22,7 @@ export const routes: Routes = [
   },
   {
     path: 'app',
+    canActivate: [authGuard],
     loadComponent: () => import('./components/layout/app-layout/app-layout').then(modulo => modulo.AppLayout),
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -43,6 +45,10 @@ export const routes: Routes = [
       {
         path: 'onboarding',
         loadComponent: () => import('./pages/onboarding/onboarding').then(modulo => modulo.Onboarding),
+      },
+      {
+        path: 'cuenta',
+        loadComponent: () => import('./pages/cuenta/cuenta').then(modulo => modulo.Cuenta),
       }
     ]
   }

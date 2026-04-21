@@ -13,11 +13,11 @@
   <section class="panel-principal__cuerpo">
     <section class="panel-principal__centro">
 
-      <section class="panel-principal__estadisticas">
-        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="CPU Usage" valor="24.8%" icono="fa-solid fa-microchip" subtexto="↑ +2.4%" variante="primario"></app-tarjeta-estadistica>
-        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="RAM Used" valor="12.2 GB" icono="fa-solid fa-memory" subtexto="● Stable" variante="morado"></app-tarjeta-estadistica>
-        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="Uptime" valor="42" icono="fa-solid fa-arrow-up-from-bracket" subtexto="● 100% Up" variante="cyan"></app-tarjeta-estadistica>
-        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="Sync Tasks" valor="3" icono="fa-solid fa-rotate" subtexto="● Pending" variante="advertencia"></app-tarjeta-estadistica>
+      <section class="panel-principal__estadisticas animar-hijos">
+        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="CPU Usage" valor="--" icono="fa-solid fa-microchip" subtexto="No data" variante="primario"></app-tarjeta-estadistica>
+        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="RAM Used" valor="--" icono="fa-solid fa-memory" subtexto="No data" variante="teal"></app-tarjeta-estadistica>
+        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="Uptime" valor="--" icono="fa-solid fa-arrow-up-from-bracket" subtexto="No data" variante="cyan"></app-tarjeta-estadistica>
+        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="Sync Tasks" valor="--" icono="fa-solid fa-rotate" subtexto="No data" variante="advertencia"></app-tarjeta-estadistica>
       </section>
 
       <section class="panel-principal__servidores">
@@ -27,7 +27,10 @@
             Connected VPS Servers
           </h2>
         </header>
-        <section class="panel-principal__servidores__lista">
+        <section class="panel-principal__servidores__lista animar-hijos">
+          @if (listaDeServidores().length === 0) {
+            <p class="panel-principal__vacio">No servers connected yet.</p>
+          }
           @for (servidor of listaDeServidores(); track servidor.id) {
             <article class="tarjeta-servidor">
               <header class="tarjeta-servidor__cabecera">
@@ -79,6 +82,11 @@
             </tr>
           </thead>
           <tbody>
+            @if (listaDeSitios().length === 0) {
+              <tr>
+                <td class="tabla-sitios__td tabla-sitios__td--vacio" colspan="4">No sites deployed yet.</td>
+              </tr>
+            }
             @for (sitio of listaDeSitios(); track sitio.dominio) {
               <tr class="tabla-sitios__fila">
                 <td class="tabla-sitios__td">
@@ -98,7 +106,10 @@
     <aside class="panel-principal__lateral">
       <section class="actividad-reciente">
         <h3 class="actividad-reciente__titulo">Recent Activity</h3>
-        <ul class="actividad-reciente__lista">
+        @if (listaDeActividad().length === 0) {
+          <p class="actividad-reciente__vacio">No recent activity.</p>
+        }
+        <ul class="actividad-reciente__lista animar-hijos">
           @for (evento of listaDeActividad(); track evento.texto) {
             <li class="actividad-reciente__item">
               <span class="actividad-reciente__icono actividad-reciente__icono--{{ evento.colorIcono }}"><i [class]="evento.icono"></i></span>
@@ -115,7 +126,7 @@
         <h3 class="panel-principal__stats-rapidos__titulo">Quick Stats</h3>
         <section class="panel-principal__stats-rapidos__card">
           <span class="panel-principal__stats-rapidos__label">Monthly Traffic</span>
-          <span class="panel-principal__stats-rapidos__valor">12.4 <small>M</small></span>
+          <span class="panel-principal__stats-rapidos__valor">-- <small></small></span>
           <section class="panel-principal__stats-rapidos__grafico">
             @for (altura of alturasDelGrafico; track $index; let esUltima = $last) {
               <span class="panel-principal__stats-rapidos__barra" [class.panel-principal__stats-rapidos__barra--actual]="esUltima" [style.height.%]="altura"></span>

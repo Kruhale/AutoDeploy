@@ -5,10 +5,24 @@ import { MigasPan } from '../../components/shared/migas-pan/migas-pan';
 interface AplicacionHospedada {
   icono: string;
   textoIcono: string;
-  colorIcono: 'amarillo' | 'cyan' | 'morado';
+  colorIcono: 'amarillo' | 'cyan' | 'teal';
   nombre: string;
   meta: string;
   version: string;
+}
+
+interface DatosServidor {
+  nombre: string;
+  estado: 'online' | 'offline' | 'warning';
+  ip: string;
+  ubicacion: string;
+  sistemaOperativo: string;
+  cargaCpu: number;
+  ramUsada: number;
+  ramTotal: number;
+  anchoBanda: number;
+  ultimoBackup: string;
+  tiempoActivo: string;
 }
 
 @Component({
@@ -18,9 +32,6 @@ interface AplicacionHospedada {
   styleUrl: './gestion-servidor.scss'
 })
 export class GestionServidor {
-  listaDeAplicaciones = signal<AplicacionHospedada[]>([
-    { icono: '', textoIcono: 'JS', colorIcono: 'amarillo', nombre: 'main-api-service', meta: 'api.autodeploy.sh · Node.js v18.x', version: 'v1.2.4' },
-    { icono: '', textoIcono: 'HTML', colorIcono: 'cyan', nombre: 'client-dashboard', meta: 'app.autodeploy.sh · React / Nginx', version: 'v2.0.1' },
-    { icono: 'fa-solid fa-globe', textoIcono: '', colorIcono: 'morado', nombre: 'marketing-site', meta: 'autodeploy.sh · Static / CDN', version: 'v1.0.0' },
-  ]);
+  servidor = signal<DatosServidor | null>(null);
+  listaDeAplicaciones = signal<AplicacionHospedada[]>([]);
 }

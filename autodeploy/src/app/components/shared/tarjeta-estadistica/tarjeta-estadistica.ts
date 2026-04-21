@@ -11,6 +11,6 @@ export class TarjetaEstadistica {
   valor = input.required<string>();
   icono = input.required<string>();
   subtexto = input<string>('');
-  variante = input<'primario' | 'exito' | 'info' | 'morado' | 'cyan' | 'advertencia'>('primario');
+  variante = input<'primario' | 'exito' | 'info' | 'teal' | 'cyan' | 'advertencia'>('primario');
   barraProgreso = input<number>(0);
 }

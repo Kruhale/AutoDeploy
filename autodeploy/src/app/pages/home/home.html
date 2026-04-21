@@ -1,0 +1,270 @@
+<main class="landing">
+
+
+  <!-- PORTADA: capitulo cinematografico fijado (patron ponder.ai). El caos
+       de la infraestructura flota en profundidad alrededor del titular; el
+       scroll lo ordena en el panel mientras el titular cambia con blur. -->
+  <section class="portada" #capituloPortada>
+
+    <!-- Aurora ambar: la atmosfera del capitulo respira muy despacio -->
+    <span class="portada__aurora" aria-hidden="true"></span>
+
+    <!-- Constelacion de fichas del producto flotando en profundidad -->
+    <ul class="portada__constelacion" aria-hidden="true">
+      <li class="portada__ficha portada__ficha--lejos" data-ficha="compose">
+        <span class="portada__ficha__nombre">docker-compose.yml</span>
+        <span class="portada__ficha__linea">services:</span>
+        <span class="portada__ficha__linea">  web: &#123; image: miapp &#125;</span>
+      </li>
+      <li class="portada__ficha" data-ficha="dominio">
+        <span class="portada__ficha__nombre">miapp.tudominio.dev</span>
+        <span class="portada__ficha__linea portada__ficha__linea--live"><span class="portada__ficha__punto"></span> live · ssl</span>
+      </li>
+      <li class="portada__ficha portada__ficha--medio" data-ficha="nginx">
+        <span class="portada__ficha__nombre">nginx.conf</span>
+        <span class="portada__ficha__linea">listen 443 ssl http2;</span>
+      </li>
+      <li class="portada__ficha portada__ficha--lejos" data-ficha="log">
+        <span class="portada__ficha__nombre">deploy.log</span>
+        <span class="portada__ficha__linea">[09:41] deploy #128 · ok</span>
+      </li>
+      <li class="portada__ficha portada__ficha--medio" data-ficha="metricas">
+        <span class="portada__ficha__nombre">métricas</span>
+        <svg class="portada__ficha__grafica" viewBox="0 0 80 20" preserveAspectRatio="none"><polyline points="0,14 12,10 24,12 36,6 48,9 60,4 72,7 80,3" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </li>
+      <li class="portada__ficha" data-ficha="ssh">
+        <span class="portada__ficha__nombre">sesión ssh</span>
+        <span class="portada__ficha__linea">$ ssh root&#64;203.0.113.10</span>
+      </li>
+      <li class="portada__ficha portada__ficha--medio" data-ficha="backup">
+        <span class="portada__ficha__nombre">backups</span>
+        <span class="portada__ficha__linea">backup-2026-07-21.tar.gz</span>
+      </li>
+      <li class="portada__ficha portada__ficha--lejos" data-ficha="certificado">
+        <span class="portada__ficha__nombre">certificado ssl</span>
+        <span class="portada__ficha__linea">renovado · válido 89 días</span>
+      </li>
+    </ul>
+
+    <!-- Titulares apilados del capitulo: el scroll los intercambia con blur -->
+    <header class="portada__contenido">
+      <h1 class="portada__titulo" #tituloPortada>
+        <span class="portada__titulo__linea">
+          <span class="portada__titulo__texto">{{ 'home.hero.tituloLinea1' | translate }}</span>
+        </span>
+        <span class="portada__titulo__linea">
+          <span class="portada__titulo__texto portada__titulo__texto--acento">{{ 'home.hero.tituloLinea2' | translate }}</span>
+        </span>
+      </h1>
+      <p class="portada__titulo portada__titulo--capitulo" data-capitulo="2" aria-hidden="true">
+        <span class="portada__titulo__texto">{{ 'home.hero.cap2Linea1' | translate }}</span>
+        <span class="portada__titulo__texto portada__titulo__texto--acento">{{ 'home.hero.cap2Linea2' | translate }}</span>
+      </p>
+      <p class="portada__titulo portada__titulo--capitulo" data-capitulo="3" aria-hidden="true">
+        <span class="portada__titulo__texto">{{ 'home.hero.cap3Linea1' | translate }}</span>
+        <span class="portada__titulo__texto portada__titulo__texto--acento">{{ 'home.hero.cap3Linea2' | translate }}</span>
+      </p>
+    </header>
+
+    <p class="portada__descripcion">{{ 'home.hero.descripcion' | translate }}</p>
+
+    <nav class="portada__acciones">
+      <a class="portada__cta" botonMagnetico [routerLink]="rutaEmpezar()">
+        <span class="portada__cta__texto">
+          <span class="portada__cta__capa">{{ 'home.hero.ctaPrimario' | translate }}</span>
+          <span class="portada__cta__capa portada__cta__capa--doble" aria-hidden="true">{{ 'home.hero.ctaPrimario' | translate }}</span>
+        </span>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </a>
+      <a class="portada__enlace" href="#como-funciona">{{ 'home.hero.ctaSecundario' | translate }}</a>
+    </nav>
+
+    <!-- La pieza central del capitulo: el panel del producto, en vivo -->
+    <app-panel-en-vivo class="portada__panel"></app-panel-en-vivo>
+
+    <p class="portada__cue" aria-hidden="true">
+      <span class="portada__cue__scroll">{{ 'home.hero.cue' | translate }} <span class="portada__cue__flecha">↓</span></span>
+      <span class="portada__cue__destino">01 / 05</span>
+    </p>
+  </section>
+
+  <!-- 01 · MANIFIESTO -->
+  <section class="manifiesto" id="manifiesto">
+    <h2 class="manifiesto__eyebrow">— 01 · {{ 'home.manifiesto.titulo' | translate }}</h2>
+    <p class="manifiesto__texto" #textoManifiesto>{{ 'home.manifiesto.texto' | translate }}</p>
+  </section>
+
+  <!-- Cinta tecnica: el vocabulario del oficio desfilando entre capitulos -->
+  <aside class="cinta" aria-hidden="true">
+    <p class="cinta__pista">
+      <span class="cinta__grupo">git push · docker build · nginx + ssl · dns · backups · métricas en vivo · terminal ssh · deploy #128 ok ·</span>
+      <span class="cinta__grupo">git push · docker build · nginx + ssl · dns · backups · métricas en vivo · terminal ssh · deploy #128 ok ·</span>
+    </p>
+  </aside>
+
+  <!-- 02 · COMO FUNCIONA -->
+  <section class="proceso" id="como-funciona" tabindex="-1">
+    <header class="proceso__cabecera">
+      <p class="proceso__eyebrow">— 02 · {{ 'home.comoFunciona.titulo' | translate }}</p>
+      <h2 class="proceso__titulo">{{ 'home.comoFunciona.descripcion' | translate }}</h2>
+    </header>
+
+    <ol class="proceso__pasos">
+      <li class="proceso__paso">
+        <span class="proceso__paso__numero">01</span>
+        <section class="proceso__paso__contenido">
+          <h3 class="proceso__paso__titulo">{{ 'home.comoFunciona.paso1.titulo' | translate }}</h3>
+          <p class="proceso__paso__descripcion">{{ 'home.comoFunciona.paso1.descripcion' | translate }}</p>
+        </section>
+      </li>
+      <li class="proceso__paso">
+        <span class="proceso__paso__numero">02</span>
+        <section class="proceso__paso__contenido">
+          <h3 class="proceso__paso__titulo">{{ 'home.comoFunciona.paso2.titulo' | translate }}</h3>
+          <p class="proceso__paso__descripcion">{{ 'home.comoFunciona.paso2.descripcion' | translate }}</p>
+        </section>
+      </li>
+      <li class="proceso__paso">
+        <span class="proceso__paso__numero">03</span>
+        <section class="proceso__paso__contenido">
+          <h3 class="proceso__paso__titulo">{{ 'home.comoFunciona.paso3.titulo' | translate }}</h3>
+          <p class="proceso__paso__descripcion">{{ 'home.comoFunciona.paso3.descripcion' | translate }}</p>
+        </section>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 03 · CAPACIDADES -->
+  <section class="capacidades" id="features">
+    <h2 class="capacidades__eyebrow">— 03 · {{ 'home.funcionalidades.titulo' | translate }}</h2>
+
+    <ul class="capacidades__lista">
+      <li class="capacidades__fila">
+        <span class="capacidades__fila__numero">01</span>
+        <h3 class="capacidades__fila__titulo">{{ 'home.funcionalidades.item1.titulo' | translate }}</h3>
+        <p class="capacidades__fila__descripcion">{{ 'home.funcionalidades.item1.descripcion' | translate }}</p>
+      </li>
+      <li class="capacidades__fila">
+        <span class="capacidades__fila__numero">02</span>
+        <h3 class="capacidades__fila__titulo">{{ 'home.funcionalidades.item2.titulo' | translate }}</h3>
+        <p class="capacidades__fila__descripcion">{{ 'home.funcionalidades.item2.descripcion' | translate }}</p>
+      </li>
+      <li class="capacidades__fila">
+        <span class="capacidades__fila__numero">03</span>
+        <h3 class="capacidades__fila__titulo">{{ 'home.funcionalidades.item3.titulo' | translate }}</h3>
+        <p class="capacidades__fila__descripcion">{{ 'home.funcionalidades.item3.descripcion' | translate }}</p>
+      </li>
+      <li class="capacidades__fila">
+        <span class="capacidades__fila__numero">04</span>
+        <h3 class="capacidades__fila__titulo">{{ 'home.funcionalidades.item4.titulo' | translate }}</h3>
+        <p class="capacidades__fila__descripcion">{{ 'home.funcionalidades.item4.descripcion' | translate }}</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 04 · CIFRAS -->
+  <section class="cifras" id="cifras">
+    <h2 class="cifras__eyebrow">— 04 · {{ 'home.stats.eyebrow' | translate }}</h2>
+
+    <section class="cifras__lista">
+      <article class="cifras__item">
+        <span class="cifras__numero"><span [contadorAnimado]="2400">0</span><span class="cifras__sufijo">+</span></span>
+        <span class="cifras__etiqueta">{{ 'home.stats.despliegues' | translate }}</span>
+      </article>
+      <article class="cifras__item">
+        <span class="cifras__numero"><span [contadorAnimado]="99.9" [decimales]="1">0</span><span class="cifras__sufijo">%</span></span>
+        <span class="cifras__etiqueta">{{ 'home.stats.uptime' | translate }}</span>
+      </article>
+      <article class="cifras__item">
+        <span class="cifras__numero" [contadorAnimado]="6">0</span>
+        <span class="cifras__etiqueta">{{ 'home.stats.servicios' | translate }}</span>
+      </article>
+    </section>
+  </section>
+
+  <!-- 05 · PLANES -->
+  <section class="planes" id="pricing">
+    <header class="planes__cabecera">
+      <p class="planes__eyebrow">— 05 · {{ 'home.precios.titulo' | translate }}</p>
+      <h2 class="planes__titulo">{{ 'home.precios.descripcion' | translate }}</h2>
+    </header>
+
+    <section class="planes__columnas">
+
+      <article class="planes__plan">
+        <p class="planes__plan__nombre">{{ 'home.precios.free.nombre' | translate }}</p>
+        <p class="planes__plan__precio">{{ 'home.precios.free.precio' | translate }}<span class="planes__plan__periodo">{{ 'home.precios.periodo' | translate }}</span></p>
+        <p class="planes__plan__descripcion">{{ 'home.precios.free.descripcion' | translate }}</p>
+        <ul class="planes__plan__lista">
+          <li class="planes__plan__item">{{ 'home.precios.free.features.servidores' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.free.features.despliegues' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.free.features.monitorizacion' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.free.features.soporte' | translate }}</li>
+        </ul>
+        @if (planActivo() === "free") {
+          <button class="planes__plan__cta planes__plan__cta--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+        } @else {
+          <a class="planes__plan__cta" [routerLink]="rutaEmpezar()">{{ 'home.precios.free.cta' | translate }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        }
+      </article>
+
+      <article class="planes__plan planes__plan--destacado">
+        <p class="planes__plan__nombre">{{ 'home.precios.pro.nombre' | translate }} <span class="planes__plan__badge">{{ 'home.precios.pro.badge' | translate }}</span></p>
+        <p class="planes__plan__precio">{{ 'home.precios.pro.precio' | translate }}<span class="planes__plan__periodo">{{ 'home.precios.periodo' | translate }}</span></p>
+        <p class="planes__plan__descripcion">{{ 'home.precios.pro.descripcion' | translate }}</p>
+        <ul class="planes__plan__lista">
+          <li class="planes__plan__item">{{ 'home.precios.pro.features.servidores' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.pro.features.despliegues' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.pro.features.ia' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.pro.features.dominios' | translate }}</li>
+        </ul>
+        @if (planActivo() === "pro") {
+          <button class="planes__plan__cta planes__plan__cta--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+        } @else {
+          <a class="planes__plan__cta" routerLink="/app/pago" [queryParams]="{ plan: 'pro' }">{{ 'home.precios.pro.cta' | translate }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        }
+      </article>
+
+      <article class="planes__plan">
+        <p class="planes__plan__nombre">{{ 'home.precios.business.nombre' | translate }}</p>
+        <p class="planes__plan__precio">{{ 'home.precios.business.precio' | translate }}<span class="planes__plan__periodo">{{ 'home.precios.periodo' | translate }}</span></p>
+        <p class="planes__plan__descripcion">{{ 'home.precios.business.descripcion' | translate }}</p>
+        <ul class="planes__plan__lista">
+          <li class="planes__plan__item">{{ 'home.precios.business.features.servidores' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.business.features.despliegues' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.business.features.ia' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.business.features.equipo' | translate }}</li>
+        </ul>
+        @if (planActivo() === "business") {
+          <button class="planes__plan__cta planes__plan__cta--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+        } @else {
+          <a class="planes__plan__cta" routerLink="/app/pago" [queryParams]="{ plan: 'business' }">{{ 'home.precios.business.cta' | translate }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+        }
+      </article>
+
+    </section>
+  </section>
+
+  <!-- CIERRE -->
+  <section class="cierre" id="cierre">
+    <!-- Ecos del hero: la infraestructura sigue viva, ya ordenada -->
+    <span class="cierre__eco cierre__eco--izquierda" aria-hidden="true">deploy #129 · ok</span>
+    <span class="cierre__eco cierre__eco--derecha" aria-hidden="true">ssl · renovado</span>
+    <h2 class="cierre__titulo">{{ 'home.cta.titulo' | translate }}</h2>
+    <p class="cierre__descripcion">{{ 'home.cta.descripcion' | translate }}</p>
+    <a class="cierre__cta" botonMagnetico [routerLink]="rutaEmpezar()">
+      <span class="cierre__cta__texto">
+        <span class="cierre__cta__capa">{{ 'home.cta.boton' | translate }}</span>
+        <span class="cierre__cta__capa cierre__cta__capa--doble" aria-hidden="true">{{ 'home.cta.boton' | translate }}</span>
+      </span>
+      <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+    </a>
+  </section>
+
+  <!-- HUD de capitulos: el indice del periodico acompana al lector -->
+  <p class="hud-capitulos" id="hud-capitulos" aria-hidden="true">
+    <span class="hud-capitulos__numero" id="hud-numero">01</span>
+    <span class="hud-capitulos__total">/ 05</span>
+  </p>
+
+</main>

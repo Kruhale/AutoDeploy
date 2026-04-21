@@ -1,0 +1,777 @@
+// Landing editorial oscura: fondo casi negro sereno, tipografia monumental,
+// lineas de 1px como unica decoracion. El hero es una terminal que se
+// despliega sola en bucle — el contrapunto vivo al titular "Sin terminal".
+.landing {
+  --fondo-editorial: hsl(230, 8%, 4%);
+  --tinta: hsl(40, 20%, 92%);
+  --tinta-suave: hsl(40, 6%, 60%);
+  // 56% y no menos: a 42% el mono de eyebrows/cue caia bajo el 4.5:1 AA.
+  --tinta-apagada: hsl(40, 5%, 56%);
+  --acento: hsl(42, 62%, 62%);
+  --linea: hsla(40, 20%, 92%, 0.09);
+
+  // Alias para que header/footer globales dentro de la home hereden la paleta.
+  --texto-claro: var(--tinta);
+  --texto-medio: var(--tinta-suave);
+  --texto-apagado: var(--tinta-apagada);
+  --borde-normal: var(--linea);
+  --borde-suave: hsla(40, 20%, 92%, 0.05);
+
+  position: relative;
+  // El fondo vive en ::before (fixed, cubre toda la ventana) y el velo radial
+  // en ::after, para que la vineta se superponga sin pintar sobre el contenido.
+  color: var(--tinta);
+  overflow-x: clip;
+}
+
+// Fondo que cubre toda la ventana, con un lavado vertical sutilisimo:
+// nada en Apple es negro plano — la luz viene de arriba.
+.landing::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-color: var(--fondo-editorial);
+  background-image: linear-gradient(180deg, hsla(40, 20%, 92%, 0.025) 0%, transparent 34%);
+}
+
+html.tema-claro .landing::before {
+  background-image: linear-gradient(180deg, hsla(40, 60%, 99%, 0.75) 0%, transparent 34%);
+}
+
+// Velo radial: oscurece los bordes para que el texto siempre respire encima.
+.landing::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 50% 40%, transparent 55%, hsla(230, 8%, 2%, 0.55) 100%);
+}
+
+// ------------------------------------------------ TEMA CLARO: PAPEL EDITORIAL
+// Misma composicion, paleta invertida: tinta oscura sobre papel calido y el
+// acento ambar mas profundo para mantener contraste AA sobre fondo claro.
+html.tema-claro .landing {
+  --fondo-editorial: hsl(40, 30%, 95%);
+  --tinta: hsl(230, 14%, 13%);
+  --tinta-suave: hsl(230, 7%, 38%);
+  // 42%: medido, 46% se quedaba en 4.38:1; 42% da ~5.3:1 AA sobre papel.
+  --tinta-apagada: hsl(230, 5%, 42%);
+  // 31%: a 36% el texto del CTA sobre papel se quedaba en ~3.9:1.
+  --acento: hsl(38, 78%, 31%);
+  --linea: hsla(230, 14%, 13%, 0.14);
+  --borde-suave: hsla(230, 14%, 13%, 0.07);
+}
+
+// Vineta calida en claro, mucho mas suave que la oscura.
+html.tema-claro .landing::after {
+  background: radial-gradient(120% 120% at 50% 40%, transparent 60%, hsla(40, 30%, 85%, 0.55) 100%);
+}
+
+// Los CTA rellenos en hover cambian a texto papel cuando el fondo es claro.
+html.tema-claro .portada__cta:hover,
+html.tema-claro .cierre__cta:hover {
+  color: hsl(40, 30%, 96%);
+}
+
+// Banner de cookies en papel.
+html.tema-claro body:has(.landing) .banner-cookies {
+  background-color: hsl(40, 28%, 92%);
+  border-color: hsla(230, 14%, 13%, 0.14);
+  box-shadow: 0 1.5rem 3rem hsla(230, 14%, 13%, 0.12);
+
+  .banner-cookies__texto {
+    color: hsl(230, 7%, 38%);
+  }
+
+  .banner-cookies__enlace,
+  .banner-cookies__boton--primario {
+    color: hsl(38, 78%, 36%);
+  }
+
+  .banner-cookies__boton--primario {
+    border-color: hsl(38, 78%, 36%);
+
+    &:hover {
+      background-color: hsl(38, 78%, 36%);
+      color: hsl(40, 30%, 96%);
+    }
+  }
+
+  .banner-cookies__boton--secundario {
+    color: hsl(230, 7%, 38%);
+    border-color: hsla(230, 14%, 13%, 0.16);
+  }
+}
+
+// ---------------------------------------------------------------- PORTADA
+
+// Capitulo cinematografico (patron ponder.ai): todo centrado en columna,
+// titulares apilados que el scroll intercambia con blur, y la infraestructura
+// flotando en profundidad alrededor hasta ordenarse en el panel.
+.portada {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  // Ritmo deliberado: titulo→texto cerca, CTA→panel con aire.
+  gap: 1.2rem;
+  padding: 6rem 6vw 1.25rem;
+  max-width: 100rem;
+  margin: 0 auto;
+  width: 100%;
+  overflow: hidden;
+  // Profundidad REAL del capitulo: las fichas viven a distintos translateZ
+  // y esta perspectiva es la que los proyecta (y hace posible el parallax).
+  perspective: 1200px;
+}
+
+@media (min-width: 1867px) {
+  .portada {
+    padding-left: 7rem;
+    padding-right: 7rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .portada {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+// Guias de reticula "impresas", casi invisibles: estructura sin ruido.
+.portada::before {
+  content: "";
+  position: absolute;
+  top: 5.5rem;
+  bottom: 4.5rem;
+  left: 24%;
+  width: 1px;
+  background-color: hsla(40, 20%, 92%, 0.05);
+  pointer-events: none;
+}
+
+.portada::after {
+  content: "";
+  position: absolute;
+  top: 5.5rem;
+  bottom: 4.5rem;
+  left: 76%;
+  width: 1px;
+  background-color: hsla(40, 20%, 92%, 0.05);
+  pointer-events: none;
+}
+
+html.tema-claro .portada::before {
+  background-color: hsla(230, 14%, 13%, 0.06);
+}
+
+html.tema-claro .portada::after {
+  background-color: hsla(230, 14%, 13%, 0.06);
+}
+
+@media (max-width: 900px) {
+  .portada::before {
+    display: none;
+  }
+
+  .portada::after {
+    display: none;
+  }
+}
+
+// Seleccionar texto en la landing tine con el ambar editorial.
+.landing ::selection {
+  background-color: var(--acento);
+  color: var(--fondo-editorial);
+}
+
+// ------------------------------------------------------------ SCROLLBAR
+// Barra de desplazamiento editorial (solo en la landing): fina y discreta,
+// nada de la barra gorda por defecto del navegador.
+html:has(app-landing-layout) {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(230, 6%, 24%) transparent;
+}
+
+html.tema-claro:has(app-landing-layout) {
+  scrollbar-color: hsl(40, 12%, 72%) transparent;
+}
+
+html:has(app-app-layout) {
+  scrollbar-width: thin;
+  scrollbar-color: hsl(230, 6%, 24%) transparent;
+}
+
+html.tema-claro:has(app-app-layout) {
+  scrollbar-color: hsl(40, 12%, 72%) transparent;
+}
+
+// ---------------------------------------------------------------- HUD
+// El indice del periodico acompana al lector: fijo abajo-izquierda, aparece
+// tras el hero y marca el capitulo en pantalla (el numero lo pone JS).
+.hud-capitulos {
+  position: fixed;
+  left: 6vw;
+  bottom: 1.2rem;
+  z-index: 5;
+  display: flex;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.26em;
+  color: var(--tinta-apagada);
+  opacity: 0;
+  transform: translateY(0.6rem);
+  transition:
+    opacity var(--duration-base) var(--ease-suave),
+    transform var(--duration-base) var(--ease-suave);
+  pointer-events: none;
+}
+
+.hud-capitulos--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hud-capitulos__numero {
+  color: var(--acento);
+}
+
+// ---------------------------------------------------------------- GRANO
+// Grano de pelicula sobre toda la pagina: la textura que separa un fondo
+// digital plano de una impresion con cuerpo. Fijo y sin eventos.
+.grano-editorial {
+  position: fixed;
+  inset: -3rem;
+  z-index: 999;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='240' height='240'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  opacity: 0.05;
+}
+
+html.tema-claro .grano-editorial {
+  opacity: 0.033;
+}
+
+// El grano titila en saltos secos (como fotogramas), nunca en deslizamiento.
+@media (prefers-reduced-motion: no-preference) {
+  .grano-editorial {
+    animation: landing-grano-titilar 0.9s steps(1) infinite;
+  }
+}
+
+@keyframes landing-grano-titilar {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-1.2rem, 0.8rem);
+  }
+  50% {
+    transform: translate(0.9rem, -1.1rem);
+  }
+  75% {
+    transform: translate(-0.6rem, -0.7rem);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
+}
+
+// ---------------------------------------------------------------- AURORA
+// Dos masas de luz ambar derivando lentisimo tras las fichas del capitulo:
+// la atmosfera respira aunque nadie toque nada.
+.portada__aurora {
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 34% at 28% 24%, hsla(42, 62%, 58%, 0.07) 0%, transparent 70%),
+    radial-gradient(38% 30% at 74% 64%, hsla(28, 55%, 45%, 0.05) 0%, transparent 70%);
+  will-change: transform;
+}
+
+html.tema-claro .portada__aurora {
+  background:
+    radial-gradient(42% 34% at 28% 24%, hsla(38, 80%, 60%, 0.1) 0%, transparent 70%),
+    radial-gradient(38% 30% at 74% 64%, hsla(20, 60%, 55%, 0.07) 0%, transparent 70%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portada__aurora {
+    animation: portada-aurora-derivar 38s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes portada-aurora-derivar {
+  0% {
+    transform: translate3d(-2%, -1%, 0) scale(1);
+  }
+  100% {
+    transform: translate3d(2%, 2%, 0) scale(1.12);
+  }
+}
+
+// ------------------------------------------------ CONSTELACION DE FICHAS
+
+// El "material bruto" del producto flotando en el espacio del capitulo.
+.portada__constelacion {
+  position: absolute;
+  inset: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.portada__ficha {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.65rem 0.85rem;
+  background-color: hsla(40, 33%, 91%, 0.03);
+  border: 1px solid var(--linea);
+  border-radius: var(--radius-m);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: var(--tinta-suave);
+  white-space: nowrap;
+  // Sombra tintada al fondo, nunca negro puro.
+  box-shadow: 0 0.9rem 2.2rem hsla(230, 12%, 2%, 0.35);
+  will-change: transform, filter;
+}
+
+html.tema-claro .portada__ficha {
+  background-color: hsla(40, 30%, 97%, 0.75);
+  box-shadow: 0 0.9rem 2.2rem hsla(35, 30%, 40%, 0.14);
+}
+
+.portada__ficha__nombre {
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+}
+
+.portada__ficha__linea {
+  color: var(--tinta-suave);
+}
+
+.portada__ficha__linea--live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--acento);
+}
+
+.portada__ficha__punto {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--acento);
+}
+
+.portada__ficha__grafica {
+  width: 5rem;
+  height: 1.25rem;
+  color: var(--acento);
+  opacity: 0.85;
+}
+
+// Planos de profundidad: desenfoque y velo; el TAMANO lo pone translateZ
+// real a traves de la perspectiva (3D de verdad, como ponder).
+.portada__ficha--medio {
+  filter: blur(1px);
+  opacity: 0.75;
+}
+
+.portada__ficha--lejos {
+  filter: blur(2.2px);
+  opacity: 0.5;
+}
+
+// Dispersion artesanal del capitulo 1 (el "caos" compuesto con arte).
+.portada__ficha[data-ficha="compose"]     { left: 9%;  top: 20%; transform: translateZ(-360px) rotate(-4deg); }
+.portada__ficha[data-ficha="dominio"]     { left: 76%; top: 18%; transform: translateZ(48px) rotate(3deg); }
+.portada__ficha[data-ficha="nginx"]       { left: 7%;  top: 62%; transform: translateZ(-180px) rotate(2deg); }
+.portada__ficha[data-ficha="log"]         { left: 80%; top: 68%; transform: translateZ(-360px) rotate(-3deg); }
+.portada__ficha[data-ficha="metricas"]    { left: 14%; top: 40%; transform: translateZ(-180px) rotate(1deg); }
+.portada__ficha[data-ficha="ssh"]         { left: 72%; top: 44%; transform: translateZ(48px) rotate(-2deg); }
+.portada__ficha[data-ficha="backup"]      { left: 84%; top: 33%; transform: translateZ(-180px) rotate(2deg); }
+.portada__ficha[data-ficha="certificado"] { left: 16%; top: 78%; transform: translateZ(-360px) rotate(3deg); }
+
+// Deriva de flotacion continua, desfasada por ficha (vida sin scroll).
+@media (prefers-reduced-motion: no-preference) {
+  .portada__ficha {
+    animation: portada-ficha-flotar 7s ease-in-out infinite;
+  }
+
+  .portada__ficha:nth-child(2n) {
+    animation-duration: 8.5s;
+    animation-delay: -2.1s;
+  }
+
+  .portada__ficha:nth-child(3n) {
+    animation-duration: 9.5s;
+    animation-delay: -4.3s;
+  }
+}
+
+// translate (propiedad aparte del transform que gestiona GSAP): compone en
+// la GPU sin relayout por frame, que era el micro-tiron de margin-top.
+@keyframes portada-ficha-flotar {
+  0% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -0.55rem;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+// En pantallas medias/moviles el capitulo no se fija: quedan solo las fichas
+// cercanas como decoracion sutil y el resto fuera.
+@media (max-width: 1023px) {
+  .portada__ficha {
+    display: none;
+  }
+
+  // Solo el sello "live" del dominio sobrevive en movil, recolocado seguro.
+  .portada__ficha[data-ficha="dominio"] {
+    display: flex;
+    left: 6%;
+    top: 14%;
+    rotate: -2deg;
+    opacity: 0.75;
+  }
+}
+
+// ------------------------------------------------ TITULARES DEL CAPITULO
+
+.portada__contenido {
+  position: relative;
+  text-align: center;
+}
+
+// El titular pasa a la serif editorial (Fraunces), centrado y monumental.
+.portada__titulo {
+  font-family: var(--font-display);
+  font-size: 7.75rem;
+  font-weight: 400;
+  line-height: 0.92;
+  letter-spacing: -0.035em;
+  color: var(--tinta);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+@media (max-width: 1280px) {
+  .portada__titulo {
+    font-size: 6.25rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .portada__titulo {
+    font-size: 4.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .portada__titulo {
+    font-size: 3.4rem;
+    line-height: 1;
+  }
+}
+
+@media (max-width: 480px) {
+  .portada__titulo {
+    font-size: 2.8rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .portada__titulo {
+    font-size: 2.5rem;
+  }
+}
+
+// Capitulos 2 y 3: apilados sobre el h1, invisibles hasta que el scroll
+// los intercambia con blur cinematografico (GSAP).
+.portada__titulo--capitulo {
+  position: absolute;
+  inset: 0;
+  justify-content: center;
+  margin: 0;
+  opacity: 0;
+  filter: blur(14px);
+  pointer-events: none;
+}
+
+// Cada linea vive en una "mascara": GSAP la sube desde abajo al cargar.
+.portada__titulo__linea {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+}
+
+.portada__titulo__texto {
+  display: inline-block;
+  will-change: transform;
+}
+
+.portada__titulo__texto--acento {
+  color: var(--acento);
+  font-style: italic;
+}
+
+.portada__descripcion {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: var(--tinta-suave);
+  max-width: 34rem;
+  text-align: center;
+  text-wrap: pretty;
+}
+
+@media (max-width: 768px) {
+  .portada__descripcion {
+    font-size: 0.95rem;
+  }
+}
+
+.portada__acciones {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.25rem;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+  margin-bottom: 1.6rem;
+}
+
+.portada__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.05rem 2rem;
+  border: 1px solid var(--acento);
+  border-radius: var(--radius-full);
+  color: var(--acento);
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  transition: background-color 0.35s ease, color 0.35s ease, gap 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portada__cta:hover {
+  background-color: var(--acento);
+  color: hsl(230, 8%, 6%);
+  gap: 1.15rem;
+}
+
+.portada__cta:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+// Firma "texto en dos capas": al hover el rotulo sube y entra su copia.
+.portada__cta__texto {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.portada__cta__capa {
+  display: block;
+  transition: transform var(--duration-base) var(--ease-suave);
+}
+
+.portada__cta__capa--doble {
+  position: absolute;
+  inset: 0;
+  transform: translateY(110%);
+}
+
+.portada__cta:hover .portada__cta__capa {
+  transform: translateY(-110%);
+}
+
+.portada__cta:hover .portada__cta__capa--doble {
+  transform: translateY(0);
+}
+
+.portada__enlace {
+  position: relative;
+  // Padding vertical: area tactil de 44px aunque el texto mida 20.
+  padding: 0.75rem 0;
+  color: var(--tinta-suave);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
+}
+
+.portada__enlace:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+// Subrayado siempre visible (es un enlace y debe leerse como tal); al pasar
+// el raton se enciende en ambar.
+.portada__enlace::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.4rem;
+  width: 100%;
+  height: 1px;
+  background-color: var(--tinta-apagada);
+  transition: background-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.portada__enlace:hover {
+  color: var(--tinta);
+}
+
+.portada__enlace:hover::after {
+  background-color: var(--acento);
+}
+
+// El panel central: el "clip grande" del capitulo, con micro-tilt 3D y una
+// luz ambiental calida detras — el producto EMITE luz, como en Apple.
+.portada__panel {
+  position: relative;
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.portada__panel::before {
+  content: "";
+  position: absolute;
+  inset: -18% -22%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(52% 46% at 50% 42%, hsla(42, 62%, 58%, 0.07) 0%, transparent 70%);
+}
+
+html.tema-claro .portada__panel::before {
+  background: radial-gradient(52% 46% at 50% 42%, hsla(38, 70%, 45%, 0.09) 0%, transparent 70%);
+}
+
+// Regla de cierre de la plana con el cue de scroll integrado.
+.portada__cue {
+  margin-top: auto;
+  align-self: stretch;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-top: 1.05rem;
+  border-top: 1px solid var(--linea);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+}
+
+.portada__cue__flecha {
+  display: inline-block;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .portada__cue__flecha {
+    animation: portada-flecha-bajar 2.2s var(--ease-suave) infinite;
+  }
+}
+
+@keyframes portada-flecha-bajar {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(0.3rem);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+// El cue cierra la coreografia de carga: titular, texto, CTA, panel y cue.
+@media (prefers-reduced-motion: no-preference) {
+  .portada__cue {
+    animation: portada-surgir var(--duration-reveal) var(--ease-suave) 1.5s both;
+  }
+}
+
+@keyframes portada-surgir {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+// ------------------------------------------------------------- MANIFIESTO
+
+.manifiesto {
+  padding: clamp(8rem, 22vh, 15rem) clamp(1.5rem, 6vw, 7rem);
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+.manifiesto__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+
+// El manifiesto habla con la misma voz serif que el titular de portada.
+.manifiesto__texto {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3.6vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  color: var(--tinta);
+  max-width: 62rem;
+  text-wrap: balance;
+}
+
+// Cada palabra empieza apagada; GSAP las enciende al ritmo del scroll.
+.manifiesto__palabra {
+  opacity: 0.16;
+}
+
+// Los terminos tecnicos (SSH, HTTPS, VPS...) prenden en ambar italica:
+// la voz del titular reaparece dentro del parrafo.
+.manifiesto__palabra--clave {
+  color: var(--acento);
+  font-style: italic;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manifiesto__palabra {
+    opacity: 1;
+  }
+}

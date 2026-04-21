@@ -1,0 +1,124 @@
+/* =====================================================
+   ANIMACIONES — keyframes + clases reutilizables
+   ===================================================== */
+
+/* ── KEYFRAMES ─────────────────────────────────────── */
+
+@keyframes entrar-abajo {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes entrar-derecha {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes entrar-escala {
+  from { opacity: 0; transform: scale(0.93); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes parpadeo-cursor {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes pulso-estado {
+  0%   { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+  70%  { box-shadow: 0 0 0 7px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+@keyframes latido {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.25); }
+}
+
+/* ── CLASES DE CARGA (page load — sin scroll) ──────── */
+
+.animar {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-duration: 0.7s;
+  animation-delay: var(--retraso, 0ms);
+}
+
+.animar--subir    { animation-name: entrar-abajo; }
+.animar--derecha  { animation-name: entrar-derecha; }
+.animar--escala   { animation-name: entrar-escala; }
+
+/* ── SCROLL REVEAL (IntersectionObserver directive) ── */
+
+.revelar {
+  opacity: 0;
+  transition:
+    opacity  0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms);
+}
+
+.revelar--arriba     { transform: translateY(28px); }
+.revelar--izquierda  { transform: translateX(-28px); }
+.revelar--derecha    { transform: translateX(28px); }
+.revelar--escala     { transform: scale(0.94); }
+
+.revelar--visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── STAGGER AUTOMÁTICO (children de un contenedor) ── */
+
+.animar-hijos > * {
+  opacity: 0;
+  animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animar-hijos > *:nth-child(1) { animation-delay: 0ms;   }
+.animar-hijos > *:nth-child(2) { animation-delay: 80ms;  }
+.animar-hijos > *:nth-child(3) { animation-delay: 160ms; }
+.animar-hijos > *:nth-child(4) { animation-delay: 240ms; }
+.animar-hijos > *:nth-child(5) { animation-delay: 320ms; }
+.animar-hijos > *:nth-child(6) { animation-delay: 400ms; }
+
+/* ── TERMINAL TYPEWRITER ───────────────────────────── */
+
+.seccion-bienvenida__terminal__linea {
+  opacity: 0;
+  animation: entrar-abajo 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.seccion-bienvenida__terminal__linea:nth-child(1)  { animation-delay: 0.35s; }
+.seccion-bienvenida__terminal__linea:nth-child(2)  { animation-delay: 0.75s; }
+.seccion-bienvenida__terminal__linea:nth-child(3)  { animation-delay: 1.05s; }
+.seccion-bienvenida__terminal__linea:nth-child(4)  { animation-delay: 1.15s; }
+.seccion-bienvenida__terminal__linea:nth-child(5)  { animation-delay: 1.50s; }
+.seccion-bienvenida__terminal__linea:nth-child(6)  { animation-delay: 1.85s; }
+.seccion-bienvenida__terminal__linea:nth-child(7)  { animation-delay: 2.15s; }
+.seccion-bienvenida__terminal__linea:nth-child(8)  { animation-delay: 2.45s; }
+.seccion-bienvenida__terminal__linea:nth-child(9)  { animation-delay: 2.55s; }
+.seccion-bienvenida__terminal__linea:nth-child(10) { animation-delay: 2.85s; }
+
+/* ── PUNTO HERO (latido amarillo) ─────────────────── */
+
+.seccion-bienvenida__etiqueta__punto {
+  animation: latido 2.5s ease-in-out infinite;
+}
+
+/* ── PUNTO ONLINE EN GESTION-SERVIDOR (pulso verde) ─ */
+
+.gestion-servidor__badge--online .gestion-servidor__badge__punto {
+  animation: pulso-estado 2s ease-out infinite;
+}
+
+/* ── DASHBOARD: cabecera entra suavemente ─────────── */
+
+.panel-principal__cabecera {
+  animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0ms;
+}
+
+.panel-principal__estadisticas {
+  animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 80ms;
+}

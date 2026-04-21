@@ -1,0 +1,166 @@
+.seccion-precios {
+  padding: var(--spacing-size-8xl) 0;
+}
+
+.seccion-precios__cabecera {
+  margin-bottom: var(--spacing-size-5xl);
+}
+
+.seccion-precios__titulo {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-extrabold);
+  color: var(--texto-claro);
+  letter-spacing: -1px;
+  line-height: var(--line-height-tight);
+}
+
+.seccion-precios__descripcion {
+  font-size: var(--font-size-base);
+  color: var(--texto-medio);
+  margin-top: var(--spacing-size-m);
+}
+
+.seccion-precios__cuadricula {
+  display: grid;
+  grid-template-columns: 1fr 1.08fr 1fr;
+  gap: var(--spacing-size-2xl);
+  align-items: start;
+}
+
+/* ── TARJETA PLAN ─────────────────────────── */
+
+.tarjeta-plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-3xl);
+  padding: var(--spacing-size-3xl);
+  background-color: var(--fondo-tarjeta);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-xl);
+  transition: border-color var(--duration-base) ease;
+}
+
+.tarjeta-plan:hover {
+  border-color: hsla(40, 33.33%, 91.37%, 0.14);
+}
+
+.tarjeta-plan--destacado {
+  border-color: var(--amarillo-normal);
+  background-color: var(--fondo-tarjeta);
+  box-shadow: var(--shadow-hover-amarillo);
+  padding-top: calc(var(--spacing-size-3xl) + 0.5rem);
+}
+
+.tarjeta-plan--destacado:hover {
+  border-color: var(--amarillo-normal);
+}
+
+.tarjeta-plan__badge {
+  position: absolute;
+  top: -0.875rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: var(--amarillo-normal);
+  color: var(--fondo-oscuro);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-extrabold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0.25rem 0.875rem;
+  border-radius: var(--radius-full);
+  white-space: nowrap;
+}
+
+.tarjeta-plan__cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-s);
+}
+
+.tarjeta-plan__nombre {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.tarjeta-plan__precio {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-top: var(--spacing-size-xs);
+}
+
+.tarjeta-plan__precio__numero {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-black);
+  color: var(--texto-claro);
+  line-height: 1;
+}
+
+.tarjeta-plan--destacado .tarjeta-plan__precio__numero {
+  color: var(--amarillo-normal);
+}
+
+.tarjeta-plan__precio__periodo {
+  font-size: var(--font-size-md);
+  color: var(--texto-apagado);
+}
+
+.tarjeta-plan__descripcion {
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+  line-height: var(--line-height-relaxed);
+}
+
+/* ── LISTA FEATURES ──────────────────────── */
+
+.tarjeta-plan__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-m);
+  flex: 1;
+}
+
+.tarjeta-plan__item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-m);
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+}
+
+.tarjeta-plan__item--inactivo {
+  opacity: 0.4;
+}
+
+.tarjeta-plan__item__check {
+  color: var(--verde-normal);
+  font-size: 0.75rem;
+  width: 1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.tarjeta-plan__item__xmark {
+  color: var(--texto-apagado);
+  font-size: 0.75rem;
+  width: 1rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* ── BOTÓN ───────────────────────────────── */
+
+.tarjeta-plan__boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-top: auto;
+}

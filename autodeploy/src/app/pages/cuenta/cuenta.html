@@ -1,0 +1,90 @@
+<section class="pagina-cuenta">
+
+  <header class="pagina-cuenta__cabecera">
+    <h1 class="pagina-cuenta__titulo">Account Settings</h1>
+    <p class="pagina-cuenta__subtitulo">Manage your profile and preferences</p>
+  </header>
+
+  <section class="pagina-cuenta__tarjeta">
+    <section class="pagina-cuenta__perfil">
+      <span class="pagina-cuenta__avatar">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <circle cx="12" cy="8" r="4"/>
+          <path d="M4 20c0-4 3.582-6 8-6s8 2 8 6"/>
+        </svg>
+      </span>
+      <section class="pagina-cuenta__perfil__info">
+        <span class="pagina-cuenta__nombre">—</span>
+        <span class="pagina-cuenta__email">—</span>
+        @if (planService.planActual() !== 'free') {
+          <span class="pagina-cuenta__badge-plan pagina-cuenta__badge-plan--{{ planService.planActual() }}">
+            {{ planService.planActual() | uppercase }}
+          </span>
+        }
+      </section>
+    </section>
+  </section>
+
+  <section class="pagina-cuenta__tarjeta">
+    <h2 class="pagina-cuenta__seccion-titulo">Profile</h2>
+
+    <section class="campo">
+      <label class="campo__etiqueta" for="cuenta-nombre">Full name</label>
+      <input class="campo__input" id="cuenta-nombre" type="text" placeholder="Your name">
+    </section>
+
+    <section class="campo">
+      <label class="campo__etiqueta" for="cuenta-email">Email</label>
+      <input class="campo__input" id="cuenta-email" type="email" placeholder="your@email.com">
+    </section>
+
+    <button class="boton--primario pagina-cuenta__boton-guardar" type="button">Save changes</button>
+  </section>
+
+  <section class="pagina-cuenta__tarjeta">
+    <section class="pagina-cuenta__plan-cabecera">
+      <h2 class="pagina-cuenta__seccion-titulo">Subscription Plan</h2>
+      <a class="pagina-cuenta__ver-planes" routerLink="/" fragment="pricing">View all plans</a>
+    </section>
+
+    <section class="pagina-cuenta__planes">
+      @for (plan of planes; track plan.id) {
+        <article
+          class="pagina-cuenta__opcion-plan"
+          [class.pagina-cuenta__opcion-plan--activo]="planService.planActual() === plan.id"
+          [class.pagina-cuenta__opcion-plan--pro]="plan.id === 'pro'"
+          (click)="cambiarPlan(plan.id)">
+          <section class="pagina-cuenta__opcion-plan__info">
+            <span class="pagina-cuenta__opcion-plan__nombre">{{ plan.nombre }}</span>
+            <span class="pagina-cuenta__opcion-plan__precio">
+              @if (plan.precio === 0) { Free } @else { €{{ plan.precio }}/mo }
+            </span>
+          </section>
+          <section class="pagina-cuenta__opcion-plan__check">
+            @if (planService.planActual() === plan.id) {
+              <i class="fa-solid fa-circle-check"></i>
+            } @else {
+              <i class="fa-regular fa-circle"></i>
+            }
+          </section>
+        </article>
+      }
+    </section>
+
+    <p class="pagina-cuenta__aviso-plan">
+      @if (planService.planActual() === 'free') {
+        You are on the free plan. Upgrade to unlock more servers, AI assistant, and custom domains.
+      } @else {
+        Plan active. Changes take effect immediately.
+      }
+    </p>
+  </section>
+
+  <section class="pagina-cuenta__tarjeta">
+    <h2 class="pagina-cuenta__seccion-titulo">Danger Zone</h2>
+    <button class="boton--peligro pagina-cuenta__boton-cerrar" type="button" (click)="cerrarSesion()">
+      Log out
+    </button>
+  </section>
+
+</section>

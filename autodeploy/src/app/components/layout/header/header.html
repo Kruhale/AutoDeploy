@@ -14,6 +14,13 @@
   </nav>
 
   <section class="cabecera__acciones">
+    <button class="cabecera__tema" (click)="themeService.alternarTema()" [attr.aria-label]="themeService.temaActual() === 'oscuro' ? 'Activar modo claro' : 'Activar modo oscuro'">
+      @if (themeService.temaActual() === 'oscuro') {
+        <i class="fa-solid fa-sun"></i>
+      } @else {
+        <i class="fa-solid fa-moon"></i>
+      }
+    </button>
     @if (authService.estaLogueado()) {
     <a class="cabecera__cuenta" routerLink="/app/cuenta">
       <svg class="cabecera__cuenta__icono" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

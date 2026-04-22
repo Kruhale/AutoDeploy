@@ -116,4 +116,34 @@
 
   /* === LAYOUT === */
   --sidebar-ancho: 16.25rem;
+
+  /* === FONDO CABECERA (con opacidad para blur) === */
+  --fondo-cabecera: hsla(30, 5.56%, 10%, 0.9);
+}
+
+/* ── MODO CLARO ───────────────────────────────────── */
+
+.tema-claro {
+  --fondo-normal: hsl(40, 18%, 96%);
+  --fondo-oscuro: hsl(40, 12%, 91%);
+  --fondo-tarjeta: hsl(0, 0%, 100%);
+  --fondo-negro: hsl(40, 10%, 88%);
+  --fondo-negro-medio: hsl(40, 8%, 93%);
+  --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
+
+  --texto-claro: hsl(30, 12%, 12%);
+  --texto-medio: hsl(30, 5%, 38%);
+  --texto-apagado: hsl(30, 3%, 56%);
+
+  --borde-normal: hsla(30, 10%, 12%, 0.12);
+  --borde-suave: hsla(30, 10%, 12%, 0.07);
+
+  --fondo-cabecera: hsla(40, 18%, 96%, 0.92);
+
+  --shadow-sm: 0 0.0625rem 0.1875rem hsla(0, 0%, 0%, 0.06);
+  --shadow-md: 0 0.5rem 1.25rem hsla(0, 0%, 0%, 0.08);
+  --shadow-lg: 0 0.5rem 1.5rem hsla(0, 0%, 0%, 0.12);
+  --shadow-glow-amarillo: 0 0 1.25rem hsla(47, 86%, 56%, 0.15);
+  --shadow-hover-amarillo: 0 0.5rem 1.25rem hsla(47, 86%, 56%, 0.08);
+  --shadow-hover-cyan: 0 0.5rem 1.25rem hsla(191, 72%, 44%, 0.08);
 }

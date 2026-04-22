@@ -172,3 +172,20 @@
   letter-spacing: 1px;
   color: var(--texto-apagado);
 }
+
+@media (max-width: 768px) {
+  .barra-lateral {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: var(--z-sidebar);
+    transform: translateX(-100%);
+    transition: transform var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .barra-lateral--abierta {
+    transform: translateX(0);
+  }
+}

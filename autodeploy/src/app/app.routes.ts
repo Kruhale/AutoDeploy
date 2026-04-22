@@ -9,7 +9,19 @@ export const routes: Routes = [
       {
         path: '',
         loadComponent: () => import('./pages/home/home').then(modulo => modulo.Home),
-      }
+      },
+      {
+        path: 'aviso-legal',
+        loadComponent: () => import('./pages/aviso-legal/aviso-legal').then(modulo => modulo.AvisoLegal),
+      },
+      {
+        path: 'politica-privacidad',
+        loadComponent: () => import('./pages/politica-privacidad/politica-privacidad').then(modulo => modulo.PoliticaPrivacidad),
+      },
+      {
+        path: 'politica-cookies',
+        loadComponent: () => import('./pages/politica-cookies/politica-cookies').then(modulo => modulo.PoliticaCookies),
+      },
     ]
   },
   {

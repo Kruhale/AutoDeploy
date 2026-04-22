@@ -1,0 +1,12 @@
+@if (!cookiesService.consentimientoDado()) {
+  <section class="banner-cookies">
+    <p class="banner-cookies__texto">
+      Usamos cookies propias para mejorar tu experiencia. Consulta nuestra
+      <a class="banner-cookies__enlace" routerLink="/politica-cookies">Política de Cookies</a>.
+    </p>
+    <section class="banner-cookies__acciones">
+      <button class="banner-cookies__boton banner-cookies__boton--secundario" (click)="cookiesService.rechazar()">Rechazar</button>
+      <button class="banner-cookies__boton banner-cookies__boton--primario" (click)="cookiesService.aceptar()">Aceptar</button>
+    </section>
+  </section>
+}

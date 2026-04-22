@@ -1,5 +1,18 @@
 <section class="disposicion-app">
-  <app-sidebar></app-sidebar>
+  <header class="disposicion-app__cabecera-movil">
+    <button class="disposicion-app__hamburguesa" (click)="alternarSidebar()" aria-label="Abrir menú">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+    <a class="disposicion-app__logo-movil" routerLink="/">
+      <img class="disposicion-app__logo-movil__imagen" src="logo.png" alt="">
+      <span class="disposicion-app__logo-movil__texto">Auto<span class="disposicion-app__logo-movil__texto--acento">Deploy</span></span>
+    </a>
+  </header>
+
+  <section class="disposicion-app__backdrop" [class.disposicion-app__backdrop--visible]="sidebarAbierta()" (click)="cerrarSidebar()"></section>
+
+  <app-sidebar [abierta]="sidebarAbierta()"></app-sidebar>
+
   <section class="disposicion-app__contenido">
     <main class="disposicion-app__principal">
       <router-outlet></router-outlet>

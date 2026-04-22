@@ -4,7 +4,7 @@
   justify-content: space-between;
   height: 3.5rem;
   padding: 0 1.5rem;
-  background: rgba(26, 25, 23, 0.9);
+  background: var(--fondo-cabecera);
   backdrop-filter: blur(12px);
   border: 1px solid var(--borde-suave);
   border-radius: var(--radius-l);
@@ -104,4 +104,23 @@
   font-weight: var(--font-weight-medium);
 }
 
+.cabecera__tema {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-m);
+  background: none;
+  border: 1px solid var(--borde-normal);
+  color: var(--texto-apagado);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: color var(--duration-base) ease, border-color var(--duration-base) ease;
+}
+
+.cabecera__tema:hover {
+  color: var(--texto-claro);
+  border-color: var(--borde-normal);
+}
 

@@ -1,0 +1,210 @@
+@use "../../../../styles/00-settings/css-variables" as *;
+
+/* Pie editorial: lineas de 1px, mono uppercase y un wordmark monumental
+   desvanecido como firma final (mismo lenguaje que la landing). */
+.pie {
+  position: relative;
+  background-color: hsl(230, 8%, 4%);
+  border-top: 1px solid hsla(40, 20%, 92%, 0.1);
+  padding: clamp(3.5rem, 8vh, 5.5rem) clamp(1.5rem, 6vw, 7rem) 0;
+  overflow: hidden;
+}
+
+:host-context(.tema-claro) .pie {
+  background-color: hsl(40, 28%, 93%);
+  border-top-color: hsla(230, 14%, 13%, 0.14);
+}
+
+.pie__contenido {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 4vw, 4rem);
+  padding-bottom: clamp(2.5rem, 6vh, 4rem);
+}
+
+.pie__marca {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.pie__marca__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: hsl(42, 62%, 62%);
+  margin-bottom: 1rem;
+}
+
+:host-context(.tema-claro) .pie__marca__eyebrow {
+  color: hsl(38, 78%, 36%);
+}
+
+.pie__marca__descripcion {
+  font-size: 0.85rem;
+  color: hsl(40, 6%, 55%);
+  line-height: 1.7;
+  max-width: 20rem;
+}
+
+:host-context(.tema-claro) .pie__marca__descripcion {
+  color: hsl(230, 6%, 42%);
+}
+
+.pie__columna {
+  min-width: 0;
+  padding-top: 0.35rem;
+}
+
+.pie__columna__titulo {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: hsl(40, 4%, 42%);
+  padding-bottom: 1rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid hsla(40, 20%, 92%, 0.08);
+}
+
+:host-context(.tema-claro) .pie__columna__titulo {
+  color: hsl(230, 5%, 54%);
+  border-bottom-color: hsla(230, 14%, 13%, 0.12);
+}
+
+.pie__columna__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.pie__columna__enlace {
+  display: inline-block;
+  font-size: 0.9rem;
+  color: hsl(40, 6%, 60%);
+  transition: color var(--duration-base) ease, transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pie__columna__enlace:hover {
+  color: hsl(42, 62%, 62%);
+  transform: translateX(0.3rem);
+}
+
+:host-context(.tema-claro) .pie__columna__enlace {
+  color: hsl(230, 6%, 42%);
+}
+
+:host-context(.tema-claro) .pie__columna__enlace:hover {
+  color: hsl(38, 78%, 36%);
+}
+
+.pie__inferior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+  padding: 1.25rem 0;
+  border-top: 1px solid hsla(40, 20%, 92%, 0.08);
+  flex-wrap: wrap;
+}
+
+:host-context(.tema-claro) .pie__inferior {
+  border-top-color: hsla(230, 14%, 13%, 0.12);
+}
+
+.pie__inferior__copyright {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.12em;
+  color: hsl(40, 4%, 42%);
+}
+
+:host-context(.tema-claro) .pie__inferior__copyright {
+  color: hsl(230, 5%, 54%);
+}
+
+.pie__inferior__bloque-derecha {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.pie__inferior__redes {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pie__inferior__red {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid hsla(40, 20%, 92%, 0.14);
+  color: hsl(40, 4%, 48%);
+  transition: color var(--duration-base) ease, border-color var(--duration-base) ease;
+}
+
+.pie__inferior__red:hover {
+  color: hsl(42, 62%, 62%);
+  border-color: hsla(42, 62%, 62%, 0.5);
+}
+
+:host-context(.tema-claro) .pie__inferior__red {
+  border-color: hsla(230, 14%, 13%, 0.16);
+  color: hsl(230, 5%, 50%);
+}
+
+:host-context(.tema-claro) .pie__inferior__red:hover {
+  color: hsl(38, 78%, 36%);
+  border-color: hsla(38, 78%, 36%, 0.5);
+}
+
+/* Wordmark monumental de cierre: enorme, recortado por abajo y casi
+   desvanecido — la firma editorial del final de la pagina. */
+.pie__wordmark {
+  font-family: var(--font-secondary);
+  font-size: clamp(4rem, 13.5vw, 13rem);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.05em;
+  line-height: 0.78;
+  text-align: center;
+  white-space: nowrap;
+  margin-bottom: -0.12em;
+  background-image: linear-gradient(to bottom, hsla(40, 20%, 92%, 0.16), hsla(40, 20%, 92%, 0.02));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  pointer-events: none;
+  user-select: none;
+}
+
+:host-context(.tema-claro) .pie__wordmark {
+  background-image: linear-gradient(to bottom, hsla(230, 14%, 13%, 0.18), hsla(230, 14%, 13%, 0.02));
+}
+
+@media (max-width: $breakpoint-md) {
+  .pie {
+    padding: 2.5rem 1.25rem 0;
+  }
+
+  .pie__contenido {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-size-3xl);
+  }
+
+  .pie__inferior {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+  }
+
+  .pie__inferior__bloque-derecha {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,135 @@
+// Banner flotante de cookies que aparece fijo en la parte de abajo
+.banner-cookies {
+  position: fixed;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 3rem);
+  max-width: 52rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-size-3xl);
+  padding: var(--spacing-size-l) var(--spacing-size-2xl);
+  background-color: var(--fondo-tarjeta);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  z-index: var(--z-toast);
+
+  // Texto explicativo del banner (la frase sobre las cookies)
+  &__texto {
+    font-size: var(--font-size-md);
+    color: var(--texto-medio);
+    line-height: var(--line-height-normal);
+  }
+
+  // Enlace dentro del texto (ej: "ver politica de cookies") en amarillo
+  &__enlace {
+    color: var(--amarillo-normal);
+    font-weight: var(--font-weight-medium);
+    transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+
+    &:hover,
+    &:focus-visible {
+      opacity: 0.85;
+      outline: none;
+    }
+
+    &:focus-visible {
+      text-decoration: underline;
+      text-underline-offset: 0.25rem;
+    }
+  }
+
+  // Zona donde van los dos botones (aceptar / rechazar)
+  &__acciones {
+    display: flex;
+    gap: var(--spacing-size-m);
+    flex-shrink: 0;
+  }
+
+  // Boton del banner: comparte forma y al pulsarlo hace un mini "pop"
+  &__boton {
+    padding: 0.4375rem var(--spacing-size-xl);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-m);
+    cursor: pointer;
+    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-fast) cubic-bezier(0.16, 1, 0.3, 1);
+    border: none;
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+
+    // Variante "aceptar": fondo amarillo
+    &--primario {
+      background-color: var(--amarillo-normal);
+      color: var(--fondo-oscuro);
+
+      &:hover {
+        background-color: var(--amarillo-normal-hover);
+      }
+    }
+
+    // Variante "rechazar": transparente con borde fino
+    &--secundario {
+      background-color: transparent;
+      color: var(--texto-medio);
+      border: 1px solid var(--borde-normal);
+
+      &:hover {
+        color: var(--texto-claro);
+        border-color: var(--borde-normal);
+      }
+    }
+  }
+}
+
+// Sobre la landing editorial el banner adopta su lenguaje: oscuro, borde de
+// 1px y botones outline — la tarjeta clara del tema rompia el universo visual.
+body:has(.landing) .banner-cookies {
+  background-color: hsl(230, 8%, 7%);
+  border-color: hsla(40, 20%, 92%, 0.12);
+  box-shadow: 0 1.5rem 3rem hsla(0, 0%, 0%, 0.5);
+
+  .banner-cookies__texto {
+    color: hsl(40, 6%, 62%);
+  }
+
+  .banner-cookies__enlace {
+    color: hsl(42, 62%, 62%);
+  }
+
+  .banner-cookies__boton--primario {
+    background-color: transparent;
+    border: 1px solid hsl(42, 62%, 62%);
+    color: hsl(42, 62%, 62%);
+
+    &:hover {
+      background-color: hsl(42, 62%, 62%);
+      color: hsl(230, 8%, 6%);
+    }
+  }
+
+  .banner-cookies__boton--secundario {
+    color: hsl(40, 6%, 62%);
+    border-color: hsla(40, 20%, 92%, 0.14);
+  }
+}
+
+// Banner de cookies en movil: apila el texto y los botones en vertical
+@media (max-width: 576px) {
+  .banner-cookies {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+    bottom: var(--spacing-size-l);
+  }
+}

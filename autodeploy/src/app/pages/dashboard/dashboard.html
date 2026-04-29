@@ -1,139 +1,113 @@
 <section class="panel-principal">
+
   <header class="panel-principal__cabecera">
     <section class="panel-principal__cabecera__izquierda">
-      <h1 class="panel-principal__titulo">System Overview</h1>
-      <p class="panel-principal__subtitulo">Real-time infrastructure health and deployment status</p>
+      <h1 class="panel-principal__titulo">Dashboard</h1>
+      <p class="panel-principal__subtitulo">Infrastructure overview</p>
     </section>
-    <section class="panel-principal__cabecera__acciones">
-      <button class="boton--ghost">Refresh Data</button>
-      <a class="boton--primario" routerLink="/app/nuevo-despliegue">New Deployment</a>
-    </section>
+    <a class="boton--primario" routerLink="/app/onboarding">
+      <i class="fa-solid fa-plus"></i>
+      Add Server
+    </a>
   </header>
 
-  <section class="panel-principal__cuerpo">
-    <section class="panel-principal__centro">
+  <section class="panel-principal__metricas">
+    <article class="panel-principal__metrica">
+      <span class="panel-principal__metrica__etiqueta">Servers</span>
+      <span class="panel-principal__metrica__valor">{{ listaDeServidores().length }}</span>
+    </article>
+    <article class="panel-principal__metrica">
+      <span class="panel-principal__metrica__etiqueta">Online</span>
+      <span class="panel-principal__metrica__valor panel-principal__metrica__valor--verde">{{ contadorServidoresOnline() }}</span>
+    </article>
+    <article class="panel-principal__metrica">
+      <span class="panel-principal__metrica__etiqueta">Offline</span>
+      <span class="panel-principal__metrica__valor panel-principal__metrica__valor--rojo">{{ contadorServidoresOffline() }}</span>
+    </article>
+    <article class="panel-principal__metrica">
+      <span class="panel-principal__metrica__etiqueta">Sites</span>
+      <span class="panel-principal__metrica__valor">{{ listaDeSitios().length }}</span>
+    </article>
+  </section>
 
-      <section class="panel-principal__estadisticas animar-hijos">
-        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="CPU Usage" valor="--" icono="fa-solid fa-microchip" subtexto="No data" variante="primario"></app-tarjeta-estadistica>
-        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="RAM Used" valor="--" icono="fa-solid fa-memory" subtexto="No data" variante="teal"></app-tarjeta-estadistica>
-        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="Uptime" valor="--" icono="fa-solid fa-arrow-up-from-bracket" subtexto="No data" variante="cyan"></app-tarjeta-estadistica>
-        <app-tarjeta-estadistica class="panel-principal__estadisticas__item" etiqueta="Sync Tasks" valor="--" icono="fa-solid fa-rotate" subtexto="No data" variante="advertencia"></app-tarjeta-estadistica>
-      </section>
-
-      <section class="panel-principal__servidores">
-        <header class="panel-principal__servidores__cabecera">
-          <h2 class="panel-principal__servidores__titulo">
-            <i class="fa-solid fa-server"></i>
-            Connected VPS Servers
-          </h2>
-        </header>
-        <section class="panel-principal__servidores__lista animar-hijos">
-          @if (listaDeServidores().length === 0) {
-            <p class="panel-principal__vacio">No servers connected yet.</p>
-          }
-          @for (servidor of listaDeServidores(); track servidor.id) {
-            <article class="tarjeta-servidor">
-              <header class="tarjeta-servidor__cabecera">
-                <span class="tarjeta-servidor__indicador tarjeta-servidor__indicador--{{ servidor.estado }}"></span>
-                <h3 class="tarjeta-servidor__nombre">{{ servidor.nombre }}</h3>
-                <span class="tarjeta-servidor__ip">{{ servidor.ip }}</span>
-              </header>
-              <section class="tarjeta-servidor__metricas">
-                <section class="tarjeta-servidor__metrica">
-                  <span class="tarjeta-servidor__metrica__etiqueta">CPU LOAD</span>
-                  <span class="tarjeta-servidor__metrica__valor">{{ servidor.cargaCpu }}%</span>
-                </section>
-                <section class="tarjeta-servidor__metrica">
-                  <span class="tarjeta-servidor__metrica__etiqueta">RAM USAGE</span>
-                  <span class="tarjeta-servidor__metrica__valor">{{ servidor.usoRam }}</span>
-                </section>
+  @if (listaDeServidores().length === 0) {
+    <section class="panel-principal__vacio">
+      <i class="fa-solid fa-server panel-principal__vacio__icono"></i>
+      <p class="panel-principal__vacio__titulo">No servers connected</p>
+      <p class="panel-principal__vacio__detalle">Connect your first VPS to start monitoring and deploying</p>
+      <a class="boton--primario" routerLink="/app/onboarding">Connect Server</a>
+    </section>
+  } @else {
+    <section class="panel-principal__servidores">
+      <header class="panel-principal__servidores__cabecera">
+        <h2 class="panel-principal__servidores__titulo">Servers</h2>
+      </header>
+      <section class="panel-principal__servidores__lista">
+        @for (servidor of listaDeServidores(); track servidor.id) {
+          <article class="panel-principal__servidor">
+            <section class="panel-principal__servidor__izquierda">
+              <span class="panel-principal__servidor__indicador panel-principal__servidor__indicador--{{ servidor.estado }}"></span>
+              <section class="panel-principal__servidor__datos">
+                <span class="panel-principal__servidor__nombre">{{ servidor.nombre }}</span>
+                <span class="panel-principal__servidor__ip">{{ servidor.ip }}</span>
               </section>
-              <span class="tarjeta-servidor__barra">
-                <span class="tarjeta-servidor__barra__relleno tarjeta-servidor__barra--{{ servidor.colorBarra }}" [style.width.%]="servidor.cargaCpu"></span>
-              </span>
-              <footer class="tarjeta-servidor__pie">
-                <section class="tarjeta-servidor__iconos">
-                  @for (icono of servidor.iconos; track icono) {
-                    <i [class]="icono"></i>
-                  }
-                </section>
-                <a class="tarjeta-servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">Details →</a>
-              </footer>
-            </article>
-          }
-        </section>
-      </section>
-
-      <section class="tabla-sitios">
-        <header class="tabla-sitios__cabecera">
-          <h2 class="tabla-sitios__titulo">
-            <i class="fa-solid fa-globe"></i>
-            Active Websites & Subdomains
-          </h2>
-          <a class="tabla-sitios__ver-todo" href="#">View All</a>
-        </header>
-        <table class="tabla-sitios__tabla">
-          <thead>
-            <tr class="tabla-sitios__fila-cabecera">
-              <th class="tabla-sitios__th">Site Name</th>
-              <th class="tabla-sitios__th">Domain</th>
-              <th class="tabla-sitios__th">Status</th>
-              <th class="tabla-sitios__th">Server</th>
-            </tr>
-          </thead>
-          <tbody>
-            @if (listaDeSitios().length === 0) {
-              <tr>
-                <td class="tabla-sitios__td tabla-sitios__td--vacio" colspan="4">No sites deployed yet.</td>
-              </tr>
-            }
-            @for (sitio of listaDeSitios(); track sitio.dominio) {
-              <tr class="tabla-sitios__fila">
-                <td class="tabla-sitios__td">
-                  <span class="tabla-sitios__icono-sitio tabla-sitios__icono-sitio--{{ sitio.colorIcono }}"><i [class]="sitio.icono"></i></span>
-                  {{ sitio.nombre }}
-                </td>
-                <td class="tabla-sitios__td tabla-sitios__td--mono">{{ sitio.dominio }}</td>
-                <td class="tabla-sitios__td"><span class="tabla-sitios__badge tabla-sitios__badge--{{ sitio.estado }}">{{ sitio.textoEstado }}</span></td>
-                <td class="tabla-sitios__td">{{ sitio.servidor }}</td>
-              </tr>
-            }
-          </tbody>
-        </table>
+            </section>
+            <section class="panel-principal__servidor__acciones">
+              <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">Manage</a>
+              <a class="panel-principal__servidor__enlace panel-principal__servidor__enlace--ssh" [routerLink]="'/app/terminal/' + servidor.id">
+                <i class="fa-solid fa-terminal"></i>
+                SSH
+              </a>
+            </section>
+          </article>
+        }
       </section>
     </section>
+  }
 
-    <aside class="panel-principal__lateral">
-      <section class="actividad-reciente">
-        <h3 class="actividad-reciente__titulo">Recent Activity</h3>
-        @if (listaDeActividad().length === 0) {
-          <p class="actividad-reciente__vacio">No recent activity.</p>
-        }
-        <ul class="actividad-reciente__lista animar-hijos">
-          @for (evento of listaDeActividad(); track evento.texto) {
-            <li class="actividad-reciente__item">
-              <span class="actividad-reciente__icono actividad-reciente__icono--{{ evento.colorIcono }}"><i [class]="evento.icono"></i></span>
-              <section class="actividad-reciente__info">
-                <span class="actividad-reciente__texto">{{ evento.texto }}</span>
-                <span class="actividad-reciente__detalle">{{ evento.detalle }}</span>
+  @if (listaDeSitios().length > 0) {
+    <section class="panel-principal__sitios">
+      <header class="panel-principal__sitios__cabecera">
+        <h2 class="panel-principal__sitios__titulo">Active Sites</h2>
+      </header>
+      <section class="panel-principal__sitios__lista">
+        @for (sitio of listaDeSitios(); track sitio.dominio) {
+          <article class="panel-principal__sitio">
+            <section class="panel-principal__sitio__izquierda">
+              <span class="panel-principal__sitio__icono panel-principal__sitio__icono--{{ sitio.colorIcono }}">
+                <i [class]="sitio.icono"></i>
+              </span>
+              <section class="panel-principal__sitio__datos">
+                <span class="panel-principal__sitio__nombre">{{ sitio.nombre }}</span>
+                <span class="panel-principal__sitio__dominio">{{ sitio.dominio }}</span>
               </section>
-            </li>
-          }
-        </ul>
+            </section>
+            <span class="panel-principal__sitio__estado panel-principal__sitio__estado--{{ sitio.estado }}">{{ sitio.textoEstado }}</span>
+          </article>
+        }
       </section>
+    </section>
+  }
 
-      <section class="panel-principal__stats-rapidos">
-        <h3 class="panel-principal__stats-rapidos__titulo">Quick Stats</h3>
-        <section class="panel-principal__stats-rapidos__card">
-          <span class="panel-principal__stats-rapidos__label">Monthly Traffic</span>
-          <span class="panel-principal__stats-rapidos__valor">-- <small></small></span>
-          <section class="panel-principal__stats-rapidos__grafico">
-            @for (altura of alturasDelGrafico; track $index; let esUltima = $last) {
-              <span class="panel-principal__stats-rapidos__barra" [class.panel-principal__stats-rapidos__barra--actual]="esUltima" [style.height.%]="altura"></span>
-            }
-          </section>
-        </section>
+  @if (listaDeActividad().length > 0) {
+    <section class="panel-principal__actividad">
+      <header class="panel-principal__actividad__cabecera">
+        <h2 class="panel-principal__actividad__titulo">Recent Activity</h2>
+      </header>
+      <section class="panel-principal__actividad__lista">
+        @for (evento of listaDeActividad(); track evento.texto) {
+          <article class="panel-principal__evento">
+            <span class="panel-principal__evento__icono panel-principal__evento__icono--{{ evento.colorIcono }}">
+              <i [class]="evento.icono"></i>
+            </span>
+            <section class="panel-principal__evento__datos">
+              <span class="panel-principal__evento__texto">{{ evento.texto }}</span>
+              <span class="panel-principal__evento__detalle">{{ evento.detalle }}</span>
+            </section>
+          </article>
+        }
       </section>
-    </aside>
-  </section>
+    </section>
+  }
+
 </section>

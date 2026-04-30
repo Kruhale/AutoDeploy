@@ -146,3 +146,30 @@
 .pagina-registro__enlace:hover {
   opacity: 0.8;
 }
+
+.pagina-registro__criterios {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+  margin-top: var(--spacing-size-s);
+}
+
+.pagina-registro__criterio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-apagado);
+  transition: color var(--duration-base) ease;
+}
+
+.pagina-registro__criterio i {
+  width: 0.75rem;
+  text-align: center;
+  font-size: 0.5rem;
+}
+
+.pagina-registro__criterio--ok {
+  color: var(--verde-normal);
+}

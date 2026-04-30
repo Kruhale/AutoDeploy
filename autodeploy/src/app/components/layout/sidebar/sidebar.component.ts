@@ -1,5 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UsuarioService } from '../../../services/usuario.service';
+import { PlanService } from '../../../services/plan.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -9,4 +11,16 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 })
 export class Sidebar {
   abierta = input(false);
+  colapsada = signal(false);
+
+  constructor(
+    public usuarioService: UsuarioService,
+    public planService: PlanService
+  ) {}
+
+  alternarColapso(): void {
+    this.colapsada.update(function(estadoActual) {
+      return !estadoActual;
+    });
+  }
 }

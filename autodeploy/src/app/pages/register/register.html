@@ -19,36 +19,60 @@
     <form class="pagina-registro__formulario">
 
       @if (mensajeDeErrorVisible()) {
-      <p class="pagina-registro__error">Ha ocurrido un error. Inténtalo de nuevo.</p>
+      <p class="pagina-registro__error">{{ mensajeDeError() }}</p>
       }
 
       <section class="campo">
         <label class="campo__etiqueta" for="nombre">Nombre completo</label>
-        <input class="campo__input" id="nombre" type="text" placeholder="Tu nombre" autocomplete="name">
+        <input class="campo__input" id="nombre" name="nombre" type="text" placeholder="Tu nombre" autocomplete="name" [ngModel]="nombreCompleto()" (ngModelChange)="nombreCompleto.set($event)">
       </section>
 
       <section class="campo">
         <label class="campo__etiqueta" for="email">Email</label>
-        <input class="campo__input" id="email" type="email" placeholder="tu@email.com" autocomplete="email">
+        <input class="campo__input" id="email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
       </section>
 
       <section class="campo">
-        <label class="campo__etiqueta" for="password">Contraseña</label>
+        <label class="campo__etiqueta" for="password">Password</label>
         <section class="pagina-registro__campo-password">
-          <input class="campo__input" id="password" [type]="passwordEsVisible() ? 'text' : 'password'"
-            placeholder="••••••••" autocomplete="new-password">
+          <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
+            placeholder="••••••••" autocomplete="new-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
           <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
-            [attr.aria-label]="passwordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
+            [attr.aria-label]="passwordEsVisible() ? 'Hide password' : 'Show password'">
             <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
           </button>
         </section>
+        @if (passwordUsuario().length > 0) {
+          <ul class="pagina-registro__criterios">
+            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioLongitud()">
+              <i [class]="criterioLongitud() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+              At least 8 characters
+            </li>
+            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioMayuscula()">
+              <i [class]="criterioMayuscula() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+              One uppercase letter
+            </li>
+            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioMinuscula()">
+              <i [class]="criterioMinuscula() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+              One lowercase letter
+            </li>
+            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioNumero()">
+              <i [class]="criterioNumero() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+              One number
+            </li>
+            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioEspecial()">
+              <i [class]="criterioEspecial() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+              One special character
+            </li>
+          </ul>
+        }
       </section>
 
       <section class="campo">
         <label class="campo__etiqueta" for="confirmar-password">Confirmar contraseña</label>
         <section class="pagina-registro__campo-password">
-          <input class="campo__input" id="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'"
-            placeholder="••••••••" autocomplete="new-password">
+          <input class="campo__input" id="confirmar-password" name="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'"
+            placeholder="••••••••" autocomplete="new-password" [ngModel]="confirmPasswordUsuario()" (ngModelChange)="confirmPasswordUsuario.set($event)">
           <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadConfirmPassword()"
             [attr.aria-label]="confirmPasswordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
             <i [class]="confirmPasswordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
@@ -56,8 +80,9 @@
         </section>
       </section>
 
-      <button class="boton--primario pagina-registro__boton-enviar" type="button" (click)="crearCuenta()">Crear
-        cuenta</button>
+      <button class="boton--primario pagina-registro__boton-enviar" type="button" (click)="crearCuenta()" [disabled]="cargando()">
+        {{ cargando() ? 'Creating...' : 'Crear cuenta' }}
+      </button>
 
     </form>
 

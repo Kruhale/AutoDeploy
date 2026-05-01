@@ -29,3 +29,12 @@
 @use "styles/05-components/animaciones";
 @use "styles/05-components/pagina-legal";
 @use "styles/05-components/banner-cookies";
+@use "styles/05-components/pagina-billing";
+@use "styles/05-components/pagina-networking";
+@use "styles/05-components/pagina-firewall";
+@use "styles/05-components/pagina-backups";
+@use "styles/05-components/pagina-settings";
+@use "styles/05-components/terminal-ssh";
+@use "styles/05-components/pagina-terminal-selector";
+
+@import "@xterm/xterm/css/xterm.css";

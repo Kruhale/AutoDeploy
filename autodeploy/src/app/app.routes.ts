@@ -61,6 +61,34 @@ export const routes: Routes = [
       {
         path: 'cuenta',
         loadComponent: () => import('./pages/cuenta/cuenta').then(modulo => modulo.Cuenta),
+      },
+      {
+        path: 'billing',
+        loadComponent: () => import('./pages/billing/billing').then(modulo => modulo.Billing),
+      },
+      {
+        path: 'networking',
+        loadComponent: () => import('./pages/networking/networking').then(modulo => modulo.Networking),
+      },
+      {
+        path: 'firewall',
+        loadComponent: () => import('./pages/firewall/firewall').then(modulo => modulo.Firewall),
+      },
+      {
+        path: 'backups',
+        loadComponent: () => import('./pages/backups/backups').then(modulo => modulo.Backups),
+      },
+      {
+        path: 'settings',
+        loadComponent: () => import('./pages/settings/settings').then(modulo => modulo.Settings),
+      },
+      {
+        path: 'terminal',
+        loadComponent: () => import('./pages/terminal-selector/terminal-selector').then(modulo => modulo.TerminalSelector),
+      },
+      {
+        path: 'terminal/:servidorId',
+        loadComponent: () => import('./pages/terminal-ssh/terminal-ssh').then(modulo => modulo.TerminalSsh),
       }
     ]
   }

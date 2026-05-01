@@ -1,36 +1,26 @@
 <section class="gestion-servidor">
   <header class="gestion-servidor__barra-superior">
-    <app-migas-pan [migas]="[{ etiqueta: 'Servers', enlace: '/app/dashboard' }, { etiqueta: servidor()?.nombre ?? '—' }]"></app-migas-pan>
-    <section class="gestion-servidor__barra-busqueda">
-      <section class="gestion-servidor__busqueda">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="gestion-servidor__busqueda__input" type="text" placeholder="Search commands...">
-      </section>
-      <section class="gestion-servidor__barra-iconos">
-        <i class="fa-solid fa-bell"></i>
-        <i class="fa-solid fa-circle-question"></i>
-      </section>
-    </section>
+    <app-migas-pan [migas]="[{ etiqueta: 'Servers', enlace: '/app/dashboard' }, { etiqueta: servidorNombre() }]"></app-migas-pan>
   </header>
 
   <header class="gestion-servidor__cabecera">
     <section class="gestion-servidor__cabecera__info">
-      <h1 class="gestion-servidor__nombre">{{ servidor()?.nombre ?? '—' }}</h1>
-      @if (servidor()) {
-        <span class="gestion-servidor__badge gestion-servidor__badge--{{ servidor()!.estado }}">
-          <span class="gestion-servidor__badge__punto"></span>
-          {{ servidor()!.estado === 'online' ? 'Online' : servidor()!.estado === 'offline' ? 'Offline' : 'Warning' }}
-        </span>
-      }
+      <h1 class="gestion-servidor__nombre">{{ servidorNombre() }}</h1>
+      <span class="gestion-servidor__badge gestion-servidor__badge--{{ servidorEstado() }}">
+        <span class="gestion-servidor__badge__punto"></span>
+        {{ servidorEstado() === 'online' ? 'Online' : 'Offline' }}
+      </span>
       <section class="gestion-servidor__detalles">
-        <span class="gestion-servidor__detalle"><i class="fa-solid fa-server"></i> {{ servidor()?.ip ?? '—' }}</span>
-        <span class="gestion-servidor__detalle">{{ servidor()?.ubicacion ?? '—' }}</span>
-        <span class="gestion-servidor__detalle">{{ servidor()?.sistemaOperativo ?? '—' }}</span>
+        <span class="gestion-servidor__detalle"><i class="fa-solid fa-server"></i> {{ servidorIp() }}</span>
+        <span class="gestion-servidor__detalle">Port {{ servidorPuerto() }}</span>
+        <span class="gestion-servidor__detalle">{{ servidorUsuario() }}@</span>
       </section>
     </section>
     <section class="gestion-servidor__cabecera__acciones">
-      <button class="boton--ghost" [disabled]="!servidor()">SSH</button>
-      <button class="boton--peligro" [disabled]="!servidor()">Reboot Server</button>
+      <a class="boton--primario" [routerLink]="'/app/terminal/' + servidorId()">SSH Terminal</a>
+      <button class="boton--peligro" (click)="reiniciarServidor()" [disabled]="reiniciando()">
+        {{ reiniciando() ? 'Rebooting...' : 'Reboot Server' }}
+      </button>
     </section>
   </header>
 
@@ -38,26 +28,25 @@
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
       etiqueta="CPU Load"
-      [valor]="servidor() ? servidor()!.cargaCpu + '%' : '—'"
+      valor="—"
       icono="fa-solid fa-microchip"
-      [barraProgreso]="servidor()?.cargaCpu ?? 0"
+      subtexto="No data yet"
       variante="primario">
     </app-tarjeta-estadistica>
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
       etiqueta="Memory (RAM)"
-      [valor]="servidor() ? servidor()!.ramUsada.toString() : '—'"
+      valor="—"
       icono="fa-solid fa-memory"
-      [subtexto]="servidor() ? '/ ' + servidor()!.ramTotal + ' GB' : ''"
-      [barraProgreso]="servidor() ? (servidor()!.ramUsada / servidor()!.ramTotal) * 100 : 0"
+      subtexto="No data yet"
       variante="exito">
     </app-tarjeta-estadistica>
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
       etiqueta="Bandwidth"
-      [valor]="servidor() ? servidor()!.anchoBanda.toString() : '—'"
+      valor="—"
       icono="fa-solid fa-wifi"
-      [subtexto]="servidor() ? 'KB/s' : ''"
+      subtexto="No data yet"
       variante="primario">
     </app-tarjeta-estadistica>
   </section>
@@ -69,7 +58,7 @@
         Hosted Applications
         <span class="gestion-servidor__aplicaciones__conteo">({{ listaDeAplicaciones().length }} Active)</span>
       </h2>
-      <button class="boton--primario" [disabled]="!servidor()">Deploy New</button>
+      <a class="boton--primario" routerLink="/app/nuevo-despliegue">Deploy New</a>
     </header>
 
     @if (listaDeAplicaciones().length === 0) {
@@ -104,11 +93,11 @@
   <footer class="gestion-servidor__inferior">
     <section class="gestion-servidor__inferior__item">
       <span class="gestion-servidor__inferior__etiqueta">Last Backup</span>
-      <span class="gestion-servidor__inferior__valor">{{ servidor()?.ultimoBackup ?? '—' }}</span>
+      <span class="gestion-servidor__inferior__valor">—</span>
     </section>
     <section class="gestion-servidor__inferior__item">
       <span class="gestion-servidor__inferior__etiqueta">System Uptime</span>
-      <span class="gestion-servidor__inferior__valor">{{ servidor()?.tiempoActivo ?? '—' }}</span>
+      <span class="gestion-servidor__inferior__valor">—</span>
     </section>
   </footer>
 </section>

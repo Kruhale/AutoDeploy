@@ -18,19 +18,18 @@
 
   <section class="logs-terminal__barra-filtros">
     <section class="logs-terminal__filtros">
-      <button class="logs-terminal__filtro">
-        <i class="fa-solid fa-filter"></i> Filters
+      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'all'" (click)="cambiarFiltro('all')">
+        <i class="fa-solid fa-filter"></i> All
       </button>
-      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'all'" (click)="cambiarFiltro('all')">All</button>
       <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'info'" (click)="cambiarFiltro('info')">Info</button>
       <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'warn'" (click)="cambiarFiltro('warn')">Warning</button>
       <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'error'" (click)="cambiarFiltro('error')">Error</button>
     </section>
     <section class="logs-terminal__barra-acciones">
-      <button class="boton--ghost">
+      <button class="boton--ghost" (click)="exportarLogs()">
         <i class="fa-solid fa-download"></i> Export Logs
       </button>
-      <button class="boton--primario">
+      <button class="boton--primario" (click)="reiniciarFlujo()">
         <i class="fa-solid fa-rotate-right"></i> Restart Flow
       </button>
     </section>

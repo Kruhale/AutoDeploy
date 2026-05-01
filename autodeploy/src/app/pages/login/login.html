@@ -19,19 +19,19 @@
     <form class="pagina-login__formulario">
 
       @if (mensajeDeErrorVisible()) {
-      <p class="pagina-login__error">Email o contraseña incorrectos</p>
+      <p class="pagina-login__error">{{ mensajeDeError() }}</p>
       }
 
       <section class="campo">
         <label class="campo__etiqueta" for="email">Email</label>
-        <input class="campo__input" id="email" type="email" placeholder="tu@email.com" autocomplete="email">
+        <input class="campo__input" id="email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
       </section>
 
       <section class="campo">
         <label class="campo__etiqueta" for="password">Contraseña</label>
         <section class="pagina-login__campo-password">
-          <input class="campo__input" id="password" [type]="passwordEsVisible() ? 'text' : 'password'"
-            placeholder="••••••••" autocomplete="current-password">
+          <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
+            placeholder="••••••••" autocomplete="current-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
           <button class="pagina-login__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
             [attr.aria-label]="passwordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
             <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
@@ -39,8 +39,9 @@
         </section>
       </section>
 
-      <button class="boton--primario pagina-login__boton-enviar" type="button" (click)="iniciarSesion()">Iniciar
-        sesión</button>
+      <button class="boton--primario pagina-login__boton-enviar" type="button" (click)="iniciarSesion()" [disabled]="cargando()">
+        {{ cargando() ? 'Signing in...' : 'Iniciar sesión' }}
+      </button>
 
     </form>
 

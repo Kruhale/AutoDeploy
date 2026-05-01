@@ -2,8 +2,9 @@
   <header class="nuevo-despliegue__barra-superior">
     <app-migas-pan [migas]="[{ etiqueta: 'Home', enlace: '/app/dashboard' }, { etiqueta: 'New Deployment' }]"></app-migas-pan>
     <section class="nuevo-despliegue__barra-acciones">
-      <i class="fa-solid fa-bell"></i>
-      <button class="boton--primario">Deploy Now</button>
+      <button class="boton--primario" (click)="lanzarDespliegue()" [disabled]="desplegando()">
+        {{ desplegando() ? 'Deploying...' : 'Deploy Now' }}
+      </button>
     </section>
   </header>
 
@@ -48,18 +49,16 @@
         @if (origenCodigo() === 'git') {
           <section class="campo">
             <label class="campo__etiqueta">Repository URL</label>
-            <input class="campo__input" type="text" placeholder="https://github.com/user/repo.git">
+            <input class="campo__input" type="text" placeholder="https://github.com/user/repo.git" [ngModel]="repositorioUrl()" (ngModelChange)="repositorioUrl.set($event)">
           </section>
           <section class="nuevo-despliegue__fila-inputs">
             <section class="campo nuevo-despliegue__campo--mitad">
               <label class="campo__etiqueta">Branch</label>
-              <select class="campo__select">
-                <option>main</option>
-              </select>
+              <input class="campo__input" type="text" placeholder="main" [ngModel]="rama()" (ngModelChange)="rama.set($event)">
             </section>
             <section class="campo nuevo-despliegue__campo--mitad">
               <label class="campo__etiqueta">Root Directory</label>
-              <input class="campo__input" type="text" placeholder="./">
+              <input class="campo__input" type="text" placeholder="./" [ngModel]="directorioRaiz()" (ngModelChange)="directorioRaiz.set($event)">
             </section>
           </section>
         }
@@ -84,11 +83,11 @@
         </section>
         <section class="campo">
           <label class="campo__etiqueta">Application Port</label>
-          <input class="campo__input" type="text" value="8080">
+          <input class="campo__input" type="text" [ngModel]="puertoAplicacion()" (ngModelChange)="puertoAplicacion.set($event)">
         </section>
         <section class="campo">
           <label class="campo__etiqueta">Domain / Subdomain</label>
-          <input class="campo__input" type="text" placeholder="miapp.autodeploy.sh">
+          <input class="campo__input" type="text" placeholder="miapp.autodeploy.sh" [ngModel]="dominio()" (ngModelChange)="dominio.set($event)">
         </section>
         <section class="nuevo-despliegue__nota">
           <i class="fa-solid fa-circle-info nuevo-despliegue__nota__icono"></i>
@@ -99,7 +98,9 @@
   </section>
 
   <footer class="nuevo-despliegue__pie">
-    <button class="boton--ghost">Cancel</button>
-    <button class="boton--primario">Launch Deployment</button>
+    <button class="boton--ghost" (click)="cancelar()">Cancel</button>
+    <button class="boton--primario" (click)="lanzarDespliegue()" [disabled]="desplegando()">
+      {{ desplegando() ? 'Deploying...' : 'Launch Deployment' }}
+    </button>
   </footer>
 </section>

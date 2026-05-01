@@ -1,0 +1,71 @@
+<section class="pagina-billing">
+
+  <app-migas-pan [migas]="[{ etiqueta: 'Dashboard', enlace: '/app/dashboard' }, { etiqueta: 'Billing' }]"></app-migas-pan>
+
+  <header class="pagina-billing__cabecera">
+    <section class="pagina-billing__cabecera__izquierda">
+      <h1 class="pagina-billing__titulo">Billing</h1>
+      <p class="pagina-billing__subtitulo">Manage your subscription and payment methods</p>
+    </section>
+  </header>
+
+  <section class="pagina-billing__plan">
+    <section class="pagina-billing__plan__info">
+      <span class="pagina-billing__plan__etiqueta">Current Plan</span>
+      <span class="pagina-billing__plan__nombre">Free</span>
+      <span class="pagina-billing__plan__detalle">1 server, 512 MB RAM, community support</span>
+    </section>
+    <button class="boton--primario" (click)="navegarAPlanes()">Upgrade Plan</button>
+  </section>
+
+  <section class="pagina-billing__seccion">
+    <header class="pagina-billing__seccion__cabecera">
+      <h2 class="pagina-billing__seccion__titulo">Payment Method</h2>
+      <button class="boton--ghost" (click)="agregarMetodoPago()">Add Method</button>
+    </header>
+    @if (mensajeMetodoPago()) {
+      <p class="pagina-billing__mensaje">{{ mensajeMetodoPago() }}</p>
+    }
+    <p class="pagina-billing__vacio">
+      <i class="fa-solid fa-credit-card pagina-billing__vacio__icono"></i>
+      No payment method configured
+    </p>
+  </section>
+
+  <section class="pagina-billing__seccion">
+    <header class="pagina-billing__seccion__cabecera">
+      <h2 class="pagina-billing__seccion__titulo">Invoices</h2>
+    </header>
+
+    @if (listaDeFacturas().length === 0) {
+      <p class="pagina-billing__vacio">
+        <i class="fa-solid fa-file-invoice pagina-billing__vacio__icono"></i>
+        No invoices yet
+      </p>
+    } @else {
+      <table class="pagina-billing__tabla">
+        <thead>
+          <tr class="pagina-billing__tabla__fila-cabecera">
+            <th class="pagina-billing__tabla__th">Date</th>
+            <th class="pagina-billing__tabla__th">Description</th>
+            <th class="pagina-billing__tabla__th">Amount</th>
+            <th class="pagina-billing__tabla__th">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (factura of listaDeFacturas(); track factura.id) {
+            <tr class="pagina-billing__tabla__fila">
+              <td class="pagina-billing__tabla__td pagina-billing__tabla__td--mono">{{ factura.fecha }}</td>
+              <td class="pagina-billing__tabla__td">{{ factura.concepto }}</td>
+              <td class="pagina-billing__tabla__td pagina-billing__tabla__td--mono">{{ factura.importe }}</td>
+              <td class="pagina-billing__tabla__td">
+                <span class="pagina-billing__badge pagina-billing__badge--{{ factura.estado }}">{{ factura.estado }}</span>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+</section>

@@ -1,0 +1,169 @@
+.pagina-billing {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-3xl);
+}
+
+.pagina-billing__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.pagina-billing__cabecera__izquierda {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pagina-billing__titulo {
+  font-family: var(--font-secondary);
+  font-size: 1.75rem;
+  font-weight: var(--font-weight-extrabold);
+  color: var(--texto-claro);
+  letter-spacing: -0.5px;
+}
+
+.pagina-billing__subtitulo {
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+}
+
+.pagina-billing__plan {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-size-2xl);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l);
+}
+
+.pagina-billing__plan__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.pagina-billing__plan__etiqueta {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--texto-apagado);
+}
+
+.pagina-billing__plan__nombre {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+}
+
+.pagina-billing__plan__detalle {
+  font-size: var(--font-size-sm);
+  color: var(--texto-medio);
+}
+
+.pagina-billing__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-l);
+}
+
+.pagina-billing__seccion__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pagina-billing__seccion__titulo {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+}
+
+.pagina-billing__vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-size-s);
+  padding: var(--spacing-size-5xl) 0;
+  color: var(--texto-apagado);
+  font-size: var(--font-size-md);
+  text-align: center;
+}
+
+.pagina-billing__vacio__icono {
+  font-size: 1.5rem;
+  opacity: 0.4;
+  margin-bottom: var(--spacing-size-s);
+}
+
+.pagina-billing__tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.pagina-billing__tabla__fila-cabecera {
+  border-bottom: 1px solid var(--borde-normal);
+}
+
+.pagina-billing__tabla__th {
+  padding: var(--spacing-size-m) var(--spacing-size-l);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--texto-apagado);
+  text-align: left;
+}
+
+.pagina-billing__tabla__fila {
+  border-bottom: 1px solid var(--borde-suave);
+  transition: background-color var(--duration-fast) ease;
+}
+
+.pagina-billing__tabla__fila:hover {
+  background-color: rgba(240, 236, 226, 0.02);
+}
+
+.pagina-billing__tabla__td {
+  padding: var(--spacing-size-l);
+  font-size: var(--font-size-md);
+  color: var(--texto-claro);
+}
+
+.pagina-billing__tabla__td--mono {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+}
+
+.pagina-billing__badge {
+  display: inline-flex;
+  padding: 0.125rem 0.5rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-full);
+}
+
+.pagina-billing__badge--paid {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--verde-normal);
+}
+
+.pagina-billing__badge--pending {
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--naranja-normal);
+}
+
+.pagina-billing__badge--failed {
+  background: rgba(239, 68, 68, 0.1);
+  color: var(--rojo-normal);
+}
+
+.pagina-billing__mensaje {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-medio);
+}

@@ -5,13 +5,13 @@
         <span class="onboarding__etiqueta__punto"></span>
         Initial Setup
       </span>
-      <h1 class="onboarding__titulo">Connect Your Infrastructure</h1>
-      <p class="onboarding__descripcion">Link your server to start managing deployments, monitoring and backups powered by our AI.</p>
+      <h1 class="onboarding__titulo">Connect Your Server</h1>
+      <p class="onboarding__descripcion">Enter your VPS credentials to start managing deployments, monitoring and backups.</p>
     </section>
     <section class="onboarding__cabecera__derecha">
       <span class="onboarding__estado-conexion">
         <span class="onboarding__estado-conexion__label">EST</span>
-        <span class="onboarding__estado-conexion__texto">Waiting for connection</span>
+        <span class="onboarding__estado-conexion__texto">{{ mensajeEstado() }}</span>
       </span>
       <i class="fa-solid fa-network-wired onboarding__estado-conexion__icono"></i>
     </section>
@@ -22,7 +22,7 @@
       <article class="onboarding__seguridad__card">
         <h2 class="onboarding__seguridad__titulo">
           <i class="fa-solid fa-shield-halved onboarding__seguridad__titulo__icono"></i>
-          Enterprise Grade Security
+          Security
         </h2>
 
         <article class="onboarding__seguridad__item">
@@ -30,9 +30,9 @@
           <section class="onboarding__seguridad__info">
             <h3 class="onboarding__seguridad__nombre">
               <i class="fa-solid fa-lock"></i>
-              AES-256 Encryption
+              AES-256
             </h3>
-            <p class="onboarding__seguridad__desc">Your credentials are encrypted locally before being securely transmitted.</p>
+            <p class="onboarding__seguridad__desc">Credentials encrypted at rest</p>
           </section>
         </article>
 
@@ -40,10 +40,10 @@
           <span class="onboarding__seguridad__barra"></span>
           <section class="onboarding__seguridad__info">
             <h3 class="onboarding__seguridad__nombre">
-              <i class="fa-solid fa-bolt"></i>
-              Instant Connection
+              <i class="fa-solid fa-key"></i>
+              SSH Key Support
             </h3>
-            <p class="onboarding__seguridad__desc">Optimized protocols for server linking in under 30 seconds.</p>
+            <p class="onboarding__seguridad__desc">Passwordless auth via private key</p>
           </section>
         </article>
       </article>
@@ -53,27 +53,27 @@
       <section class="onboarding__formulario__fila">
         <section class="campo onboarding__campo--mitad">
           <label class="campo__etiqueta">Server Nickname</label>
-          <input class="campo__input" type="text" placeholder="e.g. API Production">
+          <input class="campo__input" name="nombre" type="text" placeholder="e.g. API Production" [ngModel]="nombreServidor()" (ngModelChange)="nombreServidor.set($event)">
         </section>
         <section class="campo onboarding__campo--mitad">
           <label class="campo__etiqueta">IP Address</label>
-          <input class="campo__input" type="text" placeholder="123.456.78.90">
+          <input class="campo__input" name="ip" type="text" placeholder="123.456.78.90" [ngModel]="direccionIp()" (ngModelChange)="direccionIp.set($event)">
         </section>
       </section>
       <section class="onboarding__formulario__fila">
         <section class="campo onboarding__campo--mitad">
           <label class="campo__etiqueta">SSH Port</label>
-          <input class="campo__input" type="text" value="22">
+          <input class="campo__input" name="puerto" type="text" [ngModel]="puertoSsh()" (ngModelChange)="puertoSsh.set($event)">
         </section>
         <section class="campo onboarding__campo--mitad">
           <label class="campo__etiqueta">User</label>
-          <input class="campo__input" type="text" value="root">
+          <input class="campo__input" name="usuario" type="text" [ngModel]="usuarioSsh()" (ngModelChange)="usuarioSsh.set($event)">
         </section>
       </section>
       <section class="campo">
         <label class="campo__etiqueta">Authentication Method</label>
         <section class="toggle">
-          <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'ssh'" (click)="cambiarMetodoAuth('ssh')">
+          <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'key'" (click)="cambiarMetodoAuth('key')">
             <i class="fa-solid fa-key"></i> SSH Key
           </button>
           <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'password'" (click)="cambiarMetodoAuth('password')">
@@ -84,29 +84,23 @@
       @if (metodoAutenticacion() === 'password') {
         <section class="campo">
           <label class="campo__etiqueta">Password</label>
-          <input class="campo__input" type="password" placeholder="Enter server password">
+          <input class="campo__input" name="password" type="password" placeholder="Enter server password" [ngModel]="passwordServidor()" (ngModelChange)="passwordServidor.set($event)">
         </section>
       }
     </section>
   </section>
 
   <section class="onboarding__ayuda">
-    <span class="onboarding__ayuda__icono"><i class="fa-solid fa-robot"></i></span>
+    <span class="onboarding__ayuda__icono"><i class="fa-solid fa-circle-question"></i></span>
     <section class="onboarding__ayuda__info">
       <h3 class="onboarding__ayuda__titulo">Need help?</h3>
-      <p class="onboarding__ayuda__desc">AI can help you find your IP or SSH port.</p>
+      <p class="onboarding__ayuda__desc">Run <code>hostname -I</code> on your server to find the IP address.</p>
     </section>
-    <i class="fa-solid fa-arrow-right onboarding__ayuda__flecha"></i>
   </section>
 
-  <button class="onboarding__boton-conectar">
-    Connect Server
+  <button class="onboarding__boton-conectar" (click)="conectarServidor()" [disabled]="conectando()">
+    {{ conectando() ? 'Connecting...' : 'Connect Server' }}
     <i class="fa-solid fa-link"></i>
   </button>
 
-  <footer class="onboarding__cifrado">
-    <span class="onboarding__cifrado__punto"></span>
-    <span class="onboarding__cifrado__texto">Encrypted Session Active</span>
-    <i class="fa-solid fa-shield-halved onboarding__cifrado__icono"></i>
-  </footer>
 </section>

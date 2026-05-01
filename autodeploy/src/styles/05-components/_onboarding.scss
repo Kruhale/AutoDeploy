@@ -241,29 +241,3 @@
   background-color: var(--amarillo-normal-hover);
 }
 
-.onboarding__cifrado {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-size-s);
-  font-size: var(--font-size-sm);
-  color: var(--texto-apagado);
-}
-
-.onboarding__cifrado__punto {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: 50%;
-  background-color: var(--verde-normal);
-}
-
-.onboarding__cifrado__texto {
-  font-weight: var(--font-weight-semibold);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  font-size: var(--font-size-xs);
-}
-
-.onboarding__cifrado__icono {
-  color: var(--verde-normal);
-}

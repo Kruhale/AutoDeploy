@@ -32,6 +32,27 @@
   border-color: var(--amarillo-normal);
 }
 
+.campo__textarea {
+  padding: 0.625rem var(--spacing-size-l);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-m);
+  color: var(--texto-claro);
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  resize: vertical;
+  transition: border-color var(--duration-base) ease;
+}
+
+.campo__textarea::placeholder {
+  color: var(--texto-apagado);
+}
+
+.campo__textarea:focus {
+  outline: none;
+  border-color: var(--amarillo-normal);
+}
+
 .campo__select {
   padding: 0.625rem var(--spacing-size-l);
   background: rgba(240, 236, 226, 0.03);

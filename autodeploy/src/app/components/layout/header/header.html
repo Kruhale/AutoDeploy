@@ -21,6 +21,39 @@
         <i class="fa-solid fa-moon"></i>
       }
     </button>
+
+    @if (authService.estaLogueado()) {
+      <section class="cabecera__notificaciones">
+        <button class="cabecera__campana" (click)="alternarNotificaciones()" aria-label="Notificaciones">
+          <i class="fa-solid fa-bell"></i>
+          @if (contadorSinLeer() > 0) {
+            <span class="cabecera__campana__badge">{{ contadorSinLeer() }}</span>
+          }
+        </button>
+
+        @if (notificacionesAbiertas()) {
+          <article class="cabecera__dropdown">
+            <header class="cabecera__dropdown__cabecera">
+              <span class="cabecera__dropdown__titulo">Notifications</span>
+              @if (contadorSinLeer() > 0) {
+                <button class="cabecera__dropdown__marcar" (click)="marcarTodasComoLeidas()">
+                  Mark all as read
+                </button>
+              }
+            </header>
+            <ul class="cabecera__dropdown__lista">
+              @for (notificacion of listaNotificaciones(); track notificacion.mensaje) {
+                <li class="cabecera__notif-item" [class.cabecera__notif-item--leida]="notificacion.leida">
+                  <p class="cabecera__notif-item__mensaje">{{ notificacion.mensaje }}</p>
+                  <span class="cabecera__notif-item__fecha">{{ notificacion.fecha }}</span>
+                </li>
+              }
+            </ul>
+          </article>
+        }
+      </section>
+    }
+
     @if (authService.estaLogueado()) {
     <a class="cabecera__cuenta" routerLink="/app/cuenta">
       <svg class="cabecera__cuenta__icono" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">

@@ -8,6 +8,27 @@
   </header>
 
   <section class="pagina-settings__seccion">
+    <h2 class="pagina-settings__seccion__titulo">Account</h2>
+    <section class="pagina-settings__fila">
+      <section class="campo">
+        <label class="campo__etiqueta" for="nombre-cuenta">Name</label>
+        <input class="campo__input" id="nombre-cuenta" type="text" placeholder="Your name" [ngModel]="nombreCuenta()" (ngModelChange)="nombreCuenta.set($event)">
+      </section>
+      <section class="campo">
+        <label class="campo__etiqueta" for="email-cuenta">Email</label>
+        <input class="campo__input" id="email-cuenta" type="email" placeholder="you@example.com" [ngModel]="emailCuenta()" (ngModelChange)="emailCuenta.set($event)">
+      </section>
+    </section>
+    @if (mensajeGuardado()) {
+      <p class="pagina-settings__mensaje-exito">{{ mensajeGuardado() }}</p>
+    }
+    @if (mensajeError()) {
+      <p class="pagina-settings__mensaje-error">{{ mensajeError() }}</p>
+    }
+    <button class="boton--primario" (click)="guardarCuenta()">Save account</button>
+  </section>
+
+  <section class="pagina-settings__seccion">
     <h2 class="pagina-settings__seccion__titulo">Server</h2>
     <section class="pagina-settings__fila">
       <section class="campo">

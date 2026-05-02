@@ -1,6 +1,7 @@
 import { Component, signal } from "@angular/core";
 import { MigasPan } from "../../components/shared/migas-pan/migas-pan";
 import { FormsModule } from "@angular/forms";
+import { UsuarioService } from "../../services/usuario.service";
 
 interface ClaveSsh {
   nombre: string;
@@ -22,10 +23,19 @@ export class Settings {
   hostname = signal("");
   timezone = signal("UTC");
   mensajeGuardado = signal("");
+  mensajeError = signal("");
+
+  nombreCuenta = signal("");
+  emailCuenta = signal("");
 
   mostrarFormularioClave = signal(false);
   nombreNuevaClave = signal("");
   contenidoNuevaClave = signal("");
+
+  constructor(private usuarioService: UsuarioService) {
+    this.nombreCuenta.set(this.usuarioService.nombre());
+    this.emailCuenta.set(this.usuarioService.email());
+  }
 
   guardarConfiguracion(): void {
     this.mensajeGuardado.set("Settings saved");
@@ -33,6 +43,28 @@ export class Settings {
     setTimeout(function() {
       componente.mensajeGuardado.set("");
     }, 3000);
+  }
+
+  guardarCuenta(): void {
+    const nombreActual = this.nombreCuenta();
+    const emailActual = this.emailCuenta();
+    const componente = this;
+
+    if (!nombreActual || !emailActual) {
+      return;
+    }
+
+    this.usuarioService.actualizarPerfil(nombreActual, emailActual).then(function() {
+      componente.mensajeGuardado.set("Account updated");
+      setTimeout(function() {
+        componente.mensajeGuardado.set("");
+      }, 3000);
+    }).catch(function() {
+      componente.mensajeError.set("Error al guardar los cambios");
+      setTimeout(function() {
+        componente.mensajeError.set("");
+      }, 3000);
+    });
   }
 
   mostrarFormularioAgregarClave(): void {

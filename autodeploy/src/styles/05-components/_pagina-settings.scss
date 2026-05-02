@@ -177,6 +177,12 @@
   color: var(--verde-normal);
 }
 
+.pagina-settings__mensaje-error {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--rojo-normal);
+}
+
 .pagina-settings__seccion__cabecera {
   display: flex;
   align-items: center;

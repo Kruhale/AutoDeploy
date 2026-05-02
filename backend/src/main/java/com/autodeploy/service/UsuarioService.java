@@ -62,4 +62,12 @@ public class UsuarioService {
         Usuario usuarioActualizado = usuarioRepository.save(usuario);
         return usuarioActualizado;
     }
+
+    public void eliminar(String id) {
+        boolean existe = usuarioRepository.existsById(id);
+        if (!existe) {
+            throw new ResourceNotFoundException("Usuario no encontrado");
+        }
+        usuarioRepository.deleteById(id);
+    }
 }

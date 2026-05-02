@@ -8,6 +8,7 @@ import com.autodeploy.model.Usuario;
 import com.autodeploy.service.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -68,5 +69,11 @@ public class UsuarioController {
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Perfil actualizado", respuesta);
         return ResponseEntity.ok(cuerpo);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> eliminar(@PathVariable String id) {
+        usuarioService.eliminar(id);
+        return ResponseEntity.noContent().build();
     }
 }

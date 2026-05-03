@@ -1,0 +1,29 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: autodeploy-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-datos:/data/db
+
+  backend:
+    build: ./backend
+    container_name: autodeploy-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/autodeploy
+
+  frontend:
+    build: ./autodeploy
+    container_name: autodeploy-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+
+volumes:
+  mongodb-datos:

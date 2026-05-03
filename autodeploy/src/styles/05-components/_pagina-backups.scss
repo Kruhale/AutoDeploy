@@ -161,3 +161,17 @@
   background: rgba(239, 68, 68, 0.1);
   color: var(--rojo-normal);
 }
+
+@media (max-width: 768px) {
+  .pagina-backups__cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+  }
+
+  .pagina-backups__auto {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+  }
+}

@@ -378,3 +378,45 @@
   border-radius: 50%;
   background-color: var(--verde-normal);
 }
+
+@media (max-width: 768px) {
+  .gestion-servidor__barra-superior {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+  }
+
+  .gestion-servidor__busqueda {
+    min-width: unset;
+    width: 100%;
+  }
+
+  .gestion-servidor__cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+  }
+
+  .gestion-servidor__detalles {
+    flex-wrap: wrap;
+  }
+
+  .gestion-servidor__metricas {
+    flex-direction: column;
+  }
+
+  .gestion-servidor__config-rapida {
+    flex-direction: column;
+  }
+
+  .gestion-servidor__app {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+  }
+
+  .gestion-servidor__inferior {
+    flex-wrap: wrap;
+    gap: var(--spacing-size-l);
+  }
+}

@@ -167,3 +167,25 @@
   font-weight: var(--font-weight-semibold);
   color: var(--texto-medio);
 }
+
+@media (max-width: 768px) {
+  .pagina-billing__cabecera {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+  }
+
+  .pagina-billing__plan {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
+  }
+
+  .pagina-billing__seccion {
+    overflow-x: auto;
+  }
+
+  .pagina-billing__tabla {
+    min-width: 36rem;
+  }
+}

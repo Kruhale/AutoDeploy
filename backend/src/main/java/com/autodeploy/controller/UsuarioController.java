@@ -6,6 +6,8 @@ import com.autodeploy.dto.LoginResponse;
 import com.autodeploy.dto.RegistroRequest;
 import com.autodeploy.model.Usuario;
 import com.autodeploy.service.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.Map;
 
+@Tag(name = "Usuarios", description = "Gestión de usuarios y autenticación")
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
@@ -30,6 +33,7 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
+    @Operation(summary = "Registrar usuario", description = "Crea una cuenta nueva y devuelve los datos del usuario")
     @PostMapping("/registro")
     public ResponseEntity<ApiResponse<LoginResponse>> registrar(@RequestBody @Valid RegistroRequest peticion) {
         Usuario usuario = usuarioService.registrar(peticion);
@@ -40,6 +44,7 @@ public class UsuarioController {
         return ResponseEntity.created(ubicacion).body(cuerpo);
     }
 
+    @Operation(summary = "Login", description = "Autentica al usuario con email y contraseña")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody @Valid LoginRequest peticion) {
         LoginResponse respuesta = usuarioService.login(peticion);

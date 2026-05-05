@@ -4,6 +4,8 @@ import com.autodeploy.dto.ApiResponse;
 import com.autodeploy.dto.ConexionSshRequest;
 import com.autodeploy.model.Servidor;
 import com.autodeploy.service.ServidorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.net.URI;
 import java.util.List;
 
+@Tag(name = "Servidores", description = "CRUD de servidores SSH")
 @RestController
 @RequestMapping("/api/servidores")
 public class ServidorController {
@@ -27,6 +30,7 @@ public class ServidorController {
         this.servidorService = servidorService;
     }
 
+    @Operation(summary = "Registrar servidor", description = "Añade un nuevo servidor SSH al sistema")
     @PostMapping
     public ResponseEntity<ApiResponse<Servidor>> registrar(@RequestBody @Valid ConexionSshRequest peticion) {
         Servidor servidor = servidorService.registrar(peticion);
@@ -36,6 +40,7 @@ public class ServidorController {
         return ResponseEntity.created(ubicacion).body(cuerpo);
     }
 
+    @Operation(summary = "Listar servidores", description = "Devuelve todos los servidores registrados")
     @GetMapping
     public ResponseEntity<ApiResponse<List<Servidor>>> listar() {
         List<Servidor> listaDeServidores = servidorService.listar();
@@ -52,6 +57,7 @@ public class ServidorController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Probar conexion SSH", description = "Verifica si el servidor es accesible por SSH sin guardarlo")
     @PostMapping("/probar-conexion")
     public ResponseEntity<ApiResponse<Boolean>> probarConexion(@RequestBody @Valid ConexionSshRequest peticion) {
         boolean conectado = servidorService.probarConexion(peticion);

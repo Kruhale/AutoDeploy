@@ -51,6 +51,26 @@
     </app-tarjeta-estadistica>
   </section>
 
+  @if (estadoSalud()) {
+    <section class="gestion-servidor__salud">
+      <span class="gestion-servidor__salud__estado gestion-servidor__salud__estado--{{ estadoSalud()!.estado }}">
+        <span class="gestion-servidor__salud__estado__punto"></span>
+        {{ estadoSalud()!.estado === 'online' ? 'Online' : estadoSalud()!.estado === 'offline' ? 'Offline' : 'Degraded' }}
+        <span class="gestion-servidor__salud__estado__tiempo">{{ estadoSalud()!.tiempoRespuestaMs }}ms</span>
+      </span>
+      @if (historialSalud().length > 0) {
+        <section class="gestion-servidor__salud__historial">
+          @for (comprobacion of historialSalud(); track comprobacion.fechaComprobacion) {
+            <span
+              class="gestion-servidor__salud__historial__punto gestion-servidor__salud__historial__punto--{{ comprobacion.estado }}"
+              [title]="comprobacion.estado + ' · ' + comprobacion.tiempoRespuestaMs + 'ms'">
+            </span>
+          }
+        </section>
+      }
+    </section>
+  }
+
   <section class="gestion-servidor__aplicaciones">
     <header class="gestion-servidor__aplicaciones__cabecera">
       <h2 class="gestion-servidor__aplicaciones__titulo">

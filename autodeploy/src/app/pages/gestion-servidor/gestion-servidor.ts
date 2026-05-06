@@ -1,5 +1,6 @@
 import { Component, signal, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
+import { HttpClient } from "@angular/common/http";
 import { TarjetaEstadistica } from "../../components/shared/tarjeta-estadistica/tarjeta-estadistica";
 import { MigasPan } from "../../components/shared/migas-pan/migas-pan";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
@@ -11,6 +12,12 @@ interface AplicacionHospedada {
   nombre: string;
   meta: string;
   version: string;
+}
+
+interface ComprobacionSalud {
+  estado: "online" | "offline" | "degraded";
+  tiempoRespuestaMs: number;
+  fechaComprobacion: string;
 }
 
 @Component({
@@ -29,10 +36,13 @@ export class GestionServidor implements OnInit {
   reiniciando = signal(false);
 
   listaDeAplicaciones = signal<AplicacionHospedada[]>([]);
+  estadoSalud = signal<ComprobacionSalud | null>(null);
+  historialSalud = signal<ComprobacionSalud[]>([]);
 
   constructor(
     private ruta: ActivatedRoute,
-    private servidorService: ServidorService
+    private servidorService: ServidorService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +63,22 @@ export class GestionServidor implements OnInit {
 
         const estadoMapeado = servidor.estado === "conectado" ? "online" : "offline";
         componente.servidorEstado.set(estadoMapeado);
+
+        componente.cargarSalud(idDesdeRuta);
+      }
+    });
+  }
+
+  cargarSalud(idServidor: string): void {
+    const componente = this;
+
+    this.http.get<ComprobacionSalud[]>("http://localhost:8080/api/health/" + idServidor).subscribe({
+      next: function(comprobaciones: ComprobacionSalud[]) {
+        if (comprobaciones.length > 0) {
+          componente.estadoSalud.set(comprobaciones[0]);
+        }
+        const ultimasCinco = comprobaciones.slice(0, 5);
+        componente.historialSalud.set(ultimasCinco);
       }
     });
   }

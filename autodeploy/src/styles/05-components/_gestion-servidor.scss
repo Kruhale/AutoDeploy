@@ -327,6 +327,73 @@
   font-size: var(--font-size-sm);
 }
 
+.gestion-servidor__salud {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-3xl);
+}
+
+.gestion-servidor__salud__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.gestion-servidor__salud__estado--online {
+  color: var(--verde-normal);
+}
+
+.gestion-servidor__salud__estado--offline {
+  color: var(--rojo-normal);
+}
+
+.gestion-servidor__salud__estado--degraded {
+  color: var(--naranja-normal);
+}
+
+.gestion-servidor__salud__estado__punto {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background-color: currentColor;
+}
+
+.gestion-servidor__salud__estado__tiempo {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--texto-apagado);
+  margin-left: 0.25rem;
+}
+
+.gestion-servidor__salud__historial {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.gestion-servidor__salud__historial__punto {
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  cursor: default;
+}
+
+.gestion-servidor__salud__historial__punto--online {
+  background-color: var(--verde-normal);
+}
+
+.gestion-servidor__salud__historial__punto--offline {
+  background-color: var(--rojo-normal);
+}
+
+.gestion-servidor__salud__historial__punto--degraded {
+  background-color: var(--naranja-normal);
+}
+
 .gestion-servidor__inferior {
   display: flex;
   align-items: center;

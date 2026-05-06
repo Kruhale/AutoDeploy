@@ -33,6 +33,15 @@ interface Actividad {
   detalle: string;
 }
 
+interface DespliegueReciente {
+  id: string;
+  servidorId: string;
+  tipo: string;
+  estado: "completado" | "fallido" | "en_progreso";
+  mensaje: string;
+  fechaInicio: string;
+}
+
 @Component({
   selector: "app-dashboard",
   imports: [RouterLink],
@@ -43,6 +52,7 @@ export class Dashboard implements OnInit {
   listaDeServidores = signal<ServidorDashboard[]>([]);
   listaDeSitios = signal<SitioWeb[]>([]);
   listaDeActividad = signal<Actividad[]>([]);
+  listaDespliegues = signal<DespliegueReciente[]>([]);
   contadorServidoresOnline: Signal<number>;
   contadorServidoresOffline: Signal<number>;
 
@@ -72,6 +82,7 @@ export class Dashboard implements OnInit {
   ngOnInit(): void {
     this.cargarServidores();
     this.cargarActividad();
+    this.cargarDespliegues();
   }
 
   cargarActividad(): void {
@@ -129,6 +140,16 @@ export class Dashboard implements OnInit {
 
     const diferenciaEnDias = Math.floor(diferenciaEnHoras / 24);
     return "hace " + diferenciaEnDias + " d";
+  }
+
+  cargarDespliegues(): void {
+    const componente = this;
+
+    this.http.get<DespliegueReciente[]>("http://localhost:8080/api/despliegues").subscribe({
+      next: function(despliegues: DespliegueReciente[]) {
+        componente.listaDespliegues.set(despliegues);
+      }
+    });
   }
 
   cargarServidores(): void {

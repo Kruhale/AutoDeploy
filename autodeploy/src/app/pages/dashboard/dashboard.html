@@ -110,4 +110,25 @@
     </section>
   }
 
+  <section class="panel-principal__despliegues">
+    <header class="panel-principal__despliegues__cabecera">
+      <h2 class="panel-principal__despliegues__titulo">Despliegues recientes</h2>
+    </header>
+    @if (listaDespliegues().length === 0) {
+      <p class="panel-principal__despliegues__vacio">Sin despliegues registrados</p>
+    }
+    @for (despliegue of listaDespliegues(); track despliegue.id) {
+      <article class="panel-principal__despliegue">
+        <section class="panel-principal__despliegue__izquierda">
+          <span class="panel-principal__despliegue__badge panel-principal__despliegue__badge--tipo">{{ despliegue.tipo }}</span>
+          <span class="panel-principal__despliegue__mensaje">{{ despliegue.mensaje }}</span>
+        </section>
+        <section class="panel-principal__despliegue__derecha">
+          <span class="panel-principal__despliegue__tiempo">{{ calcularTiempoRelativo(despliegue.fechaInicio) }}</span>
+          <span class="panel-principal__despliegue__badge panel-principal__despliegue__badge--{{ despliegue.estado }}">{{ despliegue.estado }}</span>
+        </section>
+      </article>
+    }
+  </section>
+
 </section>

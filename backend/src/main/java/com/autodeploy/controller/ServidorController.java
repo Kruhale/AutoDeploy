@@ -4,6 +4,7 @@ import com.autodeploy.dto.ApiResponse;
 import com.autodeploy.dto.ConexionSshRequest;
 import com.autodeploy.model.Servidor;
 import com.autodeploy.service.ServidorService;
+import com.autodeploy.service.SshCommandService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -25,9 +26,11 @@ import java.util.List;
 public class ServidorController {
 
     private final ServidorService servidorService;
+    private final SshCommandService sshCommandService;
 
-    public ServidorController(ServidorService servidorService) {
+    public ServidorController(ServidorService servidorService, SshCommandService sshCommandService) {
         this.servidorService = servidorService;
+        this.sshCommandService = sshCommandService;
     }
 
     @Operation(summary = "Registrar servidor", description = "Añade un nuevo servidor SSH al sistema")
@@ -64,6 +67,16 @@ public class ServidorController {
 
         String mensaje = conectado ? "Conexion SSH exitosa" : "No se pudo conectar";
         ApiResponse<Boolean> cuerpo = new ApiResponse<>(conectado, mensaje, conectado);
+        return ResponseEntity.ok(cuerpo);
+    }
+
+    @Operation(summary = "Reiniciar servidor", description = "Ejecuta sudo reboot en el servidor via SSH")
+    @PostMapping("/{id}/reboot")
+    public ResponseEntity<ApiResponse<String>> reiniciar(@PathVariable String id) {
+        Servidor servidor = servidorService.obtenerPorId(id);
+        sshCommandService.ejecutarComando(servidor, "sudo reboot");
+
+        ApiResponse<String> cuerpo = new ApiResponse<>(true, "Reinicio iniciado en " + servidor.getNombre(), null);
         return ResponseEntity.ok(cuerpo);
     }
 

@@ -20,6 +20,14 @@ interface ComprobacionSalud {
   fechaComprobacion: string;
 }
 
+interface SubdominioItem {
+  id: string;
+  nombre: string;
+  tipo: string;
+  destino: string;
+  sslActivo: boolean;
+}
+
 @Component({
   selector: "app-gestion-servidor",
   imports: [TarjetaEstadistica, MigasPan, RouterLink],
@@ -38,6 +46,7 @@ export class GestionServidor implements OnInit {
   listaDeAplicaciones = signal<AplicacionHospedada[]>([]);
   estadoSalud = signal<ComprobacionSalud | null>(null);
   historialSalud = signal<ComprobacionSalud[]>([]);
+  listaSubdominios = signal<SubdominioItem[]>([]);
 
   constructor(
     private ruta: ActivatedRoute,
@@ -65,6 +74,7 @@ export class GestionServidor implements OnInit {
         componente.servidorEstado.set(estadoMapeado);
 
         componente.cargarSalud(idDesdeRuta);
+        componente.cargarSubdominios(idDesdeRuta);
       }
     });
   }
@@ -79,6 +89,27 @@ export class GestionServidor implements OnInit {
         }
         const ultimasCinco = comprobaciones.slice(0, 5);
         componente.historialSalud.set(ultimasCinco);
+      }
+    });
+  }
+
+  cargarSubdominios(idServidor: string): void {
+    const componente = this;
+
+    this.http.get<SubdominioItem[]>("http://localhost:8080/api/subdominios/servidor/" + idServidor).subscribe({
+      next: function(subdominios: SubdominioItem[]) {
+        componente.listaSubdominios.set(subdominios);
+      }
+    });
+  }
+
+  eliminarSubdominio(idSubdominio: string): void {
+    const componente = this;
+    const idServidor = this.servidorId();
+
+    this.http.delete("http://localhost:8080/api/subdominios/" + idSubdominio).subscribe({
+      next: function() {
+        componente.cargarSubdominios(idServidor);
       }
     });
   }

@@ -71,6 +71,36 @@
     </section>
   }
 
+  <section class="gestion-servidor__subdominios">
+    <header class="gestion-servidor__subdominios__cabecera">
+      <h2 class="gestion-servidor__subdominios__titulo">
+        <i class="fa-solid fa-globe"></i>
+        Subdominios &amp; SSL
+      </h2>
+    </header>
+
+    @if (listaSubdominios().length === 0) {
+      <p class="gestion-servidor__vacio">Sin subdominios configurados</p>
+    }
+    @for (subdominio of listaSubdominios(); track subdominio.id) {
+      <article class="gestion-servidor__subdominio">
+        <section class="gestion-servidor__subdominio__info">
+          <span class="gestion-servidor__subdominio__nombre">{{ subdominio.nombre }}</span>
+          <span class="gestion-servidor__subdominio__badge">{{ subdominio.tipo }}</span>
+          <span class="gestion-servidor__subdominio__destino">{{ subdominio.destino }}</span>
+        </section>
+        <section class="gestion-servidor__subdominio__acciones">
+          <span class="gestion-servidor__subdominio__badge" [class.gestion-servidor__subdominio__badge--ssl-activo]="subdominio.sslActivo">
+            <i class="fa-solid fa-lock"></i> {{ subdominio.sslActivo ? 'SSL activo' : 'Sin SSL' }}
+          </span>
+          <button class="gestion-servidor__app__btn gestion-servidor__app__btn--peligro" (click)="eliminarSubdominio(subdominio.id)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </section>
+      </article>
+    }
+  </section>
+
   <section class="gestion-servidor__aplicaciones">
     <header class="gestion-servidor__aplicaciones__cabecera">
       <h2 class="gestion-servidor__aplicaciones__titulo">

@@ -9,7 +9,7 @@
     <section class="logs-terminal__cabecera__derecha">
       <section class="logs-terminal__busqueda">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="logs-terminal__busqueda__input" type="text" placeholder="Search logs...">
+        <input class="logs-terminal__busqueda__input" type="text" placeholder="Search logs..." (input)="busquedaTexto.set($any($event.target).value)">
       </section>
       <i class="fa-solid fa-bell logs-terminal__icono-notif"></i>
       <span class="logs-terminal__avatar"></span>

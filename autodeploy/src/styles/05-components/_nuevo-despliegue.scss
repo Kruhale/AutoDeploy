@@ -185,6 +185,41 @@
   line-height: 1.5;
 }
 
+.nuevo-despliegue__selector-tecnologia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-s);
+}
+
+.nuevo-despliegue__tecnologias__opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-size-s);
+}
+
+.nuevo-despliegue__tecnologia {
+  padding: var(--spacing-size-s) var(--spacing-size-l);
+  background: transparent;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-m);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-medio);
+  cursor: pointer;
+  transition: border-color var(--duration-base) ease;
+}
+
+.nuevo-despliegue__tecnologia:hover {
+  border-color: rgba(240, 236, 226, 0.2);
+  color: var(--texto-claro);
+}
+
+.nuevo-despliegue__tecnologia--activa {
+  border-color: var(--amarillo-normal);
+  background: rgba(245, 214, 35, 0.06);
+  color: var(--amarillo-normal);
+}
+
 .nuevo-despliegue__pie {
   display: flex;
   justify-content: flex-end;

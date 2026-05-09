@@ -10,6 +10,11 @@ interface OpcionTecnologia {
   descripcion: string;
 }
 
+interface OpcionTecnologiaSimple {
+  valor: string;
+  etiqueta: string;
+}
+
 @Component({
   selector: "app-nuevo-despliegue",
   imports: [MigasPan, FormsModule],
@@ -18,6 +23,7 @@ interface OpcionTecnologia {
 })
 export class NuevoDespliegue {
   tecnologiaSeleccionada = signal<string>("Docker Compose");
+  tecnologiaValorSeleccionado = signal<string>("");
   origenCodigo = signal<"git" | "zip">("git");
   sslActivo = signal(true);
   desplegando = signal(false);
@@ -26,6 +32,14 @@ export class NuevoDespliegue {
   directorioRaiz = signal("./");
   puertoAplicacion = signal("8080");
   dominio = signal("");
+
+  opcionesTecnologiaSimple: OpcionTecnologiaSimple[] = [
+    { valor: "node", etiqueta: "Node.js" },
+    { valor: "python", etiqueta: "Python" },
+    { valor: "php", etiqueta: "PHP" },
+    { valor: "static", etiqueta: "Static HTML" },
+    { valor: "docker", etiqueta: "Docker" },
+  ];
 
   opcionesDeTecnologia = signal<OpcionTecnologia[]>([
     { icono: "fa-solid fa-gear", etiquetaTexto: "", nombre: "Docker Compose", descripcion: "Multi-container stack" },

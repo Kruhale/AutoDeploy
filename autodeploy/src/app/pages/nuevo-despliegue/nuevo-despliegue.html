@@ -97,6 +97,20 @@
     </section>
   </section>
 
+  <section class="nuevo-despliegue__selector-tecnologia">
+    <p class="campo__etiqueta">Tecnología</p>
+    <section class="nuevo-despliegue__tecnologias__opciones">
+      @for (tech of opcionesTecnologiaSimple; track tech.valor) {
+        <button
+          class="nuevo-despliegue__tecnologia"
+          [class.nuevo-despliegue__tecnologia--activa]="tecnologiaValorSeleccionado() === tech.valor"
+          (click)="tecnologiaValorSeleccionado.set(tech.valor)">
+          {{ tech.etiqueta }}
+        </button>
+      }
+    </section>
+  </section>
+
   <footer class="nuevo-despliegue__pie">
     <button class="boton--ghost" (click)="cancelar()">Cancel</button>
     <button class="boton--primario" (click)="lanzarDespliegue()" [disabled]="desplegando()">

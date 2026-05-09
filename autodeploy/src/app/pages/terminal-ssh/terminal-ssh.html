@@ -1,0 +1,22 @@
+<section class="terminal-ssh" [attr.aria-labelledby]="'terminal-ssh-titulo'">
+  <h1 class="u-solo-lectores-pantalla" id="terminal-ssh-titulo">{{ "terminalSsh.tituloAccesible" | translate:{ servidor: nombreServidor() } }}</h1>
+  <header class="terminal-ssh__barra">
+    <section class="terminal-ssh__semaforo">
+      <a class="terminal-ssh__punto terminal-ssh__punto--rojo" routerLink="/app/dashboard" [attr.aria-label]="'terminalSsh.ariaCerrar' | translate" [title]="'terminalSsh.ariaCerrar' | translate"></a>
+      <span class="terminal-ssh__punto terminal-ssh__punto--naranja"></span>
+      <span class="terminal-ssh__punto terminal-ssh__punto--verde"></span>
+    </section>
+    <span class="terminal-ssh__titulo">{{ nombreServidor() }} &mdash; {{ ipServidor() }}</span>
+    <section class="terminal-ssh__estado" aria-live="polite">
+      <span class="terminal-ssh__estado__punto" [class.terminal-ssh__estado__punto--conectado]="terminalService.estadoConexion() === 'conectado'" aria-hidden="true"></span>
+      <span class="terminal-ssh__estado__texto">{{ "comun.estados." + terminalService.estadoConexion() | translate }}</span>
+    </section>
+  </header>
+
+  <section class="terminal-ssh__contenedor" #contenedorTerminal></section>
+
+  <footer class="terminal-ssh__pie">
+    <span class="terminal-ssh__pie__info">SSH &middot; {{ ipServidor() }}:{{ puertoServidor() }}</span>
+    <a class="terminal-ssh__pie__volver" routerLink="/app/dashboard">{{ "terminalSsh.volverDashboard" | translate }}</a>
+  </footer>
+</section>

@@ -446,6 +446,89 @@
   background-color: var(--verde-normal);
 }
 
+.gestion-servidor__subdominios {
+  display: flex;
+  flex-direction: column;
+}
+
+.gestion-servidor__subdominios__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-size-2xl);
+  background: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l) var(--radius-l) 0 0;
+}
+
+.gestion-servidor__subdominios__titulo {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-s);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+}
+
+.gestion-servidor__subdominio {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-size-l) var(--spacing-size-2xl);
+  border-top: 1px solid var(--borde-suave);
+  background: rgba(240, 236, 226, 0.02);
+}
+
+.gestion-servidor__subdominio__info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-l);
+}
+
+.gestion-servidor__subdominio__nombre {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--texto-claro);
+}
+
+.gestion-servidor__subdominio__destino {
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+}
+
+.gestion-servidor__subdominio__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-l);
+}
+
+.gestion-servidor__subdominio__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.625rem;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-full);
+  background: rgba(240, 236, 226, 0.07);
+  color: var(--texto-apagado);
+}
+
+.gestion-servidor__subdominio__badge--ssl-activo {
+  background: rgba(34, 197, 94, 0.1);
+  color: var(--verde-normal);
+}
+
+.gestion-servidor__vacio {
+  padding: var(--spacing-size-2xl);
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+  border: 1px solid var(--borde-suave);
+  border-top: none;
+  border-radius: 0 0 var(--radius-l) var(--radius-l);
+}
+
 @media (max-width: 768px) {
   .gestion-servidor__barra-superior {
     flex-direction: column;

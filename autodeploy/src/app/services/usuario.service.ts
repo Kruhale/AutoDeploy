@@ -1,5 +1,6 @@
-import { Injectable, signal } from "@angular/core";
+import { Injectable, signal, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { IdiomaService } from "./idioma.service";
 
 interface RespuestaApi<T> {
   success: boolean;
@@ -13,6 +14,7 @@ interface DatosUsuario {
   email: string;
   plan: string;
   fechaFinSuscripcion: string | null;
+  idioma: string;
 }
 
 @Injectable({ providedIn: "root" })
@@ -25,6 +27,8 @@ export class UsuarioService {
   email = signal(sessionStorage.getItem("email") || "");
   plan = signal(sessionStorage.getItem("plan") || "free");
   fechaFinSuscripcion = signal<string | null>(sessionStorage.getItem("fechaFinSuscripcion"));
+
+  private idiomaService = inject(IdiomaService);
 
   constructor(private http: HttpClient) {}
 
@@ -227,5 +231,10 @@ export class UsuarioService {
     this.nombre.set(datos.nombre);
     this.email.set(datos.email);
     this.plan.set(datos.plan || "free");
+
+    if (datos.idioma) {
+      sessionStorage.setItem("idioma", datos.idioma);
+      this.idiomaService.aplicarIdiomaDelUsuario(datos.idioma);
+    }
   }
 }

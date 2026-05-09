@@ -3,14 +3,14 @@
     <section class="editorial__cabecera__izquierda">
       <p class="editorial__sello">
         <span class="editorial__sello__punto" aria-hidden="true"></span>
-        Workspace · Initial setup · Onboarding
+        {{ "onboarding.sello" | translate }}
       </p>
-      <h1 class="editorial__titulo">Connect server<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="editorial__subtitulo">Enter your VPS credentials to start managing deployments, monitoring and backups.</p>
+      <h1 class="editorial__titulo">{{ "onboarding.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "onboarding.subtitulo" | translate }}</p>
     </section>
     <section class="onboarding__cabecera__derecha">
       <span class="onboarding__estado-conexion">
-        <span class="onboarding__estado-conexion__label">EST</span>
+        <span class="onboarding__estado-conexion__label">{{ "onboarding.estadoLabel" | translate }}</span>
         <span class="onboarding__estado-conexion__texto">{{ mensajeEstado() }}</span>
       </span>
       <i class="fa-solid fa-network-wired onboarding__estado-conexion__icono"></i>
@@ -22,7 +22,7 @@
       <article class="onboarding__seguridad__card">
         <h2 class="onboarding__seguridad__titulo">
           <i class="fa-solid fa-shield-halved onboarding__seguridad__titulo__icono"></i>
-          Security
+          {{ "onboarding.seguridad.titulo" | translate }}
         </h2>
 
         <article class="onboarding__seguridad__item">
@@ -30,9 +30,9 @@
           <section class="onboarding__seguridad__info">
             <h3 class="onboarding__seguridad__nombre">
               <i class="fa-solid fa-lock"></i>
-              AES-256
+              {{ "onboarding.seguridad.aesTitulo" | translate }}
             </h3>
-            <p class="onboarding__seguridad__desc">Credentials encrypted at rest</p>
+            <p class="onboarding__seguridad__desc">{{ "onboarding.seguridad.aesDescripcion" | translate }}</p>
           </section>
         </article>
 
@@ -41,9 +41,9 @@
           <section class="onboarding__seguridad__info">
             <h3 class="onboarding__seguridad__nombre">
               <i class="fa-solid fa-key"></i>
-              SSH Key Support
+              {{ "onboarding.seguridad.sshKeyTitulo" | translate }}
             </h3>
-            <p class="onboarding__seguridad__desc">Passwordless auth via private key</p>
+            <p class="onboarding__seguridad__desc">{{ "onboarding.seguridad.sshKeyDescripcion" | translate }}</p>
           </section>
         </article>
       </article>
@@ -52,39 +52,39 @@
     <section class="onboarding__formulario">
       <section class="onboarding__formulario__fila">
         <section class="campo onboarding__campo--mitad">
-          <label class="campo__etiqueta">Server Nickname</label>
-          <input class="campo__input" name="nombre" type="text" placeholder="e.g. API Production" [ngModel]="nombreServidor()" (ngModelChange)="nombreServidor.set($event)">
+          <label class="campo__etiqueta">{{ "onboarding.formulario.serverNickname" | translate }}</label>
+          <input class="campo__input" name="nombre" type="text" [placeholder]="'onboarding.formulario.serverNicknamePlaceholder' | translate" [ngModel]="nombreServidor()" (ngModelChange)="nombreServidor.set($event)">
         </section>
         <section class="campo onboarding__campo--mitad">
-          <label class="campo__etiqueta">IP Address</label>
-          <input class="campo__input" name="ip" type="text" placeholder="123.456.78.90" [ngModel]="direccionIp()" (ngModelChange)="direccionIp.set($event)">
+          <label class="campo__etiqueta">{{ "onboarding.formulario.ipAddress" | translate }}</label>
+          <input class="campo__input" name="ip" type="text" [placeholder]="'onboarding.formulario.ipAddressPlaceholder' | translate" [ngModel]="direccionIp()" (ngModelChange)="direccionIp.set($event)">
         </section>
       </section>
       <section class="onboarding__formulario__fila">
         <section class="campo onboarding__campo--mitad">
-          <label class="campo__etiqueta">SSH Port</label>
+          <label class="campo__etiqueta">{{ "onboarding.formulario.sshPort" | translate }}</label>
           <input class="campo__input" name="puerto" type="text" [ngModel]="puertoSsh()" (ngModelChange)="puertoSsh.set($event)">
         </section>
         <section class="campo onboarding__campo--mitad">
-          <label class="campo__etiqueta">User</label>
+          <label class="campo__etiqueta">{{ "onboarding.formulario.user" | translate }}</label>
           <input class="campo__input" name="usuario" type="text" [ngModel]="usuarioSsh()" (ngModelChange)="usuarioSsh.set($event)">
         </section>
       </section>
       <section class="campo">
-        <label class="campo__etiqueta">Authentication Method</label>
+        <label class="campo__etiqueta">{{ "onboarding.formulario.authMethod" | translate }}</label>
         <section class="toggle">
           <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'key'" (click)="cambiarMetodoAuth('key')">
-            <i class="fa-solid fa-key"></i> SSH Key
+            <i class="fa-solid fa-key"></i> {{ "onboarding.formulario.authMethodKey" | translate }}
           </button>
           <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'password'" (click)="cambiarMetodoAuth('password')">
-            <i class="fa-solid fa-lock"></i> Password
+            <i class="fa-solid fa-lock"></i> {{ "onboarding.formulario.authMethodPassword" | translate }}
           </button>
         </section>
       </section>
       @if (metodoAutenticacion() === 'password') {
         <section class="campo">
-          <label class="campo__etiqueta">Password</label>
-          <input class="campo__input" name="password" type="password" placeholder="Enter server password" [ngModel]="passwordServidor()" (ngModelChange)="passwordServidor.set($event)">
+          <label class="campo__etiqueta">{{ "onboarding.formulario.contrasena" | translate }}</label>
+          <input class="campo__input" name="password" type="password" [placeholder]="'onboarding.formulario.passwordPlaceholder' | translate" [ngModel]="passwordServidor()" (ngModelChange)="passwordServidor.set($event)">
         </section>
       }
     </section>
@@ -93,13 +93,13 @@
   <section class="onboarding__ayuda">
     <span class="onboarding__ayuda__icono"><i class="fa-solid fa-circle-question"></i></span>
     <section class="onboarding__ayuda__info">
-      <h3 class="onboarding__ayuda__titulo">Need help?</h3>
-      <p class="onboarding__ayuda__desc">Run <code>hostname -I</code> on your server to find the IP address.</p>
+      <h3 class="onboarding__ayuda__titulo">{{ "onboarding.ayuda.titulo" | translate }}</h3>
+      <p class="onboarding__ayuda__desc">{{ "onboarding.ayuda.descripcionParte1" | translate }}<code>{{ "onboarding.ayuda.codigo" | translate }}</code>{{ "onboarding.ayuda.descripcionParte2" | translate }}</p>
     </section>
   </section>
 
   <button class="onboarding__boton-conectar" (click)="conectarServidor()" [disabled]="conectando()">
-    {{ conectando() ? 'Connecting...' : 'Connect Server' }}
+    {{ (conectando() ? "onboarding.connecting" : "onboarding.connectServer") | translate }}
     <i class="fa-solid fa-link"></i>
   </button>
 

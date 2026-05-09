@@ -19,6 +19,7 @@ public class Usuario {
     private String passwordHash;
     private LocalDateTime fechaCreacion;
     private String plan;
+    private String idioma;
     private LocalDateTime fechaInicioSuscripcion;
     private LocalDateTime fechaFinSuscripcion;
     private List<ClaveSshUsuario> clavesSsh = new ArrayList<>();
@@ -27,6 +28,7 @@ public class Usuario {
     public Usuario() {
         this.fechaCreacion = LocalDateTime.now();
         this.plan = "free";
+        this.idioma = "es";
         this.clavesSsh = new ArrayList<>();
         this.preferenciasNotificacion = new PreferenciasNotificacion();
     }
@@ -37,6 +39,7 @@ public class Usuario {
         this.passwordHash = passwordHash;
         this.fechaCreacion = LocalDateTime.now();
         this.plan = "free";
+        this.idioma = "es";
         this.clavesSsh = new ArrayList<>();
         this.preferenciasNotificacion = new PreferenciasNotificacion();
     }
@@ -75,4 +78,7 @@ public class Usuario {
 
     public LocalDateTime getFechaFinSuscripcion() { return fechaFinSuscripcion; }
     public void setFechaFinSuscripcion(LocalDateTime fechaFinSuscripcion) { this.fechaFinSuscripcion = fechaFinSuscripcion; }
+
+    public String getIdioma() { return idioma != null ? idioma : "es"; }
+    public void setIdioma(String idioma) { this.idioma = idioma; }
 }

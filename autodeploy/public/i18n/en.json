@@ -1,0 +1,1413 @@
+{
+  "comun": {
+    "guardar": "Save",
+    "cancelar": "Cancel",
+    "eliminar": "Delete",
+    "anadir": "Add",
+    "editar": "Edit",
+    "cargando": "Loading…",
+    "error": "Error",
+    "exito": "Done",
+    "confirmar": "Confirm",
+    "cerrar": "Close",
+    "volver": "Back",
+    "continuar": "Continue",
+    "siguiente": "Next",
+    "anterior": "Previous",
+    "buscar": "Search",
+    "guion": "—",
+    "menu": "Menu",
+    "sinDatos": "No data yet",
+    "guardando": "Saving…",
+    "guardado": "Saved",
+    "creando": "Creating…",
+    "eliminando": "Deleting…",
+    "actualizando": "Updating…",
+    "procesando": "Processing…",
+    "intentar": "Retry",
+    "ver": "View",
+    "estado": "Status",
+    "fecha": "Date",
+    "nombre": "Name",
+    "descripcion": "Description",
+    "accion": "Action",
+    "acciones": "Actions",
+    "tipo": "Type",
+    "activo": "Active",
+    "inactivo": "Inactive"
+  },
+  "selectorIdioma": {
+    "etiqueta": "Language",
+    "descripcion": "Choose the interface language. Your preference is saved to your account.",
+    "aria": {
+      "abrir": "Change language",
+      "grupo": "Language selector"
+    }
+  },
+  "navegacion": {
+    "ir": "Go"
+  },
+  "footer": {
+    "marca": {
+      "descripcion1": "Drama-free deployments.",
+      "descripcion2": "Enterprise cloud infrastructure",
+      "descripcion3": "stripped down to the essentials."
+    },
+    "columnaProducto": {
+      "titulo": "Product",
+      "features": "Features",
+      "comoFunciona": "How it works",
+      "precios": "Pricing",
+      "apiDocs": "API documentation"
+    },
+    "columnaLegal": {
+      "titulo": "Legal",
+      "politicaPrivacidad": "Privacy policy",
+      "terminos": "Terms of service",
+      "rgpd": "GDPR",
+      "politicaCookies": "Cookie policy"
+    },
+    "columnaSoporte": {
+      "titulo": "Support",
+      "documentacion": "Documentation",
+      "estado": "Service status",
+      "contacto": "Contact",
+      "comunidad": "Community"
+    },
+    "copyright": "© 2026 AutoDeployService · Enterprise cloud infrastructure"
+  },
+  "barraPie": {
+    "estado": "All systems operational",
+    "version": "v2.41"
+  },
+  "header": {
+    "nav": {
+      "features": "Features",
+      "comoFunciona": "How it works",
+      "precios": "Pricing"
+    },
+    "aria": {
+      "temaClaro": "Switch to light mode",
+      "temaOscuro": "Switch to dark mode",
+      "notificaciones": "Notifications",
+      "menu": "Open menu",
+      "cerrarMenu": "Close menu"
+    },
+    "dropdown": {
+      "titulo": "Notifications",
+      "marcarTodas": "Mark all as read"
+    },
+    "cuenta": "My account",
+    "login": "Sign in",
+    "botonApp": "Go to app",
+    "tiempo": {
+      "haceMin": "{{min}} min ago",
+      "haceHoras": "{{h}} h ago",
+      "haceDias": "{{d}} d ago",
+      "haceUnMomento": "a moment ago"
+    },
+    "notif": {
+      "servidorOffline": "Server vps-prod-01 is down",
+      "deployCompleted": "Deployment to production completed",
+      "cpuExcedida": "CPU usage above 90% on vps-dev-02",
+      "sslRenovado": "SSL certificate renewed for example.com"
+    },
+    "panelMovil": {
+      "titulo": "Menu"
+    }
+  },
+  "sidebar": {
+    "secciones": {
+      "principal": "Main",
+      "servidor": "Server"
+    },
+    "nav": {
+      "dashboard": "Dashboard",
+      "conectarServidor": "Connect server",
+      "actividad": "Activity",
+      "billing": "Billing",
+      "terminal": "Terminal",
+      "asistenteIa": "AI Assistant",
+      "aplicaciones": "Applications",
+      "networking": "Networking & SSL",
+      "firewall": "Firewall",
+      "backups": "Backups"
+    },
+    "chipPro": "Pro",
+    "colapsar": "Collapse",
+    "fallbackCuenta": "My account"
+  },
+  "bannerCookies": {
+    "texto": "We use first-party cookies to improve your experience. Read our",
+    "enlace": "Cookie policy",
+    "rechazar": "Reject",
+    "aceptar": "Accept"
+  },
+  "panelMetricas": {
+    "fallbackNombre": "Server",
+    "esperandoPrimerCiclo": "Waiting for first cycle",
+    "mensajeVacio": "The backend is opening the SSH session and collecting data. Metrics will appear here in a few seconds.",
+    "uptimeSufijo": "uptime",
+    "sesionViva": "SSH session active",
+    "reconectando": "Reconnecting",
+    "tarjetas": {
+      "cpu": "CPU",
+      "carga": "Load",
+      "ram": "RAM",
+      "disco": "Disk"
+    },
+    "webs": {
+      "titulo": "Deployed sites",
+      "vacio": "No active sites in /etc/nginx/sites-enabled"
+    },
+    "docker": {
+      "titulo": "Docker containers",
+      "vacio": "No containers running"
+    }
+  },
+  "campanaNotificaciones": {
+    "ariaBoton": "Notifications",
+    "tituloPanel": "Notifications",
+    "ariaCerrar": "Close",
+    "vacio": "No notifications",
+    "marcarLeida": "Mark as read",
+    "eliminar": "Delete",
+    "marcarTodas": "Mark all as read"
+  },
+  "toastNotificaciones": {
+    "ariaCerrar": "Close"
+  },
+  "migasPan": {
+    "separador": "›"
+  },
+  "home": {
+    "hero": {
+      "etiqueta": "VPS management panel",
+      "titulo": "Manage your VPS without touching the terminal",
+      "descripcion": "Forget complicated commands. Connect over SSH and deploy your apps instantly with a sleek, powerful interface.",
+      "ctaPrimario": "Get started",
+      "ctaSecundario": "How it works",
+      "terminal": {
+        "titulo": "autodeploy — terminal",
+        "linea1": "Connecting over SSH…",
+        "exito": "ready",
+        "linea2": "Environment configured",
+        "linea3": "Uploading files…",
+        "linea4": "Setting up Nginx…",
+        "linea5": "SSL active (Let's Encrypt)",
+        "urlFinal": "→ https://my-site.com is live"
+      }
+    },
+    "funcionalidades": {
+      "titulo": "What you get",
+      "descripcion": "Smooth, fast workflows designed for teams that prioritize speed.",
+      "item1": {
+        "titulo": "No installation",
+        "descripcion": "Securely connect to your server over SSH—no intrusive scripts or heavy agents. Your credentials are encrypted end to end."
+      },
+      "item2": {
+        "titulo": "ZIP deployment",
+        "descripcion": "Upload compressed projects or link a Git repo. Ideal for prototypes without complex CI/CD pipelines."
+      },
+      "item3": {
+        "titulo": "End-to-end encryption",
+        "descripcion": "Full encryption ensures your infrastructure management stays completely secure and private every step of the way."
+      },
+      "item4": {
+        "titulo": "AI Assistant",
+        "descripcion": "Optimize settings and troubleshoot issues with our infrastructure copilot. Receive suggestions based on your server's live state."
+      }
+    },
+    "comoFunciona": {
+      "titulo": "How it works",
+      "descripcion": "From code to production in three steps",
+      "paso1": {
+        "titulo": "Connect your server",
+        "descripcion": "Provide your SSH credentials. The platform auto-configures your environment in line with current security standards."
+      },
+      "paso2": {
+        "titulo": "Upload your code",
+        "descripcion": "Drag and drop ZIP files or link Git repos—pick whatever fits your workflow."
+      },
+      "paso3": {
+        "titulo": "Deploy in one click",
+        "descripcion": "Nginx, SSL with Let's Encrypt, and process management with PM2 or Docker. Your app is live instantly."
+      }
+    },
+    "precios": {
+      "titulo": "Simple pricing",
+      "descripcion": "Start for free. Scale when you need to. No hidden fees.",
+      "periodo": "/month",
+      "planActual": "Your current plan",
+      "free": {
+        "nombre": "Free",
+        "precio": "€0",
+        "descripcion": "For developers exploring the platform.",
+        "features": {
+          "servidores": "1 VPS server",
+          "despliegues": "5 deployments/month",
+          "monitorizacion": "Basic monitoring",
+          "soporte": "Community support",
+          "ia": "AI Assistant",
+          "dominios": "Custom domains",
+          "equipo": "Team management"
+        },
+        "cta": "Start for free"
+      },
+      "pro": {
+        "badge": "Most popular",
+        "nombre": "Pro",
+        "precio": "€9",
+        "descripcion": "For teams with apps in production.",
+        "features": {
+          "servidores": "5 VPS servers",
+          "despliegues": "Unlimited deployments",
+          "monitorizacion": "Advanced monitoring",
+          "soporte": "Priority support",
+          "ia": "AI Assistant",
+          "dominios": "3 custom domains",
+          "equipo": "Team management"
+        },
+        "cta": "Start with Pro"
+      },
+      "business": {
+        "nombre": "Business",
+        "precio": "€29",
+        "descripcion": "Scale infrastructure without limits.",
+        "features": {
+          "servidores": "Unlimited servers",
+          "despliegues": "Unlimited deployments",
+          "monitorizacion": "Advanced analytics",
+          "soporte": "Dedicated support",
+          "ia": "AI Assistant",
+          "dominios": "Unlimited domains",
+          "equipo": "Team management (10 users)"
+        },
+        "cta": "Start with Business"
+      }
+    },
+    "cta": {
+      "titulo": "Ready to simplify your infrastructure?",
+      "descripcion": "Join hundreds of developers who have left the terminal behind. Start for free and scale today.",
+      "boton": "Start free now"
+    }
+  },
+  "avisoLegal": {
+    "titulo": "Legal Notice",
+    "fecha": "Last updated: April 2026",
+    "seccion1": {
+      "titulo": "1. Owner details",
+      "parrafo1": "In accordance with Article 10 of Spanish Law 34/2002, of July 11, on Information Society and E-Commerce Services (LSSI-CE), the owner of the AutoDeploy website is Alejandro Bravo Calderón, with address in Cádiz, Spain.",
+      "etiquetaEmail": "Contact email:"
+    },
+    "seccion2": {
+      "titulo": "2. Purpose and scope",
+      "parrafo": "This legal notice governs the use of the AutoDeploy website, a platform for managing VPS servers through a web interface. Accessing the website implies full acceptance of the terms set out herein."
+    },
+    "seccion3": {
+      "titulo": "3. Intellectual and industrial property",
+      "parrafo": "The contents of the website (text, images, logos, source code, and graphic design) are the property of the owner and are protected by current intellectual property legislation. Their full or partial reproduction without express authorization is prohibited."
+    },
+    "seccion4": {
+      "titulo": "4. Disclaimer of liability",
+      "parrafo": "AutoDeploy does not guarantee the continuous availability of the service nor accepts liability for damages arising from technical interruptions, unauthorized access, or data loss attributable to causes beyond its control."
+    },
+    "seccion5": {
+      "titulo": "5. Applicable law and jurisdiction",
+      "parrafo": "This legal notice is governed by Spanish law. For the resolution of any dispute, the parties submit to the courts and tribunals of Cádiz, expressly waiving any other jurisdiction."
+    }
+  },
+  "politicaPrivacidad": {
+    "titulo": "Privacy Policy",
+    "fecha": "Last updated: April 2026",
+    "seccion1": {
+      "titulo": "1. Data controller",
+      "parrafo": "The controller of the personal data collected through AutoDeploy is Alejandro Bravo Calderón, with address in Cádiz, Spain. You can contact us at"
+    },
+    "seccion2": {
+      "titulo": "2. Data collected and purpose",
+      "intro": "We collect the following data when you sign up:",
+      "item1Etiqueta": "Email and password",
+      "item1Descripcion": "to manage your account.",
+      "item2Etiqueta": "SSH credentials",
+      "item2Descripcion": "to connect to your servers on your behalf, encrypted at rest.",
+      "item3Etiqueta": "Usage data",
+      "item3Descripcion": "deployment logs and server metrics to show you the history."
+    },
+    "seccion3": {
+      "titulo": "3. Legal basis for processing",
+      "parrafo": "The processing is based on the performance of the service contract you accept when signing up (Art. 6.1.b GDPR). The processing of analytics cookies is based on your consent (Art. 6.1.a GDPR)."
+    },
+    "seccion4": {
+      "titulo": "4. Data retention",
+      "parrafo": "Data is retained for as long as your account remains active. When you delete your account, your data is removed within a maximum of 30 days, unless there is a legal obligation to retain it."
+    },
+    "seccion5": {
+      "titulo": "5. Your rights",
+      "parrafo": "Under the GDPR, you have the right to access, rectify, erase, object to, and restrict the processing of your data. You can exercise these rights by writing to",
+      "cierre": "You may also lodge a complaint with the Spanish Data Protection Agency (aepd.es)."
+    }
+  },
+  "politicaCookies": {
+    "titulo": "Cookie Policy",
+    "fecha": "Last updated: April 2026",
+    "seccion1": {
+      "titulo": "What are cookies?",
+      "parrafo": "Cookies are small text files that websites store on your device when you visit them. They are used to remember your preferences, keep you signed in, and analyze site usage."
+    },
+    "tabla": {
+      "titulo": "Cookies we use",
+      "nombre": "Name",
+      "tipo": "Type",
+      "duracion": "Duration",
+      "finalidad": "Purpose",
+      "fila1": {
+        "nombre": "logueado",
+        "tipo": "Technical",
+        "duracion": "Session",
+        "finalidad": "Keep the session signed in"
+      },
+      "fila2": {
+        "nombre": "tema",
+        "tipo": "Preference",
+        "duracion": "Persistent",
+        "finalidad": "Remember the theme (light/dark)"
+      },
+      "fila3": {
+        "nombre": "cookies",
+        "tipo": "Technical",
+        "duracion": "Persistent",
+        "finalidad": "Save your cookie preference"
+      },
+      "fila4": {
+        "nombre": "plan",
+        "tipo": "Functional",
+        "duracion": "Session",
+        "finalidad": "Remember your active subscription plan"
+      }
+    },
+    "gestion": {
+      "titulo": "How to manage cookies",
+      "parrafo": "You can accept or reject non-essential cookies from the banner that appears when you visit the site. You can also delete cookies from your browser settings at any time. Note that disabling technical cookies may affect how the service works."
+    }
+  },
+  "login": {
+    "sello": "2026 Edition · Restricted access",
+    "titularLinea1": "Welcome",
+    "titularLinea2": "back",
+    "panelTexto": "Your infrastructure is waiting. A persistent SSH session, a clean dashboard, and live metrics from second zero.",
+    "panelItem1": "End-to-end encrypted connections",
+    "panelItem2": "Immediate access to your servers and deployments",
+    "panelItem3": "Real-time SSH metrics, no intrusive agents",
+    "panelPieTexto": "Personal dossier · maintained by AutoDeploy",
+    "volver": "Back to home",
+    "cabeceraNumero": "01 · ACCESS",
+    "titulo": "Sign in",
+    "subtitulo": "Enter your credentials to access the control panel.",
+    "emailEtiqueta": "Email",
+    "emailPlaceholder": "you@email.com",
+    "passwordEtiqueta": "Password",
+    "passwordPlaceholder": "••••••••",
+    "ariaOcultarPassword": "Hide password",
+    "ariaVerPassword": "Show password",
+    "botonCargando": "Verifying",
+    "boton": "Sign in",
+    "pieTexto": "Don't have an account?",
+    "pieEnlace": "Create account",
+    "errorCamposVacios": "Email and password are required",
+    "errorCredenciales": "Invalid credentials"
+  },
+  "register": {
+    "sello": "2026 Edition · Onboarding open",
+    "titularLinea1": "Start your",
+    "titularLinea2": "infrastructure",
+    "panelTexto": "Connect your VPS via SSH, deploy your apps in one click, and monitor everything in real time from a single clean dashboard.",
+    "panelItem1Titulo": "Connect your first server",
+    "panelItem1Descripcion": "SSH credentials, no intrusive scripts or heavy agents.",
+    "panelItem2Titulo": "Upload your code",
+    "panelItem2Descripcion": "ZIP or Git repo, whichever fits your workflow.",
+    "panelItem3Titulo": "Deploy in one click",
+    "panelItem3Descripcion": "Nginx + SSL + PM2 / Docker configured instantly.",
+    "panelPieTexto": "Personal dossier · maintained by AutoDeploy",
+    "volver": "Back to home",
+    "cabeceraNumero": "02 · NEW ACCOUNT",
+    "titulo": "Create account",
+    "subtitulo": "Start managing your infrastructure in minutes.",
+    "nombreEtiqueta": "Full name",
+    "nombrePlaceholder": "Your name",
+    "emailEtiqueta": "Email",
+    "emailPlaceholder": "you@email.com",
+    "passwordEtiqueta": "Password",
+    "passwordPlaceholder": "••••••••",
+    "ariaOcultarPassword": "Hide password",
+    "ariaVerPassword": "Show password",
+    "confirmarPasswordEtiqueta": "Confirm password",
+    "confirmarPasswordPlaceholder": "••••••••",
+    "ariaOcultarConfirmPassword": "Hide password",
+    "ariaVerConfirmPassword": "Show password",
+    "criterioLongitud": "At least 8 characters",
+    "criterioMayuscula": "One uppercase letter",
+    "criterioMinuscula": "One lowercase letter",
+    "criterioNumero": "One number",
+    "criterioEspecial": "One special character",
+    "botonCargando": "Creating",
+    "boton": "Create account",
+    "pieTexto": "Already have an account?",
+    "pieEnlace": "Sign in",
+    "errorCamposVacios": "All fields are required",
+    "errorPasswordInvalida": "The password does not meet all requirements",
+    "errorPasswordsNoCoinciden": "Passwords do not match",
+    "errorRegistro": "Registration failed"
+  },
+  "confirmarFree": {
+    "volver": "Back",
+    "etiqueta": "Selected plan",
+    "nombre": "Free",
+    "precioPeriodo": "/month",
+    "resumen": "The essentials to connect your first server and start deploying for free.",
+    "item1": "1 VPS server",
+    "item2": "5 deployments per month",
+    "item3": "Basic monitoring",
+    "item4": "Community support",
+    "bajada": {
+      "eyebrow": "Plan change",
+      "tituloParte1": "You're about to downgrade from",
+      "tituloParte2": "to the",
+      "planFree": "Free",
+      "descripcion": "You'll keep your account and your servers, but you'll lose immediate access to premium features.",
+      "perdidasTitulo": "What you'll lose",
+      "perdida1": "AI Assistant",
+      "perdida2": "Custom domains",
+      "perdida3": "Unlimited deployments"
+    },
+    "alta": {
+      "eyebrow": "Start for free",
+      "titulo": "Ready to deploy your first app.",
+      "descripcion": "No credit card or trial period. Create your account and connect your server in under two minutes.",
+      "paso1": "Create your account with email",
+      "paso2": "Connect your server over SSH",
+      "paso3": "Deploy your first app"
+    },
+    "botonCancelar": "Cancel",
+    "botonConfirmarBajada": "Confirm downgrade",
+    "botonContinuar": "Continue to sign up"
+  },
+  "dashboard": {
+    "sello": "Operations · live monitor",
+    "titulo": "Dashboard",
+    "subtitulo": "Real-time infrastructure overview · all systems streaming",
+    "ctaAddServerPrincipal": "Add server",
+    "ctaAddServerSecundario": "Connect a new VPS",
+    "metricas": {
+      "totalServers": "Total servers",
+      "totalServersNota": "Active in this workspace",
+      "online": "Online",
+      "offline": "Offline",
+      "sites": "Sites"
+    },
+    "vacio": {
+      "titulo": "No servers connected",
+      "detalle": "Connect your first VPS to start monitoring and deploying",
+      "boton": "Connect server"
+    },
+    "seccion": {
+      "liveMonitoringTitulo": "Live monitoring",
+      "liveMonitoringDescripcion": "A persistent SSH session is kept per server. Metrics refresh every 30 seconds.",
+      "serversTitulo": "Servers",
+      "serversDescripcion": "Direct access per row · manage or jump into the shell.",
+      "activeSitesTitulo": "Active sites",
+      "activeSitesDescripcion": "Domains currently published and reachable.",
+      "recentActivityTitulo": "Recent activity",
+      "recentActivityDescripcion": "Latest events logged across servers and deployments.",
+      "recentDeploymentsTitulo": "Recent deployments",
+      "recentDeploymentsDescripcion": "Builds and rollouts ordered by start time."
+    },
+    "servidor": {
+      "manage": "Manage",
+      "ssh": "SSH"
+    },
+    "despliegues": {
+      "vacio": "No deployments recorded yet"
+    },
+    "tiempoRelativo": {
+      "haceUnMomento": "a moment ago",
+      "minutos": "{{n}} min ago",
+      "horas": "{{n}} h ago",
+      "dias": "{{n}} d ago"
+    }
+  },
+  "gestionServidor": {
+    "selloPrefijo": "Workspace · Server · ",
+    "estado": {
+      "online": "Online",
+      "offline": "Offline",
+      "degraded": "Degraded"
+    },
+    "port": "Port",
+    "hostSufijo": "@host",
+    "ctaSshPrincipal": "SSH Terminal",
+    "ctaSshSecundario": "Open shell",
+    "rebooting": "Rebooting",
+    "reboot": "Reboot",
+    "metricas": {
+      "cpu": "CPU load",
+      "ram": "Memory (RAM)",
+      "bandwidth": "Bandwidth",
+      "sinDatos": "No data yet"
+    },
+    "subdominios": {
+      "titulo": "Subdomains and SSL",
+      "metaActivos": "{{n}} active",
+      "vacio": "No subdomains configured yet.",
+      "sslActivo": "SSL active",
+      "sslInactivo": "No SSL"
+    },
+    "aplicaciones": {
+      "titulo": "Hosted applications",
+      "accion": "Deploy new",
+      "vacio": "No applications deployed on this server yet.",
+      "ok": "HTTP 200"
+    },
+    "inferior": {
+      "lastBackup": "Last backup",
+      "systemUptime": "System uptime"
+    }
+  },
+  "logsTerminal": {
+    "sello": "Workspace · Activity · Production v2.4.1",
+    "titulo": "Activity",
+    "subtitulo": "Real-time log stream and interactive shell · filter by severity to stay focused.",
+    "busqueda": "Search logs…",
+    "filtro": {
+      "all": "All",
+      "info": "Info",
+      "warn": "Warning",
+      "error": "Error"
+    },
+    "exportarLogs": "Export logs",
+    "refrescando": "Refreshing",
+    "refrescar": "Refresh",
+    "visor": {
+      "titulo": "Event viewer",
+      "loading": "Loading…",
+      "sinEventos": "No events yet",
+      "contador": "{{n}} events",
+      "cargandoActividad": "Loading recent activity…",
+      "vacioTitulo": "No activity logged yet",
+      "vacioDetalle": "Events will appear here as soon as something happens: deployments, connections, alerts."
+    },
+    "terminal": {
+      "tituloPrefijo": "Interactive shell — ",
+      "servidorPlaceholder": "select a server",
+      "selectorPlaceholder": "— pick a server —",
+      "connect": "Connect",
+      "disconnect": "Disconnect",
+      "sinServidores": "No servers configured. Add one from \"Connect server\" to open a shell.",
+      "elegirServidorParte1": "Pick a server above and press ",
+      "elegirServidorBold": "Connect",
+      "elegirServidorParte2": " to start an SSH session."
+    },
+    "pie": {
+      "logCodigoPrefijo": "№ LOG-",
+      "vacio": "No activity logged yet",
+      "resumen": "{{n}} recent events · {{m}} server(s) available",
+      "edicion": "ACTIVITY EDITION 2026.05"
+    }
+  },
+  "nuevoDespliegue": {
+    "sello": "Workspace · Applications · New deployment",
+    "titulo": "New deployment",
+    "subtitulo": "Configure runtime, source code, and target server to launch your application.",
+    "deploying": "Deploying",
+    "deployNow": "Deploy now",
+    "ctaSecundario": "Build and launch",
+    "cancelar": "Cancel",
+    "paso01": {
+      "titulo": "Runtime and stack",
+      "meta": "Pick one"
+    },
+    "paso02": {
+      "titulo": "Source code",
+      "metaGit": "Git remote",
+      "metaZip": "Upload ZIP",
+      "toggleGit": "Git / GitHub",
+      "toggleZip": "Upload ZIP",
+      "repositoryUrl": "Repository URL",
+      "repositoryUrlPlaceholder": "https://github.com/user/repo.git",
+      "branch": "Branch",
+      "branchPlaceholder": "main",
+      "rootDirectory": "Root directory",
+      "rootDirectoryPlaceholder": "./",
+      "zip": {
+        "arrastrar": "Drag your .zip here or click to select",
+        "detalle": "Maximum size 50 MB",
+        "quitar": "Remove file",
+        "directorioDestino": "Target remote directory",
+        "directorioDestinoPlaceholder": "/var/www/myapp"
+      }
+    },
+    "paso03": {
+      "titulo": "Network and SSL",
+      "tlsOn": "TLS on",
+      "tlsOff": "TLS off",
+      "sslTitulo": "Let's Encrypt SSL",
+      "sslDescripcion": "Firewall enabled",
+      "targetServer": "Target server",
+      "applicationPort": "Application port",
+      "dominio": "Domain / subdomain",
+      "dominioPlaceholder": "myapp.autodeploy.sh",
+      "nota": "We'll automatically configure an Nginx instance as a reverse proxy for this service."
+    },
+    "pie": {
+      "codigoPrefijo": "№ DEP-",
+      "tlsOn": "TLS automatically managed by Let's Encrypt",
+      "tlsOff": "TLS off — only enable it in production"
+    },
+    "opciones": {
+      "dockerComposeNombre": "Docker Compose",
+      "dockerComposeDescripcion": "Multi-container stack",
+      "ddevNombre": "DDEV",
+      "ddevDescripcion": "From local to production",
+      "nodejsNombre": "Node.js",
+      "nodejsDescripcion": "V8 JavaScript runtime",
+      "phpNombre": "PHP",
+      "phpDescripcion": "FPM and Apache/Nginx"
+    },
+    "errores": {
+      "repositorioRequerido": "The repository URL is required for Git deployments.",
+      "elegirServidor": "Pick a target server.",
+      "noRegistrado": "Could not register the deployment.",
+      "solamenteZip": "Only .zip files are accepted",
+      "zipDemasiadoGrande": "File exceeds the maximum allowed size (50 MB)",
+      "zipRequerido": "You must select a .zip file",
+      "directorioRequerido": "Specify the remote target directory",
+      "zipFallido": "ZIP deployment could not be completed"
+    },
+    "exito": {
+      "registrado": "Deployment registered. Redirecting to the dashboard…",
+      "zipDesplegado": "ZIP deployment completed successfully"
+    }
+  },
+  "onboarding": {
+    "sello": "Workspace · Initial setup · Onboarding",
+    "titulo": "Connect server",
+    "subtitulo": "Enter your VPS credentials to start managing deployments, monitoring, and backups.",
+    "estadoLabel": "STA",
+    "seguridad": {
+      "titulo": "Security",
+      "aesTitulo": "AES-256",
+      "aesDescripcion": "Credentials encrypted at rest",
+      "sshKeyTitulo": "SSH key support",
+      "sshKeyDescripcion": "Passwordless authentication via private key"
+    },
+    "formulario": {
+      "serverNickname": "Server alias",
+      "serverNicknamePlaceholder": "e.g. Production API",
+      "ipAddress": "IP address",
+      "ipAddressPlaceholder": "123.456.78.90",
+      "sshPort": "SSH port",
+      "user": "User",
+      "authMethod": "Authentication method",
+      "authMethodKey": "SSH key",
+      "passwordPlaceholder": "Enter the server password",
+      "contrasena": "Password",
+      "authMethodContrasena": "Password"
+    },
+    "ayuda": {
+      "titulo": "Need help?",
+      "descripcionParte1": "Run ",
+      "codigo": "hostname -I",
+      "descripcionParte2": " on your server to find the IP address."
+    },
+    "connecting": "Connecting…",
+    "connectServer": "Connect server",
+    "estado": {
+      "esperando": "Waiting for connection",
+      "probando": "Testing connection…",
+      "conectado": "Connected",
+      "fallido": "Connection failed"
+    },
+    "errorNombreIp": "Name and IP are required"
+  },
+  "cuenta": {
+    "refPrefix": "N°",
+    "estampa": "PRESS · ARCHIVE",
+    "selloIssue": "Personal dossier · Issue {{anio}}",
+    "overlineFree": "Free plan holder",
+    "overlinePaid": "Subscriber to",
+    "anonymous": "Anonymous",
+    "aviso": {
+      "titulo": "Subscription pending cancellation",
+      "descParte1": "Your access to ",
+      "descParte2": " remains active until ",
+      "descParte3": ". After that, the account will revert to the Free plan."
+    },
+    "seccion01": {
+      "titulo": "Tenure",
+      "descripcion": "Activity calendar since the account was created."
+    },
+    "tenure": {
+      "inauguralValor": "01",
+      "inauguralUnidad": "Day 01 · just started",
+      "unidadSingular": "day",
+      "unidadPlural": "days",
+      "leyendaInaugural": "Welcome aboard. Your first day is being logged.",
+      "leyendaContinuo": "of continuous use",
+      "diaCero": "Day zero",
+      "hitoUnAnio": "365 · one-year mark"
+    },
+    "seccion02": {
+      "titulo": "Identity",
+      "descripcion": "The name and email your teammates will see inside this workspace."
+    },
+    "formulario": {
+      "displayName": "Display name",
+      "displayNamePlaceholder": "What should we call you?",
+      "email": "Email address",
+      "emailPlaceholder": "you@email.com",
+      "emailPista": "Only used for billing and security alerts."
+    },
+    "saving": "Saving",
+    "commitChanges": "Commit changes",
+    "seccion03": {
+      "titulo": "Tier",
+      "descripcion": "Three altitudes. Billing prorated on every change."
+    },
+    "planFree": "Free",
+    "precioSufijo": "/month",
+    "cancelsPrefix": "Cancels on ",
+    "current": "Current",
+    "compararPricing": "Read the full pricing manifesto",
+    "seccion04": {
+      "titulo": "SSH keys",
+      "descripcion": "Public keys for passwordless authentication on every server you connect.",
+      "addKey": "Add key"
+    },
+    "formClave": {
+      "nombre": "Key name",
+      "nombrePlaceholder": "My laptop",
+      "publicKey": "Public key",
+      "publicKeyPlaceholder": "ssh-rsa AAAA...",
+      "cancelar": "Cancel",
+      "addKey": "Add key"
+    },
+    "clavesVacioTitulo": "No SSH keys registered",
+    "clavesVacioDetalle": "Add a public key to enable passwordless connections.",
+    "addedPrefix": "Added on ",
+    "ariaRemoveKey": "Remove key",
+    "seccion05": {
+      "titulo": "Notifications",
+      "descripcion": "Choose which events reach your inbox. Everything is opt-in."
+    },
+    "notifEmailTitulo": "Email notifications",
+    "notifEmailDetalle": "Receive deployment and status updates by email.",
+    "notifCriticasTitulo": "Critical alerts",
+    "notifCriticasDetalle": "Get notified when CPU, RAM, or disk usage exceeds 90%.",
+    "notifDespliegesTitulo": "Deployment events",
+    "notifDespliegesDetalle": "Every successful or failed build, the moment it happens.",
+    "seccion06": {
+      "titulo": "Language",
+      "descripcion": "Choose the interface language. Your preference is saved to your account and applied instantly."
+    },
+    "seccion07": {
+      "titulo": "Sign out",
+      "descripcion": "Hold the button down for a full second to end this session."
+    },
+    "salidaCargando": "Keep holding",
+    "salidaReposo": "Hold to sign out",
+    "pieNotas": "Personal dossier · maintained by AutoDeploy",
+    "pieEdicionPrefijo": "Issue",
+    "credenciales": {
+      "email": "Email",
+      "reference": "Reference",
+      "memberSince": "Member since"
+    },
+    "resumen": {
+      "status": "Status",
+      "servers": "Servers",
+      "aiAssistant": "AI Assistant",
+      "support": "Support",
+      "pendingCancellation": "Pending cancellation",
+      "freeTier": "Free tier",
+      "active": "Active",
+      "unlimited": "Unlimited",
+      "enabled": "Enabled",
+      "disabled": "Disabled"
+    },
+    "marquee": {
+      "perMonth": "/ month",
+      "unlimitedServers": "Unlimited servers",
+      "serversSuffix": "servers",
+      "aiIncluded": "AI Assistant included",
+      "supportSuffix": "support",
+      "enterpriseGrade": "Enterprise grade"
+    }
+  },
+  "billing": {
+    "sello": "Workspace · Billing center",
+    "titulo": "Billing",
+    "subtitulo": "Subscription, payment methods, and invoices in one place.",
+    "managePlanPrincipal": "Manage plan",
+    "managePlanSecundario": "Compare tiers",
+    "planEtiqueta": "Current subscription",
+    "features": {
+      "unlimitedServers": "Unlimited servers",
+      "serversSuffix": " servers",
+      "unlimitedDeployments": "Unlimited deployments",
+      "deploymentsSuffix": " deployments/month",
+      "aiIncluded": "AI Assistant included",
+      "aiNotAvailable": "AI Assistant not available",
+      "supportSuffix": " support"
+    },
+    "precioMoneda": "€",
+    "precioPeriodo": "/month",
+    "edicionPrefijo": " · Issue ",
+    "nextCharge": "Next charge",
+    "daysRemaining": " days remaining",
+    "seccion01": {
+      "titulo": "Usage this cycle",
+      "descripcion": "Live consumption against your plan limits. Resets every billing cycle."
+    },
+    "seccion02": {
+      "titulo": "Payment method",
+      "descripcion": "Card stored encrypted by Stripe — our server never sees it.",
+      "addMethod": "Add method"
+    },
+    "tarjetaFantasma": {
+      "marca": "VISA",
+      "cardholder": "Cardholder",
+      "cardholderValor": "— · —",
+      "expires": "Expires",
+      "expiresValor": "··/··"
+    },
+    "metodoPagoVacio": {
+      "titulo": "No payment method configured",
+      "detalle": "Add a card to unlock upgrades and automatic monthly billing. We never store the full PAN — only a tokenized reference via Stripe.",
+      "boton": "Connect a card"
+    },
+    "seccion03": {
+      "titulo": "Invoices",
+      "descripcion": "Past charges ordered by date · downloadable as PDF."
+    },
+    "facturasVacioTitulo": "No invoices issued yet",
+    "facturasVacioDetalle": "When you upgrade your plan, each charge will appear here automatically with a downloadable receipt.",
+    "tabla": {
+      "fecha": "Date",
+      "descripcion": "Description",
+      "importe": "Amount",
+      "estado": "Status",
+      "descargaAria": "Download invoice"
+    },
+    "pieTexto": "Stripe handles every charge · PCI-DSS Level 1 compliant",
+    "pieEdicionPrefijo": "Billing issue ",
+    "uso": {
+      "deUnlimited": "of unlimited",
+      "zeroPercent": "0% used",
+      "percentUsed": "{{n}}% used",
+      "servers": "Connected servers",
+      "deployments": "Deployments this cycle",
+      "customDomains": "Custom domains"
+    },
+    "stripeComingSoon": "Stripe integration coming soon"
+  },
+  "networking": {
+    "sello": "Workspace · Networking · SSL",
+    "titulo": "Networking",
+    "subtitulo": "Domains, DNS records, and SSL certificates · routed through your servers.",
+    "ctaPrincipal": "Add domain",
+    "ctaSecundario": "Point traffic here",
+    "formularioTitulo": "New domain",
+    "formularioDescripcion": "DNS propagation usually takes between 5 and 60 minutes.",
+    "dominio": "Domain name",
+    "dominioPlaceholder": "example.com",
+    "servidor": "Server",
+    "tipo": "Type",
+    "tipoPrimary": "Primary",
+    "tipoSubdomain": "Subdomain",
+    "destino": "Destination path / port",
+    "destinoPlaceholder": "/ or 8080",
+    "cancelar": "Cancel",
+    "guardando": "Saving…",
+    "agregar": "Add domain →",
+    "dominios": "Domains",
+    "dominiosDescripcion": "Registered hostnames pointing to this workspace.",
+    "cargandoDominios": "Loading domains…",
+    "vacioTitulo": "No domains configured",
+    "vacioDetalle": "Add your first domain to start routing traffic to your server.",
+    "sslActivo": "SSL active",
+    "sslInactivo": "No SSL",
+    "ariaEliminarDominio": "Remove domain",
+    "accionesTitulo": "Quick actions",
+    "accionesDescripcion": "Run the most common DNS and SSL flows in one click.",
+    "renovarTitulo": "Renew SSL",
+    "renovando": "Renewing…",
+    "renovarDetalle": "Force a Let's Encrypt renewal cycle",
+    "dnsTitulo": "DNS records",
+    "dnsDetalle": "View A, CNAME, MX entries",
+    "redirectsTitulo": "Redirects",
+    "redirectsDetalle": "301/302 rules between hosts",
+    "pieCodigo": "№ NET-{{count}}D",
+    "pieTexto": "SSL managed by Let's Encrypt · auto-renewal enabled",
+    "pieEdicion": "Networking issue 2026.05",
+    "modalDns": {
+      "indice": "DNS · Live lookup",
+      "titulo": "DNS records",
+      "ariaCerrar": "Close",
+      "placeholder": "example.com",
+      "resolviendo": "Resolving",
+      "lookup": "Look up",
+      "sinRegistros": "— no records"
+    },
+    "modalRedirects": {
+      "indice": "301 · 302 · between hosts",
+      "titulo": "Redirects",
+      "placeholderOrigen": "From: old.example.com",
+      "placeholderDestino": "To: https://new.example.com",
+      "codigo301": "301 (permanent)",
+      "codigo302": "302 (temporary)",
+      "guardando": "Saving",
+      "agregar": "Add",
+      "cargando": "Loading…",
+      "vacio": "No redirects configured · they will be written to `$HOME/.autodeploy/redirects.conf` on save.",
+      "ariaEliminar": "Remove redirect"
+    },
+    "mensajes": {
+      "errorAgregar": "Could not add the domain. Please try again.",
+      "errorEliminar": "Could not remove the domain.",
+      "sinDominiosRenovar": "No domains to renew yet.",
+      "iniciandoRenovacion": "Triggering SSL renewal on {{count}} domain(s)…",
+      "renovacionCompletada": "SSL renewal completed on {{count}} server(s).",
+      "renovacionFallida": "SSL renewal failed on one or more servers.",
+      "errorCrearRedirect": "Could not create the redirect",
+      "errorEliminarRedirect": "Could not remove the redirect"
+    }
+  },
+  "firewall": {
+    "selloPrefijo": "Workspace · Firewall · ",
+    "estadoActivo": "Active",
+    "estadoInactivo": "Inactive",
+    "titulo": "Firewall",
+    "subtitulo": "Inbound and outbound traffic rules · managed under the hood by ufw.",
+    "ctaPrincipal": "Add rule",
+    "ctaSecundario": "Open or block a port",
+    "selectorServidor": "Target server",
+    "presetsEtiqueta": "Presets · one click",
+    "presetSsh": "SSH",
+    "presetHttp": "HTTP",
+    "presetHttps": "HTTPS",
+    "presetMysql": "MySQL",
+    "presetPostgres": "Postgres",
+    "formularioTitulo": "New rule",
+    "formularioDescripcion": "All fields are applied by ufw within seconds.",
+    "puerto": "Port",
+    "puertoPlaceholder": "8080",
+    "protocolo": "Protocol",
+    "accion": "Action",
+    "accionAllow": "Allow",
+    "accionDeny": "Deny",
+    "origen": "Source",
+    "origenPlaceholder": "0.0.0.0/0",
+    "descripcion": "Description",
+    "descripcionPlaceholder": "Custom rule",
+    "cancelar": "Cancel",
+    "aplicar": "Apply rule →",
+    "reglasTitulo": "Active rules",
+    "reglasDescripcion": "Rules ordered by priority · enforced by ufw on the host.",
+    "vacioTitulo": "No rules configured",
+    "vacioDetalle": "Add rules manually or pick one of the presets above to quickly secure your server.",
+    "tablaPuerto": "Port",
+    "tablaProtocolo": "Protocol",
+    "tablaAccion": "Action",
+    "tablaOrigen": "Source",
+    "tablaDescripcion": "Description",
+    "ariaEliminar": "Remove rule",
+    "pieCodigo": "№ FW-{{count}}R",
+    "pieTexto": "Backed by ufw · changes apply instantly over SSH",
+    "pieEdicion": "Firewall issue 2026.05",
+    "preset": {
+      "ssh": "SSH access",
+      "http": "HTTP traffic",
+      "https": "HTTPS traffic",
+      "mysql": "MySQL database",
+      "postgres": "PostgreSQL database"
+    },
+    "mensajes": {
+      "errorPreset": "Could not add the preset rule",
+      "errorAgregar": "Could not add the rule",
+      "errorEliminar": "Could not remove the rule"
+    }
+  },
+  "backups": {
+    "selloPrefijo": "Workspace · Backups · ",
+    "estadoAutomatico": "Automatic",
+    "estadoManual": "Manual",
+    "titulo": "Backups",
+    "subtitulo": "Snapshots and restore points · stored encrypted off-server.",
+    "creando": "Creating",
+    "crear": "Create backup",
+    "ctaSecundario": "Snapshot the server now",
+    "selectorServidor": "Target server",
+    "autoTitulo": "Automatic backups",
+    "autoDetalle": "Daily snapshots at {{hora}} UTC · retained for 7 days · cron installed via SSH",
+    "snapshotsTitulo": "Snapshots",
+    "snapshotsDescripcion": "Restore points ordered by date · press \"Restore\" to revert.",
+    "vacioTitulo": "No backups available",
+    "vacioDetalle": "Create your first backup or enable automatic snapshots above to protect your infrastructure.",
+    "restore": "Restore",
+    "pieCodigo": "№ BKP-{{count}}S",
+    "pieTexto": "Snapshots encrypted with AES-256 · stored off-server",
+    "pieEdicion": "Backups issue 2026.05",
+    "mensajes": {
+      "cronInstalado": "Cron installed · daily snapshots at {{hora}} UTC",
+      "autoDeshabilitado": "Automatic backups disabled",
+      "errorCronInstalar": "Could not install the cron",
+      "errorCronEliminar": "Could not remove the cron",
+      "errorIniciar": "Could not start the backup",
+      "errorEliminar": "Could not delete the backup",
+      "errorRestaurar": "Could not restore the backup",
+      "confirmRestaurar": "This will restore the server state from this snapshot. A safety snapshot will be created automatically before the restore. Continue?",
+      "restoreIniciado": "Restore started · a pre-restore safety snapshot will appear shortly"
+    },
+    "tipo": {
+      "auto": "Automatic",
+      "manual": "Manual"
+    },
+    "estado": {
+      "completado": "Completed",
+      "en_progreso": "In progress",
+      "fallido": "Failed"
+    },
+    "eliminar": "Delete backup"
+  },
+  "terminalSelector": {
+    "sello": "Workspace · Terminal · SSH",
+    "titulo": "Terminal",
+    "subtitulo": "Open a fully interactive SSH session on any connected server.",
+    "vacioTitulo": "No servers connected",
+    "vacioDetalle": "First add a server from \"Connect server\" to open SSH sessions.",
+    "ctaPrincipal": "Connect server",
+    "ctaSecundario": "Start onboarding",
+    "bloqueTitulo": "Available servers",
+    "bloqueDescripcion": "Click a host to open a live PTY session in the browser.",
+    "hostSufijo": "@host",
+    "pieCodigo": "№ TTY-{{count}}H",
+    "pieTexto": "Interactive PTY · 100% real bash · bidirectional WebSocket",
+    "pieEdicion": "Terminal issue 2026.05"
+  },
+  "terminalSsh": {
+    "ariaCerrar": "Close",
+    "volverDashboard": "Back to dashboard"
+  },
+  "pago": {
+    "volver": "Back",
+    "etiqueta": "Selected plan",
+    "titularTarjeta": "Cardholder",
+    "titularPlaceholder": "FIRST LAST",
+    "expira": "Expires",
+    "expiraPlaceholder": "MM/YY",
+    "titulo": "Payment details",
+    "subtitulo": "Your connection is encrypted and secure",
+    "numeroTarjeta": "Card number",
+    "numeroTarjetaPlaceholder": "1234 5678 9012 3456",
+    "nombreTitular": "Cardholder name",
+    "nombreTitularPlaceholder": "As it appears on the card",
+    "fechaExpiracion": "Expiration date",
+    "fechaExpiracionPlaceholder": "MM/YY",
+    "cvv": "CVV",
+    "tooltipCvvAmex": "4 digits on the front",
+    "tooltipCvvGenerico": "3 digits on the back",
+    "cvvAmexPlaceholder": "••••",
+    "cvvGenericoPlaceholder": "•••",
+    "infoSeguridad": "Simulated payment — no real charge will be made",
+    "procesando": "Processing…",
+    "pagar": "Pay {{precio}}",
+    "exitoTitulo": "Payment completed!",
+    "exitoDescripcion": "Your {{nombrePlan}} plan is now active. Welcome aboard.",
+    "exitoBoton": "Go to dashboard",
+    "errorTitulo": "Processing error",
+    "errorDescripcion": "We couldn't complete the payment. Please try again.",
+    "errorBoton": "Retry",
+    "planProNombre": "Pro",
+    "planProPrecio": "€9/month",
+    "planProDescripcion": "For teams with apps in production",
+    "planBusinessNombre": "Business",
+    "planBusinessPrecio": "€29/month",
+    "planBusinessDescripcion": "For unlimited infrastructure",
+    "validacion": {
+      "numeroObligatorio": "The card number is required",
+      "numeroIncompleto": "Card number incomplete",
+      "numeroInvalido": "Invalid card number",
+      "nombreObligatorio": "The cardholder name is required",
+      "nombreMinimoCaracteres": "The name must be at least 3 characters",
+      "nombreSoloLetras": "The name can only contain letters",
+      "fechaFormato": "Incorrect MM/YY format",
+      "fechaMesInvalido": "The month is invalid",
+      "fechaExpirada": "The card has expired",
+      "cvvObligatorio": "The CVV is required",
+      "cvvLongitud": "The CVV must be {{n}} digits"
+    }
+  },
+  "asistenteIa": {
+    "sello": "AutoDeploy · AI copilot",
+    "tituloPrefijo": "Hi, I'm ",
+    "tituloNombre": "Nimbus",
+    "subtitulo": "Ask me to do anything on your server in plain language. Before touching anything, I'll show you the exact command.",
+    "selectorEtiqueta": "Active server",
+    "selectorSinServidores": "You have no servers connected",
+    "ajustes": "Settings",
+    "avisoTitulo": "You haven't configured your OpenRouter key yet.",
+    "avisoTexto": "You need a key to chat with the AI. Open the settings to enter it.",
+    "avisoBoton": "Configure now",
+    "bienvenidaTitulo": "How can I help you today?",
+    "bienvenidaTexto": "Start with one of these questions or write your own. I'll translate it into shell commands.",
+    "comandoChip": "Suggested command",
+    "estado": {
+      "pendiente": "Requires your approval",
+      "ejecutando": "Running…",
+      "ejecutado": "Executed",
+      "rechazado": "Rejected"
+    },
+    "cancelar": "Cancel",
+    "ejecutar": "Run on the server",
+    "salida": "Output",
+    "ariaLimpiar": "Clear conversation",
+    "placeholderEntrada": "Type what you want to do on your server…",
+    "config": {
+      "etiqueta": "Settings",
+      "titulo": "OpenRouter connection",
+      "ariaCerrar": "Close",
+      "apiKey": "OpenRouter key",
+      "apiKeyPlaceholder": "sk-or-v1-…",
+      "apiKeyConfigurada": "You already have a key saved. Leave it blank to keep it.",
+      "apiKeyNueva": "Get one for free at openrouter.ai/keys",
+      "modelo": "Preferred model",
+      "modeloAyuda": "Models marked as free do not consume credits.",
+      "comandos": "Auto-approved commands (one per line)",
+      "comandosAyuda": "Commands starting with these prefixes will run without asking for permission. Empty = ask for permission for everything.",
+      "cancelar": "Cancel",
+      "guardar": "Save settings"
+    },
+    "sugerencias": {
+      "disco": "How much free disk space is left?",
+      "ram": "Show me the RAM usage",
+      "nginx": "Restart the nginx service",
+      "cpu": "List the processes consuming the most CPU"
+    },
+    "modelos": {
+      "gpt4oMini": "GPT-4o mini (fast)",
+      "gpt4o": "GPT-4o (powerful)",
+      "claudeSonnet": "Claude 3.5 Sonnet",
+      "geminiFlash": "Gemini 2.0 Flash (free)",
+      "llama": "Llama 3.3 70B (free)"
+    },
+    "mensajes": {
+      "errorGuardarConfig": "Error saving settings",
+      "seleccionaServidor": "Select a server before sending the message",
+      "errorRespuesta": "An error occurred: ",
+      "errorDefault": "could not process your message",
+      "errorEjecutar": "Error: ",
+      "falloComando": "failed to execute the command"
+    }
+  },
+  "apiDocs": {
+    "sello": "API · Technical reference",
+    "titulo": "API Documentation",
+    "subtitulo": "Integrate AutoDeploy into your technical stack with our complete REST API. Standard JSON, JWT authentication, and real-time WebSockets.",
+    "version": "Current version",
+    "autenticacion": {
+      "titulo": "Authentication",
+      "descripcion": "All calls require a JWT token in the Authorization header. Get your token through the login endpoint."
+    },
+    "endpoints": {
+      "titulo": "Featured endpoints",
+      "descripcion": "The most used routes to manage servers, deployments, and configuration."
+    },
+    "respuestas": {
+      "titulo": "Response codes",
+      "descripcion": "Standard HTTP codes. All responses follow the ApiResponse format with success, message, and data.",
+      "codigo200": "Successful operation",
+      "codigo401": "Invalid or expired token",
+      "codigo404": "Resource not found",
+      "codigo500": "Internal server error"
+    },
+    "websockets": {
+      "titulo": "Real-time WebSockets",
+      "descripcion": "Three WebSocket channels for interactive SSH terminal, streaming metrics, and push notifications.",
+      "terminal": "Interactive SSH session",
+      "metricas": "Real-time metrics",
+      "notificaciones": "Push notifications"
+    },
+    "llamadaFinal": {
+      "titulo": "Explore the full API",
+      "texto": "Access the interactive documentation with Swagger UI to try each endpoint directly from your browser.",
+      "boton": "Open Swagger UI"
+    }
+  },
+  "documentacion": {
+    "sello": "Guides · User manual",
+    "titulo": "Documentation",
+    "subtitulo": "Learn to use AutoDeploy from scratch. Step-by-step tutorials to set up servers, deploy applications, and manage your infrastructure.",
+    "actualizado": "Last revised",
+    "fecha": "May 2026",
+    "primerosPasos": {
+      "titulo": "Getting started",
+      "descripcion": "Basic concepts to start using the platform.",
+      "guia1": {
+        "titulo": "Connect your first server",
+        "texto": "Add a VPS by entering IP, user, and SSH credentials. The connection is validated automatically."
+      },
+      "guia2": {
+        "titulo": "Set up SSH key authentication",
+        "texto": "Use private keys instead of passwords for a more secure connection to your server."
+      },
+      "guia3": {
+        "titulo": "Your first deployment",
+        "texto": "Deploy a project from a Git repository with a single click. Automatic detection of application type."
+      },
+      "guia4": {
+        "titulo": "Attach a subdomain",
+        "texto": "Configure DNS records and SSL certificates so your application is reachable through a public domain."
+      }
+    },
+    "operaciones": {
+      "titulo": "Daily operations",
+      "descripcion": "Common tasks to keep your services in production.",
+      "guia1": {
+        "titulo": "Firewall rules with ufw",
+        "texto": "Open and close ports, create rules by IP, and keep your server secure from the interface."
+      },
+      "guia2": {
+        "titulo": "Automatic backups",
+        "texto": "Schedule daily or weekly backups. The tar.gz files are stored on the VPS and registered on the platform."
+      },
+      "guia3": {
+        "titulo": "Redirects and reverse proxy",
+        "texto": "Configure HTTP redirects and nginx proxy rules from the Networking section."
+      },
+      "guia4": {
+        "titulo": "Real-time metrics",
+        "texto": "Monitor CPU, memory, and disk with a panel refreshed every second via WebSocket."
+      }
+    },
+    "avanzado": {
+      "titulo": "Advanced",
+      "descripcion": "For users who want to get the most out of the platform.",
+      "guia1": {
+        "titulo": "CI/CD integration",
+        "texto": "Connect your GitHub Actions pipeline to deploy automatically when pushing to the main branch."
+      },
+      "guia2": {
+        "titulo": "AI assistant for administration",
+        "texto": "Ask the assistant to run commands on your server by describing what you want in natural language."
+      },
+      "guia3": {
+        "titulo": "Manage plans and billing",
+        "texto": "Change your plan, view your invoice, and manage payment methods from the Billing section."
+      }
+    }
+  },
+  "estado": {
+    "sello": "Status · Real time",
+    "titulo": "Service status",
+    "subtitulo": "Live monitoring of every AutoDeploy component. Automatic refresh every 30 seconds.",
+    "ultimaActualizacion": "Last check",
+    "cargandoInicial": "Checking service status...",
+    "banner": {
+      "ok": "All systems operational",
+      "degradado": "Operating with partial incidents",
+      "caido": "Service outage detected"
+    },
+    "servicios": {
+      "api": "REST API",
+      "apiDescripcion": "Platform HTTP endpoints",
+      "baseDeDatos": "Database",
+      "baseDeDatosDescripcion": "MongoDB · primary persistence",
+      "websocketTerminal": "Terminal WebSocket",
+      "websocketTerminalDescripcion": "Interactive SSH connection",
+      "websocketMetricas": "Metrics WebSocket",
+      "websocketMetricasDescripcion": "Live telemetry stream",
+      "websocketNotificaciones": "Notifications WebSocket",
+      "websocketNotificacionesDescripcion": "Push notifications to users",
+      "asistenteIa": "AI Assistant",
+      "asistenteIaDescripcion": "OpenRouter · natural language responses"
+    },
+    "etiquetas": {
+      "up": "Operational",
+      "degraded": "Degraded",
+      "down": "Down"
+    },
+    "acciones": {
+      "refrescar": "Refresh now",
+      "actualizando": "Updating..."
+    },
+    "notaAutoRefresco": "Automatic refresh every 30 seconds"
+  },
+  "contacto": {
+    "sello": "Contact · We are here",
+    "titulo": "Let's talk",
+    "subtitulo": "Got a question, a suggestion, or a problem? Write to us through the channel you prefer and we'll get back to you as soon as possible.",
+    "respuestaEn": "Response time",
+    "formulario": {
+      "titulo": "Send a message",
+      "nombre": "Name",
+      "email": "Email",
+      "asunto": "Subject",
+      "mensaje": "Message",
+      "enviar": "Send email"
+    },
+    "exito": {
+      "titulo": "Email client opened",
+      "texto": "We have prepared the message with the data from the form. Review it and press send in your email client.",
+      "botonNuevo": "Send another message"
+    },
+    "canales": {
+      "titulo": "Other channels",
+      "email": "Direct email",
+      "github": "GitHub",
+      "redes": "Social networks",
+      "horario": "Support hours",
+      "horarioValor": "Mon-Fri · 9:00 to 18:00 CET"
+    }
+  },
+  "comunidad": {
+    "sello": "Community · Join in",
+    "titulo": "AutoDeploy community",
+    "subtitulo": "Learn, share, and build with people deploying applications every day. Forums, live chat, and resources created by the community.",
+    "miembros": "Active members",
+    "github": {
+      "titulo": "GitHub Discussions",
+      "texto": "Ask, propose improvements, and follow the project's development."
+    },
+    "discord": {
+      "titulo": "Discord",
+      "texto": "Live chat with other users and the maintenance team."
+    },
+    "twitter": {
+      "titulo": "X / Twitter",
+      "texto": "News, releases, and tricks about continuous deployments."
+    },
+    "reddit": {
+      "titulo": "Reddit",
+      "texto": "Long-form conversations, shared guides, and technical debates."
+    },
+    "recursos": {
+      "titulo": "Community resources",
+      "descripcion": "Content created by members to help you get more out of the platform.",
+      "tutorial": "Tutorial",
+      "video": "Video",
+      "articulo": "Article",
+      "recurso1": {
+        "titulo": "Deploy Next.js step by step",
+        "texto": "Complete guide to take a Next.js application to production with SSL and its own domain."
+      },
+      "recurso2": {
+        "titulo": "Weekly rotating backups",
+        "texto": "Strategy to keep daily copies for a week and weekly copies for a month."
+      },
+      "recurso3": {
+        "titulo": "Harden SSH security",
+        "texto": "Recommended configuration to reduce your server's attack surface."
+      }
+    }
+  }
+}

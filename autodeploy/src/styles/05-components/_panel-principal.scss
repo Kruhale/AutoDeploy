@@ -1,0 +1,176 @@
+// Dashboard "Parte de operaciones": el marco editorial (cabecera, bloques,
+// vitales, ledger, estados) viene del sistema compartido; aqui solo vive lo
+// propio de la pagina: la fecha del parte, el registro con rail de tiempo y
+// los detalles de las filas de servidores y despliegues.
+
+.panel-principal__fecha {
+  color: var(--texto-apagado);
+}
+
+.panel-principal__fecha::before {
+  content: "· ";
+}
+
+// Los paneles de monitorizacion traen su propio filete superior;
+// el borde inferior cierra el ultimo.
+.panel-principal__monitores {
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--borde-normal);
+}
+
+// ---------------------------------------------------------------------------
+// Fila de servidor en el ledger
+
+.panel-principal__servidor__estado {
+  width: 7.5rem; /* 120px */
+  flex-shrink: 0;
+}
+
+.panel-principal__servidor__nombre {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+  letter-spacing: -0.01em;
+}
+
+.panel-principal__servidor__ip {
+  margin-left: 0.6rem; /* 10px */
+  font-family: var(--font-mono);
+  font-size: 0.72rem; /* 12px */
+  letter-spacing: 0.04em;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-principal__servidor__enlace {
+  padding: 0.45rem 0.25rem; /* 7px 4px, area de toque comoda */
+  font-family: var(--font-mono);
+  font-size: 0.65rem; /* 10px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-medio);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.panel-principal__servidor__enlace:hover {
+  color: var(--amarillo-normal);
+}
+
+.panel-principal__servidor__enlace:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
+}
+
+// ---------------------------------------------------------------------------
+// Registro de actividad: rail de tiempo a la izquierda, eje vertical y texto
+
+.panel-principal__registro {
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-principal__registro__linea {
+  display: flex;
+  align-items: stretch;
+  gap: var(--spacing-size-l);
+}
+
+.panel-principal__registro__hora {
+  width: 6.5rem; /* 104px */
+  flex-shrink: 0;
+  padding-top: 0.15rem; /* 2px, alinea con la primera linea del texto */
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.1em;
+  line-height: 1.35;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-principal__registro__eje {
+  position: relative;
+  width: 0.9rem; /* 14px */
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.panel-principal__registro__eje::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 1px;
+  background-color: var(--borde-suave);
+}
+
+.panel-principal__registro__punto {
+  position: relative;
+  width: 0.45rem; /* 7px */
+  height: 0.45rem;
+  margin-top: 0.3rem; /* 5px */
+  border-radius: 50%;
+  background-color: var(--texto-apagado);
+}
+
+.panel-principal__registro__punto--verde {
+  background-color: var(--verde-normal);
+}
+
+.panel-principal__registro__punto--rojo {
+  background-color: var(--rojo-normal);
+}
+
+.panel-principal__registro__punto--azul {
+  background-color: var(--amarillo-normal);
+}
+
+.panel-principal__registro__punto--teal {
+  background-color: var(--texto-apagado);
+}
+
+.panel-principal__registro__texto {
+  padding-bottom: var(--spacing-size-l);
+  font-size: var(--font-size-sm);
+  color: var(--texto-claro);
+  line-height: var(--line-height-normal);
+  min-width: 0;
+}
+
+// ---------------------------------------------------------------------------
+// Despliegues
+
+.panel-principal__despliegues-vacio {
+  padding: var(--spacing-size-l) 0.25rem;
+  border-top: 1px solid var(--borde-normal);
+  font-family: var(--font-mono);
+  font-size: 0.65rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.panel-principal__despliegue__tipo {
+  width: 5.5rem; /* 88px */
+  flex-shrink: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.62rem; /* 10px */
+}
+
+@media (max-width: 640px) {
+  .panel-principal__servidor__estado {
+    width: auto;
+  }
+
+  .panel-principal__registro__hora {
+    width: 4.5rem; /* 72px */
+  }
+}

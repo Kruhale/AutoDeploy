@@ -1,0 +1,70 @@
+<main class="pagina-recursos">
+  <section class="pagina-recursos__hero">
+    <section class="pagina-recursos__hero__izquierda">
+      <span class="pagina-recursos__sello">
+        <span class="pagina-recursos__sello__punto"></span>
+        {{ "estado.sello" | translate }}
+      </span>
+      <h1 class="pagina-recursos__titulo">{{ "estado.titulo" | translate }}</h1>
+      <p class="pagina-recursos__subtitulo">{{ "estado.subtitulo" | translate }}</p>
+    </section>
+    <section class="pagina-recursos__hero__derecha">
+      <p class="pagina-recursos__hero__meta">{{ "estado.ultimaActualizacion" | translate }}</p>
+      <p class="pagina-recursos__hero__meta-valor">{{ fechaFormateada() }}</p>
+    </section>
+  </section>
+
+  @if (estadoActual() !== null) {
+    @if (estadoActual()!.estadoGeneral === "UP") {
+      <section class="pagina-estado__banner pagina-estado__banner--ok">
+        <span class="pagina-estado__banner__icono">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12l5 5L20 7"></path>
+          </svg>
+        </span>
+        <p class="pagina-estado__banner__titulo">{{ "estado.banner.ok" | translate }}</p>
+      </section>
+    } @else if (estadoActual()!.estadoGeneral === "DEGRADED") {
+      <section class="pagina-estado__banner pagina-estado__banner--aviso">
+        <span class="pagina-estado__banner__icono">!</span>
+        <p class="pagina-estado__banner__titulo">{{ "estado.banner.degradado" | translate }}</p>
+      </section>
+    } @else {
+      <section class="pagina-estado__banner pagina-estado__banner--error">
+        <span class="pagina-estado__banner__icono">!</span>
+        <p class="pagina-estado__banner__titulo">{{ "estado.banner.caido" | translate }}</p>
+      </section>
+    }
+
+    <section class="pagina-estado__lista">
+      @for (servicio of estadoActual()!.servicios; track servicio.clave) {
+        <article class="pagina-estado__servicio">
+          <span class="pagina-estado__servicio__indicador" [class]="'pagina-estado__servicio__indicador--' + servicio.estado.toLowerCase()"></span>
+          <section class="pagina-estado__servicio__info">
+            <h3 class="pagina-estado__servicio__nombre">{{ "estado.servicios." + servicio.clave | translate }}</h3>
+            <p class="pagina-estado__servicio__descripcion">{{ "estado.servicios." + servicio.clave + "Descripcion" | translate }}</p>
+          </section>
+          <span class="pagina-estado__servicio__etiqueta" [class]="'pagina-estado__servicio__etiqueta--' + servicio.estado.toLowerCase()">
+            {{ "estado.etiquetas." + servicio.estado.toLowerCase() | translate }}
+          </span>
+        </article>
+      }
+    </section>
+
+    <section class="pagina-estado__acciones">
+      <button type="button" class="pagina-recursos__boton pagina-recursos__boton--secundario" (click)="recargarManual()" [disabled]="cargando()">
+        @if (cargando()) {
+          {{ "estado.acciones.actualizando" | translate }}
+        } @else {
+          {{ "estado.acciones.refrescar" | translate }}
+        }
+      </button>
+      <p class="pagina-estado__nota">{{ "estado.notaAutoRefresco" | translate }}</p>
+    </section>
+  } @else if (cargando()) {
+    <section class="pagina-estado__cargando">
+      <span class="pagina-estado__cargando__circulo"></span>
+      <p>{{ "estado.cargandoInicial" | translate }}</p>
+    </section>
+  }
+</main>

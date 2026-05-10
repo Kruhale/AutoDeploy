@@ -33,6 +33,31 @@ export const routes: Routes = [
             (modulo) => modulo.PoliticaCookies,
           ),
       },
+      {
+        path: 'api-docs',
+        loadComponent: () =>
+          import('./pages/api-docs/api-docs').then((modulo) => modulo.ApiDocs),
+      },
+      {
+        path: 'documentacion',
+        loadComponent: () =>
+          import('./pages/documentacion/documentacion').then((modulo) => modulo.Documentacion),
+      },
+      {
+        path: 'estado',
+        loadComponent: () =>
+          import('./pages/estado/estado').then((modulo) => modulo.Estado),
+      },
+      {
+        path: 'contacto',
+        loadComponent: () =>
+          import('./pages/contacto/contacto').then((modulo) => modulo.Contacto),
+      },
+      {
+        path: 'comunidad',
+        loadComponent: () =>
+          import('./pages/comunidad/comunidad').then((modulo) => modulo.Comunidad),
+      },
     ],
   },
   {

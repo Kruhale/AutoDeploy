@@ -7,6 +7,7 @@ import com.autodeploy.exception.BadRequestException;
 import com.autodeploy.exception.ResourceNotFoundException;
 import com.autodeploy.model.Usuario;
 import com.autodeploy.repository.UsuarioRepository;
+import com.autodeploy.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,10 +16,12 @@ public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     public Usuario registrar(RegistroRequest peticion) {
@@ -44,7 +47,8 @@ public class UsuarioService {
             throw new BadRequestException("Email o password incorrectos");
         }
 
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail());
+        String tokenJwt = jwtUtil.generarToken(usuario.getId(), usuario.getEmail());
+        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), tokenJwt);
         return respuesta;
     }
 

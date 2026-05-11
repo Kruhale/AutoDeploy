@@ -19,6 +19,6 @@ public class WebSocketConfig implements WebSocketConfigurer {
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(sshWebSocketHandler, "/ws/terminal")
-                .setAllowedOrigins("http://localhost:4200");
+                .setAllowedOrigins("*");
     }
 }

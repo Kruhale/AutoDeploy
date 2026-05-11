@@ -1,23 +1,60 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
+import { signal } from "@angular/core";
 
-import { Login } from './login';
+import { Login } from "./login";
+import { UsuarioService } from "../../services/usuario.service";
+import { AuthService } from "../../services/auth.service";
 
-describe('Login', () => {
-  let component: Login;
+const mockUsuarioService = {
+  login: jasmine.createSpy("login").and.returnValue(Promise.resolve({ id: "1", nombre: "Test", email: "test@test.com" })),
+  emailUsuario: signal(""),
+  passwordUsuario: signal("")
+};
+
+const mockAuthService = {
+  login: jasmine.createSpy("login"),
+  estaLogueado: signal(false)
+};
+
+describe("Login", function() {
+  let componente: Login;
   let fixture: ComponentFixture<Login>;
 
-  beforeEach(async () => {
+  beforeEach(async function() {
     await TestBed.configureTestingModule({
-      imports: [Login]
-    })
-    .compileComponents();
+      imports: [Login],
+      providers: [
+        provideRouter([]),
+        { provide: UsuarioService, useValue: mockUsuarioService },
+        { provide: AuthService, useValue: mockAuthService }
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Login);
-    component = fixture.componentInstance;
+    componente = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it("deberia crear el componente", function() {
+    expect(componente).toBeTruthy();
+  });
+
+  it("deberia llamar a usuarioService.login al iniciar sesion con datos validos", async function() {
+    componente.emailUsuario.set("test@test.com");
+    componente.passwordUsuario.set("password123");
+
+    await componente.iniciarSesion();
+
+    expect(mockUsuarioService.login).toHaveBeenCalledWith("test@test.com", "password123");
+  });
+
+  it("deberia mostrar error si el email o password estan vacios", async function() {
+    componente.emailUsuario.set("");
+    componente.passwordUsuario.set("");
+
+    await componente.iniciarSesion();
+
+    expect(componente.mensajeDeErrorVisible()).toBeTrue();
   });
 });

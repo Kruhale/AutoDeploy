@@ -37,7 +37,7 @@ public class UsuarioController {
     @PostMapping("/registro")
     public ResponseEntity<ApiResponse<LoginResponse>> registrar(@RequestBody @Valid RegistroRequest peticion) {
         Usuario usuario = usuarioService.registrar(peticion);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail());
+        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
         URI ubicacion = URI.create("/api/usuarios/" + usuario.getId());
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Usuario registrado", respuesta);
@@ -56,7 +56,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<LoginResponse>> obtener(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail());
+        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "OK", respuesta);
         return ResponseEntity.ok(cuerpo);
@@ -70,7 +70,7 @@ public class UsuarioController {
         String email = datos.getOrDefault("email", "");
 
         Usuario usuario = usuarioService.actualizar(id, nombre, email);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail());
+        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Perfil actualizado", respuesta);
         return ResponseEntity.ok(cuerpo);

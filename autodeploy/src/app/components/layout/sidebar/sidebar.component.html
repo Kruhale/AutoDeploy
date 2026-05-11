@@ -4,7 +4,7 @@
     <span class="barra-lateral__logo__texto">Auto<span class="barra-lateral__logo__texto--acento">Deploy</span></span>
   </a>
 
-  <nav class="barra-lateral__navegacion" role="navigation" aria-label="Navegación principal">
+  <nav class="barra-lateral__navegacion">
     <section class="barra-lateral__seccion">
       <span class="barra-lateral__seccion__titulo">Main Menu</span>
       <ul class="barra-lateral__lista">
@@ -13,12 +13,6 @@
             [routerLinkActiveOptions]="{ exact: true }">
             <i class="fa-solid fa-table-columns barra-lateral__enlace__icono"></i>
             <span class="barra-lateral__enlace__texto">Dashboard</span>
-          </a>
-        </li>
-        <li>
-          <a class="barra-lateral__enlace" routerLink="/app/chat-ia" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-robot barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">AI Assistant</span>
           </a>
         </li>
         <li>
@@ -87,7 +81,7 @@
   </nav>
 
   <footer class="barra-lateral__inferior">
-    <button class="barra-lateral__colapsar" (click)="alternarColapso()" [attr.aria-label]="colapsada() ? 'Expandir barra lateral' : 'Colapsar barra lateral'">
+    <button class="barra-lateral__colapsar" (click)="alternarColapso()">
       <i class="barra-lateral__colapsar__icono" [class]="colapsada() ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'"></i>
       @if (!colapsada()) {
         <span class="barra-lateral__colapsar__texto">Collapse</span>

@@ -1,15 +1,9 @@
 import { Component, signal, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
+import { TarjetaEstadistica } from "../../components/shared/tarjeta-estadistica/tarjeta-estadistica";
 import { MigasPan } from "../../components/shared/migas-pan/migas-pan";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
-
-interface MetricasServidor {
-  cpuPorcentaje: number;
-  ramPorcentaje: number;
-  discoPorcentaje: number;
-  uptime: string;
-}
 
 interface AplicacionHospedada {
   icono: string;
@@ -36,7 +30,7 @@ interface SubdominioItem {
 
 @Component({
   selector: "app-gestion-servidor",
-  imports: [MigasPan, RouterLink],
+  imports: [TarjetaEstadistica, MigasPan, RouterLink],
   templateUrl: "./gestion-servidor.html",
   styleUrl: "./gestion-servidor.scss"
 })
@@ -49,7 +43,6 @@ export class GestionServidor implements OnInit {
   servidorPuerto = signal(22);
   reiniciando = signal(false);
 
-  metricasServidor = signal<MetricasServidor | null>(null);
   listaDeAplicaciones = signal<AplicacionHospedada[]>([]);
   estadoSalud = signal<ComprobacionSalud | null>(null);
   historialSalud = signal<ComprobacionSalud[]>([]);
@@ -80,19 +73,8 @@ export class GestionServidor implements OnInit {
         const estadoMapeado = servidor.estado === "conectado" ? "online" : "offline";
         componente.servidorEstado.set(estadoMapeado);
 
-        componente.cargarMetricas(idDesdeRuta);
         componente.cargarSalud(idDesdeRuta);
         componente.cargarSubdominios(idDesdeRuta);
-      }
-    });
-  }
-
-  cargarMetricas(idServidor: string): void {
-    const componente = this;
-
-    this.http.get<MetricasServidor>("/api/metricas/" + idServidor).subscribe({
-      next: function(metricas: MetricasServidor) {
-        componente.metricasServidor.set(metricas);
       }
     });
   }
@@ -100,7 +82,7 @@ export class GestionServidor implements OnInit {
   cargarSalud(idServidor: string): void {
     const componente = this;
 
-    this.http.get<ComprobacionSalud[]>("/api/health/" + idServidor).subscribe({
+    this.http.get<ComprobacionSalud[]>("http://localhost:8080/api/health/" + idServidor).subscribe({
       next: function(comprobaciones: ComprobacionSalud[]) {
         if (comprobaciones.length > 0) {
           componente.estadoSalud.set(comprobaciones[0]);
@@ -114,7 +96,7 @@ export class GestionServidor implements OnInit {
   cargarSubdominios(idServidor: string): void {
     const componente = this;
 
-    this.http.get<SubdominioItem[]>("/api/subdominios/servidor/" + idServidor).subscribe({
+    this.http.get<SubdominioItem[]>("http://localhost:8080/api/subdominios/servidor/" + idServidor).subscribe({
       next: function(subdominios: SubdominioItem[]) {
         componente.listaSubdominios.set(subdominios);
       }
@@ -125,7 +107,7 @@ export class GestionServidor implements OnInit {
     const componente = this;
     const idServidor = this.servidorId();
 
-    this.http.delete("/api/subdominios/" + idSubdominio).subscribe({
+    this.http.delete("http://localhost:8080/api/subdominios/" + idSubdominio).subscribe({
       next: function() {
         componente.cargarSubdominios(idServidor);
       }

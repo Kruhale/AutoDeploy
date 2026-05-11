@@ -24,32 +24,32 @@
     </section>
   </header>
 
-  @if (metricasServidor()) {
-    <section class="gestion-servidor__metricas-barras">
-      <article class="gestion-servidor__metrica">
-        <span class="gestion-servidor__metrica__etiqueta">CPU</span>
-        <section class="gestion-servidor__metrica__barra">
-          <span class="gestion-servidor__metrica__progreso gestion-servidor__metrica__progreso--cpu" [style.width.%]="metricasServidor()!.cpuPorcentaje"></span>
-        </section>
-        <span class="gestion-servidor__metrica__valor">{{ metricasServidor()!.cpuPorcentaje }}%</span>
-      </article>
-      <article class="gestion-servidor__metrica">
-        <span class="gestion-servidor__metrica__etiqueta">RAM</span>
-        <section class="gestion-servidor__metrica__barra">
-          <span class="gestion-servidor__metrica__progreso gestion-servidor__metrica__progreso--ram" [style.width.%]="metricasServidor()!.ramPorcentaje"></span>
-        </section>
-        <span class="gestion-servidor__metrica__valor">{{ metricasServidor()!.ramPorcentaje }}%</span>
-      </article>
-      <article class="gestion-servidor__metrica">
-        <span class="gestion-servidor__metrica__etiqueta">Disk</span>
-        <section class="gestion-servidor__metrica__barra">
-          <span class="gestion-servidor__metrica__progreso gestion-servidor__metrica__progreso--disco" [style.width.%]="metricasServidor()!.discoPorcentaje"></span>
-        </section>
-        <span class="gestion-servidor__metrica__valor">{{ metricasServidor()!.discoPorcentaje }}%</span>
-      </article>
-      <p class="gestion-servidor__metrica__uptime">Uptime: {{ metricasServidor()!.uptime }}</p>
-    </section>
-  }
+  <section class="gestion-servidor__metricas">
+    <app-tarjeta-estadistica
+      class="gestion-servidor__metricas__item"
+      etiqueta="CPU Load"
+      valor="—"
+      icono="fa-solid fa-microchip"
+      subtexto="No data yet"
+      variante="primario">
+    </app-tarjeta-estadistica>
+    <app-tarjeta-estadistica
+      class="gestion-servidor__metricas__item"
+      etiqueta="Memory (RAM)"
+      valor="—"
+      icono="fa-solid fa-memory"
+      subtexto="No data yet"
+      variante="exito">
+    </app-tarjeta-estadistica>
+    <app-tarjeta-estadistica
+      class="gestion-servidor__metricas__item"
+      etiqueta="Bandwidth"
+      valor="—"
+      icono="fa-solid fa-wifi"
+      subtexto="No data yet"
+      variante="primario">
+    </app-tarjeta-estadistica>
+  </section>
 
   @if (estadoSalud()) {
     <section class="gestion-servidor__salud">

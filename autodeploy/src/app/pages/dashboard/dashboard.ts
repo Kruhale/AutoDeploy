@@ -88,7 +88,7 @@ export class Dashboard implements OnInit {
   cargarActividad(): void {
     const componente = this;
 
-    this.http.get<ActividadApi[]>("/api/actividad").subscribe({
+    this.http.get<ActividadApi[]>("http://localhost:8080/api/actividad").subscribe({
       next: function(actividadesApi: ActividadApi[]) {
         const actividadesMapeadas = actividadesApi.map(function(actividadApi: ActividadApi) {
           const colorIcono = componente.resolverColorIcono(actividadApi.tipo);
@@ -145,7 +145,7 @@ export class Dashboard implements OnInit {
   cargarDespliegues(): void {
     const componente = this;
 
-    this.http.get<DespliegueReciente[]>("/api/despliegues").subscribe({
+    this.http.get<DespliegueReciente[]>("http://localhost:8080/api/despliegues").subscribe({
       next: function(despliegues: DespliegueReciente[]) {
         componente.listaDespliegues.set(despliegues);
       }

@@ -1,7 +1,15 @@
-import { Component, signal, computed, Signal } from "@angular/core";
+import { Component, signal, computed, Signal, HostListener } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../../services/auth.service";
 import { ThemeService } from "../../../services/theme.service";
+
+interface NotificacionMock {
+  claveMensaje: string;
+  claveTiempo: string;
+  parametrosTiempo: { [clave: string]: number };
+  leida: boolean;
+}
 
 interface Notificacion {
   mensaje: string;
@@ -11,30 +19,47 @@ interface Notificacion {
 
 @Component({
   selector: "app-header",
-  imports: [RouterLink],
+  imports: [RouterLink, TranslateModule],
   templateUrl: "./header.html",
   styleUrl: "./header.scss",
 })
 export class Header {
   notificacionesAbiertas = signal(false);
+  menuMovilAbierto = signal(false);
 
-  listaNotificaciones = signal<Notificacion[]>([
-    { mensaje: "Server vps-prod-01 went offline", fecha: "hace 5 min", leida: false },
-    { mensaje: "Deployment to production completed", fecha: "hace 23 min", leida: false },
-    { mensaje: "CPU usage exceeded 90% on vps-dev-02", fecha: "hace 1 h", leida: false },
-    { mensaje: "SSL certificate renewed for example.com", fecha: "hace 3 h", leida: true },
+  private notificacionesMock = signal<NotificacionMock[]>([
+    { claveMensaje: "header.notif.servidorOffline", claveTiempo: "header.tiempo.haceMin", parametrosTiempo: { min: 5 }, leida: false },
+    { claveMensaje: "header.notif.deployCompleted", claveTiempo: "header.tiempo.haceMin", parametrosTiempo: { min: 23 }, leida: false },
+    { claveMensaje: "header.notif.cpuExcedida", claveTiempo: "header.tiempo.haceHoras", parametrosTiempo: { h: 1 }, leida: false },
+    { claveMensaje: "header.notif.sslRenovado", claveTiempo: "header.tiempo.haceHoras", parametrosTiempo: { h: 3 }, leida: true },
   ]);
 
+  listaNotificaciones: Signal<Notificacion[]>;
   contadorSinLeer: Signal<number>;
 
   constructor(
     public authService: AuthService,
     public themeService: ThemeService,
+    private translate: TranslateService,
   ) {
     const componente = this;
 
+    this.listaNotificaciones = computed(function() {
+      const notificacionesActuales = componente.notificacionesMock();
+      const notificacionesTraducidas = notificacionesActuales.map(function(notificacionMock) {
+        const mensajeTraducido = componente.translate.instant(notificacionMock.claveMensaje);
+        const fechaTraducida = componente.translate.instant(notificacionMock.claveTiempo, notificacionMock.parametrosTiempo);
+        return {
+          mensaje: mensajeTraducido,
+          fecha: fechaTraducida,
+          leida: notificacionMock.leida,
+        };
+      });
+      return notificacionesTraducidas;
+    });
+
     this.contadorSinLeer = computed(function() {
-      const todasLasNotificaciones = componente.listaNotificaciones();
+      const todasLasNotificaciones = componente.notificacionesMock();
       const notificacionesSinLeer = todasLasNotificaciones.filter(function(notificacion) {
         return !notificacion.leida;
       });
@@ -48,11 +73,27 @@ export class Header {
     });
   }
 
+  alternarMenuMovil(): void {
+    this.menuMovilAbierto.update(function(estadoActual) {
+      return !estadoActual;
+    });
+  }
+
+  cerrarMenuMovil(): void {
+    this.menuMovilAbierto.set(false);
+  }
+
   marcarTodasComoLeidas(): void {
-    this.listaNotificaciones.update(function(listaActual) {
+    this.notificacionesMock.update(function(listaActual) {
       return listaActual.map(function(notificacion) {
         return { ...notificacion, leida: true };
       });
     });
+  }
+
+  @HostListener("document:keydown.escape")
+  onEscape(): void {
+    this.menuMovilAbierto.set(false);
+    this.notificacionesAbiertas.set(false);
   }
 }

@@ -1,5 +1,7 @@
 import { Component, signal } from "@angular/core";
-import { RouterLink, RouterOutlet } from "@angular/router";
+import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { filter } from "rxjs/operators";
 import { Sidebar } from "../sidebar/sidebar.component";
 import { BarraPieApp } from "../barra-pie-app/barra-pie-app";
 import { CampanaNotificaciones } from "../../shared/campana-notificaciones/campana-notificaciones";
@@ -7,13 +9,20 @@ import { ToastNotificaciones } from "../../shared/toast-notificaciones/toast-not
 
 @Component({
   selector: "app-app-layout",
-  imports: [RouterOutlet, RouterLink, Sidebar, BarraPieApp, CampanaNotificaciones, ToastNotificaciones],
+  imports: [RouterOutlet, RouterLink, Sidebar, BarraPieApp, CampanaNotificaciones, ToastNotificaciones, TranslateModule],
   templateUrl: "./app-layout.html",
   styleUrl: "./app-layout.scss"
 })
 export class AppLayout {
 
   sidebarAbierta = signal(false);
+
+  constructor(private router: Router) {
+    const componente = this;
+    this.router.events
+      .pipe(filter(function(evento) { return evento instanceof NavigationEnd; }))
+      .subscribe(function() { componente.cerrarSidebar(); });
+  }
 
   alternarSidebar(): void {
     this.sidebarAbierta.update(function(v) { return !v; });

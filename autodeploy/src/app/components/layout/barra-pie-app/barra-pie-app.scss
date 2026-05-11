@@ -1,3 +1,49 @@
 :host {
   display: block;
 }
+
+.barra-pie-app {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem var(--spacing-size-3xl);
+  background-color: var(--fondo-oscuro);
+  border-top: 1px solid var(--borde-normal);
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.barra-pie-app__copyright {
+  font-family: var(--font-mono);
+}
+
+.barra-pie-app__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.barra-pie-app__estado__punto {
+  width: 0.5rem;
+  height: 0.5rem;
+  background-color: var(--verde-normal);
+  border-radius: 50%;
+  box-shadow: 0 0 0.5rem var(--verde-normal);
+}
+
+.barra-pie-app__derecha {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.barra-pie-app__version {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--texto-apagado);
+  padding: 0.25rem 0.5rem;
+  background-color: var(--fondo-tarjeta);
+  border-radius: 0.25rem;
+}

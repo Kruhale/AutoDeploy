@@ -5,7 +5,6 @@ interface RespuestaApi<T> {
   success: boolean;
   message: string;
   data: T;
-  token?: string;
 }
 
 interface DatosUsuario {
@@ -57,9 +56,6 @@ export class UsuarioService {
         .subscribe({
           next: function(respuesta: RespuestaApi<DatosUsuario>) {
             if (respuesta.success) {
-              if (respuesta.token) {
-                sessionStorage.setItem("autodeploy_token", respuesta.token);
-              }
               servicio.guardarEnSesion(respuesta.data);
               resolver(respuesta.data);
             } else {
@@ -101,7 +97,6 @@ export class UsuarioService {
     sessionStorage.removeItem("usuarioId");
     sessionStorage.removeItem("nombre");
     sessionStorage.removeItem("email");
-    sessionStorage.removeItem("autodeploy_token");
     this.usuarioId.set("");
     this.nombre.set("");
     this.email.set("");

@@ -43,6 +43,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/dashboard/dashboard').then(modulo => modulo.Dashboard),
       },
       {
+        path: 'chat-ia',
+        loadComponent: () => import('./pages/chat-ia/chat-ia').then(modulo => modulo.ChatIa),
+      },
+      {
         path: 'servidor/:id',
         loadComponent: () => import('./pages/gestion-servidor/gestion-servidor').then(modulo => modulo.GestionServidor),
       },

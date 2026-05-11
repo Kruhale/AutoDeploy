@@ -33,7 +33,7 @@ export interface PeticionConexionSsh {
 @Injectable({ providedIn: "root" })
 export class ServidorService {
 
-  private readonly urlBase = "http://localhost:8080/api/servidores";
+  private readonly urlBase = "/api/servidores";
 
   constructor(private http: HttpClient) {}
 

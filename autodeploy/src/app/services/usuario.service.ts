@@ -5,6 +5,7 @@ interface RespuestaApi<T> {
   success: boolean;
   message: string;
   data: T;
+  token?: string;
 }
 
 interface DatosUsuario {
@@ -16,7 +17,7 @@ interface DatosUsuario {
 @Injectable({ providedIn: "root" })
 export class UsuarioService {
 
-  private readonly urlBase = "http://localhost:8080/api/usuarios";
+  private readonly urlBase = "/api/usuarios";
 
   usuarioId = signal(sessionStorage.getItem("usuarioId") || "");
   nombre = signal(sessionStorage.getItem("nombre") || "");
@@ -56,6 +57,9 @@ export class UsuarioService {
         .subscribe({
           next: function(respuesta: RespuestaApi<DatosUsuario>) {
             if (respuesta.success) {
+              if (respuesta.token) {
+                sessionStorage.setItem("autodeploy_token", respuesta.token);
+              }
               servicio.guardarEnSesion(respuesta.data);
               resolver(respuesta.data);
             } else {
@@ -97,6 +101,7 @@ export class UsuarioService {
     sessionStorage.removeItem("usuarioId");
     sessionStorage.removeItem("nombre");
     sessionStorage.removeItem("email");
+    sessionStorage.removeItem("autodeploy_token");
     this.usuarioId.set("");
     this.nombre.set("");
     this.email.set("");

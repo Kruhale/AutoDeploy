@@ -38,7 +38,7 @@
           <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
             placeholder="••••••••" autocomplete="new-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
           <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
-            [attr.aria-label]="passwordEsVisible() ? 'Hide password' : 'Show password'">
+            [attr.aria-label]="passwordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
             <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
           </button>
         </section>

@@ -1,6 +1,8 @@
 @use "styles/00-settings/fonts";
 @use "styles/00-settings/css-variables";
 @use "styles/00-settings/variables";
+@use "styles/01-tools/mixins";
+@use "styles/01-tools/utilidades";
 @use "styles/02-generic/reset";
 @use "styles/03-elements/buttons";
 @use "styles/03-elements/forms";

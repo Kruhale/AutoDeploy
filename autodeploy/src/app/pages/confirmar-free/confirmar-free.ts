@@ -1,13 +1,14 @@
-import { Component, computed, Signal } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
-import { UsuarioService } from '../../services/usuario.service';
+import { Component, computed, Signal } from "@angular/core";
+import { Router, RouterLink } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { AuthService } from "../../services/auth.service";
+import { UsuarioService } from "../../services/usuario.service";
 
 @Component({
-  selector: 'app-confirmar-free',
-  imports: [RouterLink],
-  templateUrl: './confirmar-free.html',
-  styleUrl: './confirmar-free.scss',
+  selector: "app-confirmar-free",
+  imports: [RouterLink, TranslateModule],
+  templateUrl: "./confirmar-free.html",
+  styleUrl: "./confirmar-free.scss",
 })
 export class ConfirmarFree {
   estaLogueado: Signal<boolean>;
@@ -26,24 +27,24 @@ export class ConfirmarFree {
     });
 
     this.planActual = computed(function () {
-      return componente.usuarioService.plan() || '';
+      return componente.usuarioService.plan() || "";
     });
 
     this.esBajada = computed(function () {
       const plan = componente.planActual();
-      return componente.estaLogueado() && (plan === 'pro' || plan === 'business');
+      return componente.estaLogueado() && (plan === "pro" || plan === "business");
     });
   }
 
   confirmar(): void {
     if (!this.estaLogueado()) {
-      this.router.navigate(['/register']);
+      this.router.navigate(["/register"]);
       return;
     }
-    this.router.navigate(['/app/dashboard']);
+    this.router.navigate(["/app/dashboard"]);
   }
 
   cancelar(): void {
-    this.router.navigate(['/']);
+    this.router.navigate(["/"]);
   }
 }

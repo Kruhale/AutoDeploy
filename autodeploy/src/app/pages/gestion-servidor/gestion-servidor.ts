@@ -1,6 +1,7 @@
 import { Component, signal, OnInit } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
+import { TranslateModule } from "@ngx-translate/core";
 import { TarjetaEstadistica } from "../../components/shared/tarjeta-estadistica/tarjeta-estadistica";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 
@@ -39,7 +40,7 @@ interface DespliegueApi {
 
 @Component({
   selector: "app-gestion-servidor",
-  imports: [TarjetaEstadistica, RouterLink],
+  imports: [TarjetaEstadistica, RouterLink, TranslateModule],
   templateUrl: "./gestion-servidor.html",
   styleUrl: "./gestion-servidor.scss"
 })

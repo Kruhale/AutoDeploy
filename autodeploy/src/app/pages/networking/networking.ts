@@ -1,6 +1,7 @@
 import { Component, signal, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 
 interface SubdominioApi {
@@ -43,7 +44,7 @@ interface RedireccionApi {
 
 @Component({
   selector: "app-networking",
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: "./networking.html",
   styleUrl: "./networking.scss"
 })
@@ -79,7 +80,8 @@ export class Networking implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private servidorService: ServidorService
+    private servidorService: ServidorService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -183,7 +185,7 @@ export class Networking implements OnInit {
       },
       error: function() {
         componente.guardando.set(false);
-        componente.mensajeAccion.set("Could not add the domain. Try again.");
+        componente.mensajeAccion.set(componente.translate.instant("networking.mensajes.errorAgregar"));
         setTimeout(function() { componente.mensajeAccion.set(""); }, 4000);
       }
     });
@@ -196,7 +198,7 @@ export class Networking implements OnInit {
         componente.cargarTodo();
       },
       error: function() {
-        componente.mensajeAccion.set("Could not remove the domain.");
+        componente.mensajeAccion.set(componente.translate.instant("networking.mensajes.errorEliminar"));
         setTimeout(function() { componente.mensajeAccion.set(""); }, 4000);
       }
     });
@@ -205,13 +207,13 @@ export class Networking implements OnInit {
   renovarSsl(): void {
     const dominios = this.listaDeDominios();
     if (dominios.length === 0) {
-      this.mensajeAccion.set("No domains to renew yet.");
+      this.mensajeAccion.set(this.translate.instant("networking.mensajes.sinDominiosRenovar"));
       const componente = this;
       setTimeout(function() { componente.mensajeAccion.set(""); }, 3000);
       return;
     }
     this.procesandoSsl.set(true);
-    this.mensajeAccion.set("Triggering SSL renewal on " + dominios.length + " domain(s)…");
+    this.mensajeAccion.set(this.translate.instant("networking.mensajes.iniciandoRenovacion", { count: dominios.length }));
     const componente = this;
     const servidoresUnicos = Array.from(new Set(dominios.map(function(d) { return d.servidorId; })));
     let respondidos = 0;
@@ -222,7 +224,7 @@ export class Networking implements OnInit {
           respondidos = respondidos + 1;
           if (respondidos === servidoresUnicos.length) {
             componente.procesandoSsl.set(false);
-            componente.mensajeAccion.set("SSL renewal completed on " + servidoresUnicos.length + " server(s).");
+            componente.mensajeAccion.set(componente.translate.instant("networking.mensajes.renovacionCompletada", { count: servidoresUnicos.length }));
             setTimeout(function() { componente.mensajeAccion.set(""); }, 4000);
             componente.cargarTodo();
           }
@@ -231,7 +233,7 @@ export class Networking implements OnInit {
           respondidos = respondidos + 1;
           if (respondidos === servidoresUnicos.length) {
             componente.procesandoSsl.set(false);
-            componente.mensajeAccion.set("SSL renewal failed on one or more servers.");
+            componente.mensajeAccion.set(componente.translate.instant("networking.mensajes.renovacionFallida"));
             setTimeout(function() { componente.mensajeAccion.set(""); }, 4000);
           }
         }
@@ -346,7 +348,7 @@ export class Networking implements OnInit {
       },
       error: function() {
         componente.guardandoRedireccion.set(false);
-        componente.mensajeAccion.set("Could not create the redirect");
+        componente.mensajeAccion.set(componente.translate.instant("networking.mensajes.errorCrearRedirect"));
         setTimeout(function() { componente.mensajeAccion.set(""); }, 3000);
       }
     });
@@ -357,7 +359,7 @@ export class Networking implements OnInit {
     this.http.delete("/api/networking/redirects/" + idRedireccion).subscribe({
       next: function() { componente.cargarRedirecciones(); },
       error: function() {
-        componente.mensajeAccion.set("Could not delete the redirect");
+        componente.mensajeAccion.set(componente.translate.instant("networking.mensajes.errorEliminarRedirect"));
         setTimeout(function() { componente.mensajeAccion.set(""); }, 3000);
       }
     });

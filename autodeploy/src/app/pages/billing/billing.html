@@ -4,25 +4,25 @@
     <section class="pagina-billing__cabecera__izquierda">
       <p class="pagina-billing__sello">
         <span class="pagina-billing__sello__punto" aria-hidden="true"></span>
-        Workspace · Billing center
+        {{ "billing.sello" | translate }}
       </p>
-      <h1 class="pagina-billing__titulo">Billing<span class="pagina-billing__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="pagina-billing__subtitulo">Subscription, payment methods and invoices in one place.</p>
+      <h1 class="pagina-billing__titulo">{{ "billing.titulo" | translate }}<span class="pagina-billing__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="pagina-billing__subtitulo">{{ "billing.subtitulo" | translate }}</p>
     </section>
     <button class="pagina-billing__cta-principal" type="button" (click)="navegarAPlanes()">
       <span class="pagina-billing__cta-principal__icono" aria-hidden="true">
         <i class="fa-solid fa-arrow-up-right-from-square"></i>
       </span>
       <span class="pagina-billing__cta-principal__texto">
-        <span class="pagina-billing__cta-principal__principal">Manage plan</span>
-        <span class="pagina-billing__cta-principal__secundario">Compare tiers</span>
+        <span class="pagina-billing__cta-principal__principal">{{ "billing.managePlanPrincipal" | translate }}</span>
+        <span class="pagina-billing__cta-principal__secundario">{{ "billing.managePlanSecundario" | translate }}</span>
       </span>
     </button>
   </header>
 
   <section class="pagina-billing__plan">
     <section class="pagina-billing__plan__columna-info">
-      <span class="pagina-billing__plan__etiqueta">Current subscription</span>
+      <span class="pagina-billing__plan__etiqueta">{{ "billing.planEtiqueta" | translate }}</span>
       <h2 class="pagina-billing__plan__nombre">{{ detallePlanActual().nombre }}</h2>
       <p class="pagina-billing__plan__descripcion">{{ detallePlanActual().descripcion }}</p>
       <ul class="pagina-billing__plan__features">
@@ -30,38 +30,38 @@
           <span class="pagina-billing__plan__features__icono" aria-hidden="true">
             <i class="fa-solid fa-server"></i>
           </span>
-          {{ detallePlanActual().limiteServidores === null ? "Unlimited servers" : detallePlanActual().limiteServidores + " servers" }}
+          {{ detallePlanActual().limiteServidores === null ? ("billing.features.unlimitedServers" | translate) : detallePlanActual().limiteServidores + ("billing.features.serversSuffix" | translate) }}
         </li>
         <li class="pagina-billing__plan__features__item">
           <span class="pagina-billing__plan__features__icono" aria-hidden="true">
             <i class="fa-solid fa-rocket"></i>
           </span>
-          {{ detallePlanActual().limiteDespliegues === null ? "Unlimited deployments" : detallePlanActual().limiteDespliegues + " deployments/mo" }}
+          {{ detallePlanActual().limiteDespliegues === null ? ("billing.features.unlimitedDeployments" | translate) : detallePlanActual().limiteDespliegues + ("billing.features.deploymentsSuffix" | translate) }}
         </li>
         <li class="pagina-billing__plan__features__item">
           <span class="pagina-billing__plan__features__icono" aria-hidden="true">
             <i class="fa-solid fa-robot"></i>
           </span>
-          {{ detallePlanActual().asistentIa ? "AI Assistant included" : "AI Assistant not available" }}
+          {{ (detallePlanActual().asistentIa ? "billing.features.aiIncluded" : "billing.features.aiNotAvailable") | translate }}
         </li>
         <li class="pagina-billing__plan__features__item">
           <span class="pagina-billing__plan__features__icono" aria-hidden="true">
             <i class="fa-solid fa-headset"></i>
           </span>
-          {{ detallePlanActual().soporte | titlecase }} support
+          {{ detallePlanActual().soporte | titlecase }}{{ "billing.features.supportSuffix" | translate }}
         </li>
       </ul>
     </section>
 
     <section class="pagina-billing__plan__columna-precio">
       <span class="pagina-billing__plan__price">
-        <span class="pagina-billing__plan__price__moneda">€</span>{{ detallePlanActual().precio }}<small class="pagina-billing__plan__price__periodo">/mo</small>
+        <span class="pagina-billing__plan__price__moneda">{{ "billing.precioMoneda" | translate }}</span>{{ detallePlanActual().precio }}<small class="pagina-billing__plan__price__periodo">{{ "billing.precioPeriodo" | translate }}</small>
       </span>
-      <p class="pagina-billing__plan__marca">{{ planService.planActual() | uppercase }} · Edition {{ detallePlanActual().nombre }}</p>
+      <p class="pagina-billing__plan__marca">{{ planService.planActual() | uppercase }}{{ "billing.edicionPrefijo" | translate }}{{ detallePlanActual().nombre }}</p>
       <section class="pagina-billing__plan__renovacion">
-        <span class="pagina-billing__plan__renovacion__etiqueta">Next charge</span>
+        <span class="pagina-billing__plan__renovacion__etiqueta">{{ "billing.nextCharge" | translate }}</span>
         <span class="pagina-billing__plan__renovacion__fecha">{{ fechaProximoCobro() | date:"d MMM yyyy":"":"en" }}</span>
-        <span class="pagina-billing__plan__renovacion__detalle">{{ diasHastaProximoCobro() }} days remaining</span>
+        <span class="pagina-billing__plan__renovacion__detalle">{{ diasHastaProximoCobro() }}{{ "billing.daysRemaining" | translate }}</span>
       </section>
     </section>
   </section>
@@ -70,8 +70,8 @@
     <header class="pagina-billing__cabecera-seccion">
       <span class="pagina-billing__cabecera-seccion__indice">01</span>
       <section class="pagina-billing__cabecera-seccion__texto">
-        <h2 class="pagina-billing__cabecera-seccion__titulo">Usage this cycle</h2>
-        <p class="pagina-billing__cabecera-seccion__descripcion">Live consumption against your plan limits. Resets every billing cycle.</p>
+        <h2 class="pagina-billing__cabecera-seccion__titulo">{{ "billing.seccion01.titulo" | translate }}</h2>
+        <p class="pagina-billing__cabecera-seccion__descripcion">{{ "billing.seccion01.descripcion" | translate }}</p>
       </section>
     </header>
     <section class="pagina-billing__uso">
@@ -92,12 +92,12 @@
     <header class="pagina-billing__cabecera-seccion">
       <span class="pagina-billing__cabecera-seccion__indice">02</span>
       <section class="pagina-billing__cabecera-seccion__texto">
-        <h2 class="pagina-billing__cabecera-seccion__titulo">Payment method</h2>
-        <p class="pagina-billing__cabecera-seccion__descripcion">Card stored encrypted by Stripe — never seen by our servers.</p>
+        <h2 class="pagina-billing__cabecera-seccion__titulo">{{ "billing.seccion02.titulo" | translate }}</h2>
+        <p class="pagina-billing__cabecera-seccion__descripcion">{{ "billing.seccion02.descripcion" | translate }}</p>
       </section>
       <button class="pagina-billing__boton-ghost" type="button" (click)="agregarMetodoPago()">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
-        Add method
+        {{ "billing.seccion02.addMethod" | translate }}
       </button>
     </header>
 
@@ -112,25 +112,25 @@
       <section class="pagina-billing__tarjeta-fantasma" aria-hidden="true">
         <section class="pagina-billing__tarjeta-fantasma__cabecera">
           <span class="pagina-billing__tarjeta-fantasma__chip"></span>
-          <span class="pagina-billing__tarjeta-fantasma__marca">VISA</span>
+          <span class="pagina-billing__tarjeta-fantasma__marca">{{ "billing.tarjetaFantasma.marca" | translate }}</span>
         </section>
         <p class="pagina-billing__tarjeta-fantasma__numero">···· ···· ···· ····</p>
         <section class="pagina-billing__tarjeta-fantasma__pie">
           <span class="pagina-billing__tarjeta-fantasma__pie__bloque">
-            <span class="pagina-billing__tarjeta-fantasma__pie__etiqueta">Cardholder</span>
-            <span class="pagina-billing__tarjeta-fantasma__pie__valor">— · —</span>
+            <span class="pagina-billing__tarjeta-fantasma__pie__etiqueta">{{ "billing.tarjetaFantasma.cardholder" | translate }}</span>
+            <span class="pagina-billing__tarjeta-fantasma__pie__valor">{{ "billing.tarjetaFantasma.cardholderValor" | translate }}</span>
           </span>
           <span class="pagina-billing__tarjeta-fantasma__pie__bloque">
-            <span class="pagina-billing__tarjeta-fantasma__pie__etiqueta">Expires</span>
-            <span class="pagina-billing__tarjeta-fantasma__pie__valor">··/··</span>
+            <span class="pagina-billing__tarjeta-fantasma__pie__etiqueta">{{ "billing.tarjetaFantasma.expires" | translate }}</span>
+            <span class="pagina-billing__tarjeta-fantasma__pie__valor">{{ "billing.tarjetaFantasma.expiresValor" | translate }}</span>
           </span>
         </section>
       </section>
       <section class="pagina-billing__metodo-pago-vacio__texto">
-        <p class="pagina-billing__metodo-pago-vacio__titulo">No payment method configured</p>
-        <p class="pagina-billing__metodo-pago-vacio__detalle">Add a card to unlock upgrades and unlock automatic monthly billing. We never store the full PAN — only a tokenized reference via Stripe.</p>
+        <p class="pagina-billing__metodo-pago-vacio__titulo">{{ "billing.metodoPagoVacio.titulo" | translate }}</p>
+        <p class="pagina-billing__metodo-pago-vacio__detalle">{{ "billing.metodoPagoVacio.detalle" | translate }}</p>
         <button class="pagina-billing__metodo-pago-vacio__boton" type="button" (click)="agregarMetodoPago()">
-          <span>Connect a card</span>
+          <span>{{ "billing.metodoPagoVacio.boton" | translate }}</span>
           <span aria-hidden="true">→</span>
         </button>
       </section>
@@ -141,8 +141,8 @@
     <header class="pagina-billing__cabecera-seccion">
       <span class="pagina-billing__cabecera-seccion__indice">03</span>
       <section class="pagina-billing__cabecera-seccion__texto">
-        <h2 class="pagina-billing__cabecera-seccion__titulo">Invoices</h2>
-        <p class="pagina-billing__cabecera-seccion__descripcion">Past charges ordered by date · downloadable as PDF.</p>
+        <h2 class="pagina-billing__cabecera-seccion__titulo">{{ "billing.seccion03.titulo" | translate }}</h2>
+        <p class="pagina-billing__cabecera-seccion__descripcion">{{ "billing.seccion03.descripcion" | translate }}</p>
       </section>
     </header>
 
@@ -152,17 +152,17 @@
           <i class="fa-solid fa-file-invoice"></i>
         </span>
         <section class="pagina-billing__vacio-invoices__texto">
-          <p class="pagina-billing__vacio-invoices__titulo">No invoices issued yet</p>
-          <p class="pagina-billing__vacio-invoices__detalle">When you upgrade, every charge will appear here automatically with a downloadable receipt.</p>
+          <p class="pagina-billing__vacio-invoices__titulo">{{ "billing.facturasVacioTitulo" | translate }}</p>
+          <p class="pagina-billing__vacio-invoices__detalle">{{ "billing.facturasVacioDetalle" | translate }}</p>
         </section>
       </section>
     } @else {
       <section class="pagina-billing__tabla">
         <header class="pagina-billing__tabla__cabecera">
-          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--fecha">Date</span>
-          <span class="pagina-billing__tabla__th">Description</span>
-          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--importe">Amount</span>
-          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--estado">Status</span>
+          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--fecha">{{ "billing.tabla.fecha" | translate }}</span>
+          <span class="pagina-billing__tabla__th">{{ "billing.tabla.descripcion" | translate }}</span>
+          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--importe">{{ "billing.tabla.importe" | translate }}</span>
+          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--estado">{{ "billing.tabla.estado" | translate }}</span>
           <span class="pagina-billing__tabla__th pagina-billing__tabla__th--acciones" aria-hidden="true"></span>
         </header>
         @for (factura of listaDeFacturas(); track factura.id) {
@@ -173,7 +173,7 @@
             <span class="pagina-billing__tabla__td">
               <span class="pagina-billing__badge pagina-billing__badge--{{ factura.estado }}">{{ factura.estado }}</span>
             </span>
-            <a class="pagina-billing__tabla__descarga" href="#" aria-label="Download invoice">
+            <a class="pagina-billing__tabla__descarga" href="#" [attr.aria-label]="'billing.tabla.descargaAria' | translate">
               <i class="fa-solid fa-arrow-down"></i>
             </a>
           </article>
@@ -185,9 +185,9 @@
   <footer class="pagina-billing__pie">
     <span class="pagina-billing__pie__codigo">№ {{ planService.planActual() | uppercase }}-{{ diasHastaProximoCobro() }}D</span>
     <span class="pagina-billing__pie__separador" aria-hidden="true"></span>
-    <span class="pagina-billing__pie__texto">Stripe handles every charge · PCI-DSS Level 1 compliant</span>
+    <span class="pagina-billing__pie__texto">{{ "billing.pieTexto" | translate }}</span>
     <span class="pagina-billing__pie__separador" aria-hidden="true"></span>
-    <span class="pagina-billing__pie__edicion">Billing edition {{ fechaProximoCobro() | date:"yyyy.MM":"":"en" }}</span>
+    <span class="pagina-billing__pie__edicion">{{ "billing.pieEdicionPrefijo" | translate }}{{ fechaProximoCobro() | date:"yyyy.MM":"":"en" }}</span>
   </footer>
 
 </section>

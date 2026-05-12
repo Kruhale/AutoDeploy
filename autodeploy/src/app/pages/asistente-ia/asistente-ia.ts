@@ -1,27 +1,23 @@
 import { Component, ElementRef, OnInit, ViewChild, signal, computed } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AsistenteIaService, MensajeChat, ConfiguracionAsistente } from "../../services/asistente-ia.service";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 import { UsuarioService } from "../../services/usuario.service";
 
-const SUGERENCIAS_INICIALES = [
-  { icono: "fa-solid fa-hard-drive", texto: "¿Cuánto espacio libre queda en el disco?" },
-  { icono: "fa-solid fa-microchip", texto: "Muéstrame el consumo de memoria RAM" },
-  { icono: "fa-solid fa-arrows-rotate", texto: "Reinicia el servicio nginx" },
-  { icono: "fa-solid fa-list-check", texto: "Lista los procesos que más CPU consumen" }
-];
+interface SugerenciaEntrada {
+  icono: string;
+  texto: string;
+}
 
-const MODELOS_DISPONIBLES = [
-  { id: "openai/gpt-4o-mini", nombre: "GPT-4o mini (rápido)" },
-  { id: "openai/gpt-4o", nombre: "GPT-4o (potente)" },
-  { id: "anthropic/claude-3.5-sonnet", nombre: "Claude 3.5 Sonnet" },
-  { id: "google/gemini-2.0-flash-exp:free", nombre: "Gemini 2.0 Flash (gratis)" },
-  { id: "meta-llama/llama-3.3-70b-instruct:free", nombre: "Llama 3.3 70B (gratis)" }
-];
+interface ModeloEntrada {
+  id: string;
+  nombre: string;
+}
 
 @Component({
   selector: "app-asistente-ia",
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: "./asistente-ia.html",
   styleUrl: "./asistente-ia.scss"
 })
@@ -30,8 +26,28 @@ export class AsistenteIa implements OnInit {
   @ViewChild("contenedorMensajes") contenedorMensajes!: ElementRef<HTMLElement>;
   @ViewChild("areaEntrada") areaEntrada!: ElementRef<HTMLTextAreaElement>;
 
-  readonly sugerencias = SUGERENCIAS_INICIALES;
-  readonly modelosDisponibles = MODELOS_DISPONIBLES;
+  sugerencias = computed<SugerenciaEntrada[]>(() => {
+    this.versionTraducciones();
+    return [
+      { icono: "fa-solid fa-hard-drive", texto: this.translate.instant("asistenteIa.sugerencias.disco") },
+      { icono: "fa-solid fa-microchip", texto: this.translate.instant("asistenteIa.sugerencias.ram") },
+      { icono: "fa-solid fa-arrows-rotate", texto: this.translate.instant("asistenteIa.sugerencias.nginx") },
+      { icono: "fa-solid fa-list-check", texto: this.translate.instant("asistenteIa.sugerencias.cpu") }
+    ];
+  });
+
+  modelosDisponibles = computed<ModeloEntrada[]>(() => {
+    this.versionTraducciones();
+    return [
+      { id: "openai/gpt-4o-mini", nombre: this.translate.instant("asistenteIa.modelos.gpt4oMini") },
+      { id: "openai/gpt-4o", nombre: this.translate.instant("asistenteIa.modelos.gpt4o") },
+      { id: "anthropic/claude-3.5-sonnet", nombre: this.translate.instant("asistenteIa.modelos.claudeSonnet") },
+      { id: "google/gemini-2.0-flash-exp:free", nombre: this.translate.instant("asistenteIa.modelos.geminiFlash") },
+      { id: "meta-llama/llama-3.3-70b-instruct:free", nombre: this.translate.instant("asistenteIa.modelos.llama") }
+    ];
+  });
+
+  private versionTraducciones = signal<number>(0);
 
   listaServidores = signal<ServidorRemoto[]>([]);
   servidorSeleccionadoId = signal<string>("");
@@ -62,8 +78,14 @@ export class AsistenteIa implements OnInit {
   constructor(
     public asistenteService: AsistenteIaService,
     private servidorService: ServidorService,
-    public usuarioService: UsuarioService
-  ) {}
+    public usuarioService: UsuarioService,
+    private translate: TranslateService
+  ) {
+    const componente = this;
+    this.translate.onLangChange.subscribe(function() {
+      componente.versionTraducciones.update(function(valor) { return valor + 1; });
+    });
+  }
 
   ngOnInit(): void {
     this.cargarServidores();
@@ -83,21 +105,19 @@ export class AsistenteIa implements OnInit {
     });
   }
 
-  private cargarConfiguracion(): void {
-    const componente = this;
+  private async cargarConfiguracion(): Promise<void> {
     const idUsuarioActual = this.usuarioService.usuarioId();
     if (!idUsuarioActual) return;
 
-    this.asistenteService.obtenerConfiguracion(idUsuarioActual)
-      .then(function(configuracion: ConfiguracionAsistente) {
-        componente.apiKeyYaConfigurada.set(configuracion.apiKeyConfigurada);
-        componente.modeloEnEdicion.set(configuracion.modeloPreferido);
-        const comandosUnidos = configuracion.comandosAutoAprobados.join("\n");
-        componente.comandosEnEdicion.set(comandosUnidos);
-      })
-      .catch(function() {
-        componente.apiKeyYaConfigurada.set(false);
-      });
+    try {
+      const configuracion: ConfiguracionAsistente = await this.asistenteService.obtenerConfiguracion(idUsuarioActual);
+      this.apiKeyYaConfigurada.set(configuracion.apiKeyConfigurada);
+      this.modeloEnEdicion.set(configuracion.modeloPreferido);
+      const comandosUnidos = configuracion.comandosAutoAprobados.join("\n");
+      this.comandosEnEdicion.set(comandosUnidos);
+    } catch (error) {
+      this.apiKeyYaConfigurada.set(false);
+    }
   }
 
   abrirConfiguracion(): void {
@@ -137,7 +157,7 @@ export class AsistenteIa implements OnInit {
       this.apiKeyEnEdicion.set("");
       this.mostrarPanelConfiguracion.set(false);
     } catch (error: any) {
-      this.mensajeError.set(error.message || "Error guardando configuración");
+      this.mensajeError.set(error.message || this.translate.instant("asistenteIa.mensajes.errorGuardarConfig"));
     } finally {
       this.estaCargandoConfiguracion.set(false);
     }
@@ -153,9 +173,10 @@ export class AsistenteIa implements OnInit {
 
   usarSugerencia(textoSugerencia: string): void {
     this.mensajeEnEdicion.set(textoSugerencia);
-    setTimeout(() => {
-      if (this.areaEntrada) {
-        this.areaEntrada.nativeElement.focus();
+    const componente = this;
+    setTimeout(function() {
+      if (componente.areaEntrada) {
+        componente.areaEntrada.nativeElement.focus();
       }
     }, 0);
   }
@@ -174,7 +195,7 @@ export class AsistenteIa implements OnInit {
 
     if (!textoMensaje || !idServidor || !idUsuario) {
       if (!idServidor) {
-        this.mensajeError.set("Selecciona un servidor antes de enviar el mensaje");
+        this.mensajeError.set(this.translate.instant("asistenteIa.mensajes.seleccionaServidor"));
       }
       return;
     }
@@ -204,9 +225,11 @@ export class AsistenteIa implements OnInit {
 
       this.asistenteService.agregarMensaje(mensajeRespuesta);
     } catch (error: any) {
+      const prefijoError = this.translate.instant("asistenteIa.mensajes.errorRespuesta");
+      const defectoError = this.translate.instant("asistenteIa.mensajes.errorDefault");
       const mensajeFallo: MensajeChat = {
         rol: "assistant",
-        contenido: "Ha ocurrido un error: " + (error.message || "no se pudo procesar tu mensaje")
+        contenido: prefijoError + (error.message || defectoError)
       };
       this.asistenteService.agregarMensaje(mensajeFallo);
     } finally {
@@ -234,9 +257,11 @@ export class AsistenteIa implements OnInit {
         requiereConfirmacion: false
       });
     } catch (error: any) {
+      const prefijoEjecutar = this.translate.instant("asistenteIa.mensajes.errorEjecutar");
+      const defectoFallo = this.translate.instant("asistenteIa.mensajes.falloComando");
       this.actualizarMensajeEnHistorial(indiceMensaje, {
         estadoComando: "ejecutado",
-        salidaComando: "Error: " + (error.message || "fallo al ejecutar el comando")
+        salidaComando: prefijoEjecutar + (error.message || defectoFallo)
       });
     }
 
@@ -263,9 +288,10 @@ export class AsistenteIa implements OnInit {
   }
 
   private desplazarAlFinal(): void {
-    setTimeout(() => {
-      if (this.contenedorMensajes) {
-        const elemento = this.contenedorMensajes.nativeElement;
+    const componente = this;
+    setTimeout(function() {
+      if (componente.contenedorMensajes) {
+        const elemento = componente.contenedorMensajes.nativeElement;
         elemento.scrollTop = elemento.scrollHeight;
       }
     }, 50);

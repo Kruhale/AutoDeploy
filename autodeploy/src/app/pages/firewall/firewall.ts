@@ -1,6 +1,7 @@
 import { Component, signal, OnInit } from "@angular/core";
 import { FormsModule } from "@angular/forms";
 import { HttpClient } from "@angular/common/http";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 
 interface ReglaFirewallApi {
@@ -15,7 +16,7 @@ interface ReglaFirewallApi {
 
 @Component({
   selector: "app-firewall",
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: "./firewall.html",
   styleUrl: "./firewall.scss"
 })
@@ -37,7 +38,8 @@ export class Firewall implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private servidorService: ServidorService
+    private servidorService: ServidorService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -84,6 +86,26 @@ export class Firewall implements OnInit {
     });
   }
 
+  agregarPresetSsh(): void {
+    this.agregarPreset("22", this.translate.instant("firewall.preset.ssh"));
+  }
+
+  agregarPresetHttp(): void {
+    this.agregarPreset("80", this.translate.instant("firewall.preset.http"));
+  }
+
+  agregarPresetHttps(): void {
+    this.agregarPreset("443", this.translate.instant("firewall.preset.https"));
+  }
+
+  agregarPresetMysql(): void {
+    this.agregarPreset("3306", this.translate.instant("firewall.preset.mysql"));
+  }
+
+  agregarPresetPostgres(): void {
+    this.agregarPreset("5432", this.translate.instant("firewall.preset.postgres"));
+  }
+
   agregarPreset(puerto: string, descripcion: string): void {
     const servidorId = this.servidorSeleccionadoId();
     if (!servidorId) return;
@@ -107,7 +129,7 @@ export class Firewall implements OnInit {
       },
       error: function() {
         componente.guardando.set(false);
-        componente.mensajeError.set("Could not add the preset rule");
+        componente.mensajeError.set(componente.translate.instant("firewall.mensajes.errorPreset"));
         setTimeout(function() { componente.mensajeError.set(""); }, 3000);
       }
     });
@@ -145,7 +167,7 @@ export class Firewall implements OnInit {
       },
       error: function() {
         componente.guardando.set(false);
-        componente.mensajeError.set("Could not add the rule");
+        componente.mensajeError.set(componente.translate.instant("firewall.mensajes.errorAgregar"));
         setTimeout(function() { componente.mensajeError.set(""); }, 3000);
       }
     });
@@ -159,7 +181,7 @@ export class Firewall implements OnInit {
         componente.cargarReglas(servidorId);
       },
       error: function() {
-        componente.mensajeError.set("Could not remove the rule");
+        componente.mensajeError.set(componente.translate.instant("firewall.mensajes.errorEliminar"));
         setTimeout(function() { componente.mensajeError.set(""); }, 3000);
       }
     });

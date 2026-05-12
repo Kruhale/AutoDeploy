@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, OnDestroy, computed, Signal } from "@angular/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { MetricasServidorService, MetricaServidor } from "../../services/metricas-servidor.service";
 
 @Component({
   selector: "app-panel-metricas-servidor",
-  imports: [],
+  imports: [TranslateModule],
   templateUrl: "./panel-metricas-servidor.html",
   styleUrl: "./panel-metricas-servidor.scss"
 })

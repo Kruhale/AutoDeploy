@@ -3,15 +3,15 @@
     <section class="editorial__cabecera__izquierda">
       <p class="editorial__sello">
         <span class="editorial__sello__punto" [class.editorial__sello__punto--verde]="servidorEstado() === 'online'" [class.editorial__sello__punto--rojo]="servidorEstado() !== 'online'" aria-hidden="true"></span>
-        Workspace · Server · {{ servidorEstado() === "online" ? "Online" : "Offline" }}
+        {{ "gestionServidor.selloPrefijo" | translate }}{{ servidorEstado() === "online" ? ("gestionServidor.estado.online" | translate) : ("gestionServidor.estado.offline" | translate) }}
       </p>
       <h1 class="editorial__titulo">{{ servidorNombre() }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
       <p class="gestion-servidor__detalles">
         <span class="gestion-servidor__detalle"><i class="fa-solid fa-server"></i> {{ servidorIp() }}</span>
         <span class="gestion-servidor__detalle__separador" aria-hidden="true">·</span>
-        <span class="gestion-servidor__detalle">Port {{ servidorPuerto() }}</span>
+        <span class="gestion-servidor__detalle">{{ "gestionServidor.port" | translate }} {{ servidorPuerto() }}</span>
         <span class="gestion-servidor__detalle__separador" aria-hidden="true">·</span>
-        <span class="gestion-servidor__detalle">{{ servidorUsuario() }}<small>@host</small></span>
+        <span class="gestion-servidor__detalle">{{ servidorUsuario() }}<small>{{ "gestionServidor.hostSufijo" | translate }}</small></span>
       </p>
     </section>
     <section class="gestion-servidor__cabecera__acciones">
@@ -20,15 +20,15 @@
           <i class="fa-solid fa-terminal"></i>
         </span>
         <span class="editorial__cta-principal__texto">
-          <span class="editorial__cta-principal__principal">SSH terminal</span>
-          <span class="editorial__cta-principal__secundario">Open shell</span>
+          <span class="editorial__cta-principal__principal">{{ "gestionServidor.ctaSshPrincipal" | translate }}</span>
+          <span class="editorial__cta-principal__secundario">{{ "gestionServidor.ctaSshSecundario" | translate }}</span>
         </span>
       </a>
       <button class="gestion-servidor__boton-peligro" type="button" (click)="reiniciarServidor()" [disabled]="reiniciando()">
         @if (reiniciando()) {
-          <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> Rebooting
+          <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> {{ "gestionServidor.rebooting" | translate }}
         } @else {
-          <i class="fa-solid fa-power-off" aria-hidden="true"></i> Reboot
+          <i class="fa-solid fa-power-off" aria-hidden="true"></i> {{ "gestionServidor.reboot" | translate }}
         }
       </button>
     </section>
@@ -37,26 +37,26 @@
   <section class="gestion-servidor__metricas">
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
-      etiqueta="CPU Load"
+      [etiqueta]="'gestionServidor.metricas.cpu' | translate"
       valor="—"
       icono="fa-solid fa-microchip"
-      subtexto="No data yet"
+      [subtexto]="'gestionServidor.metricas.sinDatos' | translate"
       variante="primario">
     </app-tarjeta-estadistica>
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
-      etiqueta="Memory (RAM)"
+      [etiqueta]="'gestionServidor.metricas.ram' | translate"
       valor="—"
       icono="fa-solid fa-memory"
-      subtexto="No data yet"
+      [subtexto]="'gestionServidor.metricas.sinDatos' | translate"
       variante="exito">
     </app-tarjeta-estadistica>
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
-      etiqueta="Bandwidth"
+      [etiqueta]="'gestionServidor.metricas.bandwidth' | translate"
       valor="—"
       icono="fa-solid fa-wifi"
-      subtexto="No data yet"
+      [subtexto]="'gestionServidor.metricas.sinDatos' | translate"
       variante="primario">
     </app-tarjeta-estadistica>
   </section>
@@ -65,7 +65,7 @@
     <section class="gestion-servidor__salud">
       <span class="gestion-servidor__salud__estado gestion-servidor__salud__estado--{{ estadoSalud()!.estado }}">
         <span class="gestion-servidor__salud__estado__punto"></span>
-        {{ estadoSalud()!.estado === 'online' ? 'Online' : estadoSalud()!.estado === 'offline' ? 'Offline' : 'Degraded' }}
+        {{ estadoSalud()!.estado === 'online' ? ("gestionServidor.estado.online" | translate) : estadoSalud()!.estado === 'offline' ? ("gestionServidor.estado.offline" | translate) : ("gestionServidor.estado.degraded" | translate) }}
         <span class="gestion-servidor__salud__estado__tiempo">{{ estadoSalud()!.tiempoRespuestaMs }}ms</span>
       </span>
       @if (historialSalud().length > 0) {
@@ -84,12 +84,12 @@
   <section class="gestion-servidor__subdominios">
     <header class="editorial__bloque__cabecera">
       <span class="editorial__bloque__indice">01</span>
-      <h2 class="editorial__bloque__titulo">Subdomains <em>&amp;</em> SSL</h2>
-      <p class="editorial__bloque__meta">{{ listaSubdominios().length }} active</p>
+      <h2 class="editorial__bloque__titulo">{{ "gestionServidor.subdominios.titulo" | translate }}</h2>
+      <p class="editorial__bloque__meta">{{ "gestionServidor.subdominios.metaActivos" | translate: { n: listaSubdominios().length } }}</p>
     </header>
 
     @if (listaSubdominios().length === 0) {
-      <p class="editorial__vacio">No subdomains configured yet.</p>
+      <p class="editorial__vacio">{{ "gestionServidor.subdominios.vacio" | translate }}</p>
     }
     @for (subdominio of listaSubdominios(); track subdominio.id) {
       <article class="gestion-servidor__subdominio">
@@ -100,7 +100,7 @@
         </section>
         <section class="gestion-servidor__subdominio__acciones">
           <span class="gestion-servidor__subdominio__badge" [class.gestion-servidor__subdominio__badge--ssl-activo]="subdominio.sslActivo">
-            <i class="fa-solid fa-lock"></i> {{ subdominio.sslActivo ? 'SSL activo' : 'Sin SSL' }}
+            <i class="fa-solid fa-lock"></i> {{ (subdominio.sslActivo ? "gestionServidor.subdominios.sslActivo" : "gestionServidor.subdominios.sslInactivo") | translate }}
           </span>
           <button class="gestion-servidor__app__btn gestion-servidor__app__btn--peligro" (click)="eliminarSubdominio(subdominio.id)">
             <i class="fa-solid fa-trash"></i>
@@ -113,14 +113,14 @@
   <section class="gestion-servidor__aplicaciones">
     <header class="editorial__bloque__cabecera">
       <span class="editorial__bloque__indice">02</span>
-      <h2 class="editorial__bloque__titulo">Hosted <em>applications</em></h2>
+      <h2 class="editorial__bloque__titulo">{{ "gestionServidor.aplicaciones.titulo" | translate }}</h2>
       <a class="editorial__bloque__accion" routerLink="/app/nuevo-despliegue">
-        <i class="fa-solid fa-plus" aria-hidden="true"></i> Deploy new
+        <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ "gestionServidor.aplicaciones.accion" | translate }}
       </a>
     </header>
 
     @if (listaDeAplicaciones().length === 0) {
-      <p class="editorial__vacio">No applications deployed on this server yet.</p>
+      <p class="editorial__vacio">{{ "gestionServidor.aplicaciones.vacio" | translate }}</p>
     }
     @for (app of listaDeAplicaciones(); track app.nombre) {
       <article class="gestion-servidor__app">
@@ -138,7 +138,7 @@
           </section>
         </section>
         <section class="gestion-servidor__app__acciones">
-          <span class="gestion-servidor__app__badge gestion-servidor__app__badge--ok">HTTP 200</span>
+          <span class="gestion-servidor__app__badge gestion-servidor__app__badge--ok">{{ "gestionServidor.aplicaciones.ok" | translate }}</span>
           <span class="gestion-servidor__app__version">{{ app.version }}</span>
           <i class="fa-solid fa-gear gestion-servidor__app__btn"></i>
           <i class="fa-solid fa-file gestion-servidor__app__btn"></i>
@@ -150,11 +150,11 @@
 
   <footer class="gestion-servidor__inferior">
     <section class="gestion-servidor__inferior__item">
-      <span class="gestion-servidor__inferior__etiqueta">Last Backup</span>
+      <span class="gestion-servidor__inferior__etiqueta">{{ "gestionServidor.inferior.lastBackup" | translate }}</span>
       <span class="gestion-servidor__inferior__valor">—</span>
     </section>
     <section class="gestion-servidor__inferior__item">
-      <span class="gestion-servidor__inferior__etiqueta">System Uptime</span>
+      <span class="gestion-servidor__inferior__etiqueta">{{ "gestionServidor.inferior.systemUptime" | translate }}</span>
       <span class="gestion-servidor__inferior__valor">—</span>
     </section>
   </footer>

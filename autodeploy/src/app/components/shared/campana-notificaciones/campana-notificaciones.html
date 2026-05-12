@@ -1,4 +1,4 @@
-<button class="campana-boton" (click)="alternarCampana()" aria-label="Notificaciones">
+<button class="campana-boton" (click)="alternarCampana()" [attr.aria-label]="'campanaNotificaciones.ariaBoton' | translate">
 	<i class="fa-solid fa-bell"></i>
 	<span class="campana-badge" *ngIf="notificacionService.conteoNoLeidas() > 0">
 		{{ notificacionService.conteoNoLeidas() }}
@@ -7,19 +7,19 @@
 
 <div class="campana-panel" [class.campana-panel--abierto]="campanAbierta()">
 	<div class="campana-panel__encabezado">
-		<h3 class="campana-panel__titulo">Notificaciones</h3>
-		<button class="campana-panel__cerrar" (click)="cerrarCampana()" aria-label="Cerrar">
+		<h3 class="campana-panel__titulo">{{ "campanaNotificaciones.tituloPanel" | translate }}</h3>
+		<button class="campana-panel__cerrar" (click)="cerrarCampana()" [attr.aria-label]="'campanaNotificaciones.ariaCerrar' | translate">
 			<i class="fa-solid fa-xmark"></i>
 		</button>
 	</div>
 
 	<div class="campana-panel__contenido">
 		<div *ngIf="notificacionService.notificacionesDelUsuario().length === 0" class="campana-panel__vacio">
-			<p>No hay notificaciones</p>
+			<p>{{ "campanaNotificaciones.vacio" | translate }}</p>
 		</div>
 
-		<div *ngFor="let notificacion of notificacionService.notificacionesDelUsuario()" 
-			 class="campana-item" 
+		<div *ngFor="let notificacion of notificacionService.notificacionesDelUsuario()"
+			 class="campana-item"
 			 [class.campana-item--no-leida]="!notificacion.leida">
 			<div class="campana-item__icono">
 				<i class="fa-solid" [ngClass]="'fa-' + obtenerIconoPorTipo(notificacion.tipo)"></i>
@@ -32,15 +32,15 @@
 			</div>
 
 			<div class="campana-item__acciones">
-				<button *ngIf="!notificacion.leida" 
-						class="campana-item__accion" 
+				<button *ngIf="!notificacion.leida"
+						class="campana-item__accion"
 						(click)="marcarComoLeida(notificacion.id)"
-						title="Marcar como leída">
+						[title]="'campanaNotificaciones.marcarLeida' | translate">
 					<i class="fa-solid fa-check"></i>
 				</button>
-				<button class="campana-item__accion campana-item__accion--eliminar" 
+				<button class="campana-item__accion campana-item__accion--eliminar"
 						(click)="eliminarNotificacion(notificacion.id)"
-						title="Eliminar">
+						[title]="'campanaNotificaciones.eliminar' | translate">
 					<i class="fa-solid fa-trash"></i>
 				</button>
 			</div>
@@ -49,7 +49,7 @@
 
 	<div *ngIf="notificacionService.conteoNoLeidas() > 0" class="campana-panel__pie">
 		<button class="campana-panel__boton-marcar" (click)="marcarTodasComoLeidas()">
-			Marcar todas como leídas
+			{{ "campanaNotificaciones.marcarTodas" | translate }}
 		</button>
 	</div>
 </div>

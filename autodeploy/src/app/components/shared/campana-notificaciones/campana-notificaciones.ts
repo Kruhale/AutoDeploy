@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, signal } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
 import { NotificacionService, Notificacion } from "../../../services/notificacion.service";
 import { UsuarioService } from "../../../services/usuario.service";
 import { Subscription } from "rxjs";
@@ -7,7 +8,7 @@ import { Subscription } from "rxjs";
 @Component({
 	selector: "app-campana-notificaciones",
 	standalone: true,
-	imports: [CommonModule],
+	imports: [CommonModule, TranslateModule],
 	templateUrl: "./campana-notificaciones.html",
 	styleUrl: "./campana-notificaciones.scss"
 })

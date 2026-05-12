@@ -1,14 +1,14 @@
 @if (estaEsperandoDatos()) {
   <section class="panel-metricas panel-metricas--vacio">
     <header class="panel-metricas__cabecera">
-      <h3 class="panel-metricas__titulo">{{ nombreServidor || "Servidor" }}</h3>
+      <h3 class="panel-metricas__titulo">{{ nombreServidor || ("panelMetricas.fallbackNombre" | translate) }}</h3>
       <span class="panel-metricas__chip panel-metricas__chip--esperando">
         <i class="fa-solid fa-satellite-dish"></i>
-        Esperando primer ciclo
+        {{ "panelMetricas.esperandoPrimerCiclo" | translate }}
       </span>
     </header>
     <p class="panel-metricas__mensaje-vacio">
-      El backend está abriendo la sesión SSH y recolectando datos. Las métricas aparecerán aquí en unos segundos.
+      {{ "panelMetricas.mensajeVacio" | translate }}
     </p>
   </section>
 }
@@ -18,22 +18,22 @@
   <section class="panel-metricas">
     <header class="panel-metricas__cabecera">
       <article class="panel-metricas__identidad">
-        <h3 class="panel-metricas__titulo">{{ nombreServidor || "Servidor" }}</h3>
+        <h3 class="panel-metricas__titulo">{{ nombreServidor || ("panelMetricas.fallbackNombre" | translate) }}</h3>
         <span class="panel-metricas__uptime">
           <i class="fa-solid fa-clock"></i>
-          {{ tiempoEncendidoTexto() }} encendido
+          {{ tiempoEncendidoTexto() }} {{ "panelMetricas.uptimeSufijo" | translate }}
         </span>
       </article>
       @if (metrica && metrica.sesionActiva) {
         <span class="panel-metricas__chip panel-metricas__chip--vivo">
           <span class="panel-metricas__punto-vivo"></span>
-          Sesión SSH viva
+          {{ "panelMetricas.sesionViva" | translate }}
         </span>
       }
       @if (metrica && !metrica.sesionActiva) {
         <span class="panel-metricas__chip panel-metricas__chip--caido">
           <i class="fa-solid fa-plug-circle-xmark"></i>
-          Reconectando
+          {{ "panelMetricas.reconectando" | translate }}
         </span>
       }
     </header>
@@ -42,19 +42,19 @@
       <article class="tarjeta-metrica">
         <header class="tarjeta-metrica__cabecera">
           <i class="fa-solid fa-microchip tarjeta-metrica__icono"></i>
-          <span class="tarjeta-metrica__etiqueta">CPU</span>
+          <span class="tarjeta-metrica__etiqueta">{{ "panelMetricas.tarjetas.cpu" | translate }}</span>
         </header>
         <strong class="tarjeta-metrica__valor">{{ metrica?.cpuPorcentaje?.toFixed(1) || 0 }}<small class="tarjeta-metrica__unidad">%</small></strong>
         <section class="barra-progreso" [class]="obtenerClaseColorBarra(metrica?.cpuPorcentaje || 0)">
           <span class="barra-progreso__relleno" [style.width.%]="metrica?.cpuPorcentaje || 0"></span>
         </section>
-        <span class="tarjeta-metrica__nota">Carga {{ metrica?.cargaPromedio?.toFixed(2) || "0.00" }}</span>
+        <span class="tarjeta-metrica__nota">{{ "panelMetricas.tarjetas.carga" | translate }} {{ metrica?.cargaPromedio?.toFixed(2) || "0.00" }}</span>
       </article>
 
       <article class="tarjeta-metrica">
         <header class="tarjeta-metrica__cabecera">
           <i class="fa-solid fa-memory tarjeta-metrica__icono"></i>
-          <span class="tarjeta-metrica__etiqueta">RAM</span>
+          <span class="tarjeta-metrica__etiqueta">{{ "panelMetricas.tarjetas.ram" | translate }}</span>
         </header>
         <strong class="tarjeta-metrica__valor">{{ porcentajeRam() }}<small class="tarjeta-metrica__unidad">%</small></strong>
         <section class="barra-progreso" [class]="obtenerClaseColorBarra(porcentajeRam())">
@@ -66,7 +66,7 @@
       <article class="tarjeta-metrica">
         <header class="tarjeta-metrica__cabecera">
           <i class="fa-solid fa-hard-drive tarjeta-metrica__icono"></i>
-          <span class="tarjeta-metrica__etiqueta">Disco</span>
+          <span class="tarjeta-metrica__etiqueta">{{ "panelMetricas.tarjetas.disco" | translate }}</span>
         </header>
         <strong class="tarjeta-metrica__valor">{{ metrica?.discoUsadoPorcentaje || 0 }}<small class="tarjeta-metrica__unidad">%</small></strong>
         <section class="barra-progreso" [class]="obtenerClaseColorBarra(metrica?.discoUsadoPorcentaje || 0)">
@@ -80,7 +80,7 @@
       <article class="lista-recursos">
         <header class="lista-recursos__cabecera">
           <i class="fa-solid fa-globe lista-recursos__icono"></i>
-          <h4 class="lista-recursos__titulo">Webs desplegadas</h4>
+          <h4 class="lista-recursos__titulo">{{ "panelMetricas.webs.titulo" | translate }}</h4>
           <span class="lista-recursos__contador">{{ metrica?.webDesplegadas?.length || 0 }}</span>
         </header>
         @if (metrica && metrica.webDesplegadas.length > 0) {
@@ -94,14 +94,14 @@
           </ul>
         }
         @if (!metrica || metrica.webDesplegadas.length === 0) {
-          <p class="lista-recursos__vacio">Sin sitios activos en /etc/nginx/sites-enabled</p>
+          <p class="lista-recursos__vacio">{{ "panelMetricas.webs.vacio" | translate }}</p>
         }
       </article>
 
       <article class="lista-recursos">
         <header class="lista-recursos__cabecera">
           <i class="fa-brands fa-docker lista-recursos__icono"></i>
-          <h4 class="lista-recursos__titulo">Containers Docker</h4>
+          <h4 class="lista-recursos__titulo">{{ "panelMetricas.docker.titulo" | translate }}</h4>
           <span class="lista-recursos__contador">{{ metrica?.containersDocker?.length || 0 }}</span>
         </header>
         @if (metrica && metrica.containersDocker.length > 0) {
@@ -115,7 +115,7 @@
           </ul>
         }
         @if (!metrica || metrica.containersDocker.length === 0) {
-          <p class="lista-recursos__vacio">Sin contenedores ejecutándose</p>
+          <p class="lista-recursos__vacio">{{ "panelMetricas.docker.vacio" | translate }}</p>
         }
       </article>
     </section>

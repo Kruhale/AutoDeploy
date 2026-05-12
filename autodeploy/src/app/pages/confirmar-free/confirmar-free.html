@@ -4,44 +4,44 @@
 
   <a class="confirmar-free__volver" routerLink="/" (click)="cancelar(); $event.preventDefault()">
     <i class="fa-solid fa-arrow-left-long"></i>
-    <span>Volver</span>
+    <span>{{ 'confirmarFree.volver' | translate }}</span>
   </a>
 
   <section class="confirmar-free__contenedor">
 
     <section class="confirmar-free__visual">
 
-      <span class="confirmar-free__etiqueta">Plan seleccionado</span>
+      <span class="confirmar-free__etiqueta">{{ 'confirmarFree.etiqueta' | translate }}</span>
 
       <section class="confirmar-free__nombre-precio">
-        <h2 class="confirmar-free__nombre">Free</h2>
+        <h2 class="confirmar-free__nombre">{{ 'confirmarFree.nombre' | translate }}</h2>
         <section class="confirmar-free__precio">
           <span class="confirmar-free__precio__simbolo">€</span>
           <span class="confirmar-free__precio__numero">0</span>
-          <span class="confirmar-free__precio__periodo">/mes</span>
+          <span class="confirmar-free__precio__periodo">{{ 'confirmarFree.precioPeriodo' | translate }}</span>
         </section>
       </section>
 
       <p class="confirmar-free__resumen">
-        Lo esencial para conectar tu primer servidor y empezar a desplegar sin pagar nada.
+        {{ 'confirmarFree.resumen' | translate }}
       </p>
 
       <section class="confirmar-free__lista">
         <section class="confirmar-free__item">
           <span class="confirmar-free__item__icono">01</span>
-          <span class="confirmar-free__item__texto">1 servidor VPS</span>
+          <span class="confirmar-free__item__texto">{{ 'confirmarFree.item1' | translate }}</span>
         </section>
         <section class="confirmar-free__item">
           <span class="confirmar-free__item__icono">02</span>
-          <span class="confirmar-free__item__texto">5 despliegues al mes</span>
+          <span class="confirmar-free__item__texto">{{ 'confirmarFree.item2' | translate }}</span>
         </section>
         <section class="confirmar-free__item">
           <span class="confirmar-free__item__icono">03</span>
-          <span class="confirmar-free__item__texto">Monitorización básica</span>
+          <span class="confirmar-free__item__texto">{{ 'confirmarFree.item3' | translate }}</span>
         </section>
         <section class="confirmar-free__item">
           <span class="confirmar-free__item__icono">04</span>
-          <span class="confirmar-free__item__texto">Soporte de la comunidad</span>
+          <span class="confirmar-free__item__texto">{{ 'confirmarFree.item4' | translate }}</span>
         </section>
       </section>
 
@@ -52,31 +52,31 @@
       @if (esBajada()) {
 
         <span class="confirmar-free__eyebrow confirmar-free__eyebrow--aviso">
-          Cambio de plan
+          {{ 'confirmarFree.bajada.eyebrow' | translate }}
         </span>
 
         <h1 class="confirmar-free__titulo">
-          Vas a bajar de <span class="confirmar-free__resaltar">{{ planActual() }}</span> al plan <span class="confirmar-free__resaltar">Free</span>.
+          {{ 'confirmarFree.bajada.tituloParte1' | translate }} <span class="confirmar-free__resaltar">{{ planActual() }}</span> {{ 'confirmarFree.bajada.tituloParte2' | translate }} <span class="confirmar-free__resaltar">{{ 'confirmarFree.bajada.planFree' | translate }}</span>.
         </h1>
 
         <p class="confirmar-free__descripcion">
-          Mantendrás tu cuenta y tus servidores, pero perderás el acceso inmediato a las funciones premium.
+          {{ 'confirmarFree.bajada.descripcion' | translate }}
         </p>
 
         <section class="confirmar-free__perdidas">
-          <span class="confirmar-free__perdidas__titulo">Lo que perderás</span>
+          <span class="confirmar-free__perdidas__titulo">{{ 'confirmarFree.bajada.perdidasTitulo' | translate }}</span>
           <section class="confirmar-free__perdidas__lista">
             <section class="confirmar-free__perdida">
               <span class="confirmar-free__perdida__icono">—</span>
-              <span>AI Assistant</span>
+              <span>{{ 'confirmarFree.bajada.perdida1' | translate }}</span>
             </section>
             <section class="confirmar-free__perdida">
               <span class="confirmar-free__perdida__icono">—</span>
-              <span>Dominios personalizados</span>
+              <span>{{ 'confirmarFree.bajada.perdida2' | translate }}</span>
             </section>
             <section class="confirmar-free__perdida">
               <span class="confirmar-free__perdida__icono">—</span>
-              <span>Despliegues ilimitados</span>
+              <span>{{ 'confirmarFree.bajada.perdida3' | translate }}</span>
             </section>
           </section>
         </section>
@@ -84,29 +84,29 @@
       } @else {
 
         <span class="confirmar-free__eyebrow">
-          Empieza gratis
+          {{ 'confirmarFree.alta.eyebrow' | translate }}
         </span>
 
         <h1 class="confirmar-free__titulo">
-          Listo para desplegar tu primera app.
+          {{ 'confirmarFree.alta.titulo' | translate }}
         </h1>
 
         <p class="confirmar-free__descripcion">
-          Sin tarjeta de crédito ni período de prueba. Crea tu cuenta y conecta tu servidor en menos de dos minutos.
+          {{ 'confirmarFree.alta.descripcion' | translate }}
         </p>
 
         <section class="confirmar-free__pasos">
           <section class="confirmar-free__paso">
             <span class="confirmar-free__paso__numero">01</span>
-            <span class="confirmar-free__paso__texto">Crea tu cuenta con email</span>
+            <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso1' | translate }}</span>
           </section>
           <section class="confirmar-free__paso">
             <span class="confirmar-free__paso__numero">02</span>
-            <span class="confirmar-free__paso__texto">Conecta tu servidor por SSH</span>
+            <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso2' | translate }}</span>
           </section>
           <section class="confirmar-free__paso">
             <span class="confirmar-free__paso__numero">03</span>
-            <span class="confirmar-free__paso__texto">Despliega tu primera app</span>
+            <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso3' | translate }}</span>
           </section>
         </section>
 
@@ -114,13 +114,13 @@
 
       <section class="confirmar-free__acciones">
         <button class="boton--ghost confirmar-free__boton confirmar-free__boton--secundario" type="button" (click)="cancelar()">
-          Cancelar
+          {{ 'confirmarFree.botonCancelar' | translate }}
         </button>
         <button class="boton--primario confirmar-free__boton confirmar-free__boton--principal" type="button" (click)="confirmar()">
           @if (esBajada()) {
-            Confirmar bajada
+            {{ 'confirmarFree.botonConfirmarBajada' | translate }}
           } @else {
-            Continuar al registro
+            {{ 'confirmarFree.botonContinuar' | translate }}
           }
           <i class="fa-solid fa-arrow-right-long confirmar-free__boton__flecha"></i>
         </button>

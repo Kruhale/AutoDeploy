@@ -3,15 +3,15 @@
     <section class="editorial__cabecera__izquierda">
       <p class="editorial__sello">
         <span class="editorial__sello__punto editorial__sello__punto--verde" aria-hidden="true"></span>
-        Workspace · Activity · Production v2.4.1
+        {{ "logsTerminal.sello" | translate }}
       </p>
-      <h1 class="editorial__titulo">Activity<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="editorial__subtitulo">Real-time log stream and interactive shell · filter by severity to focus.</p>
+      <h1 class="editorial__titulo">{{ "logsTerminal.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "logsTerminal.subtitulo" | translate }}</p>
     </section>
     <section class="logs-terminal__cabecera__derecha">
       <section class="logs-terminal__busqueda">
         <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="logs-terminal__busqueda__input" type="text" placeholder="Search logs..." (input)="busquedaTexto.set($any($event.target).value)">
+        <input class="logs-terminal__busqueda__input" type="text" [placeholder]="'logsTerminal.busqueda' | translate" (input)="busquedaTexto.set($any($event.target).value)">
       </section>
     </section>
   </header>
@@ -19,21 +19,21 @@
   <section class="logs-terminal__barra-filtros">
     <section class="logs-terminal__filtros">
       <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'all'" (click)="cambiarFiltro('all')">
-        <i class="fa-solid fa-filter"></i> All
+        <i class="fa-solid fa-filter"></i> {{ "logsTerminal.filtro.all" | translate }}
       </button>
-      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'info'" (click)="cambiarFiltro('info')">Info</button>
-      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'warn'" (click)="cambiarFiltro('warn')">Warning</button>
-      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'error'" (click)="cambiarFiltro('error')">Error</button>
+      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'info'" (click)="cambiarFiltro('info')">{{ "logsTerminal.filtro.info" | translate }}</button>
+      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'warn'" (click)="cambiarFiltro('warn')">{{ "logsTerminal.filtro.warn" | translate }}</button>
+      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'error'" (click)="cambiarFiltro('error')">{{ "logsTerminal.filtro.error" | translate }}</button>
     </section>
     <section class="logs-terminal__barra-acciones">
       <button class="boton--ghost" (click)="exportarLogs()">
-        <i class="fa-solid fa-download"></i> Export Logs
+        <i class="fa-solid fa-download"></i> {{ "logsTerminal.exportarLogs" | translate }}
       </button>
       <button class="boton--primario" (click)="reiniciarFlujo()" [disabled]="refrescandoFlujo()">
         @if (refrescandoFlujo()) {
-          <i class="fa-solid fa-spinner fa-spin"></i> Refreshing
+          <i class="fa-solid fa-spinner fa-spin"></i> {{ "logsTerminal.refrescando" | translate }}
         } @else {
-          <i class="fa-solid fa-rotate-right"></i> Refresh
+          <i class="fa-solid fa-rotate-right"></i> {{ "logsTerminal.refrescar" | translate }}
         }
       </button>
     </section>
@@ -41,22 +41,22 @@
 
   <section class="visor-eventos">
     <header class="visor-eventos__cabecera">
-      <h2 class="visor-eventos__titulo">Event Viewer</h2>
+      <h2 class="visor-eventos__titulo">{{ "logsTerminal.visor.titulo" | translate }}</h2>
       <span class="visor-eventos__actualizado">
-        @if (cargandoLogs()) { Loading… }
-        @else if (entradasDeLog().length === 0) { No events yet }
-        @else { {{ entradasDeLog().length }} events }
+        @if (cargandoLogs()) { {{ "logsTerminal.visor.loading" | translate }} }
+        @else if (entradasDeLog().length === 0) { {{ "logsTerminal.visor.sinEventos" | translate }} }
+        @else { {{ "logsTerminal.visor.contador" | translate: { n: entradasDeLog().length } }} }
       </span>
     </header>
     @if (cargandoLogs()) {
       <section class="visor-eventos__cargando">
-        <i class="fa-solid fa-spinner fa-spin"></i> Loading recent activity…
+        <i class="fa-solid fa-spinner fa-spin"></i> {{ "logsTerminal.visor.cargandoActividad" | translate }}
       </section>
     } @else if (obtenerEntradasFiltradas().length === 0) {
       <section class="visor-eventos__vacio">
         <i class="fa-solid fa-list-check visor-eventos__vacio__icono" aria-hidden="true"></i>
-        <p class="visor-eventos__vacio__titulo">No activity recorded yet</p>
-        <p class="visor-eventos__vacio__detalle">Events will appear here as soon as something happens — deployments, connections, alerts.</p>
+        <p class="visor-eventos__vacio__titulo">{{ "logsTerminal.visor.vacioTitulo" | translate }}</p>
+        <p class="visor-eventos__vacio__detalle">{{ "logsTerminal.visor.vacioDetalle" | translate }}</p>
       </section>
     } @else {
       <ul class="visor-eventos__lista">
@@ -79,12 +79,12 @@
         <span class="terminal-interactiva__punto terminal-interactiva__punto--verde"></span>
       </section>
       <span class="terminal-interactiva__titulo">
-        Interactive Shell — {{ servidorSeleccionadoNombre() || "selecciona un servidor" }}
+        {{ "logsTerminal.terminal.tituloPrefijo" | translate }}{{ servidorSeleccionadoNombre() || ("logsTerminal.terminal.servidorPlaceholder" | translate) }}
       </span>
       <section class="terminal-interactiva__controles">
         @if (listaDeServidores().length > 0) {
           <select class="terminal-interactiva__selector" (change)="cambiarServidor($event)" [disabled]="terminalService.estadoConexion() === 'conectado' || terminalService.estadoConexion() === 'conectando'">
-            <option value="">— pick a server —</option>
+            <option value="">{{ "logsTerminal.terminal.selectorPlaceholder" | translate }}</option>
             @for (servidor of listaDeServidores(); track servidor.id) {
               <option [value]="servidor.id" [selected]="servidor.id === servidorSeleccionadoId()">
                 {{ servidor.nombre }} ({{ servidor.direccionIp }})
@@ -93,11 +93,11 @@
           </select>
           @if (terminalService.estadoConexion() === 'desconectado' || terminalService.estadoConexion() === 'error') {
             <button class="terminal-interactiva__conectar" type="button" (click)="conectarServidorSeleccionado()" [disabled]="!servidorSeleccionadoId()">
-              <i class="fa-solid fa-plug"></i> Connect
+              <i class="fa-solid fa-plug"></i> {{ "logsTerminal.terminal.connect" | translate }}
             </button>
           } @else if (terminalService.estadoConexion() === 'conectado') {
             <button class="terminal-interactiva__desconectar" type="button" (click)="terminalService.desconectar()">
-              <i class="fa-solid fa-plug-circle-xmark"></i> Disconnect
+              <i class="fa-solid fa-plug-circle-xmark"></i> {{ "logsTerminal.terminal.disconnect" | translate }}
             </button>
           }
         }
@@ -108,27 +108,27 @@
     <section class="terminal-interactiva__cuerpo" #contenedorTerminal></section>
     @if (listaDeServidores().length === 0) {
       <section class="terminal-interactiva__vacio">
-        No servers configured. Add one from "Connect Server" to open a shell.
+        {{ "logsTerminal.terminal.sinServidores" | translate }}
       </section>
     } @else if (terminalService.estadoConexion() === 'desconectado' && !servidorSeleccionadoId()) {
       <section class="terminal-interactiva__vacio">
-        Pick a server above and press <strong>Connect</strong> to start an SSH session.
+        {{ "logsTerminal.terminal.elegirServidorParte1" | translate }}<strong>{{ "logsTerminal.terminal.elegirServidorBold" | translate }}</strong>{{ "logsTerminal.terminal.elegirServidorParte2" | translate }}
       </section>
     }
   </section>
 
   <footer class="editorial__pie">
     <section class="editorial__pie__izquierda">
-      <span class="editorial__pie__codigo">№ LOG-{{ entradasDeLog().length }}</span>
+      <span class="editorial__pie__codigo">{{ "logsTerminal.pie.logCodigoPrefijo" | translate }}{{ entradasDeLog().length }}</span>
       <span class="editorial__pie__separador" aria-hidden="true">·</span>
       <span class="editorial__pie__texto">
         @if (entradasDeLog().length === 0) {
-          No activity recorded yet
+          {{ "logsTerminal.pie.vacio" | translate }}
         } @else {
-          {{ entradasDeLog().length }} recent events · {{ listaDeServidores().length }} server(s) available
+          {{ "logsTerminal.pie.resumen" | translate: { n: entradasDeLog().length, m: listaDeServidores().length } }}
         }
       </span>
     </section>
-    <span class="editorial__pie__edicion">ACTIVITY EDITION {{ '2026.05' }}</span>
+    <span class="editorial__pie__edicion">{{ "logsTerminal.pie.edicion" | translate }}</span>
   </footer>
 </section>

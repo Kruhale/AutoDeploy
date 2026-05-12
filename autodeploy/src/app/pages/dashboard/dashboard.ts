@@ -1,6 +1,7 @@
 import { Component, signal, computed, Signal, OnInit, OnDestroy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 import { MetricasServidorService } from "../../services/metricas-servidor.service";
 import { PanelMetricasServidor } from "../../components/panel-metricas-servidor/panel-metricas-servidor";
@@ -46,7 +47,7 @@ interface DespliegueReciente {
 
 @Component({
   selector: "app-dashboard",
-  imports: [RouterLink, PanelMetricasServidor],
+  imports: [RouterLink, PanelMetricasServidor, TranslateModule],
   templateUrl: "./dashboard.html",
   styleUrl: "./dashboard.scss"
 })
@@ -61,7 +62,8 @@ export class Dashboard implements OnInit, OnDestroy {
   constructor(
     private servidorService: ServidorService,
     private http: HttpClient,
-    private metricasService: MetricasServidorService
+    private metricasService: MetricasServidorService,
+    private translate: TranslateService
   ) {
     const componente = this;
 
@@ -174,19 +176,19 @@ export class Dashboard implements OnInit, OnDestroy {
     const diferenciaEnMinutos = Math.floor(diferenciaEnMs / 60000);
 
     if (diferenciaEnMinutos < 1) {
-      return "hace un momento";
+      return this.translate.instant("dashboard.tiempoRelativo.haceUnMomento");
     }
     if (diferenciaEnMinutos < 60) {
-      return "hace " + diferenciaEnMinutos + " min";
+      return this.translate.instant("dashboard.tiempoRelativo.minutos", { n: diferenciaEnMinutos });
     }
 
     const diferenciaEnHoras = Math.floor(diferenciaEnMinutos / 60);
     if (diferenciaEnHoras < 24) {
-      return "hace " + diferenciaEnHoras + " h";
+      return this.translate.instant("dashboard.tiempoRelativo.horas", { n: diferenciaEnHoras });
     }
 
     const diferenciaEnDias = Math.floor(diferenciaEnHoras / 24);
-    return "hace " + diferenciaEnDias + " d";
+    return this.translate.instant("dashboard.tiempoRelativo.dias", { n: diferenciaEnDias });
   }
 
   cargarDespliegues(): void {

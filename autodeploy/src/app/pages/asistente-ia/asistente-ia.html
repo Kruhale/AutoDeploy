@@ -4,27 +4,27 @@
     <hgroup class="asistente-ia__intro">
       <p class="asistente-ia__sello">
         <span class="asistente-ia__sello__punto" aria-hidden="true"></span>
-        AutoDeploy · AI co-pilot
+        {{ "asistenteIa.sello" | translate }}
       </p>
-      <h1 class="asistente-ia__titulo">Hola, soy <span class="asistente-ia__titulo__acento">Nimbus</span><span class="asistente-ia__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="asistente-ia__subtitulo">Pídeme cualquier acción sobre tu servidor en lenguaje natural. Antes de tocar nada, te enseño el comando exacto.</p>
+      <h1 class="asistente-ia__titulo">{{ "asistenteIa.tituloPrefijo" | translate }}<span class="asistente-ia__titulo__acento">{{ "asistenteIa.tituloNombre" | translate }}</span><span class="asistente-ia__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="asistente-ia__subtitulo">{{ "asistenteIa.subtitulo" | translate }}</p>
     </hgroup>
 
     <section class="asistente-ia__controles">
       <label class="asistente-ia__selector">
-        <span class="asistente-ia__selector__etiqueta">Servidor activo</span>
+        <span class="asistente-ia__selector__etiqueta">{{ "asistenteIa.selectorEtiqueta" | translate }}</span>
         <select class="asistente-ia__selector__campo" [ngModel]="servidorSeleccionadoId()" (ngModelChange)="servidorSeleccionadoId.set($event)" name="servidorActivo">
           @for (servidor of listaServidores(); track servidor.id) {
             <option [value]="servidor.id">{{ servidor.nombre }} — {{ servidor.direccionIp }}</option>
           }
           @if (listaServidores().length === 0) {
-            <option value="" disabled>No tienes servidores conectados</option>
+            <option value="" disabled>{{ "asistenteIa.selectorSinServidores" | translate }}</option>
           }
         </select>
       </label>
       <button class="asistente-ia__boton-secundario" type="button" (click)="abrirConfiguracion()">
         <i class="fa-solid fa-sliders"></i>
-        <span>Ajustes</span>
+        <span>{{ "asistenteIa.ajustes" | translate }}</span>
       </button>
     </section>
   </header>
@@ -33,10 +33,10 @@
     <article class="asistente-ia__aviso">
       <i class="fa-solid fa-key asistente-ia__aviso__icono"></i>
       <section class="asistente-ia__aviso__texto">
-        <strong>Aún no has configurado tu API key de OpenRouter.</strong>
-        <span>Necesitas una clave para conversar con la IA. Abre los ajustes para introducirla.</span>
+        <strong>{{ "asistenteIa.avisoTitulo" | translate }}</strong>
+        <span>{{ "asistenteIa.avisoTexto" | translate }}</span>
       </section>
-      <button class="asistente-ia__boton-acento" type="button" (click)="abrirConfiguracion()">Configurar ahora</button>
+      <button class="asistente-ia__boton-acento" type="button" (click)="abrirConfiguracion()">{{ "asistenteIa.avisoBoton" | translate }}</button>
     </article>
   }
 
@@ -47,10 +47,10 @@
         <span class="asistente-ia__bienvenida__halo">
           <i class="fa-solid fa-robot"></i>
         </span>
-        <h2 class="asistente-ia__bienvenida__titulo">¿En qué puedo ayudarte hoy?</h2>
-        <p class="asistente-ia__bienvenida__texto">Empieza por una de estas preguntas o escribe la tuya. Yo me encargo de traducirla a comandos shell.</p>
+        <h2 class="asistente-ia__bienvenida__titulo">{{ "asistenteIa.bienvenidaTitulo" | translate }}</h2>
+        <p class="asistente-ia__bienvenida__texto">{{ "asistenteIa.bienvenidaTexto" | translate }}</p>
         <ul class="asistente-ia__sugerencias">
-          @for (sugerencia of sugerencias; track sugerencia.texto) {
+          @for (sugerencia of sugerencias(); track sugerencia.texto) {
             <li>
               <button class="asistente-ia__sugerencia" type="button" (click)="usarSugerencia(sugerencia.texto)">
                 <i class="{{ sugerencia.icono }} asistente-ia__sugerencia__icono"></i>
@@ -80,19 +80,19 @@
               <header class="tarjeta-comando__cabecera">
                 <span class="tarjeta-comando__chip">
                   <i class="fa-solid fa-terminal"></i>
-                  <span>Comando propuesto</span>
+                  <span>{{ "asistenteIa.comandoChip" | translate }}</span>
                 </span>
                 @if (mensaje.estadoComando === "pendiente" && mensaje.requiereConfirmacion) {
-                  <span class="tarjeta-comando__estado tarjeta-comando__estado--pendiente">Requiere tu permiso</span>
+                  <span class="tarjeta-comando__estado tarjeta-comando__estado--pendiente">{{ "asistenteIa.estado.pendiente" | translate }}</span>
                 }
                 @if (mensaje.estadoComando === "ejecutando") {
-                  <span class="tarjeta-comando__estado tarjeta-comando__estado--ejecutando">Ejecutando…</span>
+                  <span class="tarjeta-comando__estado tarjeta-comando__estado--ejecutando">{{ "asistenteIa.estado.ejecutando" | translate }}</span>
                 }
                 @if (mensaje.estadoComando === "ejecutado") {
-                  <span class="tarjeta-comando__estado tarjeta-comando__estado--ejecutado"><i class="fa-solid fa-check"></i> Ejecutado</span>
+                  <span class="tarjeta-comando__estado tarjeta-comando__estado--ejecutado"><i class="fa-solid fa-check"></i> {{ "asistenteIa.estado.ejecutado" | translate }}</span>
                 }
                 @if (mensaje.estadoComando === "rechazado") {
-                  <span class="tarjeta-comando__estado tarjeta-comando__estado--rechazado"><i class="fa-solid fa-xmark"></i> Rechazado</span>
+                  <span class="tarjeta-comando__estado tarjeta-comando__estado--rechazado"><i class="fa-solid fa-xmark"></i> {{ "asistenteIa.estado.rechazado" | translate }}</span>
                 }
               </header>
               <pre class="tarjeta-comando__codigo">{{ mensaje.comandoPropuesto }}</pre>
@@ -108,18 +108,18 @@
                 <footer class="tarjeta-comando__acciones">
                   <button class="tarjeta-comando__boton tarjeta-comando__boton--rechazar" type="button" (click)="rechazarComando(indice)">
                     <i class="fa-solid fa-xmark"></i>
-                    <span>Cancelar</span>
+                    <span>{{ "asistenteIa.cancelar" | translate }}</span>
                   </button>
                   <button class="tarjeta-comando__boton tarjeta-comando__boton--ejecutar" type="button" (click)="confirmarComando(indice)">
                     <i class="fa-solid fa-play"></i>
-                    <span>Ejecutar en el servidor</span>
+                    <span>{{ "asistenteIa.ejecutar" | translate }}</span>
                   </button>
                 </footer>
               }
 
               @if (mensaje.salidaComando) {
                 <section class="tarjeta-comando__salida">
-                  <span class="tarjeta-comando__salida__etiqueta">Salida</span>
+                  <span class="tarjeta-comando__salida__etiqueta">{{ "asistenteIa.salida" | translate }}</span>
                   <pre class="tarjeta-comando__salida__codigo">{{ mensaje.salidaComando }}</pre>
                 </section>
               }
@@ -152,7 +152,7 @@
 
   <footer class="asistente-ia__entrada">
     @if (!historialEstaVacio()) {
-      <button class="asistente-ia__limpiar" type="button" (click)="limpiarConversacion()" aria-label="Limpiar conversación">
+      <button class="asistente-ia__limpiar" type="button" (click)="limpiarConversacion()" [attr.aria-label]="'asistenteIa.ariaLimpiar' | translate">
         <i class="fa-solid fa-broom"></i>
       </button>
     }
@@ -163,7 +163,7 @@
       (ngModelChange)="mensajeEnEdicion.set($event)"
       (keydown)="manejarTeclaEnInput($event)"
       name="mensajeEnEdicion"
-      placeholder="Escribe lo que quieres hacer en tu servidor…"
+      [placeholder]="'asistenteIa.placeholderEntrada' | translate"
       rows="1"></textarea>
     <button class="asistente-ia__enviar" type="button" (click)="enviarMensaje()" [disabled]="asistenteService.estaEscribiendo() || !mensajeEnEdicion().trim()">
       <i class="fa-solid fa-paper-plane"></i>
@@ -177,17 +177,17 @@
     <article class="overlay-config__panel" (click)="$event.stopPropagation()">
       <header class="overlay-config__cabecera">
         <hgroup>
-          <span class="overlay-config__etiqueta">Configuración</span>
-          <h2 class="overlay-config__titulo">Conexión con OpenRouter</h2>
+          <span class="overlay-config__etiqueta">{{ "asistenteIa.config.etiqueta" | translate }}</span>
+          <h2 class="overlay-config__titulo">{{ "asistenteIa.config.titulo" | translate }}</h2>
         </hgroup>
-        <button class="overlay-config__cerrar" type="button" (click)="cerrarConfiguracion()" aria-label="Cerrar">
+        <button class="overlay-config__cerrar" type="button" (click)="cerrarConfiguracion()" [attr.aria-label]="'asistenteIa.config.ariaCerrar' | translate">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </header>
 
       <form class="overlay-config__formulario" (submit)="$event.preventDefault(); guardarConfiguracion()">
         <section class="overlay-config__campo">
-          <label class="overlay-config__label" for="campo-api-key">API key de OpenRouter</label>
+          <label class="overlay-config__label" for="campo-api-key">{{ "asistenteIa.config.apiKey" | translate }}</label>
           <input
             class="overlay-config__input"
             id="campo-api-key"
@@ -196,28 +196,28 @@
             [ngModel]="apiKeyEnEdicion()"
             (ngModelChange)="apiKeyEnEdicion.set($event)"
             name="apiKeyEnEdicion"
-            placeholder="sk-or-v1-…">
+            [placeholder]="'asistenteIa.config.apiKeyPlaceholder' | translate">
           <span class="overlay-config__ayuda">
             @if (apiKeyYaConfigurada()) {
-              Ya tienes una key guardada. Déjalo vacío para mantenerla.
+              {{ "asistenteIa.config.apiKeyConfigurada" | translate }}
             } @else {
-              Consíguela gratis en openrouter.ai/keys
+              {{ "asistenteIa.config.apiKeyNueva" | translate }}
             }
           </span>
         </section>
 
         <section class="overlay-config__campo">
-          <label class="overlay-config__label" for="campo-modelo">Modelo preferido</label>
+          <label class="overlay-config__label" for="campo-modelo">{{ "asistenteIa.config.modelo" | translate }}</label>
           <select class="overlay-config__input" id="campo-modelo" [ngModel]="modeloEnEdicion()" (ngModelChange)="modeloEnEdicion.set($event)" name="modeloEnEdicion">
-            @for (modelo of modelosDisponibles; track modelo.id) {
+            @for (modelo of modelosDisponibles(); track modelo.id) {
               <option [value]="modelo.id">{{ modelo.nombre }}</option>
             }
           </select>
-          <span class="overlay-config__ayuda">Los marcados como gratis no consumen créditos.</span>
+          <span class="overlay-config__ayuda">{{ "asistenteIa.config.modeloAyuda" | translate }}</span>
         </section>
 
         <section class="overlay-config__campo">
-          <label class="overlay-config__label" for="campo-comandos">Comandos auto-aprobados (uno por línea)</label>
+          <label class="overlay-config__label" for="campo-comandos">{{ "asistenteIa.config.comandos" | translate }}</label>
           <textarea
             class="overlay-config__input overlay-config__input--textarea"
             id="campo-comandos"
@@ -226,7 +226,7 @@
             (ngModelChange)="comandosEnEdicion.set($event)"
             name="comandosEnEdicion"
             placeholder="df&#10;free&#10;uptime&#10;systemctl status"></textarea>
-          <span class="overlay-config__ayuda">Comandos que empiecen por estos prefijos se ejecutarán sin pedir permiso. Vacío = pide permiso para todo.</span>
+          <span class="overlay-config__ayuda">{{ "asistenteIa.config.comandosAyuda" | translate }}</span>
         </section>
 
         @if (mensajeError()) {
@@ -237,14 +237,14 @@
         }
 
         <footer class="overlay-config__acciones">
-          <button class="overlay-config__boton overlay-config__boton--neutral" type="button" (click)="cerrarConfiguracion()">Cancelar</button>
+          <button class="overlay-config__boton overlay-config__boton--neutral" type="button" (click)="cerrarConfiguracion()">{{ "asistenteIa.config.cancelar" | translate }}</button>
           <button class="overlay-config__boton overlay-config__boton--principal" type="submit" [disabled]="estaCargandoConfiguracion()">
             @if (estaCargandoConfiguracion()) {
               <i class="fa-solid fa-spinner fa-spin"></i>
             } @else {
               <i class="fa-solid fa-floppy-disk"></i>
             }
-            <span>Guardar configuración</span>
+            <span>{{ "asistenteIa.config.guardar" | translate }}</span>
           </button>
         </footer>
       </form>

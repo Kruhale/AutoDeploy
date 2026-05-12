@@ -1,12 +1,13 @@
 import { Component, computed, Signal } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
 import { ScrollRevealDirective } from "../../directives/scroll-reveal.directive";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
 
 @Component({
   selector: "app-home",
-  imports: [RouterLink, ScrollRevealDirective],
+  imports: [RouterLink, ScrollRevealDirective, TranslateModule],
   templateUrl: "./home.html",
   styleUrl: "./home.scss",
 })

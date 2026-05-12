@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, computed } from '@angular/core';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { UsuarioService } from '../../services/usuario.service';
 import { PlanService, PlanId } from '../../services/plan.service';
 
@@ -16,7 +17,7 @@ interface DatosPlanInfo {
 @Component({
   selector: 'app-pago',
   standalone: true,
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslateModule],
   templateUrl: './pago.html',
   styleUrl: './pago.scss',
 })
@@ -68,14 +69,14 @@ export class Pago implements OnInit {
       const plan = this.planSeleccionado();
       const planesDisponibles: Record<string, DatosPlanInfo> = {
         pro: {
-          nombre: 'Pro',
-          precio: '€9/mes',
-          descripcion: 'Para equipos con apps en producción',
+          nombre: this.translate.instant("pago.planProNombre"),
+          precio: this.translate.instant("pago.planProPrecio"),
+          descripcion: this.translate.instant("pago.planProDescripcion"),
         },
         business: {
-          nombre: 'Business',
-          precio: '€29/mes',
-          descripcion: 'Para infraestructura sin límites',
+          nombre: this.translate.instant("pago.planBusinessNombre"),
+          precio: this.translate.instant("pago.planBusinessPrecio"),
+          descripcion: this.translate.instant("pago.planBusinessDescripcion"),
         },
       };
       return planesDisponibles[plan] || planesDisponibles['pro'];
@@ -87,6 +88,7 @@ export class Pago implements OnInit {
     private activatedRoute: ActivatedRoute,
     private usuarioService: UsuarioService,
     private planService: PlanService,
+    private translate: TranslateService,
   ) {}
 
   ngOnInit(): void {
@@ -139,17 +141,17 @@ export class Pago implements OnInit {
     const longitudEsperada = this.tipoTarjeta() === 'amex' ? 15 : 16;
 
     if (numero.length === 0) {
-      this.errorNumero.set('El número de tarjeta es obligatorio');
+      this.errorNumero.set(this.translate.instant("pago.validacion.numeroObligatorio"));
       this.comprobacionNumero = false;
       return;
     }
     if (numero.length < longitudEsperada) {
-      this.errorNumero.set('Número de tarjeta incompleto');
+      this.errorNumero.set(this.translate.instant("pago.validacion.numeroIncompleto"));
       this.comprobacionNumero = false;
       return;
     }
     if (!this.pasaAlgoritmoLuhn(numero)) {
-      this.errorNumero.set('Número de tarjeta no válido');
+      this.errorNumero.set(this.translate.instant("pago.validacion.numeroInvalido"));
       this.comprobacionNumero = false;
       return;
     }
@@ -163,17 +165,17 @@ export class Pago implements OnInit {
     const soloLetras = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
 
     if (nombre.length === 0) {
-      this.errorNombre.set('El nombre del titular es obligatorio');
+      this.errorNombre.set(this.translate.instant("pago.validacion.nombreObligatorio"));
       this.comprobacionNombre = false;
       return;
     }
     if (nombre.length < 3) {
-      this.errorNombre.set('El nombre debe tener al menos 3 caracteres');
+      this.errorNombre.set(this.translate.instant("pago.validacion.nombreMinimoCaracteres"));
       this.comprobacionNombre = false;
       return;
     }
     if (!soloLetras.test(nombre)) {
-      this.errorNombre.set('El nombre solo puede contener letras');
+      this.errorNombre.set(this.translate.instant("pago.validacion.nombreSoloLetras"));
       this.comprobacionNombre = false;
       return;
     }
@@ -187,7 +189,7 @@ export class Pago implements OnInit {
     const formatoCorrecto = /^\d{2}\/\d{2}$/;
 
     if (!formatoCorrecto.test(fecha)) {
-      this.errorFecha.set('Formato MM/AA incorrecto');
+      this.errorFecha.set(this.translate.instant("pago.validacion.fechaFormato"));
       this.comprobacionFecha = false;
       return;
     }
@@ -197,7 +199,7 @@ export class Pago implements OnInit {
     const anio = parseInt('20' + partesMes[1], 10);
 
     if (mes < 1 || mes > 12) {
-      this.errorFecha.set('El mes no es válido');
+      this.errorFecha.set(this.translate.instant("pago.validacion.fechaMesInvalido"));
       this.comprobacionFecha = false;
       return;
     }
@@ -208,7 +210,7 @@ export class Pago implements OnInit {
 
     const tarjetaEstaVencida = anio < anioActual || (anio === anioActual && mes < mesActual);
     if (tarjetaEstaVencida) {
-      this.errorFecha.set('La tarjeta ha expirado');
+      this.errorFecha.set(this.translate.instant("pago.validacion.fechaExpirada"));
       this.comprobacionFecha = false;
       return;
     }
@@ -223,12 +225,12 @@ export class Pago implements OnInit {
     const cvvActual = this.cvv();
 
     if (cvvActual.length === 0) {
-      this.errorCvv.set('El CVV es obligatorio');
+      this.errorCvv.set(this.translate.instant("pago.validacion.cvvObligatorio"));
       this.comprobacionCvv = false;
       return;
     }
     if (cvvActual.length < longitudEsperada) {
-      this.errorCvv.set(`El CVV debe tener ${longitudEsperada} dígitos`);
+      this.errorCvv.set(this.translate.instant("pago.validacion.cvvLongitud", { n: longitudEsperada }));
       this.comprobacionCvv = false;
       return;
     }

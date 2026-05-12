@@ -1,7 +1,7 @@
 <section class="terminal-ssh">
   <header class="terminal-ssh__barra">
     <section class="terminal-ssh__semaforo">
-      <a class="terminal-ssh__punto terminal-ssh__punto--rojo" routerLink="/app/dashboard" title="Close"></a>
+      <a class="terminal-ssh__punto terminal-ssh__punto--rojo" routerLink="/app/dashboard" [title]="'terminalSsh.ariaCerrar' | translate"></a>
       <span class="terminal-ssh__punto terminal-ssh__punto--naranja"></span>
       <span class="terminal-ssh__punto terminal-ssh__punto--verde"></span>
     </section>
@@ -16,6 +16,6 @@
 
   <footer class="terminal-ssh__pie">
     <span class="terminal-ssh__pie__info">SSH &middot; {{ ipServidor() }}:22</span>
-    <a class="terminal-ssh__pie__volver" routerLink="/app/dashboard">Back to Dashboard</a>
+    <a class="terminal-ssh__pie__volver" routerLink="/app/dashboard">{{ "terminalSsh.volverDashboard" | translate }}</a>
   </footer>
 </section>

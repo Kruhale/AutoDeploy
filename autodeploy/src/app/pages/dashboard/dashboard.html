@@ -4,39 +4,39 @@
     <section class="panel-principal__cabecera__izquierda">
       <p class="panel-principal__sello">
         <span class="panel-principal__sello__circulo" aria-hidden="true"></span>
-        Operations · live monitor
+        {{ "dashboard.sello" | translate }}
       </p>
-      <h1 class="panel-principal__titulo">Dashboard<span class="panel-principal__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="panel-principal__subtitulo">Realtime infrastructure overview · all systems streaming</p>
+      <h1 class="panel-principal__titulo">{{ "dashboard.titulo" | translate }}<span class="panel-principal__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="panel-principal__subtitulo">{{ "dashboard.subtitulo" | translate }}</p>
     </section>
     <a class="panel-principal__cta-principal" routerLink="/app/onboarding">
       <span class="panel-principal__cta-principal__icono" aria-hidden="true">
         <i class="fa-solid fa-plus"></i>
       </span>
       <span class="panel-principal__cta-principal__texto">
-        <span class="panel-principal__cta-principal__principal">Add server</span>
-        <span class="panel-principal__cta-principal__secundario">Connect a new VPS</span>
+        <span class="panel-principal__cta-principal__principal">{{ "dashboard.ctaAddServerPrincipal" | translate }}</span>
+        <span class="panel-principal__cta-principal__secundario">{{ "dashboard.ctaAddServerSecundario" | translate }}</span>
       </span>
     </a>
   </header>
 
   <section class="panel-principal__metricas">
     <article class="panel-principal__metrica panel-principal__metrica--destacada">
-      <span class="panel-principal__metrica__etiqueta">Total servers</span>
+      <span class="panel-principal__metrica__etiqueta">{{ "dashboard.metricas.totalServers" | translate }}</span>
       <span class="panel-principal__metrica__valor">{{ listaDeServidores().length }}</span>
-      <span class="panel-principal__metrica__nota">Active in this workspace</span>
+      <span class="panel-principal__metrica__nota">{{ "dashboard.metricas.totalServersNota" | translate }}</span>
     </article>
     <article class="panel-principal__metrica">
-      <span class="panel-principal__metrica__etiqueta">Online</span>
+      <span class="panel-principal__metrica__etiqueta">{{ "dashboard.metricas.online" | translate }}</span>
       <span class="panel-principal__metrica__valor panel-principal__metrica__valor--verde">{{ contadorServidoresOnline() }}</span>
       <span class="panel-principal__metrica__pulso" aria-hidden="true"></span>
     </article>
     <article class="panel-principal__metrica">
-      <span class="panel-principal__metrica__etiqueta">Offline</span>
+      <span class="panel-principal__metrica__etiqueta">{{ "dashboard.metricas.offline" | translate }}</span>
       <span class="panel-principal__metrica__valor panel-principal__metrica__valor--rojo">{{ contadorServidoresOffline() }}</span>
     </article>
     <article class="panel-principal__metrica">
-      <span class="panel-principal__metrica__etiqueta">Sites</span>
+      <span class="panel-principal__metrica__etiqueta">{{ "dashboard.metricas.sites" | translate }}</span>
       <span class="panel-principal__metrica__valor">{{ listaDeSitios().length }}</span>
     </article>
   </section>
@@ -44,17 +44,17 @@
   @if (listaDeServidores().length === 0) {
     <section class="panel-principal__vacio">
       <i class="fa-solid fa-server panel-principal__vacio__icono"></i>
-      <p class="panel-principal__vacio__titulo">No servers connected</p>
-      <p class="panel-principal__vacio__detalle">Connect your first VPS to start monitoring and deploying</p>
-      <a class="boton--primario" routerLink="/app/onboarding">Connect Server</a>
+      <p class="panel-principal__vacio__titulo">{{ "dashboard.vacio.titulo" | translate }}</p>
+      <p class="panel-principal__vacio__detalle">{{ "dashboard.vacio.detalle" | translate }}</p>
+      <a class="boton--primario" routerLink="/app/onboarding">{{ "dashboard.vacio.boton" | translate }}</a>
     </section>
   } @else {
     <section class="panel-principal__monitor-tiempo-real">
       <header class="panel-principal__cabecera-seccion">
         <span class="panel-principal__cabecera-seccion__indice">01</span>
         <section class="panel-principal__cabecera-seccion__texto">
-          <h2 class="panel-principal__cabecera-seccion__titulo">Live monitoring</h2>
-          <p class="panel-principal__cabecera-seccion__descripcion">A persistent SSH session is held per server. Metrics refresh every 30 seconds.</p>
+          <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.liveMonitoringTitulo" | translate }}</h2>
+          <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.liveMonitoringDescripcion" | translate }}</p>
         </section>
       </header>
       <section class="panel-principal__monitor-paneles">
@@ -68,8 +68,8 @@
       <header class="panel-principal__cabecera-seccion">
         <span class="panel-principal__cabecera-seccion__indice">02</span>
         <section class="panel-principal__cabecera-seccion__texto">
-          <h2 class="panel-principal__cabecera-seccion__titulo">Servers</h2>
-          <p class="panel-principal__cabecera-seccion__descripcion">Direct access by row · manage or jump into shell.</p>
+          <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.serversTitulo" | translate }}</h2>
+          <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.serversDescripcion" | translate }}</p>
         </section>
       </header>
       <section class="panel-principal__servidores__lista">
@@ -83,10 +83,10 @@
               </section>
             </section>
             <section class="panel-principal__servidor__acciones">
-              <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">Manage <span aria-hidden="true">→</span></a>
+              <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">{{ "dashboard.servidor.manage" | translate }} <span aria-hidden="true">→</span></a>
               <a class="panel-principal__servidor__enlace panel-principal__servidor__enlace--ssh" [routerLink]="'/app/terminal/' + servidor.id">
                 <i class="fa-solid fa-terminal"></i>
-                SSH
+                {{ "dashboard.servidor.ssh" | translate }}
               </a>
             </section>
           </article>
@@ -100,8 +100,8 @@
       <header class="panel-principal__cabecera-seccion">
         <span class="panel-principal__cabecera-seccion__indice">03</span>
         <section class="panel-principal__cabecera-seccion__texto">
-          <h2 class="panel-principal__cabecera-seccion__titulo">Active sites</h2>
-          <p class="panel-principal__cabecera-seccion__descripcion">Domains currently published and reachable.</p>
+          <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.activeSitesTitulo" | translate }}</h2>
+          <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.activeSitesDescripcion" | translate }}</p>
         </section>
       </header>
       <section class="panel-principal__sitios__lista">
@@ -128,8 +128,8 @@
       <header class="panel-principal__cabecera-seccion">
         <span class="panel-principal__cabecera-seccion__indice">04</span>
         <section class="panel-principal__cabecera-seccion__texto">
-          <h2 class="panel-principal__cabecera-seccion__titulo">Recent activity</h2>
-          <p class="panel-principal__cabecera-seccion__descripcion">Latest events recorded across servers and deployments.</p>
+          <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.recentActivityTitulo" | translate }}</h2>
+          <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.recentActivityDescripcion" | translate }}</p>
         </section>
       </header>
       <section class="panel-principal__actividad__lista">
@@ -152,12 +152,12 @@
     <header class="panel-principal__cabecera-seccion">
       <span class="panel-principal__cabecera-seccion__indice">05</span>
       <section class="panel-principal__cabecera-seccion__texto">
-        <h2 class="panel-principal__cabecera-seccion__titulo">Recent deployments</h2>
-        <p class="panel-principal__cabecera-seccion__descripcion">Build runs and rollouts ordered by start time.</p>
+        <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.recentDeploymentsTitulo" | translate }}</h2>
+        <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.recentDeploymentsDescripcion" | translate }}</p>
       </section>
     </header>
     @if (listaDespliegues().length === 0) {
-      <p class="panel-principal__despliegues__vacio">No deployments registered yet</p>
+      <p class="panel-principal__despliegues__vacio">{{ "dashboard.despliegues.vacio" | translate }}</p>
     }
     @for (despliegue of listaDespliegues(); track despliegue.id) {
       <article class="panel-principal__despliegue">

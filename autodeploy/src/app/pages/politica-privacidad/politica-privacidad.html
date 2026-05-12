@@ -1,52 +1,47 @@
 <main class="pagina-legal">
   <section class="pagina-legal__contenedor">
-    <h1 class="pagina-legal__titulo">Política de Privacidad</h1>
-    <p class="pagina-legal__fecha">Última actualización: abril 2026</p>
+    <h1 class="pagina-legal__titulo">{{ 'politicaPrivacidad.titulo' | translate }}</h1>
+    <p class="pagina-legal__fecha">{{ 'politicaPrivacidad.fecha' | translate }}</p>
 
     <section class="pagina-legal__seccion">
-      <h2 class="pagina-legal__subtitulo">1. Responsable del tratamiento</h2>
+      <h2 class="pagina-legal__subtitulo">{{ 'politicaPrivacidad.seccion1.titulo' | translate }}</h2>
       <p class="pagina-legal__parrafo">
-        El responsable del tratamiento de los datos personales recogidos a través de AutoDeploy es
-        Alejandro Bravo Calderón, con domicilio en Cádiz, España.
-        Puede contactarnos en <a class="pagina-legal__enlace" href="mailto:privacidad@autodeploy.dev">privacidad&#64;autodeploy.dev</a>.
+        {{ 'politicaPrivacidad.seccion1.parrafo' | translate }} <a class="pagina-legal__enlace" href="mailto:privacidad@autodeploy.dev">privacidad&#64;autodeploy.dev</a>.
       </p>
     </section>
 
     <section class="pagina-legal__seccion">
-      <h2 class="pagina-legal__subtitulo">2. Datos recogidos y finalidad</h2>
+      <h2 class="pagina-legal__subtitulo">{{ 'politicaPrivacidad.seccion2.titulo' | translate }}</h2>
       <p class="pagina-legal__parrafo">
-        Recogemos los siguientes datos al registrarte:
+        {{ 'politicaPrivacidad.seccion2.intro' | translate }}
       </p>
       <ul class="pagina-legal__lista">
-        <li><strong>Correo electrónico y contraseña</strong> — para gestionar tu cuenta.</li>
-        <li><strong>Credenciales SSH</strong> — para conectarnos a tus servidores en tu nombre, cifradas en reposo.</li>
-        <li><strong>Datos de uso</strong> — logs de despliegues y métricas del servidor para mostrarte el historial.</li>
+        <li><strong>{{ 'politicaPrivacidad.seccion2.item1Etiqueta' | translate }}</strong> — {{ 'politicaPrivacidad.seccion2.item1Descripcion' | translate }}</li>
+        <li><strong>{{ 'politicaPrivacidad.seccion2.item2Etiqueta' | translate }}</strong> — {{ 'politicaPrivacidad.seccion2.item2Descripcion' | translate }}</li>
+        <li><strong>{{ 'politicaPrivacidad.seccion2.item3Etiqueta' | translate }}</strong> — {{ 'politicaPrivacidad.seccion2.item3Descripcion' | translate }}</li>
       </ul>
     </section>
 
     <section class="pagina-legal__seccion">
-      <h2 class="pagina-legal__subtitulo">3. Base legal del tratamiento</h2>
+      <h2 class="pagina-legal__subtitulo">{{ 'politicaPrivacidad.seccion3.titulo' | translate }}</h2>
       <p class="pagina-legal__parrafo">
-        El tratamiento se basa en la ejecución del contrato de servicio que aceptas al registrarte (art. 6.1.b RGPD).
-        El tratamiento de cookies analíticas se basa en tu consentimiento (art. 6.1.a RGPD).
+        {{ 'politicaPrivacidad.seccion3.parrafo' | translate }}
       </p>
     </section>
 
     <section class="pagina-legal__seccion">
-      <h2 class="pagina-legal__subtitulo">4. Conservación de datos</h2>
+      <h2 class="pagina-legal__subtitulo">{{ 'politicaPrivacidad.seccion4.titulo' | translate }}</h2>
       <p class="pagina-legal__parrafo">
-        Los datos se conservan mientras mantengas tu cuenta activa. Al eliminar tu cuenta, los datos se borran
-        en un plazo máximo de 30 días, salvo obligación legal de conservación.
+        {{ 'politicaPrivacidad.seccion4.parrafo' | translate }}
       </p>
     </section>
 
     <section class="pagina-legal__seccion">
-      <h2 class="pagina-legal__subtitulo">5. Tus derechos</h2>
+      <h2 class="pagina-legal__subtitulo">{{ 'politicaPrivacidad.seccion5.titulo' | translate }}</h2>
       <p class="pagina-legal__parrafo">
-        Conforme al RGPD tienes derecho a acceder, rectificar, suprimir, oponerte y limitar el tratamiento de
-        tus datos. Puedes ejercerlos escribiendo a
+        {{ 'politicaPrivacidad.seccion5.parrafo' | translate }}
         <a class="pagina-legal__enlace" href="mailto:privacidad@autodeploy.dev">privacidad&#64;autodeploy.dev</a>.
-        También puedes reclamar ante la Agencia Española de Protección de Datos (aepd.es).
+        {{ 'politicaPrivacidad.seccion5.cierre' | translate }}
       </p>
     </section>
   </section>

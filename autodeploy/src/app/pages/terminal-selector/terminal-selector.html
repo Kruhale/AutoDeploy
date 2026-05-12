@@ -4,10 +4,10 @@
     <section class="editorial__cabecera__izquierda">
       <p class="editorial__sello">
         <span class="editorial__sello__punto" aria-hidden="true"></span>
-        Workspace · Terminal · SSH
+        {{ "terminalSelector.sello" | translate }}
       </p>
-      <h1 class="editorial__titulo">Terminal<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="editorial__subtitulo">Open a fully interactive SSH session on any connected server.</p>
+      <h1 class="editorial__titulo">{{ "terminalSelector.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "terminalSelector.subtitulo" | translate }}</p>
     </section>
   </header>
 
@@ -16,15 +16,15 @@
       <span class="editorial__vacio__icono" aria-hidden="true">
         <i class="fa-solid fa-terminal"></i>
       </span>
-      <p class="editorial__vacio__titulo">No servers connected</p>
-      <p class="editorial__vacio__detalle">Add a server first from "Connect Server" to start opening SSH sessions.</p>
+      <p class="editorial__vacio__titulo">{{ "terminalSelector.vacioTitulo" | translate }}</p>
+      <p class="editorial__vacio__detalle">{{ "terminalSelector.vacioDetalle" | translate }}</p>
       <a class="editorial__cta-principal" routerLink="/app/onboarding" style="margin-top: 1rem;">
         <span class="editorial__cta-principal__icono" aria-hidden="true">
           <i class="fa-solid fa-plug"></i>
         </span>
         <span class="editorial__cta-principal__texto">
-          <span class="editorial__cta-principal__principal">Connect server</span>
-          <span class="editorial__cta-principal__secundario">Start onboarding</span>
+          <span class="editorial__cta-principal__principal">{{ "terminalSelector.ctaPrincipal" | translate }}</span>
+          <span class="editorial__cta-principal__secundario">{{ "terminalSelector.ctaSecundario" | translate }}</span>
         </span>
       </a>
     </section>
@@ -33,8 +33,8 @@
       <header class="editorial__bloque__cabecera">
         <span class="editorial__bloque__indice">01</span>
         <section class="editorial__bloque__texto">
-          <h2 class="editorial__bloque__titulo">Available servers</h2>
-          <p class="editorial__bloque__descripcion">Click a host to open a live PTY session in the browser.</p>
+          <h2 class="editorial__bloque__titulo">{{ "terminalSelector.bloqueTitulo" | translate }}</h2>
+          <p class="editorial__bloque__descripcion">{{ "terminalSelector.bloqueDescripcion" | translate }}</p>
         </section>
       </header>
       <section class="pagina-terminal-selector__lista">
@@ -48,7 +48,7 @@
               <span class="pagina-terminal-selector__servidor__ip">{{ servidor.direccionIp }}:{{ servidor.puertoSsh }}</span>
             </section>
             <section class="pagina-terminal-selector__servidor__derecha">
-              <span class="pagina-terminal-selector__servidor__usuario">{{ servidor.usuarioSsh }}<small>@host</small></span>
+              <span class="pagina-terminal-selector__servidor__usuario">{{ servidor.usuarioSsh }}<small>{{ "terminalSelector.hostSufijo" | translate }}</small></span>
               <span class="pagina-terminal-selector__servidor__flecha" aria-hidden="true">→</span>
             </section>
           </a>
@@ -58,11 +58,11 @@
   }
 
   <footer class="editorial__pie">
-    <span class="editorial__pie__codigo">№ TTY-{{ listaDeServidores().length }}H</span>
+    <span class="editorial__pie__codigo">{{ "terminalSelector.pieCodigo" | translate: { count: listaDeServidores().length } }}</span>
     <span class="editorial__pie__separador" aria-hidden="true"></span>
-    <span class="editorial__pie__texto">Interactive PTY · 100% real bash · WebSocket bidirectional</span>
+    <span class="editorial__pie__texto">{{ "terminalSelector.pieTexto" | translate }}</span>
     <span class="editorial__pie__separador" aria-hidden="true"></span>
-    <span class="editorial__pie__edicion">Terminal edition 2026.05</span>
+    <span class="editorial__pie__edicion">{{ "terminalSelector.pieEdicion" | translate }}</span>
   </footer>
 
 </section>

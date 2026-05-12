@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy } from "@angular/core";
 import { CommonModule } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
 import { NotificacionService, Notificacion } from "../../../services/notificacion.service";
 import { Subscription } from "rxjs";
 
@@ -11,7 +12,7 @@ interface ToastInterno {
 @Component({
 	selector: "app-toast-notificaciones",
 	standalone: true,
-	imports: [CommonModule],
+	imports: [CommonModule, TranslateModule],
 	templateUrl: "./toast-notificaciones.html",
 	styleUrl: "./toast-notificaciones.scss"
 })

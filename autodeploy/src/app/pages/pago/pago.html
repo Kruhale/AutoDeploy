@@ -8,7 +8,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path d="M19 12H5M5 12l7 7M5 12l7-7" />
         </svg>
-        Volver
+        {{ "pago.volver" | translate }}
       </a>
       <a class="pagina-pago__logo" routerLink="/">
         <img class="pagina-pago__logo__imagen" src="logo.png" alt="">
@@ -20,7 +20,7 @@
 
       <section class="pagina-pago__columna-izquierda">
         <section class="pagina-pago__resumen-plan">
-          <p class="pagina-pago__resumen-plan__etiqueta">Plan seleccionado</p>
+          <p class="pagina-pago__resumen-plan__etiqueta">{{ "pago.etiqueta" | translate }}</p>
           <h2 class="pagina-pago__resumen-plan__nombre">{{ infoDelPlan().nombre }}</h2>
           <p class="pagina-pago__resumen-plan__precio">{{ infoDelPlan().precio }}</p>
           <p class="pagina-pago__resumen-plan__descripcion">{{ infoDelPlan().descripcion }}</p>
@@ -50,32 +50,32 @@
 
           <section class="tarjeta-preview__pie">
             <section class="tarjeta-preview__titular">
-              <span class="tarjeta-preview__pie__etiqueta">Titular</span>
-              <span class="tarjeta-preview__pie__valor">{{ nombreTitular() || "NOMBRE APELLIDO" }}</span>
+              <span class="tarjeta-preview__pie__etiqueta">{{ "pago.titularTarjeta" | translate }}</span>
+              <span class="tarjeta-preview__pie__valor">{{ nombreTitular() || ("pago.titularPlaceholder" | translate) }}</span>
             </section>
             <section class="tarjeta-preview__expiracion">
-              <span class="tarjeta-preview__pie__etiqueta">Expira</span>
-              <span class="tarjeta-preview__pie__valor">{{ fechaExpiracion() || "MM/AA" }}</span>
+              <span class="tarjeta-preview__pie__etiqueta">{{ "pago.expira" | translate }}</span>
+              <span class="tarjeta-preview__pie__valor">{{ fechaExpiracion() || ("pago.expiraPlaceholder" | translate) }}</span>
             </section>
           </section>
         </article>
       </section>
 
       <section class="pagina-pago__columna-derecha">
-        <h1 class="pagina-pago__titulo">Datos de pago</h1>
-        <p class="pagina-pago__subtitulo">Tu conexión está cifrada y segura</p>
+        <h1 class="pagina-pago__titulo">{{ "pago.titulo" | translate }}</h1>
+        <p class="pagina-pago__subtitulo">{{ "pago.subtitulo" | translate }}</p>
 
         <form class="pagina-pago__formulario" (ngSubmit)="procesarPago()">
 
           <section class="campo">
-            <label class="campo__etiqueta" for="numero-tarjeta">Número de tarjeta</label>
+            <label class="campo__etiqueta" for="numero-tarjeta">{{ "pago.numeroTarjeta" | translate }}</label>
             <section class="campo__contenedor-input">
               <input
                 class="campo__input"
                 id="numero-tarjeta"
                 type="text"
                 inputmode="numeric"
-                placeholder="1234 5678 9012 3456"
+                [placeholder]="'pago.numeroTarjetaPlaceholder' | translate"
                 autocomplete="cc-number"
                 [value]="numeroTarjeta()"
                 (input)="formatearNumeroTarjeta($event)"
@@ -95,12 +95,12 @@
           </section>
 
           <section class="campo">
-            <label class="campo__etiqueta" for="nombre-titular">Nombre del titular</label>
+            <label class="campo__etiqueta" for="nombre-titular">{{ "pago.nombreTitular" | translate }}</label>
             <input
               class="campo__input"
               id="nombre-titular"
               type="text"
-              placeholder="Como aparece en la tarjeta"
+              [placeholder]="'pago.nombreTitularPlaceholder' | translate"
               autocomplete="cc-name"
               [ngModel]="nombreTitular()"
               (ngModelChange)="nombreTitular.set($event)"
@@ -114,13 +114,13 @@
 
           <section class="pagina-pago__fila-campos">
             <section class="campo">
-              <label class="campo__etiqueta" for="fecha-expiracion">Fecha de expiración</label>
+              <label class="campo__etiqueta" for="fecha-expiracion">{{ "pago.fechaExpiracion" | translate }}</label>
               <input
                 class="campo__input"
                 id="fecha-expiracion"
                 type="text"
                 inputmode="numeric"
-                placeholder="MM/AA"
+                [placeholder]="'pago.fechaExpiracionPlaceholder' | translate"
                 autocomplete="cc-exp"
                 [value]="fechaExpiracion()"
                 (input)="formatearFecha($event)"
@@ -133,10 +133,10 @@
 
             <section class="campo">
               <label class="campo__etiqueta" for="cvv">
-                CVV
+                {{ "pago.cvv" | translate }}
                 <span class="pagina-pago__cvv-info">
                   <i class="fa-solid fa-circle-question"></i>
-                  <span class="pagina-pago__cvv-tooltip">{{ tipoTarjeta() === 'amex' ? '4 dígitos en la parte frontal' : '3 dígitos en la parte trasera' }}</span>
+                  <span class="pagina-pago__cvv-tooltip">{{ (tipoTarjeta() === 'amex' ? "pago.tooltipCvvAmex" : "pago.tooltipCvvGenerico") | translate }}</span>
                 </span>
               </label>
               <section class="campo__contenedor-input">
@@ -145,7 +145,7 @@
                   id="cvv"
                   [type]="cvvVisible() ? 'text' : 'password'"
                   inputmode="numeric"
-                  [placeholder]="tipoTarjeta() === 'amex' ? '••••' : '•••'"
+                  [placeholder]="(tipoTarjeta() === 'amex' ? 'pago.cvvAmexPlaceholder' : 'pago.cvvGenericoPlaceholder') | translate"
                   autocomplete="cc-csc"
                   [value]="cvv()"
                   (input)="formatearCvv($event)"
@@ -163,7 +163,7 @@
 
           <section class="pagina-pago__info-seguridad">
             <i class="fa-solid fa-lock pagina-pago__info-seguridad__icono"></i>
-            <p class="pagina-pago__info-seguridad__texto">Pago simulado — no se realizará ningún cargo real</p>
+            <p class="pagina-pago__info-seguridad__texto">{{ "pago.infoSeguridad" | translate }}</p>
           </section>
 
           <button
@@ -174,10 +174,10 @@
           >
             @if (estadoPago() === "procesando") {
             <span class="pagina-pago__spinner"></span>
-            Procesando...
+            {{ "pago.procesando" | translate }}
             } @else {
             <i class="fa-solid fa-lock"></i>
-            Pagar {{ infoDelPlan().precio }}
+            {{ "pago.pagar" | translate: { precio: infoDelPlan().precio } }}
             }
           </button>
 
@@ -193,12 +193,12 @@
     <section class="pagina-pago__resultado__icono pagina-pago__resultado__icono--exito">
       <i class="fa-solid fa-check"></i>
     </section>
-    <h1 class="pagina-pago__resultado__titulo">¡Pago completado!</h1>
+    <h1 class="pagina-pago__resultado__titulo">{{ "pago.exitoTitulo" | translate }}</h1>
     <p class="pagina-pago__resultado__descripcion">
-      Tu plan <strong>{{ infoDelPlan().nombre }}</strong> ya está activo. Bienvenido a bordo.
+      {{ "pago.exitoDescripcion" | translate: { nombrePlan: infoDelPlan().nombre } }}
     </p>
     <button class="boton--primario" type="button" (click)="irAlDashboard()">
-      Ir al dashboard
+      {{ "pago.exitoBoton" | translate }}
       <i class="fa-solid fa-arrow-right"></i>
     </button>
   </section>
@@ -209,10 +209,10 @@
     <section class="pagina-pago__resultado__icono pagina-pago__resultado__icono--error">
       <i class="fa-solid fa-xmark"></i>
     </section>
-    <h1 class="pagina-pago__resultado__titulo">Error al procesar</h1>
-    <p class="pagina-pago__resultado__descripcion">No pudimos completar el pago. Inténtalo de nuevo.</p>
+    <h1 class="pagina-pago__resultado__titulo">{{ "pago.errorTitulo" | translate }}</h1>
+    <p class="pagina-pago__resultado__descripcion">{{ "pago.errorDescripcion" | translate }}</p>
     <button class="boton--ghost" type="button" (click)="reintentar()">
-      Reintentar
+      {{ "pago.errorBoton" | translate }}
     </button>
   </section>
   }

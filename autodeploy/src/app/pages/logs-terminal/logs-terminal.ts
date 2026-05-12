@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, OnDestroy, afterNextRender, signal } from "@angular/core";
 import { UpperCasePipe } from "@angular/common";
+import { TranslateModule } from "@ngx-translate/core";
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import { TerminalSshService } from "../../services/terminal-ssh.service";
@@ -16,7 +17,7 @@ interface EntradaLog {
 
 @Component({
   selector: "app-logs-terminal",
-  imports: [UpperCasePipe],
+  imports: [UpperCasePipe, TranslateModule],
   templateUrl: "./logs-terminal.html",
   styleUrl: "./logs-terminal.scss"
 })

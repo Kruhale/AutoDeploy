@@ -2,6 +2,7 @@ import { Component, signal, computed, Signal, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe, TitleCasePipe, UpperCasePipe } from "@angular/common";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { PlanService, PLANES, Plan } from "../../services/plan.service";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 
@@ -34,7 +35,7 @@ const MS_POR_DIA = 86400000;
 
 @Component({
   selector: "app-billing",
-  imports: [DatePipe, TitleCasePipe, UpperCasePipe],
+  imports: [DatePipe, TitleCasePipe, UpperCasePipe, TranslateModule],
   templateUrl: "./billing.html",
   styleUrl: "./billing.scss"
 })
@@ -55,7 +56,8 @@ export class Billing implements OnInit {
     private router: Router,
     private http: HttpClient,
     private servidorService: ServidorService,
-    readonly planService: PlanService
+    readonly planService: PlanService,
+    private translate: TranslateService
   ) {
     const componente = this;
 
@@ -81,11 +83,12 @@ export class Billing implements OnInit {
       const plan = componente.detallePlanActual();
       const formatear = function(usado: number, limite: number | null): { valor: string, detalle: string, porc: number } {
         if (limite === null) {
-          return { valor: String(usado), detalle: "of unlimited", porc: usado === 0 ? 4 : Math.min(100, usado * 5) };
+          return { valor: String(usado), detalle: componente.translate.instant("billing.uso.deUnlimited"), porc: usado === 0 ? 4 : Math.min(100, usado * 5) };
         }
+        const porcentaje = limite === 0 ? 0 : Math.round((usado / limite) * 100);
         return {
           valor: String(usado) + "/" + limite,
-          detalle: limite === 0 ? "0% used" : Math.round((usado / limite) * 100) + "% used",
+          detalle: limite === 0 ? componente.translate.instant("billing.uso.zeroPercent") : componente.translate.instant("billing.uso.percentUsed", { n: porcentaje }),
           porc: limite === 0 ? 0 : Math.min(100, (usado / limite) * 100)
         };
       };
@@ -93,9 +96,9 @@ export class Billing implements OnInit {
       const despliegues = formatear(componente.numeroDespliegues(), plan.limiteDespliegues);
       const dominios = formatear(componente.numeroDominios(), plan.dominiosPersonalizados);
       return [
-        { etiqueta: "Servers connected", valor: servidores.valor, detalle: servidores.detalle, porcentaje: servidores.porc },
-        { etiqueta: "Deployments this cycle", valor: despliegues.valor, detalle: despliegues.detalle, porcentaje: despliegues.porc },
-        { etiqueta: "Custom domains", valor: dominios.valor, detalle: dominios.detalle, porcentaje: dominios.porc }
+        { etiqueta: componente.translate.instant("billing.uso.servers"), valor: servidores.valor, detalle: servidores.detalle, porcentaje: servidores.porc },
+        { etiqueta: componente.translate.instant("billing.uso.deployments"), valor: despliegues.valor, detalle: despliegues.detalle, porcentaje: despliegues.porc },
+        { etiqueta: componente.translate.instant("billing.uso.customDomains"), valor: dominios.valor, detalle: dominios.detalle, porcentaje: dominios.porc }
       ];
     });
   }
@@ -170,7 +173,7 @@ export class Billing implements OnInit {
   }
 
   agregarMetodoPago(): void {
-    this.mensajeMetodoPago.set("Stripe integration coming soon");
+    this.mensajeMetodoPago.set(this.translate.instant("billing.stripeComingSoon"));
     const componente = this;
     setTimeout(function() {
       componente.mensajeMetodoPago.set("");

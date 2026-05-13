@@ -1,0 +1,55 @@
+<button class="campana-boton" (click)="alternarCampana()" aria-label="Notificaciones">
+	<i class="fa-solid fa-bell"></i>
+	<span class="campana-badge" *ngIf="notificacionService.conteoNoLeidas() > 0">
+		{{ notificacionService.conteoNoLeidas() }}
+	</span>
+</button>
+
+<div class="campana-panel" [class.campana-panel--abierto]="campanAbierta()">
+	<div class="campana-panel__encabezado">
+		<h3 class="campana-panel__titulo">Notificaciones</h3>
+		<button class="campana-panel__cerrar" (click)="cerrarCampana()" aria-label="Cerrar">
+			<i class="fa-solid fa-xmark"></i>
+		</button>
+	</div>
+
+	<div class="campana-panel__contenido">
+		<div *ngIf="notificacionService.notificacionesDelUsuario().length === 0" class="campana-panel__vacio">
+			<p>No hay notificaciones</p>
+		</div>
+
+		<div *ngFor="let notificacion of notificacionService.notificacionesDelUsuario()" 
+			 class="campana-item" 
+			 [class.campana-item--no-leida]="!notificacion.leida">
+			<div class="campana-item__icono">
+				<i class="fa-solid" [ngClass]="'fa-' + obtenerIconoPorTipo(notificacion.tipo)"></i>
+			</div>
+
+			<div class="campana-item__contenido">
+				<h4 class="campana-item__titulo">{{ notificacion.titulo }}</h4>
+				<p class="campana-item__descripcion">{{ notificacion.descripcion }}</p>
+				<span class="campana-item__hora">{{ notificacion.fechaCreacion | date:'short' }}</span>
+			</div>
+
+			<div class="campana-item__acciones">
+				<button *ngIf="!notificacion.leida" 
+						class="campana-item__accion" 
+						(click)="marcarComoLeida(notificacion.id)"
+						title="Marcar como leída">
+					<i class="fa-solid fa-check"></i>
+				</button>
+				<button class="campana-item__accion campana-item__accion--eliminar" 
+						(click)="eliminarNotificacion(notificacion.id)"
+						title="Eliminar">
+					<i class="fa-solid fa-trash"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div *ngIf="notificacionService.conteoNoLeidas() > 0" class="campana-panel__pie">
+		<button class="campana-panel__boton-marcar" (click)="marcarTodasComoLeidas()">
+			Marcar todas como leídas
+		</button>
+	</div>
+</div>

@@ -98,6 +98,28 @@
   height: 1.25rem;
 }
 
+.cabecera__login {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--texto-apagado);
+  transition: color var(--duration-base) ease;
+}
+
+.cabecera__login:hover {
+  color: var(--texto-claro);
+}
+
+.cabecera__login__icono {
+  font-size: 0.875rem;
+}
+
+.cabecera__login__texto {
+  font-family: var(--font-primary);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-medium);
+}
+
 .cabecera__cuenta__texto {
   font-family: var(--font-primary);
   font-size: 0.8125rem;

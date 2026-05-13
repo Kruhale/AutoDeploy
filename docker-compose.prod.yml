@@ -27,7 +27,7 @@ services:
     build: ./autodeploy
     container_name: autodeploy-frontend
     ports:
-      - "80:80"
+      - "8081:80"
     depends_on:
       - backend
     networks:

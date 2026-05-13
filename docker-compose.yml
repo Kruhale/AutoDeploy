@@ -1,0 +1,11 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: autodeploy-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb-datos:/data/db
+
+volumes:
+  mongodb-datos:

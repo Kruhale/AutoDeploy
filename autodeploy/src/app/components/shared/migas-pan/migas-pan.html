@@ -1,0 +1,12 @@
+<nav class="migas-pan">
+  @for (miga of migas(); track miga.etiqueta; let esUltima = $last) {
+    @if (miga.enlace && !esUltima) {
+      <a class="migas-pan__enlace" [routerLink]="miga.enlace">{{ miga.etiqueta }}</a>
+    } @else {
+      <span class="migas-pan__actual">{{ miga.etiqueta }}</span>
+    }
+    @if (!esUltima) {
+      <span class="migas-pan__separador">></span>
+    }
+  }
+</nav>

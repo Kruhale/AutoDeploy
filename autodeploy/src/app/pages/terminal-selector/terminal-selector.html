@@ -1,0 +1,32 @@
+<section class="pagina-terminal-selector">
+
+  <header class="pagina-terminal-selector__cabecera">
+    <h1 class="pagina-terminal-selector__titulo">Terminal</h1>
+    <p class="pagina-terminal-selector__subtitulo">Select a server to open an SSH session</p>
+  </header>
+
+  @if (listaDeServidores().length === 0) {
+    <section class="pagina-terminal-selector__vacio">
+      <i class="fa-solid fa-terminal pagina-terminal-selector__vacio__icono"></i>
+      <p class="pagina-terminal-selector__vacio__texto">No servers connected</p>
+      <p class="pagina-terminal-selector__vacio__detalle">Add a server first from Connect Server</p>
+      <a class="boton--primario" routerLink="/app/onboarding">Connect Server</a>
+    </section>
+  } @else {
+    <section class="pagina-terminal-selector__lista">
+      @for (servidor of listaDeServidores(); track servidor.id) {
+        <a class="pagina-terminal-selector__servidor" [routerLink]="'/app/terminal/' + servidor.id">
+          <section class="pagina-terminal-selector__servidor__info">
+            <span class="pagina-terminal-selector__servidor__nombre">{{ servidor.nombre }}</span>
+            <span class="pagina-terminal-selector__servidor__ip">{{ servidor.direccionIp }}:{{ servidor.puertoSsh }}</span>
+          </section>
+          <section class="pagina-terminal-selector__servidor__derecha">
+            <span class="pagina-terminal-selector__servidor__usuario">{{ servidor.usuarioSsh }}@</span>
+            <i class="fa-solid fa-arrow-right pagina-terminal-selector__servidor__flecha"></i>
+          </section>
+        </a>
+      }
+    </section>
+  }
+
+</section>

@@ -1,0 +1,99 @@
+.disposicion-app {
+  display: flex;
+  min-height: 100vh;
+  background-color: var(--fondo-normal);
+}
+
+.disposicion-app__contenido {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.disposicion-app__principal {
+  flex: 1;
+  padding: var(--spacing-size-3xl);
+  overflow-y: auto;
+}
+
+.disposicion-app__cabecera-movil {
+  display: none;
+}
+
+.disposicion-app__backdrop {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .disposicion-app {
+    flex-direction: column;
+  }
+
+  .disposicion-app__cabecera-movil {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-size-m);
+    height: 3.25rem;
+    padding: 0 var(--spacing-size-2xl);
+    background-color: var(--fondo-normal);
+    border-bottom: 1px solid var(--borde-normal);
+    position: sticky;
+    top: 0;
+    z-index: var(--z-header);
+  }
+
+  .disposicion-app__hamburguesa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: var(--radius-m);
+    background: none;
+    border: 1px solid var(--borde-normal);
+    color: var(--texto-medio);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: color var(--duration-base) ease;
+  }
+
+  .disposicion-app__hamburguesa:hover {
+    color: var(--texto-claro);
+  }
+
+  .disposicion-app__logo-movil {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-size-s);
+  }
+
+  .disposicion-app__logo-movil__imagen {
+    height: 1.5rem;
+    width: auto;
+  }
+
+  .disposicion-app__logo-movil__texto {
+    font-family: var(--font-secondary);
+    font-size: 1rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--texto-claro);
+    letter-spacing: -0.5px;
+  }
+
+  .disposicion-app__logo-movil__texto--acento {
+    color: var(--amarillo-normal);
+  }
+
+  .disposicion-app__backdrop--visible {
+    display: block;
+    position: fixed;
+    inset: 0;
+    background-color: var(--negro-transparente-040);
+    z-index: calc(var(--z-sidebar) - 1);
+  }
+
+  .disposicion-app__principal {
+    padding: var(--spacing-size-2xl) var(--spacing-size-l);
+  }
+}

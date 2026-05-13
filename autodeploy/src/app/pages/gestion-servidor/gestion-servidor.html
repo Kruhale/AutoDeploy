@@ -1,0 +1,153 @@
+<section class="gestion-servidor">
+  <header class="gestion-servidor__barra-superior">
+    <app-migas-pan [migas]="[{ etiqueta: 'Servers', enlace: '/app/dashboard' }, { etiqueta: servidorNombre() }]"></app-migas-pan>
+  </header>
+
+  <header class="gestion-servidor__cabecera">
+    <section class="gestion-servidor__cabecera__info">
+      <h1 class="gestion-servidor__nombre">{{ servidorNombre() }}</h1>
+      <span class="gestion-servidor__badge gestion-servidor__badge--{{ servidorEstado() }}">
+        <span class="gestion-servidor__badge__punto"></span>
+        {{ servidorEstado() === 'online' ? 'Online' : 'Offline' }}
+      </span>
+      <section class="gestion-servidor__detalles">
+        <span class="gestion-servidor__detalle"><i class="fa-solid fa-server"></i> {{ servidorIp() }}</span>
+        <span class="gestion-servidor__detalle">Port {{ servidorPuerto() }}</span>
+        <span class="gestion-servidor__detalle">{{ servidorUsuario() }}@</span>
+      </section>
+    </section>
+    <section class="gestion-servidor__cabecera__acciones">
+      <a class="boton--primario" [routerLink]="'/app/terminal/' + servidorId()">SSH Terminal</a>
+      <button class="boton--peligro" (click)="reiniciarServidor()" [disabled]="reiniciando()">
+        {{ reiniciando() ? 'Rebooting...' : 'Reboot Server' }}
+      </button>
+    </section>
+  </header>
+
+  <section class="gestion-servidor__metricas">
+    <app-tarjeta-estadistica
+      class="gestion-servidor__metricas__item"
+      etiqueta="CPU Load"
+      valor="—"
+      icono="fa-solid fa-microchip"
+      subtexto="No data yet"
+      variante="primario">
+    </app-tarjeta-estadistica>
+    <app-tarjeta-estadistica
+      class="gestion-servidor__metricas__item"
+      etiqueta="Memory (RAM)"
+      valor="—"
+      icono="fa-solid fa-memory"
+      subtexto="No data yet"
+      variante="exito">
+    </app-tarjeta-estadistica>
+    <app-tarjeta-estadistica
+      class="gestion-servidor__metricas__item"
+      etiqueta="Bandwidth"
+      valor="—"
+      icono="fa-solid fa-wifi"
+      subtexto="No data yet"
+      variante="primario">
+    </app-tarjeta-estadistica>
+  </section>
+
+  @if (estadoSalud()) {
+    <section class="gestion-servidor__salud">
+      <span class="gestion-servidor__salud__estado gestion-servidor__salud__estado--{{ estadoSalud()!.estado }}">
+        <span class="gestion-servidor__salud__estado__punto"></span>
+        {{ estadoSalud()!.estado === 'online' ? 'Online' : estadoSalud()!.estado === 'offline' ? 'Offline' : 'Degraded' }}
+        <span class="gestion-servidor__salud__estado__tiempo">{{ estadoSalud()!.tiempoRespuestaMs }}ms</span>
+      </span>
+      @if (historialSalud().length > 0) {
+        <section class="gestion-servidor__salud__historial">
+          @for (comprobacion of historialSalud(); track comprobacion.fechaComprobacion) {
+            <span
+              class="gestion-servidor__salud__historial__punto gestion-servidor__salud__historial__punto--{{ comprobacion.estado }}"
+              [title]="comprobacion.estado + ' · ' + comprobacion.tiempoRespuestaMs + 'ms'">
+            </span>
+          }
+        </section>
+      }
+    </section>
+  }
+
+  <section class="gestion-servidor__subdominios">
+    <header class="gestion-servidor__subdominios__cabecera">
+      <h2 class="gestion-servidor__subdominios__titulo">
+        <i class="fa-solid fa-globe"></i>
+        Subdominios &amp; SSL
+      </h2>
+    </header>
+
+    @if (listaSubdominios().length === 0) {
+      <p class="gestion-servidor__vacio">Sin subdominios configurados</p>
+    }
+    @for (subdominio of listaSubdominios(); track subdominio.id) {
+      <article class="gestion-servidor__subdominio">
+        <section class="gestion-servidor__subdominio__info">
+          <span class="gestion-servidor__subdominio__nombre">{{ subdominio.nombre }}</span>
+          <span class="gestion-servidor__subdominio__badge">{{ subdominio.tipo }}</span>
+          <span class="gestion-servidor__subdominio__destino">{{ subdominio.destino }}</span>
+        </section>
+        <section class="gestion-servidor__subdominio__acciones">
+          <span class="gestion-servidor__subdominio__badge" [class.gestion-servidor__subdominio__badge--ssl-activo]="subdominio.sslActivo">
+            <i class="fa-solid fa-lock"></i> {{ subdominio.sslActivo ? 'SSL activo' : 'Sin SSL' }}
+          </span>
+          <button class="gestion-servidor__app__btn gestion-servidor__app__btn--peligro" (click)="eliminarSubdominio(subdominio.id)">
+            <i class="fa-solid fa-trash"></i>
+          </button>
+        </section>
+      </article>
+    }
+  </section>
+
+  <section class="gestion-servidor__aplicaciones">
+    <header class="gestion-servidor__aplicaciones__cabecera">
+      <h2 class="gestion-servidor__aplicaciones__titulo">
+        <i class="fa-solid fa-cubes"></i>
+        Hosted Applications
+        <span class="gestion-servidor__aplicaciones__conteo">({{ listaDeAplicaciones().length }} Active)</span>
+      </h2>
+      <a class="boton--primario" routerLink="/app/nuevo-despliegue">Deploy New</a>
+    </header>
+
+    @if (listaDeAplicaciones().length === 0) {
+      <p class="gestion-servidor__vacio">No applications deployed yet.</p>
+    }
+    @for (app of listaDeAplicaciones(); track app.nombre) {
+      <article class="gestion-servidor__app">
+        <section class="gestion-servidor__app__info">
+          <span class="gestion-servidor__app__icono gestion-servidor__app__icono--{{ app.colorIcono }}">
+            @if (app.icono) {
+              <i [class]="app.icono"></i>
+            } @else {
+              {{ app.textoIcono }}
+            }
+          </span>
+          <section class="gestion-servidor__app__detalle">
+            <h3 class="gestion-servidor__app__nombre">{{ app.nombre }}</h3>
+            <span class="gestion-servidor__app__meta">{{ app.meta }}</span>
+          </section>
+        </section>
+        <section class="gestion-servidor__app__acciones">
+          <span class="gestion-servidor__app__badge gestion-servidor__app__badge--ok">HTTP 200</span>
+          <span class="gestion-servidor__app__version">{{ app.version }}</span>
+          <i class="fa-solid fa-gear gestion-servidor__app__btn"></i>
+          <i class="fa-solid fa-file gestion-servidor__app__btn"></i>
+          <i class="fa-solid fa-trash gestion-servidor__app__btn gestion-servidor__app__btn--peligro"></i>
+        </section>
+      </article>
+    }
+  </section>
+
+  <footer class="gestion-servidor__inferior">
+    <section class="gestion-servidor__inferior__item">
+      <span class="gestion-servidor__inferior__etiqueta">Last Backup</span>
+      <span class="gestion-servidor__inferior__valor">—</span>
+    </section>
+    <section class="gestion-servidor__inferior__item">
+      <span class="gestion-servidor__inferior__etiqueta">System Uptime</span>
+      <span class="gestion-servidor__inferior__valor">—</span>
+    </section>
+  </footer>
+</section>

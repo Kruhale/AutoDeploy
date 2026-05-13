@@ -1,0 +1,89 @@
+.seccion-llamada-accion {
+  padding: 2rem 0 4rem;
+}
+
+.seccion-llamada-accion__contenedor {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 3rem;
+  padding: 3rem;
+  background: var(--fondo-tarjeta);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l);
+}
+
+.seccion-llamada-accion__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.seccion-llamada-accion__titulo {
+  font-family: var(--font-secondary);
+  font-size: 1.75rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.75px;
+  color: var(--texto-claro);
+  line-height: 1.15;
+}
+
+.seccion-llamada-accion__descripcion {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--texto-medio);
+  max-width: 28rem;
+}
+
+.seccion-llamada-accion__botones {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.seccion-llamada-accion__boton--primario {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 2rem;
+  background-color: var(--amarillo-normal);
+  color: var(--fondo-oscuro);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-bold);
+  border-radius: var(--radius-l);
+  transition: background-color var(--duration-base) ease, transform var(--duration-fast) ease;
+}
+
+.seccion-llamada-accion__boton--primario:hover {
+  background-color: var(--amarillo-normal-hover);
+}
+
+.seccion-llamada-accion__boton--primario:active {
+  transform: scale(0.98);
+}
+
+.seccion-llamada-accion__boton--secundario {
+  display: flex;
+  align-items: center;
+  padding: 0.875rem 2rem;
+  background: transparent;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l);
+  color: var(--texto-claro);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-bold);
+  transition: border-color var(--duration-base) ease;
+}
+
+.seccion-llamada-accion__boton--secundario:hover {
+  border-color: rgba(240, 236, 226, 0.25);
+}
+
+@media (max-width: 768px) {
+  .seccion-llamada-accion__contenedor {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 2rem;
+  }
+}

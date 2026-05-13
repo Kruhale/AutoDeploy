@@ -1,0 +1,92 @@
+<section class="pagina-networking">
+
+  <app-migas-pan [migas]="[{ etiqueta: 'Dashboard', enlace: '/app/dashboard' }, { etiqueta: 'Networking & SSL' }]"></app-migas-pan>
+
+  <header class="pagina-networking__cabecera">
+    <section class="pagina-networking__cabecera__izquierda">
+      <h1 class="pagina-networking__titulo">Networking & SSL</h1>
+      <p class="pagina-networking__subtitulo">Manage domains, DNS records, and SSL certificates</p>
+    </section>
+    <button class="boton--primario" (click)="mostrarFormularioAgregar()">Add Domain</button>
+  </header>
+
+  @if (mostrarFormulario()) {
+    <section class="pagina-networking__formulario">
+      <section class="pagina-networking__formulario__fila">
+        <section class="campo">
+          <label class="campo__etiqueta">Domain name</label>
+          <input class="campo__input" type="text" placeholder="example.com" [ngModel]="nuevoDominio()" (ngModelChange)="nuevoDominio.set($event)">
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta">Type</label>
+          <select class="campo__select" [ngModel]="nuevoTipo()" (ngModelChange)="nuevoTipo.set($event)">
+            <option value="primary">Primary</option>
+            <option value="subdomain">Subdomain</option>
+          </select>
+        </section>
+      </section>
+      <section class="pagina-networking__formulario__acciones">
+        <button class="boton--ghost" (click)="cancelarFormulario()">Cancel</button>
+        <button class="boton--primario" (click)="agregarDominio()">Add</button>
+      </section>
+    </section>
+  }
+
+  <section class="pagina-networking__seccion">
+    <h2 class="pagina-networking__seccion__titulo">Domains</h2>
+
+    @if (listaDeDominios().length === 0 && !mostrarFormulario()) {
+      <section class="pagina-networking__vacio">
+        <i class="fa-solid fa-globe pagina-networking__vacio__icono"></i>
+        <p class="pagina-networking__vacio__texto">No domains configured</p>
+        <p class="pagina-networking__vacio__detalle">Add your first domain to start routing traffic to your server</p>
+      </section>
+    }
+
+    @for (dominio of listaDeDominios(); track dominio.nombre) {
+      <article class="pagina-networking__dominio">
+        <section class="pagina-networking__dominio__info">
+          <span class="pagina-networking__dominio__nombre">{{ dominio.nombre }}</span>
+          <span class="pagina-networking__dominio__tipo">{{ dominio.tipo }}</span>
+        </section>
+        <section class="pagina-networking__dominio__ssl">
+          @if (dominio.sslActivo) {
+            <span class="pagina-networking__ssl-badge pagina-networking__ssl-badge--activo">
+              <i class="fa-solid fa-lock"></i> SSL Active
+            </span>
+            <span class="pagina-networking__ssl-expira">Expires {{ dominio.sslExpira }}</span>
+          } @else {
+            <span class="pagina-networking__ssl-badge pagina-networking__ssl-badge--inactivo">
+              <i class="fa-solid fa-lock-open"></i> No SSL
+            </span>
+          }
+        </section>
+        <span class="pagina-networking__dominio__estado pagina-networking__dominio__estado--{{ dominio.estado }}">
+          {{ dominio.estado }}
+        </span>
+      </article>
+    }
+  </section>
+
+  <section class="pagina-networking__seccion">
+    <h2 class="pagina-networking__seccion__titulo">Quick Actions</h2>
+    @if (mensajeAccion()) {
+      <p class="pagina-networking__mensaje">{{ mensajeAccion() }}</p>
+    }
+    <section class="pagina-networking__acciones">
+      <button class="pagina-networking__accion" (click)="renovarSsl()">
+        <i class="fa-solid fa-rotate pagina-networking__accion__icono"></i>
+        <span class="pagina-networking__accion__texto">Renew SSL</span>
+      </button>
+      <button class="pagina-networking__accion" (click)="verRegistrosDns()">
+        <i class="fa-solid fa-list pagina-networking__accion__icono"></i>
+        <span class="pagina-networking__accion__texto">DNS Records</span>
+      </button>
+      <button class="pagina-networking__accion" (click)="configurarRedirecciones()">
+        <i class="fa-solid fa-arrow-right-arrow-left pagina-networking__accion__icono"></i>
+        <span class="pagina-networking__accion__texto">Redirects</span>
+      </button>
+    </section>
+  </section>
+
+</section>

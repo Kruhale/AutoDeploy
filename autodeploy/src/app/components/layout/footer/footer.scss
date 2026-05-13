@@ -1,0 +1,111 @@
+.pie {
+  background-color: var(--fondo-oscuro);
+  padding: 0 var(--spacing-size-7xl);
+}
+
+.pie__linea-decorativa {
+  height: 1px;
+  background: var(--borde-normal);
+}
+
+.pie__contenido {
+  display: flex;
+  gap: var(--spacing-size-5xl);
+  padding: 2.5rem 0;
+}
+
+.pie__marca {
+  flex: 1;
+}
+
+.pie__marca__nombre {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+  margin-bottom: var(--spacing-size-s);
+}
+
+.pie__marca__descripcion {
+  font-size: 0.8125rem;
+  color: var(--texto-apagado);
+  line-height: 1.5;
+}
+
+.pie__columna {
+  min-width: 8.75rem;
+}
+
+.pie__columna__titulo {
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--texto-apagado);
+  margin-bottom: var(--spacing-size-l);
+}
+
+.pie__columna__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.pie__columna__enlace {
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+  transition: color var(--duration-base) ease;
+}
+
+.pie__columna__enlace:hover {
+  color: var(--texto-claro);
+}
+
+.pie__separador {
+  height: 1px;
+  background-color: var(--borde-normal);
+}
+
+.pie__inferior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1.25rem 0;
+}
+
+.pie__inferior__copyright {
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+}
+
+.pie__inferior__redes {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.pie__inferior__red {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: var(--fondo-tarjeta);
+  color: var(--texto-apagado);
+  transition: color var(--duration-base) ease;
+}
+
+.pie__inferior__red:hover {
+  color: var(--texto-claro);
+}
+
+@media (max-width: 768px) {
+  .pie {
+    padding: 0 var(--spacing-size-3xl);
+  }
+
+  .pie__contenido {
+    flex-direction: column;
+    gap: var(--spacing-size-3xl);
+  }
+}

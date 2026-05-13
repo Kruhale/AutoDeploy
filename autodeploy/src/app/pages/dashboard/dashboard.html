@@ -1,0 +1,134 @@
+<section class="panel-principal">
+
+  <header class="panel-principal__cabecera">
+    <section class="panel-principal__cabecera__izquierda">
+      <h1 class="panel-principal__titulo">Dashboard</h1>
+      <p class="panel-principal__subtitulo">Infrastructure overview</p>
+    </section>
+    <a class="boton--primario" routerLink="/app/onboarding">
+      <i class="fa-solid fa-plus"></i>
+      Add Server
+    </a>
+  </header>
+
+  <section class="panel-principal__metricas">
+    <article class="panel-principal__metrica">
+      <span class="panel-principal__metrica__etiqueta">Servers</span>
+      <span class="panel-principal__metrica__valor">{{ listaDeServidores().length }}</span>
+    </article>
+    <article class="panel-principal__metrica">
+      <span class="panel-principal__metrica__etiqueta">Online</span>
+      <span class="panel-principal__metrica__valor panel-principal__metrica__valor--verde">{{ contadorServidoresOnline() }}</span>
+    </article>
+    <article class="panel-principal__metrica">
+      <span class="panel-principal__metrica__etiqueta">Offline</span>
+      <span class="panel-principal__metrica__valor panel-principal__metrica__valor--rojo">{{ contadorServidoresOffline() }}</span>
+    </article>
+    <article class="panel-principal__metrica">
+      <span class="panel-principal__metrica__etiqueta">Sites</span>
+      <span class="panel-principal__metrica__valor">{{ listaDeSitios().length }}</span>
+    </article>
+  </section>
+
+  @if (listaDeServidores().length === 0) {
+    <section class="panel-principal__vacio">
+      <i class="fa-solid fa-server panel-principal__vacio__icono"></i>
+      <p class="panel-principal__vacio__titulo">No servers connected</p>
+      <p class="panel-principal__vacio__detalle">Connect your first VPS to start monitoring and deploying</p>
+      <a class="boton--primario" routerLink="/app/onboarding">Connect Server</a>
+    </section>
+  } @else {
+    <section class="panel-principal__servidores">
+      <header class="panel-principal__servidores__cabecera">
+        <h2 class="panel-principal__servidores__titulo">Servers</h2>
+      </header>
+      <section class="panel-principal__servidores__lista">
+        @for (servidor of listaDeServidores(); track servidor.id) {
+          <article class="panel-principal__servidor">
+            <section class="panel-principal__servidor__izquierda">
+              <span class="panel-principal__servidor__indicador panel-principal__servidor__indicador--{{ servidor.estado }}"></span>
+              <section class="panel-principal__servidor__datos">
+                <span class="panel-principal__servidor__nombre">{{ servidor.nombre }}</span>
+                <span class="panel-principal__servidor__ip">{{ servidor.ip }}</span>
+              </section>
+            </section>
+            <section class="panel-principal__servidor__acciones">
+              <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">Manage</a>
+              <a class="panel-principal__servidor__enlace panel-principal__servidor__enlace--ssh" [routerLink]="'/app/terminal/' + servidor.id">
+                <i class="fa-solid fa-terminal"></i>
+                SSH
+              </a>
+            </section>
+          </article>
+        }
+      </section>
+    </section>
+  }
+
+  @if (listaDeSitios().length > 0) {
+    <section class="panel-principal__sitios">
+      <header class="panel-principal__sitios__cabecera">
+        <h2 class="panel-principal__sitios__titulo">Active Sites</h2>
+      </header>
+      <section class="panel-principal__sitios__lista">
+        @for (sitio of listaDeSitios(); track sitio.dominio) {
+          <article class="panel-principal__sitio">
+            <section class="panel-principal__sitio__izquierda">
+              <span class="panel-principal__sitio__icono panel-principal__sitio__icono--{{ sitio.colorIcono }}">
+                <i [class]="sitio.icono"></i>
+              </span>
+              <section class="panel-principal__sitio__datos">
+                <span class="panel-principal__sitio__nombre">{{ sitio.nombre }}</span>
+                <span class="panel-principal__sitio__dominio">{{ sitio.dominio }}</span>
+              </section>
+            </section>
+            <span class="panel-principal__sitio__estado panel-principal__sitio__estado--{{ sitio.estado }}">{{ sitio.textoEstado }}</span>
+          </article>
+        }
+      </section>
+    </section>
+  }
+
+  @if (listaDeActividad().length > 0) {
+    <section class="panel-principal__actividad">
+      <header class="panel-principal__actividad__cabecera">
+        <h2 class="panel-principal__actividad__titulo">Recent Activity</h2>
+      </header>
+      <section class="panel-principal__actividad__lista">
+        @for (evento of listaDeActividad(); track evento.texto) {
+          <article class="panel-principal__evento">
+            <span class="panel-principal__evento__icono panel-principal__evento__icono--{{ evento.colorIcono }}">
+              <i [class]="evento.icono"></i>
+            </span>
+            <section class="panel-principal__evento__datos">
+              <span class="panel-principal__evento__texto">{{ evento.texto }}</span>
+              <span class="panel-principal__evento__detalle">{{ evento.detalle }}</span>
+            </section>
+          </article>
+        }
+      </section>
+    </section>
+  }
+
+  <section class="panel-principal__despliegues">
+    <header class="panel-principal__despliegues__cabecera">
+      <h2 class="panel-principal__despliegues__titulo">Despliegues recientes</h2>
+    </header>
+    @if (listaDespliegues().length === 0) {
+      <p class="panel-principal__despliegues__vacio">Sin despliegues registrados</p>
+    }
+    @for (despliegue of listaDespliegues(); track despliegue.id) {
+      <article class="panel-principal__despliegue">
+        <section class="panel-principal__despliegue__izquierda">
+          <span class="panel-principal__despliegue__badge panel-principal__despliegue__badge--tipo">{{ despliegue.tipo }}</span>
+          <span class="panel-principal__despliegue__mensaje">{{ despliegue.mensaje }}</span>
+        </section>
+        <section class="panel-principal__despliegue__derecha">
+          <span class="panel-principal__despliegue__tiempo">{{ calcularTiempoRelativo(despliegue.fechaInicio) }}</span>
+          <span class="panel-principal__despliegue__badge panel-principal__despliegue__badge--{{ despliegue.estado }}">{{ despliegue.estado }}</span>
+        </section>
+      </article>
+    }
+  </section>
+
+</section>

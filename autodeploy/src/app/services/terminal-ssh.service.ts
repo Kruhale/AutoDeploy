@@ -15,7 +15,8 @@ export class TerminalSshService {
     }
 
     this.estadoConexion.set("conectando");
-    this.websocket = new WebSocket("ws://localhost:8080/ws/terminal");
+    const protocolo = window.location.protocol === "https:" ? "wss:" : "ws:";
+    this.websocket = new WebSocket(protocolo + "//" + window.location.host + "/ws/terminal");
 
     const servicio = this;
 

@@ -7,6 +7,7 @@
       <img class="disposicion-app__logo-movil__imagen" src="logo.png" alt="">
       <span class="disposicion-app__logo-movil__texto">Auto<span class="disposicion-app__logo-movil__texto--acento">Deploy</span></span>
     </a>
+    <app-campana-notificaciones></app-campana-notificaciones>
   </header>
 
   <section class="disposicion-app__backdrop" [class.disposicion-app__backdrop--visible]="sidebarAbierta()" (click)="cerrarSidebar()"></section>
@@ -19,4 +20,6 @@
     </main>
     <app-barra-pie-app></app-barra-pie-app>
   </section>
+
+  <app-toast-notificaciones></app-toast-notificaciones>
 </section>

@@ -2,9 +2,11 @@ import { Component, signal, computed, Signal, HostListener, ElementRef } from "@
 import { Router, RouterLink } from "@angular/router";
 import { UpperCasePipe, DatePipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../services/auth.service";
 import { PlanService, PLANES, PlanId, Plan } from "../../services/plan.service";
 import { UsuarioService } from "../../services/usuario.service";
+import { SelectorIdioma } from "../../components/shared/selector-idioma/selector-idioma";
 
 interface FilaResumen {
   etiqueta: string;
@@ -25,7 +27,7 @@ const DIAS_REFERENCIA_ANIVERSARIO = 365;
 
 @Component({
   selector: "app-cuenta",
-  imports: [RouterLink, UpperCasePipe, DatePipe, FormsModule],
+  imports: [RouterLink, UpperCasePipe, DatePipe, FormsModule, TranslateModule, SelectorIdioma],
   templateUrl: "./cuenta.html",
   styleUrl: "./cuenta.scss"
 })
@@ -50,6 +52,8 @@ export class Cuenta {
   notificacionesEmail = signal(true);
   notificacionesAlertasCriticas = signal(true);
   notificacionesDespliegues = signal(true);
+
+  versionIdioma = signal(0);
 
   inicialDelNombre: Signal<string>;
   detallePlanActual: Signal<Plan>;
@@ -77,7 +81,8 @@ export class Cuenta {
     readonly planService: PlanService,
     readonly usuarioService: UsuarioService,
     private router: Router,
-    private elemento: ElementRef<HTMLElement>
+    private elemento: ElementRef<HTMLElement>,
+    private translate: TranslateService
   ) {
     this.nombreEditable.set(this.usuarioService.nombre());
     this.emailEditable.set(this.usuarioService.email());
@@ -85,6 +90,10 @@ export class Cuenta {
     this.cargarClavesYNotificaciones();
 
     const componente = this;
+
+    this.translate.onLangChange.subscribe(function() {
+      componente.versionIdioma.update(function(v) { return v + 1; });
+    });
 
     this.inicialDelNombre = computed(function() {
       const nombre = componente.usuarioService.nombre();
@@ -116,26 +125,39 @@ export class Cuenta {
     });
 
     this.resumenDeCuenta = computed(function(): FilaResumen[] {
+      componente.versionIdioma();
       const plan = componente.detallePlanActual();
+      const valorStatus = componente.suscripcionCancelada()
+        ? componente.translate.instant("cuenta.resumen.pendingCancellation")
+        : (plan.id === "free"
+            ? componente.translate.instant("cuenta.resumen.freeTier")
+            : componente.translate.instant("cuenta.resumen.active"));
+      const valorServers = plan.limiteServidores === null
+        ? componente.translate.instant("cuenta.resumen.unlimited")
+        : String(plan.limiteServidores);
+      const valorIa = plan.asistentIa
+        ? componente.translate.instant("cuenta.resumen.enabled")
+        : componente.translate.instant("cuenta.resumen.disabled");
+      const valorSoporte = plan.soporte.charAt(0).toUpperCase() + plan.soporte.slice(1);
       return [
         {
-          etiqueta: "Status",
-          valor: componente.suscripcionCancelada() ? "Pending cancellation" : (plan.id === "free" ? "Free tier" : "Active"),
+          etiqueta: componente.translate.instant("cuenta.resumen.status"),
+          valor: valorStatus,
           estado: componente.suscripcionCancelada() ? "aviso" : (plan.id === "free" ? "neutro" : "activo")
         },
         {
-          etiqueta: "Servers",
-          valor: plan.limiteServidores === null ? "Unlimited" : String(plan.limiteServidores),
+          etiqueta: componente.translate.instant("cuenta.resumen.servers"),
+          valor: valorServers,
           estado: "neutro"
         },
         {
-          etiqueta: "AI Assistant",
-          valor: plan.asistentIa ? "Enabled" : "Disabled",
+          etiqueta: componente.translate.instant("cuenta.resumen.aiAssistant"),
+          valor: valorIa,
           estado: plan.asistentIa ? "activo" : "apagado"
         },
         {
-          etiqueta: "Support",
-          valor: plan.soporte.charAt(0).toUpperCase() + plan.soporte.slice(1),
+          etiqueta: componente.translate.instant("cuenta.resumen.support"),
+          valor: valorSoporte,
           estado: "neutro"
         }
       ];
@@ -148,15 +170,20 @@ export class Cuenta {
     });
 
     this.textoMarqueePlan = computed(function() {
+      componente.versionIdioma();
       const plan = componente.detallePlanActual();
       const palabras: string[] = [];
       palabras.push(plan.nombre.toUpperCase());
-      if (plan.precio > 0) palabras.push("€" + plan.precio + " / month");
-      if (plan.limiteServidores === null) palabras.push("Unlimited servers");
-      else palabras.push(plan.limiteServidores + " servers");
-      if (plan.asistentIa) palabras.push("AI Assistant included");
-      palabras.push(plan.soporte.toUpperCase() + " support");
-      if (plan.id === "business") palabras.push("Enterprise grade");
+      const sufijoMes = componente.translate.instant("cuenta.marquee.perMonth");
+      if (plan.precio > 0) palabras.push("€" + plan.precio + " " + sufijoMes);
+      if (plan.limiteServidores === null) {
+        palabras.push(componente.translate.instant("cuenta.marquee.unlimitedServers"));
+      } else {
+        palabras.push(plan.limiteServidores + " " + componente.translate.instant("cuenta.marquee.serversSuffix"));
+      }
+      if (plan.asistentIa) palabras.push(componente.translate.instant("cuenta.marquee.aiIncluded"));
+      palabras.push(plan.soporte.toUpperCase() + " " + componente.translate.instant("cuenta.marquee.supportSuffix"));
+      if (plan.id === "business") palabras.push(componente.translate.instant("cuenta.marquee.enterpriseGrade"));
       return palabras.join("   ·   ");
     });
   }
@@ -206,9 +233,9 @@ export class Cuenta {
 
     try {
       await this.usuarioService.actualizarPerfil(nombre, email);
-      this.mensajeGuardado.set("Saved");
+      this.mensajeGuardado.set(this.translate.instant("comun.guardado"));
     } catch (error: any) {
-      this.mensajeGuardado.set("Error");
+      this.mensajeGuardado.set(this.translate.instant("comun.error"));
     } finally {
       this.guardando.set(false);
       const componente = this;
@@ -252,48 +279,47 @@ export class Cuenta {
     this.contenidoNuevaClave.set("");
   }
 
-  agregarClaveSsh(): void {
+  async agregarClaveSsh(): Promise<void> {
     const nombre = this.nombreNuevaClave().trim();
     const contenido = this.contenidoNuevaClave().trim();
     if (!nombre || !contenido) {
       return;
     }
-    const componente = this;
-    this.usuarioService.agregarClaveSsh(nombre, contenido)
-      .then(function(claveGuardada) {
-        const fechaTexto = claveGuardada.fechaCreacion
-          ? new Date(claveGuardada.fechaCreacion).toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" })
-          : new Date().toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" });
-        const nueva: ClaveSsh = {
-          id: claveGuardada.id,
-          nombre: claveGuardada.nombre,
-          huella: claveGuardada.huella,
-          fechaCreacion: fechaTexto
-        };
-        componente.listaDeClavesSsh.update(function(actual) { return [...actual, nueva]; });
-        componente.cancelarFormularioClave();
-      })
-      .catch(function() {
-        componente.mensajeGuardado.set("Error");
-        setTimeout(function() { componente.mensajeGuardado.set(""); }, 2500);
-      });
+
+    try {
+      const claveGuardada = await this.usuarioService.agregarClaveSsh(nombre, contenido);
+      const fechaTexto = claveGuardada.fechaCreacion
+        ? new Date(claveGuardada.fechaCreacion).toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" })
+        : new Date().toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" });
+      const nueva: ClaveSsh = {
+        id: claveGuardada.id,
+        nombre: claveGuardada.nombre,
+        huella: claveGuardada.huella,
+        fechaCreacion: fechaTexto
+      };
+      this.listaDeClavesSsh.update(function(actual) { return [...actual, nueva]; });
+      this.cancelarFormularioClave();
+    } catch (error) {
+      this.mensajeGuardado.set(this.translate.instant("comun.error"));
+      const componente = this;
+      setTimeout(function() { componente.mensajeGuardado.set(""); }, 2500);
+    }
   }
 
-  eliminarClaveSsh(idClave: string): void {
-    const componente = this;
-    this.usuarioService.eliminarClaveSsh(idClave)
-      .then(function() {
-        componente.listaDeClavesSsh.update(function(actual) {
-          return actual.filter(function(c) { return c.id !== idClave; });
-        });
-      })
-      .catch(function() {
-        componente.mensajeGuardado.set("Error");
-        setTimeout(function() { componente.mensajeGuardado.set(""); }, 2500);
+  async eliminarClaveSsh(idClave: string): Promise<void> {
+    try {
+      await this.usuarioService.eliminarClaveSsh(idClave);
+      this.listaDeClavesSsh.update(function(actual) {
+        return actual.filter(function(c) { return c.id !== idClave; });
       });
+    } catch (error) {
+      this.mensajeGuardado.set(this.translate.instant("comun.error"));
+      const componente = this;
+      setTimeout(function() { componente.mensajeGuardado.set(""); }, 2500);
+    }
   }
 
-  alternarNotificacion(tipo: "email" | "criticas" | "despliegues"): void {
+  async alternarNotificacion(tipo: "email" | "criticas" | "despliegues"): Promise<void> {
     if (tipo === "email") this.notificacionesEmail.update(function(v) { return !v; });
     if (tipo === "criticas") this.notificacionesAlertasCriticas.update(function(v) { return !v; });
     if (tipo === "despliegues") this.notificacionesDespliegues.update(function(v) { return !v; });
@@ -303,32 +329,37 @@ export class Cuenta {
       alertasCriticas: this.notificacionesAlertasCriticas(),
       eventosDespliegue: this.notificacionesDespliegues()
     };
-    this.usuarioService.guardarPreferenciasNotificacion(preferencias).catch(function() {});
+    try {
+      await this.usuarioService.guardarPreferenciasNotificacion(preferencias);
+    } catch (error) {
+      // Silencio intencional: la preferencia se guarda localmente aunque falle el sync
+    }
   }
 
-  private cargarClavesYNotificaciones(): void {
-    const componente = this;
+  private async cargarClavesYNotificaciones(): Promise<void> {
     if (!this.usuarioService.usuarioId()) return;
 
-    this.usuarioService.listarClavesSsh()
-      .then(function(claves) {
-        const adaptadas: ClaveSsh[] = (claves || []).map(function(c) {
-          const fechaTexto = c.fechaCreacion
-            ? new Date(c.fechaCreacion).toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" })
-            : "—";
-          return { id: c.id, nombre: c.nombre, huella: c.huella, fechaCreacion: fechaTexto };
-        });
-        componente.listaDeClavesSsh.set(adaptadas);
-      })
-      .catch(function() {});
+    try {
+      const claves = await this.usuarioService.listarClavesSsh();
+      const adaptadas: ClaveSsh[] = (claves || []).map(function(c) {
+        const fechaTexto = c.fechaCreacion
+          ? new Date(c.fechaCreacion).toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" })
+          : "—";
+        return { id: c.id, nombre: c.nombre, huella: c.huella, fechaCreacion: fechaTexto };
+      });
+      this.listaDeClavesSsh.set(adaptadas);
+    } catch (error) {
+      // Silencio intencional
+    }
 
-    this.usuarioService.obtenerPreferenciasNotificacion()
-      .then(function(prefs) {
-        componente.notificacionesEmail.set(prefs.email);
-        componente.notificacionesAlertasCriticas.set(prefs.alertasCriticas);
-        componente.notificacionesDespliegues.set(prefs.eventosDespliegue);
-      })
-      .catch(function() {});
+    try {
+      const prefs = await this.usuarioService.obtenerPreferenciasNotificacion();
+      this.notificacionesEmail.set(prefs.email);
+      this.notificacionesAlertasCriticas.set(prefs.alertasCriticas);
+      this.notificacionesDespliegues.set(prefs.eventosDespliegue);
+    } catch (error) {
+      // Silencio intencional
+    }
   }
 
   private extraerFechaCreacionDelId(): Date | null {

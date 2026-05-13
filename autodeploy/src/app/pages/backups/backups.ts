@@ -1,6 +1,7 @@
 import { Component, signal, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 
 interface BackupApi {
@@ -15,7 +16,7 @@ interface BackupApi {
 
 @Component({
   selector: "app-backups",
-  imports: [DatePipe],
+  imports: [DatePipe, TranslateModule],
   templateUrl: "./backups.html",
   styleUrl: "./backups.scss"
 })
@@ -35,7 +36,8 @@ export class Backups implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private servidorService: ServidorService
+    private servidorService: ServidorService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
@@ -96,14 +98,17 @@ export class Backups implements OnInit {
       next: function() {
         componente.backupsAutomaticos.set(nuevoEstado);
         componente.guardandoAutoBackup.set(false);
-        componente.mensajeExito.set(nuevoEstado
-          ? "Cron installed · daily snapshots at " + componente.horaBackupAutomatico() + " UTC"
-          : "Automatic backups disabled");
+        if (nuevoEstado) {
+          componente.mensajeExito.set(componente.translate.instant("backups.mensajes.cronInstalado", { hora: componente.horaBackupAutomatico() }));
+        } else {
+          componente.mensajeExito.set(componente.translate.instant("backups.mensajes.autoDeshabilitado"));
+        }
         setTimeout(function() { componente.mensajeExito.set(""); }, 4000);
       },
       error: function() {
         componente.guardandoAutoBackup.set(false);
-        componente.mensajeError.set("Could not " + (nuevoEstado ? "install" : "remove") + " the cron");
+        const claveError = nuevoEstado ? "backups.mensajes.errorCronInstalar" : "backups.mensajes.errorCronEliminar";
+        componente.mensajeError.set(componente.translate.instant(claveError));
         setTimeout(function() { componente.mensajeError.set(""); }, 4000);
       }
     });
@@ -159,7 +164,7 @@ export class Backups implements OnInit {
       },
       error: function() {
         componente.creandoBackup.set(false);
-        componente.mensajeError.set("Could not start the backup");
+        componente.mensajeError.set(componente.translate.instant("backups.mensajes.errorIniciar"));
         setTimeout(function() { componente.mensajeError.set(""); }, 3000);
       }
     });
@@ -173,14 +178,14 @@ export class Backups implements OnInit {
         componente.cargarBackups(servidorId);
       },
       error: function() {
-        componente.mensajeError.set("Could not delete the backup");
+        componente.mensajeError.set(componente.translate.instant("backups.mensajes.errorEliminar"));
         setTimeout(function() { componente.mensajeError.set(""); }, 3000);
       }
     });
   }
 
   restaurarBackup(idBackup: string): void {
-    const confirmado = window.confirm("This will restore the server state from this snapshot. A pre-restore safety snapshot will be created automatically. Continue?");
+    const confirmado = window.confirm(this.translate.instant("backups.mensajes.confirmRestaurar"));
     if (!confirmado) return;
 
     const componente = this;
@@ -188,14 +193,15 @@ export class Backups implements OnInit {
 
     this.http.post("/api/backups/" + idBackup + "/restaurar", {}).subscribe({
       next: function() {
-        componente.mensajeExito.set("Restore started · a pre-restore safety snapshot will appear shortly");
+        componente.mensajeExito.set(componente.translate.instant("backups.mensajes.restoreIniciado"));
         setTimeout(function() {
           componente.mensajeExito.set("");
           componente.cargarBackups(servidorId);
         }, 3000);
       },
       error: function(error) {
-        const detalle = error && error.error && error.error.message ? error.error.message : "Could not restore the backup";
+        const mensajePorDefecto = componente.translate.instant("backups.mensajes.errorRestaurar");
+        const detalle = error && error.error && error.error.message ? error.error.message : mensajePorDefecto;
         componente.mensajeError.set(detalle);
         setTimeout(function() { componente.mensajeError.set(""); }, 4000);
       }

@@ -1611,11 +1611,40 @@
   }
 
   .cuenta__timeline-planes {
-    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-size-s);
+  }
+
+  .cuenta__nodo-plan {
+    padding: 0 0.25rem;
+    gap: 0.35rem;
+  }
+
+  .cuenta__nodo-plan__bullet {
+    width: 1.8rem;
+    height: 1.8rem;
+  }
+
+  .cuenta__nodo-plan__bullet__nucleo {
+    width: 0.5rem;
+    height: 0.5rem;
+  }
+
+  .cuenta__nodo-plan__nombre {
+    font-size: 0.95rem;
+  }
+
+  .cuenta__nodo-plan__precio {
+    font-size: 0.7rem;
+  }
+
+  .cuenta__nodo-plan__marca__texto {
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    padding: 0.12rem 0.4rem;
   }
 
   .cuenta__timeline-planes__rail {
-    display: none;
+    top: 0.9rem;
   }
 
   .cuenta__pie {

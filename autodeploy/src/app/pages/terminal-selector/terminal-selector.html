@@ -1,0 +1,61 @@
+<section class="pagina-terminal-selector editorial">
+
+  <header class="editorial__cabecera editorial__cabecera--simple">
+    <section class="editorial__cabecera__izquierda">
+      <p class="editorial__sello">
+        <span class="editorial__sello__punto" aria-hidden="true"></span>
+        {{ "terminalSelector.sello" | translate }}
+      </p>
+      <h1 class="editorial__titulo">{{ "terminalSelector.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "terminalSelector.subtitulo" | translate }}</p>
+    </section>
+  </header>
+
+  @if (listaDeServidores().length === 0) {
+    <section class="editorial__vacio">
+      <span class="editorial__vacio__icono" aria-hidden="true">
+        <i class="fa-solid fa-terminal"></i>
+      </span>
+      <p class="editorial__vacio__titulo">{{ "terminalSelector.vacioTitulo" | translate }}</p>
+      <p class="editorial__vacio__detalle">{{ "terminalSelector.vacioDetalle" | translate }}</p>
+      <a class="editorial__cta-principal editorial__cta-principal--separado" routerLink="/app/onboarding">
+        <span class="editorial__cta-principal__icono" aria-hidden="true">
+          <i class="fa-solid fa-plug"></i>
+        </span>
+        <span class="editorial__cta-principal__texto">
+          <span class="editorial__cta-principal__principal">{{ "terminalSelector.ctaPrincipal" | translate }}</span>
+          <span class="editorial__cta-principal__secundario">{{ "terminalSelector.ctaSecundario" | translate }}</span>
+        </span>
+      </a>
+    </section>
+  } @else {
+    <section class="editorial__bloque">
+      <header class="editorial__bloque__cabecera">
+        <span class="editorial__bloque__indice">01</span>
+        <section class="editorial__bloque__texto">
+          <h2 class="editorial__bloque__titulo">{{ "terminalSelector.bloqueTitulo" | translate }}</h2>
+          <p class="editorial__bloque__descripcion">{{ "terminalSelector.bloqueDescripcion" | translate }}</p>
+        </section>
+      </header>
+      <section class="pagina-terminal-selector__lista">
+        @for (servidor of listaDeServidores(); track servidor.id) {
+          <a class="pagina-terminal-selector__servidor" [routerLink]="'/app/terminal/' + servidor.id">
+            <span class="pagina-terminal-selector__servidor__icono" aria-hidden="true">
+              <i class="fa-solid fa-terminal"></i>
+            </span>
+            <section class="pagina-terminal-selector__servidor__info">
+              <span class="pagina-terminal-selector__servidor__nombre">{{ servidor.nombre }}</span>
+              <span class="pagina-terminal-selector__servidor__ip">{{ servidor.direccionIp }}:{{ servidor.puertoSsh }}</span>
+            </section>
+            <section class="pagina-terminal-selector__servidor__derecha">
+              <span class="pagina-terminal-selector__servidor__usuario">{{ servidor.usuarioSsh }}<small>{{ "terminalSelector.hostSufijo" | translate }}</small></span>
+              <span class="pagina-terminal-selector__servidor__flecha" aria-hidden="true">→</span>
+            </section>
+          </a>
+        }
+      </section>
+    </section>
+  }
+
+
+</section>

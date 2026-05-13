@@ -1,0 +1,46 @@
+<section class="disposicion-app" [attr.aria-label]="'comun.ariaDisposicionApp' | translate">
+  <a class="u-saltar-contenido" href="#contenido-principal">{{ "comun.saltarContenido" | translate }}</a>
+
+  <!-- Grano de pelicula: la misma textura editorial que el sitio publico -->
+  <span class="grano-editorial" aria-hidden="true"></span>
+
+  <header class="disposicion-app__cabecera-movil" [attr.aria-label]="'comun.ariaCabeceraMovil' | translate">
+    <button class="disposicion-app__hamburguesa" (click)="alternarSidebar()" [attr.aria-label]="'comun.menu' | translate">
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
+    </button>
+    <a class="disposicion-app__logo-movil" routerLink="/">
+      <img class="disposicion-app__logo-movil__imagen" src="logo-128.webp" alt="AutoDeploy" width="24" height="24" decoding="async">
+      <span class="disposicion-app__logo-movil__texto" aria-hidden="true">Auto<span class="disposicion-app__logo-movil__texto--acento">Deploy</span></span>
+    </a>
+    <app-campana-notificaciones></app-campana-notificaciones>
+  </header>
+
+  <button type="button" class="disposicion-app__backdrop" [class.disposicion-app__backdrop--visible]="sidebarAbierta()" (click)="cerrarSidebar()" [attr.aria-label]="'comun.cerrarMenu' | translate" tabindex="-1"></button>
+
+  <app-sidebar [abierta]="sidebarAbierta()"></app-sidebar>
+
+  <section class="disposicion-app__contenido" [attr.aria-label]="'comun.ariaContenidoApp' | translate">
+    <header class="disposicion-app__cabecera-desktop" [attr.aria-label]="'comun.ariaCabeceraApp' | translate">
+      <menu class="disposicion-app__acciones" [attr.aria-label]="'header.aria.acciones' | translate">
+        <button type="button" class="disposicion-app__tema" (click)="themeService.alternarTema()" [attr.aria-label]="themeService.temaActual() === 'oscuro' ? ('header.aria.temaClaro' | translate) : ('header.aria.temaOscuro' | translate)">
+          @if (themeService.temaActual() === 'oscuro') {
+            <i class="fa-solid fa-sun" aria-hidden="true"></i>
+          } @else {
+            <i class="fa-solid fa-moon" aria-hidden="true"></i>
+          }
+        </button>
+        <app-campana-notificaciones></app-campana-notificaciones>
+        <a class="disposicion-app__cuenta" routerLink="/app/cuenta" [attr.aria-label]="'header.cuenta' | translate">
+          <i class="fa-solid fa-user" aria-hidden="true"></i>
+        </a>
+      </menu>
+    </header>
+
+    <main id="contenido-principal" tabindex="-1" class="disposicion-app__principal">
+      <router-outlet></router-outlet>
+    </main>
+    <app-barra-pie-app></app-barra-pie-app>
+  </section>
+
+  <app-toast-notificaciones></app-toast-notificaciones>
+</section>

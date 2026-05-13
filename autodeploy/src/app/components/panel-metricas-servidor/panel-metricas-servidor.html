@@ -1,0 +1,109 @@
+@if (estaEsperandoDatos()) {
+  <section class="panel-metricas panel-metricas--vacio">
+    <header class="panel-metricas__cabecera">
+      <h3 class="panel-metricas__titulo">{{ nombreServidor || ("panelMetricas.fallbackNombre" | translate) }}</h3>
+      <span class="editorial__estado editorial__estado--ambar editorial__estado--vivo">
+        <span class="editorial__estado__punto" aria-hidden="true"></span>
+        {{ "panelMetricas.esperandoPrimerCiclo" | translate }}
+      </span>
+    </header>
+    <p class="panel-metricas__mensaje-vacio">
+      {{ "panelMetricas.mensajeVacio" | translate }}
+    </p>
+  </section>
+}
+
+@if (!estaEsperandoDatos()) {
+  @let metrica = metricaActual();
+  <section class="panel-metricas">
+    <header class="panel-metricas__cabecera">
+      <article class="panel-metricas__identidad">
+        <h3 class="panel-metricas__titulo">{{ nombreServidor || ("panelMetricas.fallbackNombre" | translate) }}</h3>
+        <span class="panel-metricas__uptime">{{ tiempoEncendidoTexto() }} {{ "panelMetricas.uptimeSufijo" | translate }}</span>
+      </article>
+      @if (metrica && metrica.sesionActiva) {
+        <span class="editorial__estado editorial__estado--verde editorial__estado--vivo">
+          <span class="editorial__estado__punto" aria-hidden="true"></span>
+          {{ "panelMetricas.sesionViva" | translate }}
+        </span>
+      }
+      @if (metrica && !metrica.sesionActiva) {
+        <span class="editorial__estado editorial__estado--rojo">
+          <span class="editorial__estado__punto" aria-hidden="true"></span>
+          {{ "panelMetricas.reconectando" | translate }}
+        </span>
+      }
+    </header>
+
+    <section class="editorial__vitales editorial__vitales--compacta">
+      <article class="editorial__vitales__dato">
+        <span class="editorial__vitales__etiqueta">{{ "panelMetricas.tarjetas.cpu" | translate }}</span>
+        <span class="editorial__vitales__cifra">{{ redondearPorcentaje(metrica?.cpuPorcentaje || 0) }}<small class="panel-metricas__unidad">%</small></span>
+        <span class="editorial__vitales__barra" aria-hidden="true">
+          <span class="editorial__vitales__barra__relleno editorial__vitales__barra__relleno--{{ obtenerColorBarra(metrica?.cpuPorcentaje || 0) }}" [style.width.%]="metrica?.cpuPorcentaje || 0"></span>
+        </span>
+        <span class="editorial__vitales__nota">{{ "panelMetricas.tarjetas.carga" | translate }} {{ metrica?.cargaPromedio?.toFixed(2) || "0.00" }}</span>
+      </article>
+
+      <article class="editorial__vitales__dato">
+        <span class="editorial__vitales__etiqueta">{{ "panelMetricas.tarjetas.ram" | translate }}</span>
+        <span class="editorial__vitales__cifra">{{ porcentajeRam() }}<small class="panel-metricas__unidad">%</small></span>
+        <span class="editorial__vitales__barra" aria-hidden="true">
+          <span class="editorial__vitales__barra__relleno editorial__vitales__barra__relleno--{{ obtenerColorBarra(porcentajeRam()) }}" [style.width.%]="porcentajeRam()"></span>
+        </span>
+        <span class="editorial__vitales__nota">{{ metrica?.ramUsadaMb }} MB / {{ metrica?.ramTotalMb }} MB</span>
+      </article>
+
+      <article class="editorial__vitales__dato">
+        <span class="editorial__vitales__etiqueta">{{ "panelMetricas.tarjetas.disco" | translate }}</span>
+        <span class="editorial__vitales__cifra">{{ metrica?.discoUsadoPorcentaje || 0 }}<small class="panel-metricas__unidad">%</small></span>
+        <span class="editorial__vitales__barra" aria-hidden="true">
+          <span class="editorial__vitales__barra__relleno editorial__vitales__barra__relleno--{{ obtenerColorBarra(metrica?.discoUsadoPorcentaje || 0) }}" [style.width.%]="metrica?.discoUsadoPorcentaje || 0"></span>
+        </span>
+        <span class="editorial__vitales__nota">{{ metrica?.discoUsadoGb }} GB / {{ metrica?.discoTotalGb }} GB</span>
+      </article>
+    </section>
+
+    <section class="panel-metricas__listas">
+      <article class="panel-metricas__recurso">
+        <header class="panel-metricas__recurso__cabecera">
+          <h4 class="panel-metricas__recurso__titulo">{{ "panelMetricas.webs.titulo" | translate }}</h4>
+          <span class="panel-metricas__recurso__contador">{{ metrica?.webDesplegadas?.length || 0 }}</span>
+        </header>
+        @if (metrica && metrica.webDesplegadas.length > 0) {
+          <ul class="panel-metricas__recurso__lista">
+            @for (web of metrica.webDesplegadas; track web) {
+              <li class="panel-metricas__recurso__item">
+                <span class="panel-metricas__recurso__punto" aria-hidden="true"></span>
+                {{ web }}
+              </li>
+            }
+          </ul>
+        }
+        @if (!metrica || metrica.webDesplegadas.length === 0) {
+          <p class="panel-metricas__recurso__vacio">{{ "panelMetricas.webs.vacio" | translate }}</p>
+        }
+      </article>
+
+      <article class="panel-metricas__recurso">
+        <header class="panel-metricas__recurso__cabecera">
+          <h4 class="panel-metricas__recurso__titulo">{{ "panelMetricas.docker.titulo" | translate }}</h4>
+          <span class="panel-metricas__recurso__contador">{{ metrica?.containersDocker?.length || 0 }}</span>
+        </header>
+        @if (metrica && metrica.containersDocker.length > 0) {
+          <ul class="panel-metricas__recurso__lista">
+            @for (contenedor of metrica.containersDocker; track contenedor) {
+              <li class="panel-metricas__recurso__item">
+                <span class="panel-metricas__recurso__punto" aria-hidden="true"></span>
+                {{ contenedor }}
+              </li>
+            }
+          </ul>
+        }
+        @if (!metrica || metrica.containersDocker.length === 0) {
+          <p class="panel-metricas__recurso__vacio">{{ "panelMetricas.docker.vacio" | translate }}</p>
+        }
+      </article>
+    </section>
+  </section>
+}

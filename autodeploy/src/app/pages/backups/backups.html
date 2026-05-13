@@ -4,10 +4,10 @@
     <section class="editorial__cabecera__izquierda">
       <p class="editorial__sello">
         <span class="editorial__sello__punto" [class.editorial__sello__punto--verde]="backupsAutomaticos()" aria-hidden="true"></span>
-        Workspace · Backups · {{ backupsAutomaticos() ? "Automatic" : "Manual" }}
+        {{ "backups.selloPrefijo" | translate }}{{ backupsAutomaticos() ? ("backups.estadoAutomatico" | translate) : ("backups.estadoManual" | translate) }}
       </p>
-      <h1 class="editorial__titulo">Backups<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="editorial__subtitulo">Snapshots and restore points · stored encrypted off-site.</p>
+      <h1 class="editorial__titulo">{{ "backups.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "backups.subtitulo" | translate }}</p>
     </section>
     <button class="editorial__cta-principal" type="button" (click)="crearBackup()" [disabled]="creandoBackup()">
       <span class="editorial__cta-principal__icono" aria-hidden="true">
@@ -18,15 +18,15 @@
         }
       </span>
       <span class="editorial__cta-principal__texto">
-        <span class="editorial__cta-principal__principal">{{ creandoBackup() ? "Creating" : "Create backup" }}</span>
-        <span class="editorial__cta-principal__secundario">Snapshot the server now</span>
+        <span class="editorial__cta-principal__principal">{{ creandoBackup() ? ("backups.creando" | translate) : ("backups.crear" | translate) }}</span>
+        <span class="editorial__cta-principal__secundario">{{ "backups.ctaSecundario" | translate }}</span>
       </span>
     </button>
   </header>
 
   @if (listaServidores().length > 1) {
     <section class="pagina-backups__selector-servidor">
-      <label class="pagina-backups__selector-servidor__etiqueta">Target server</label>
+      <label class="pagina-backups__selector-servidor__etiqueta">{{ "backups.selectorServidor" | translate }}</label>
       <select class="pagina-backups__selector-servidor__select" [value]="servidorSeleccionadoId()" (change)="cambiarServidor($any($event.target).value)">
         @for (servidor of listaServidores(); track servidor.id) {
           <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
@@ -47,8 +47,8 @@
         <i class="fa-solid fa-clock-rotate-left"></i>
       </span>
       <section class="pagina-backups__auto__texto">
-        <span class="pagina-backups__auto__titulo">Automatic backups</span>
-        <span class="pagina-backups__auto__detalle">Daily snapshots at <strong>{{ horaBackupAutomatico() }} UTC</strong> · retained for <strong>7 days</strong> · cron installed via SSH</span>
+        <span class="pagina-backups__auto__titulo">{{ "backups.autoTitulo" | translate }}</span>
+        <span class="pagina-backups__auto__detalle">{{ "backups.autoDetalle" | translate: { hora: horaBackupAutomatico() } }}</span>
       </section>
     </section>
     <button class="pagina-backups__interruptor"
@@ -71,8 +71,8 @@
     <header class="editorial__bloque__cabecera">
       <span class="editorial__bloque__indice">01</span>
       <section class="editorial__bloque__texto">
-        <h2 class="editorial__bloque__titulo">Snapshots</h2>
-        <p class="editorial__bloque__descripcion">Restore points ordered by creation date · click "Restore" to revert.</p>
+        <h2 class="editorial__bloque__titulo">{{ "backups.snapshotsTitulo" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "backups.snapshotsDescripcion" | translate }}</p>
       </section>
     </header>
 
@@ -81,32 +81,45 @@
         <span class="editorial__vacio__icono" aria-hidden="true">
           <i class="fa-solid fa-hard-drive"></i>
         </span>
-        <p class="editorial__vacio__titulo">No backups available</p>
-        <p class="editorial__vacio__detalle">Create your first backup or enable automatic snapshots above to protect your infrastructure.</p>
+        <p class="editorial__vacio__titulo">{{ "backups.vacioTitulo" | translate }}</p>
+        <p class="editorial__vacio__detalle">{{ "backups.vacioDetalle" | translate }}</p>
       </section>
     } @else {
       <section class="pagina-backups__lista">
         @for (backup of listaDeBackups(); track backup.id) {
           <article class="pagina-backups__item">
-            <span class="pagina-backups__item__icono" [class.pagina-backups__item__icono--auto]="backup.tipo === 'auto'" aria-hidden="true">
-              @if (backup.tipo === "auto") {
-                <i class="fa-solid fa-clock"></i>
-              } @else {
-                <i class="fa-solid fa-hand"></i>
-              }
-            </span>
-            <section class="pagina-backups__item__info">
-              <span class="pagina-backups__item__fecha">{{ backup.fechaCreacion | date:"medium" }}</span>
-              <span class="pagina-backups__item__meta">{{ backup.tamano || "—" }} · <span class="pagina-backups__item__tipo">{{ backup.tipo }}</span></span>
+            <section class="pagina-backups__item__identidad">
+              <span class="pagina-backups__item__icono" [class.pagina-backups__item__icono--auto]="backup.tipo === 'auto'" aria-hidden="true">
+                @if (backup.tipo === "auto") {
+                  <i class="fa-solid fa-clock"></i>
+                } @else {
+                  <i class="fa-solid fa-hand"></i>
+                }
+              </span>
+              <section class="pagina-backups__item__info">
+                <span class="pagina-backups__item__fecha">{{ backup.fechaCreacion | date:"medium" }}</span>
+                <span class="pagina-backups__item__meta">
+                  <span>{{ backup.tamano || ("comun.guion" | translate) }}</span>
+                  <span class="pagina-backups__item__separador" aria-hidden="true">·</span>
+                  <span class="pagina-backups__item__tipo">{{ "backups.tipo." + backup.tipo | translate }}</span>
+                </span>
+              </section>
             </section>
-            <span class="pagina-backups__badge pagina-backups__badge--{{ backup.estado }}">{{ backup.estado }}</span>
-            <button class="editorial__boton-ghost" type="button" (click)="restaurarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'">
-              <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
-              Restore
-            </button>
-            <button class="editorial__boton-ghost editorial__boton-ghost--peligro" type="button" (click)="eliminarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'">
-              <i class="fa-solid fa-trash" aria-hidden="true"></i>
-            </button>
+
+            <span class="pagina-backups__badge pagina-backups__badge--{{ backup.estado }}">
+              <span class="pagina-backups__badge__punto" aria-hidden="true"></span>
+              {{ "backups.estado." + backup.estado | translate }}
+            </span>
+
+            <section class="pagina-backups__item__acciones">
+              <button class="pagina-backups__accion pagina-backups__accion--primaria" type="button" (click)="restaurarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'">
+                <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                <span>{{ "backups.restore" | translate }}</span>
+              </button>
+              <button class="pagina-backups__accion pagina-backups__accion--peligro" type="button" (click)="eliminarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'" [attr.aria-label]="'backups.eliminar' | translate">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              </button>
+            </section>
           </article>
         }
       </section>
@@ -114,11 +127,11 @@
   </section>
 
   <footer class="editorial__pie">
-    <span class="editorial__pie__codigo">№ BKP-{{ listaDeBackups().length }}S</span>
+    <span class="editorial__pie__codigo">{{ "backups.pieCodigo" | translate: { count: listaDeBackups().length } }}</span>
     <span class="editorial__pie__separador" aria-hidden="true"></span>
-    <span class="editorial__pie__texto">Snapshots encrypted with AES-256 · stored off-site</span>
+    <span class="editorial__pie__texto">{{ "backups.pieTexto" | translate }}</span>
     <span class="editorial__pie__separador" aria-hidden="true"></span>
-    <span class="editorial__pie__edicion">Backups edition 2026.05</span>
+    <span class="editorial__pie__edicion">{{ "backups.pieEdicion" | translate }}</span>
   </footer>
 
 </section>

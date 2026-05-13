@@ -1,7 +1,7 @@
 <section class="cuenta">
 
   <aside class="cuenta__indice-vertical" aria-hidden="true">
-    <span class="cuenta__indice-vertical__codigo">N° {{ anioActual }}.{{ idTruncado() }}</span>
+    <span class="cuenta__indice-vertical__codigo">{{ "cuenta.refPrefix" | translate }} {{ anioActual }}.{{ idTruncado() }}</span>
     <span class="cuenta__indice-vertical__rotulo">
       @for (letra of letrasIndiceVertical; track $index) {
         <span class="cuenta__indice-vertical__letra">{{ letra }}</span>
@@ -11,7 +11,7 @@
         <span class="cuenta__indice-vertical__letra">{{ letra }}</span>
       }
     </span>
-    <span class="cuenta__indice-vertical__estampa">PRESS · ARCHIVE</span>
+    <span class="cuenta__indice-vertical__estampa">{{ "cuenta.estampa" | translate }}</span>
   </aside>
 
   <header class="cuenta__hero">
@@ -21,7 +21,7 @@
     <section class="cuenta__hero__capa-superior">
       <p class="cuenta__hero__sello">
         <span class="cuenta__hero__sello__circulo">·</span>
-        <span class="cuenta__hero__sello__texto">Personal dossier · Issue {{ anioActual }}</span>
+        <span class="cuenta__hero__sello__texto">{{ "cuenta.selloIssue" | translate: { anio: anioActual } }}</span>
       </p>
       <p class="cuenta__hero__fecha-edicion">{{ fechaCreacionCuenta() | date:"EEEE, d MMM yyyy":"":"en" }}</p>
     </section>
@@ -36,15 +36,15 @@
         </article>
         <ul class="cuenta__credenciales">
           <li class="cuenta__credenciales__fila">
-            <span class="cuenta__credenciales__clave">Email</span>
-            <span class="cuenta__credenciales__valor">{{ usuarioService.email() || "—" }}</span>
+            <span class="cuenta__credenciales__clave">{{ "cuenta.credenciales.email" | translate }}</span>
+            <span class="cuenta__credenciales__valor">{{ usuarioService.email() || ("comun.guion" | translate) }}</span>
           </li>
           <li class="cuenta__credenciales__fila">
-            <span class="cuenta__credenciales__clave">Reference</span>
-            <span class="cuenta__credenciales__valor">{{ idTruncado() || "—" }}</span>
+            <span class="cuenta__credenciales__clave">{{ "cuenta.credenciales.reference" | translate }}</span>
+            <span class="cuenta__credenciales__valor">{{ idTruncado() || ("comun.guion" | translate) }}</span>
           </li>
           <li class="cuenta__credenciales__fila">
-            <span class="cuenta__credenciales__clave">Member since</span>
+            <span class="cuenta__credenciales__clave">{{ "cuenta.credenciales.memberSince" | translate }}</span>
             <span class="cuenta__credenciales__valor">{{ fechaCreacionCuenta() | date:"d MMM yyyy":"":"en" }}</span>
           </li>
         </ul>
@@ -52,8 +52,8 @@
 
       <section class="cuenta__hero__columna-titulo">
         <h1 class="cuenta__hero__titulo">
-          <span class="cuenta__hero__titulo__overline">{{ planService.planActual() === "free" ? "Free tier holder" : "Subscriber to" }}</span>
-          <span class="cuenta__hero__titulo__principal">{{ usuarioService.nombre() || "Anonymous" }}<span class="cuenta__hero__titulo__estrella" aria-hidden="true">*</span></span>
+          <span class="cuenta__hero__titulo__overline">{{ planService.planActual() === "free" ? ("cuenta.overlineFree" | translate) : ("cuenta.overlinePaid" | translate) }}</span>
+          <span class="cuenta__hero__titulo__principal">{{ usuarioService.nombre() || ("cuenta.anonymous" | translate) }}<span class="cuenta__hero__titulo__estrella" aria-hidden="true">*</span></span>
           <span class="cuenta__hero__titulo__plan">{{ detallePlanActual().nombre | uppercase }}</span>
         </h1>
       </section>
@@ -72,10 +72,9 @@
     <section class="cuenta__aviso">
       <span class="cuenta__aviso__bandera" aria-hidden="true">!</span>
       <section class="cuenta__aviso__cuerpo">
-        <p class="cuenta__aviso__titulo">Subscription scheduled to end</p>
+        <p class="cuenta__aviso__titulo">{{ "cuenta.aviso.titulo" | translate }}</p>
         <p class="cuenta__aviso__descripcion">
-          Your <strong>{{ detallePlanActual().nombre }}</strong> access remains intact until
-          <strong>{{ fechaFinFormateada() | date:"d MMMM yyyy":"":"en" }}</strong>. Afterwards the account downgrades to Free.
+          {{ "cuenta.aviso.descParte1" | translate }}<strong>{{ detallePlanActual().nombre }}</strong>{{ "cuenta.aviso.descParte2" | translate }}<strong>{{ fechaFinFormateada() | date:"d MMMM yyyy":"":"en" }}</strong>{{ "cuenta.aviso.descParte3" | translate }}
         </p>
       </section>
     </section>
@@ -85,32 +84,32 @@
     <header class="cuenta__cabecera-seccion">
       <span class="cuenta__cabecera-seccion__indice">01</span>
       <section class="cuenta__cabecera-seccion__texto">
-        <h2 class="cuenta__cabecera-seccion__titulo">Tenure</h2>
-        <p class="cuenta__cabecera-seccion__descripcion">Calendar of activity since the account was first signed.</p>
+        <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion01.titulo" | translate }}</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion01.descripcion" | translate }}</p>
       </section>
     </header>
 
     <section class="cuenta__tenure">
       <article class="cuenta__tenure__numero">
         @if (diasComoMiembro() === 0) {
-          <span class="cuenta__tenure__numero__valor cuenta__tenure__numero__valor--inaugural">01</span>
-          <span class="cuenta__tenure__numero__unidad">Day 01 · just begun</span>
+          <span class="cuenta__tenure__numero__valor cuenta__tenure__numero__valor--inaugural">{{ "cuenta.tenure.inauguralValor" | translate }}</span>
+          <span class="cuenta__tenure__numero__unidad">{{ "cuenta.tenure.inauguralUnidad" | translate }}</span>
         } @else {
           <span class="cuenta__tenure__numero__valor">{{ diasComoMiembro() }}</span>
-          <span class="cuenta__tenure__numero__unidad">{{ diasComoMiembro() === 1 ? "day" : "days" }}</span>
+          <span class="cuenta__tenure__numero__unidad">{{ diasComoMiembro() === 1 ? ("cuenta.tenure.unidadSingular" | translate) : ("cuenta.tenure.unidadPlural" | translate) }}</span>
         }
       </article>
       <section class="cuenta__tenure__detalle">
         <p class="cuenta__tenure__leyenda">
-          {{ diasComoMiembro() === 0 ? "Welcome on board. Your first day is being recorded." : "in continuous use" }}
+          {{ diasComoMiembro() === 0 ? ("cuenta.tenure.leyendaInaugural" | translate) : ("cuenta.tenure.leyendaContinuo" | translate) }}
         </p>
         <section class="cuenta__tenure__progreso">
           <span class="cuenta__tenure__progreso__pista">
             <span class="cuenta__tenure__progreso__relleno" [style.width.%]="progresoAniversarioPorcentaje()"></span>
           </span>
           <section class="cuenta__tenure__progreso__leyenda">
-            <span class="cuenta__tenure__progreso__borde">Day zero</span>
-            <span class="cuenta__tenure__progreso__hito">365 · one year mark</span>
+            <span class="cuenta__tenure__progreso__borde">{{ "cuenta.tenure.diaCero" | translate }}</span>
+            <span class="cuenta__tenure__progreso__hito">{{ "cuenta.tenure.hitoUnAnio" | translate }}</span>
           </section>
         </section>
       </section>
@@ -121,8 +120,8 @@
     <header class="cuenta__cabecera-seccion">
       <span class="cuenta__cabecera-seccion__indice">02</span>
       <section class="cuenta__cabecera-seccion__texto">
-        <h2 class="cuenta__cabecera-seccion__titulo">Identity</h2>
-        <p class="cuenta__cabecera-seccion__descripcion">The name and email shown to teammates inside this workspace.</p>
+        <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion02.titulo" | translate }}</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion02.descripcion" | translate }}</p>
       </section>
     </header>
 
@@ -130,7 +129,7 @@
       <section class="cuenta__campo-editorial">
         <label class="cuenta__campo-editorial__etiqueta" for="cuenta-nombre">
           <span class="cuenta__campo-editorial__numero">i</span>
-          Display name
+          {{ "cuenta.formulario.displayName" | translate }}
         </label>
         <input
           class="cuenta__campo-editorial__input"
@@ -138,14 +137,14 @@
           name="cuenta-nombre"
           type="text"
           autocomplete="name"
-          placeholder="How should we call you"
+          [placeholder]="'cuenta.formulario.displayNamePlaceholder' | translate"
           [ngModel]="nombreEditable()"
           (ngModelChange)="nombreEditable.set($event)">
       </section>
       <section class="cuenta__campo-editorial">
         <label class="cuenta__campo-editorial__etiqueta" for="cuenta-email">
           <span class="cuenta__campo-editorial__numero">ii</span>
-          Email address
+          {{ "cuenta.formulario.email" | translate }}
         </label>
         <input
           class="cuenta__campo-editorial__input"
@@ -153,10 +152,10 @@
           name="cuenta-email"
           type="email"
           autocomplete="email"
-          placeholder="your@email.com"
+          [placeholder]="'cuenta.formulario.emailPlaceholder' | translate"
           [ngModel]="emailEditable()"
           (ngModelChange)="emailEditable.set($event)">
-        <p class="cuenta__campo-editorial__pista">Used only for billing and security notifications.</p>
+        <p class="cuenta__campo-editorial__pista">{{ "cuenta.formulario.emailPista" | translate }}</p>
       </section>
     </section>
 
@@ -167,7 +166,7 @@
         (click)="guardarCambios()"
         [disabled]="guardando()">
         <span class="cuenta__boton-guardar__contenido">
-          <span class="cuenta__boton-guardar__texto">{{ guardando() ? "Saving" : "Commit changes" }}</span>
+          <span class="cuenta__boton-guardar__texto">{{ guardando() ? ("cuenta.saving" | translate) : ("cuenta.commitChanges" | translate) }}</span>
           <span class="cuenta__boton-guardar__flecha" aria-hidden="true">→</span>
         </span>
         <span class="cuenta__boton-guardar__indicador" aria-hidden="true"></span>
@@ -187,8 +186,8 @@
     <header class="cuenta__cabecera-seccion">
       <span class="cuenta__cabecera-seccion__indice">03</span>
       <section class="cuenta__cabecera-seccion__texto">
-        <h2 class="cuenta__cabecera-seccion__titulo">Tier</h2>
-        <p class="cuenta__cabecera-seccion__descripcion">Three altitudes. Prorated billing on every switch.</p>
+        <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion03.titulo" | translate }}</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion03.descripcion" | translate }}</p>
       </section>
     </header>
 
@@ -205,14 +204,14 @@
           </span>
           <span class="cuenta__nodo-plan__nombre">{{ plan.nombre }}</span>
           <span class="cuenta__nodo-plan__precio">
-            @if (plan.precio === 0) { Free } @else { €{{ plan.precio }}<small>/mo</small> }
+            @if (plan.precio === 0) { {{ "cuenta.planFree" | translate }} } @else { €{{ plan.precio }}<small>{{ "cuenta.precioSufijo" | translate }}</small> }
           </span>
           @if (planService.planActual() === plan.id) {
             <span class="cuenta__nodo-plan__marca">
               @if (suscripcionCancelada() && plan.id !== "free") {
-                <span class="cuenta__nodo-plan__marca__texto cuenta__nodo-plan__marca__texto--aviso">Cancels {{ fechaFinFormateada() | date:"d MMM":"":"en" }}</span>
+                <span class="cuenta__nodo-plan__marca__texto cuenta__nodo-plan__marca__texto--aviso">{{ "cuenta.cancelsPrefix" | translate }}{{ fechaFinFormateada() | date:"d MMM":"":"en" }}</span>
               } @else {
-                <span class="cuenta__nodo-plan__marca__texto">Current</span>
+                <span class="cuenta__nodo-plan__marca__texto">{{ "cuenta.current" | translate }}</span>
               }
             </span>
           }
@@ -237,7 +236,7 @@
 
     <a class="cuenta__enlace-comparar" routerLink="/" fragment="pricing">
       <span class="cuenta__enlace-comparar__borde-izq" aria-hidden="true"></span>
-      <span>Read the full pricing manifesto</span>
+      <span>{{ "cuenta.compararPricing" | translate }}</span>
       <span class="cuenta__enlace-comparar__flecha" aria-hidden="true">→</span>
     </a>
   </section>
@@ -246,12 +245,12 @@
     <header class="cuenta__cabecera-seccion">
       <span class="cuenta__cabecera-seccion__indice">04</span>
       <section class="cuenta__cabecera-seccion__texto">
-        <h2 class="cuenta__cabecera-seccion__titulo">SSH keys</h2>
-        <p class="cuenta__cabecera-seccion__descripcion">Public keys for passwordless authentication on every server you connect.</p>
+        <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion04.titulo" | translate }}</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion04.descripcion" | translate }}</p>
       </section>
       <button class="cuenta__boton-ghost" type="button" (click)="mostrarFormularioAgregarClave()" [disabled]="mostrarFormularioClave()">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
-        Add key
+        {{ "cuenta.seccion04.addKey" | translate }}
       </button>
     </header>
 
@@ -260,34 +259,34 @@
         <section class="cuenta__campo-editorial">
           <label class="cuenta__campo-editorial__etiqueta" for="ssh-nombre">
             <span class="cuenta__campo-editorial__numero">i</span>
-            Key name
+            {{ "cuenta.formClave.nombre" | translate }}
           </label>
           <input
             class="cuenta__campo-editorial__input"
             id="ssh-nombre"
             type="text"
-            placeholder="My laptop"
+            [placeholder]="'cuenta.formClave.nombrePlaceholder' | translate"
             [ngModel]="nombreNuevaClave()"
             (ngModelChange)="nombreNuevaClave.set($event)">
         </section>
         <section class="cuenta__campo-editorial">
           <label class="cuenta__campo-editorial__etiqueta" for="ssh-clave">
             <span class="cuenta__campo-editorial__numero">ii</span>
-            Public key
+            {{ "cuenta.formClave.publicKey" | translate }}
           </label>
           <textarea
             class="cuenta__campo-editorial__textarea"
             id="ssh-clave"
             rows="3"
-            placeholder="ssh-rsa AAAA..."
+            [placeholder]="'cuenta.formClave.publicKeyPlaceholder' | translate"
             [ngModel]="contenidoNuevaClave()"
             (ngModelChange)="contenidoNuevaClave.set($event)"></textarea>
         </section>
         <section class="cuenta__form-clave__acciones">
-          <button class="cuenta__form-clave__cancelar" type="button" (click)="cancelarFormularioClave()">Cancel</button>
+          <button class="cuenta__form-clave__cancelar" type="button" (click)="cancelarFormularioClave()">{{ "cuenta.formClave.cancelar" | translate }}</button>
           <button class="cuenta__boton-guardar" type="button" (click)="agregarClaveSsh()">
             <span class="cuenta__boton-guardar__contenido">
-              <span class="cuenta__boton-guardar__texto">Add key</span>
+              <span class="cuenta__boton-guardar__texto">{{ "cuenta.formClave.addKey" | translate }}</span>
               <span class="cuenta__boton-guardar__flecha" aria-hidden="true">→</span>
             </span>
           </button>
@@ -298,8 +297,8 @@
     @if (listaDeClavesSsh().length === 0 && !mostrarFormularioClave()) {
       <section class="cuenta__vacio">
         <i class="fa-solid fa-key cuenta__vacio__icono" aria-hidden="true"></i>
-        <p class="cuenta__vacio__titulo">No SSH keys registered</p>
-        <p class="cuenta__vacio__detalle">Add a public key to enable passwordless connections.</p>
+        <p class="cuenta__vacio__titulo">{{ "cuenta.clavesVacioTitulo" | translate }}</p>
+        <p class="cuenta__vacio__detalle">{{ "cuenta.clavesVacioDetalle" | translate }}</p>
       </section>
     }
 
@@ -314,8 +313,8 @@
               <span class="cuenta__clave__nombre">{{ clave.nombre }}</span>
               <span class="cuenta__clave__huella">{{ clave.huella }}</span>
             </section>
-            <span class="cuenta__clave__fecha">Added {{ clave.fechaCreacion }}</span>
-            <button class="cuenta__clave__eliminar" type="button" (click)="eliminarClaveSsh(clave.id)" aria-label="Remove key">
+            <span class="cuenta__clave__fecha">{{ "cuenta.addedPrefix" | translate }}{{ clave.fechaCreacion }}</span>
+            <button class="cuenta__clave__eliminar" type="button" (click)="eliminarClaveSsh(clave.id)" [attr.aria-label]="'cuenta.ariaRemoveKey' | translate">
               <i class="fa-solid fa-trash"></i>
             </button>
           </article>
@@ -328,8 +327,8 @@
     <header class="cuenta__cabecera-seccion">
       <span class="cuenta__cabecera-seccion__indice">05</span>
       <section class="cuenta__cabecera-seccion__texto">
-        <h2 class="cuenta__cabecera-seccion__titulo">Notifications</h2>
-        <p class="cuenta__cabecera-seccion__descripcion">Choose which events reach your inbox. Everything is opt-in.</p>
+        <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion05.titulo" | translate }}</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion05.descripcion" | translate }}</p>
       </section>
     </header>
 
@@ -338,8 +337,8 @@
         <section class="cuenta__toggle-fila__info">
           <span class="cuenta__toggle-fila__numero" aria-hidden="true">i</span>
           <section class="cuenta__toggle-fila__texto">
-            <span class="cuenta__toggle-fila__titulo">Email notifications</span>
-            <span class="cuenta__toggle-fila__detalle">Receive deployment and status updates via email.</span>
+            <span class="cuenta__toggle-fila__titulo">{{ "cuenta.notifEmailTitulo" | translate }}</span>
+            <span class="cuenta__toggle-fila__detalle">{{ "cuenta.notifEmailDetalle" | translate }}</span>
           </section>
         </section>
         <button
@@ -356,8 +355,8 @@
         <section class="cuenta__toggle-fila__info">
           <span class="cuenta__toggle-fila__numero" aria-hidden="true">ii</span>
           <section class="cuenta__toggle-fila__texto">
-            <span class="cuenta__toggle-fila__titulo">Critical alerts</span>
-            <span class="cuenta__toggle-fila__detalle">Get notified when CPU, RAM or disk exceed 90% usage.</span>
+            <span class="cuenta__toggle-fila__titulo">{{ "cuenta.notifCriticasTitulo" | translate }}</span>
+            <span class="cuenta__toggle-fila__detalle">{{ "cuenta.notifCriticasDetalle" | translate }}</span>
           </section>
         </section>
         <button
@@ -374,8 +373,8 @@
         <section class="cuenta__toggle-fila__info">
           <span class="cuenta__toggle-fila__numero" aria-hidden="true">iii</span>
           <section class="cuenta__toggle-fila__texto">
-            <span class="cuenta__toggle-fila__titulo">Deployment events</span>
-            <span class="cuenta__toggle-fila__detalle">Every successful or failed build, the moment it lands.</span>
+            <span class="cuenta__toggle-fila__titulo">{{ "cuenta.notifDespliegesTitulo" | translate }}</span>
+            <span class="cuenta__toggle-fila__detalle">{{ "cuenta.notifDespliegesDetalle" | translate }}</span>
           </section>
         </section>
         <button
@@ -390,12 +389,26 @@
     </section>
   </section>
 
-  <section class="cuenta__bloque cuenta__bloque--exit">
-    <header class="cuenta__cabecera-seccion cuenta__cabecera-seccion--peligro">
+  <section class="cuenta__bloque">
+    <header class="cuenta__cabecera-seccion">
       <span class="cuenta__cabecera-seccion__indice">06</span>
       <section class="cuenta__cabecera-seccion__texto">
-        <h2 class="cuenta__cabecera-seccion__titulo">Exit</h2>
-        <p class="cuenta__cabecera-seccion__descripcion">Hold the trigger for a full second to close this session.</p>
+        <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion06.titulo" | translate }}</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion06.descripcion" | translate }}</p>
+      </section>
+    </header>
+
+    <section class="cuenta__bloque-idioma">
+      <app-selector-idioma modo="expandido"></app-selector-idioma>
+    </section>
+  </section>
+
+  <section class="cuenta__bloque cuenta__bloque--exit">
+    <header class="cuenta__cabecera-seccion cuenta__cabecera-seccion--peligro">
+      <span class="cuenta__cabecera-seccion__indice">07</span>
+      <section class="cuenta__cabecera-seccion__texto">
+        <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion07.titulo" | translate }}</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion07.descripcion" | translate }}</p>
       </section>
     </header>
 
@@ -414,7 +427,7 @@
           <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </span>
         <span class="cuenta__boton-salida__texto">
-          {{ progresoSalidaActivo() ? "Keep holding" : "Hold to sign out" }}
+          {{ progresoSalidaActivo() ? ("cuenta.salidaCargando" | translate) : ("cuenta.salidaReposo" | translate) }}
         </span>
       </span>
       <span class="cuenta__boton-salida__progreso" aria-hidden="true"></span>
@@ -424,9 +437,9 @@
   <footer class="cuenta__pie">
     <span class="cuenta__pie__codigo">{{ idTruncado() }}</span>
     <span class="cuenta__pie__separador" aria-hidden="true"></span>
-    <span class="cuenta__pie__notas">Personal dossier · maintained by AutoDeploy</span>
+    <span class="cuenta__pie__notas">{{ "cuenta.pieNotas" | translate }}</span>
     <span class="cuenta__pie__separador" aria-hidden="true"></span>
-    <span class="cuenta__pie__edicion">Edition {{ anioActual }}.{{ anioActual + 1 }}</span>
+    <span class="cuenta__pie__edicion">{{ "cuenta.pieEdicionPrefijo" | translate }} {{ anioActual }}.{{ anioActual + 1 }}</span>
   </footer>
 
 </section>

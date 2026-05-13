@@ -1,0 +1,21 @@
+<section class="terminal-ssh">
+  <header class="terminal-ssh__barra">
+    <section class="terminal-ssh__semaforo">
+      <a class="terminal-ssh__punto terminal-ssh__punto--rojo" routerLink="/app/dashboard" title="Close"></a>
+      <span class="terminal-ssh__punto terminal-ssh__punto--naranja"></span>
+      <span class="terminal-ssh__punto terminal-ssh__punto--verde"></span>
+    </section>
+    <span class="terminal-ssh__titulo">{{ nombreServidor() }} &mdash; {{ ipServidor() }}</span>
+    <section class="terminal-ssh__estado">
+      <span class="terminal-ssh__estado__punto" [class.terminal-ssh__estado__punto--conectado]="terminalService.estadoConexion() === 'conectado'"></span>
+      <span class="terminal-ssh__estado__texto">{{ terminalService.estadoConexion() }}</span>
+    </section>
+  </header>
+
+  <section class="terminal-ssh__contenedor" #contenedorTerminal></section>
+
+  <footer class="terminal-ssh__pie">
+    <span class="terminal-ssh__pie__info">SSH &middot; {{ ipServidor() }}:22</span>
+    <a class="terminal-ssh__pie__volver" routerLink="/app/dashboard">Back to Dashboard</a>
+  </footer>
+</section>

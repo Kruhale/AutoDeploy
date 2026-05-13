@@ -1,0 +1,126 @@
+<section class="pagina-firewall">
+
+  <app-migas-pan [migas]="[{ etiqueta: 'Dashboard', enlace: '/app/dashboard' }, { etiqueta: 'Firewall' }]"></app-migas-pan>
+
+  <header class="pagina-firewall__cabecera">
+    <section class="pagina-firewall__cabecera__izquierda">
+      <h1 class="pagina-firewall__titulo">Firewall</h1>
+      <p class="pagina-firewall__subtitulo">Control inbound and outbound traffic rules</p>
+    </section>
+    <section class="pagina-firewall__cabecera__acciones">
+      <section class="pagina-firewall__estado">
+        <span class="pagina-firewall__estado__punto" [class.pagina-firewall__estado__punto--activo]="firewallActivo()"></span>
+        <span class="pagina-firewall__estado__texto">{{ firewallActivo() ? 'Active' : 'Inactive' }}</span>
+      </section>
+      <button class="boton--primario" (click)="mostrarFormularioAgregar()">Add Rule</button>
+    </section>
+  </header>
+
+  <section class="pagina-firewall__presets">
+    <span class="pagina-firewall__presets__etiqueta">Presets</span>
+    <button class="pagina-firewall__preset" (click)="agregarPreset('22', 'SSH Access')">
+      <span class="pagina-firewall__preset__puerto">22</span>
+      SSH
+    </button>
+    <button class="pagina-firewall__preset" (click)="agregarPreset('80', 'HTTP Traffic')">
+      <span class="pagina-firewall__preset__puerto">80</span>
+      HTTP
+    </button>
+    <button class="pagina-firewall__preset" (click)="agregarPreset('443', 'HTTPS Traffic')">
+      <span class="pagina-firewall__preset__puerto">443</span>
+      HTTPS
+    </button>
+    <button class="pagina-firewall__preset" (click)="agregarPreset('3306', 'MySQL Database')">
+      <span class="pagina-firewall__preset__puerto">3306</span>
+      MySQL
+    </button>
+    <button class="pagina-firewall__preset" (click)="agregarPreset('5432', 'PostgreSQL Database')">
+      <span class="pagina-firewall__preset__puerto">5432</span>
+      Postgres
+    </button>
+  </section>
+
+  @if (mostrarFormulario()) {
+    <section class="pagina-firewall__formulario">
+      <section class="pagina-firewall__formulario__fila">
+        <section class="campo">
+          <label class="campo__etiqueta">Port</label>
+          <input class="campo__input" type="text" placeholder="8080" [ngModel]="nuevoPuerto()" (ngModelChange)="nuevoPuerto.set($event)">
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta">Protocol</label>
+          <select class="campo__select" [ngModel]="nuevoProtocolo()" (ngModelChange)="nuevoProtocolo.set($event)">
+            <option value="TCP">TCP</option>
+            <option value="UDP">UDP</option>
+            <option value="TCP/UDP">TCP/UDP</option>
+          </select>
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta">Action</label>
+          <select class="campo__select" [ngModel]="nuevaAccion()" (ngModelChange)="nuevaAccion.set($event)">
+            <option value="allow">Allow</option>
+            <option value="deny">Deny</option>
+          </select>
+        </section>
+      </section>
+      <section class="pagina-firewall__formulario__fila">
+        <section class="campo">
+          <label class="campo__etiqueta">Source</label>
+          <input class="campo__input" type="text" placeholder="0.0.0.0/0" [ngModel]="nuevoOrigen()" (ngModelChange)="nuevoOrigen.set($event)">
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta">Description</label>
+          <input class="campo__input" type="text" placeholder="Custom rule" [ngModel]="nuevaDescripcion()" (ngModelChange)="nuevaDescripcion.set($event)">
+        </section>
+      </section>
+      <section class="pagina-firewall__formulario__acciones">
+        <button class="boton--ghost" (click)="cancelarFormulario()">Cancel</button>
+        <button class="boton--primario" (click)="agregarRegla()">Add</button>
+      </section>
+    </section>
+  }
+
+  <section class="pagina-firewall__seccion">
+    <h2 class="pagina-firewall__seccion__titulo">Rules</h2>
+
+    @if (listaDeReglas().length === 0) {
+      <section class="pagina-firewall__vacio">
+        <i class="fa-solid fa-shield-halved pagina-firewall__vacio__icono"></i>
+        <p class="pagina-firewall__vacio__texto">No rules configured</p>
+        <p class="pagina-firewall__vacio__detalle">Add rules or use presets to secure your server</p>
+      </section>
+    } @else {
+      <table class="pagina-firewall__tabla">
+        <thead>
+          <tr class="pagina-firewall__tabla__fila-cabecera">
+            <th class="pagina-firewall__tabla__th">Port</th>
+            <th class="pagina-firewall__tabla__th">Protocol</th>
+            <th class="pagina-firewall__tabla__th">Action</th>
+            <th class="pagina-firewall__tabla__th">Source</th>
+            <th class="pagina-firewall__tabla__th">Description</th>
+            <th class="pagina-firewall__tabla__th"></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (regla of listaDeReglas(); track regla.puerto) {
+            <tr class="pagina-firewall__tabla__fila">
+              <td class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.puerto }}</td>
+              <td class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.protocolo }}</td>
+              <td class="pagina-firewall__tabla__td">
+                <span class="pagina-firewall__badge pagina-firewall__badge--{{ regla.accion }}">{{ regla.accion }}</span>
+              </td>
+              <td class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.origen }}</td>
+              <td class="pagina-firewall__tabla__td">{{ regla.descripcion }}</td>
+              <td class="pagina-firewall__tabla__td">
+                <button class="pagina-firewall__eliminar" (click)="eliminarRegla(regla.puerto)">
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+</section>

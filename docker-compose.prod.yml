@@ -1,0 +1,42 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: autodeploy-mongodb
+    volumes:
+      - mongodb-datos:/data/db
+    networks:
+      - red-interna
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: autodeploy-backend
+    depends_on:
+      - mongodb
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/autodeploy
+      AUTODEPLOY_JWT_SECRET: ${AUTODEPLOY_JWT_SECRET}
+      AUTODEPLOY_CIFRADO_CLAVE: ${AUTODEPLOY_CIFRADO_CLAVE}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemini-2.5-pro}
+    networks:
+      - red-interna
+    restart: unless-stopped
+
+  frontend:
+    build: ./autodeploy
+    container_name: autodeploy-frontend
+    ports:
+      - "8081:80"
+    depends_on:
+      - backend
+    networks:
+      - red-interna
+    restart: unless-stopped
+
+networks:
+  red-interna:
+    driver: bridge
+
+volumes:
+  mongodb-datos:

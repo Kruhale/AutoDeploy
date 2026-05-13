@@ -1,0 +1,35 @@
+# Secretos - NUNCA subir al repo
+.env
+.env.local
+.env*.local
+
+# Node
+node_modules/
+dist/
+autodeploy/dist/
+
+# Artefactos de build del backend
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+
+# Sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.env.production.local
+.env.test.local

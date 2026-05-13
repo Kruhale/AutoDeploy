@@ -1,0 +1,193 @@
+.pagina-cuenta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-4xl);
+  max-width: 32rem;
+}
+
+.pagina-cuenta__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--spacing-size-3xl);
+  border-bottom: 1px solid var(--borde-normal);
+}
+
+.pagina-cuenta__perfil {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-xl);
+}
+
+.pagina-cuenta__avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--amarillo-normal), var(--naranja-normal));
+  color: var(--fondo-oscuro);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-extrabold);
+  flex-shrink: 0;
+}
+
+.pagina-cuenta__perfil__datos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+}
+
+.pagina-cuenta__nombre {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+}
+
+.pagina-cuenta__email {
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+}
+
+.pagina-cuenta__badge-plan {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-extrabold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-full);
+}
+
+.pagina-cuenta__badge-plan--pro {
+  background-color: var(--amarillo-transparente-008);
+  color: var(--amarillo-normal);
+  border: 1px solid var(--amarillo-transparente-030);
+}
+
+.pagina-cuenta__badge-plan--business {
+  background-color: var(--cyan-transparente-008);
+  color: var(--cyan-normal);
+  border: 1px solid hsla(191, 72%, 44%, 0.25);
+}
+
+.pagina-cuenta__seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-xl);
+  padding-bottom: var(--spacing-size-3xl);
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.pagina-cuenta__seccion--peligro {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.pagina-cuenta__seccion__titulo {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--texto-apagado);
+}
+
+.pagina-cuenta__formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-xl);
+}
+
+.pagina-cuenta__mensaje {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--verde-normal);
+}
+
+.pagina-cuenta__boton-guardar {
+  align-self: flex-start;
+}
+
+.pagina-cuenta__plan-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pagina-cuenta__enlace-planes {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--amarillo-normal);
+  transition: opacity var(--duration-base) ease;
+}
+
+.pagina-cuenta__enlace-planes:hover {
+  opacity: 0.8;
+}
+
+.pagina-cuenta__planes {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.pagina-cuenta__plan-opcion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-size-l) 0;
+  border-top: 1px solid var(--borde-suave);
+  cursor: pointer;
+  transition: opacity var(--duration-base) ease;
+}
+
+.pagina-cuenta__plan-opcion:hover {
+  opacity: 0.85;
+}
+
+.pagina-cuenta__plan-opcion__info {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-xl);
+}
+
+.pagina-cuenta__plan-opcion__nombre {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+}
+
+.pagina-cuenta__plan-opcion__precio {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+}
+
+.pagina-cuenta__plan-opcion__check {
+  font-size: var(--font-size-sm);
+  color: var(--amarillo-normal);
+}
+
+.pagina-cuenta__plan-opcion--activo .pagina-cuenta__plan-opcion__nombre {
+  color: var(--amarillo-normal);
+}
+
+.pagina-cuenta__boton-logout {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-m);
+  padding: var(--spacing-size-l) 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--rojo-normal);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: opacity var(--duration-base) ease;
+}
+
+.pagina-cuenta__boton-logout:hover {
+  opacity: 0.8;
+}

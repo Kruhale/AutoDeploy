@@ -1,0 +1,93 @@
+<section class="logs-terminal">
+  <header class="logs-terminal__cabecera">
+    <section class="logs-terminal__cabecera__izquierda">
+      <span class="logs-terminal__entorno">
+        <span class="logs-terminal__entorno__punto"></span>
+        Production: V2.4.1
+      </span>
+    </section>
+    <section class="logs-terminal__cabecera__derecha">
+      <section class="logs-terminal__busqueda">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input class="logs-terminal__busqueda__input" type="text" placeholder="Search logs..." (input)="busquedaTexto.set($any($event.target).value)">
+      </section>
+      <i class="fa-solid fa-bell logs-terminal__icono-notif"></i>
+      <span class="logs-terminal__avatar"></span>
+    </section>
+  </header>
+
+  <section class="logs-terminal__barra-filtros">
+    <section class="logs-terminal__filtros">
+      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'all'" (click)="cambiarFiltro('all')">
+        <i class="fa-solid fa-filter"></i> All
+      </button>
+      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'info'" (click)="cambiarFiltro('info')">Info</button>
+      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'warn'" (click)="cambiarFiltro('warn')">Warning</button>
+      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'error'" (click)="cambiarFiltro('error')">Error</button>
+    </section>
+    <section class="logs-terminal__barra-acciones">
+      <button class="boton--ghost" (click)="exportarLogs()">
+        <i class="fa-solid fa-download"></i> Export Logs
+      </button>
+      <button class="boton--primario" (click)="reiniciarFlujo()">
+        <i class="fa-solid fa-rotate-right"></i> Restart Flow
+      </button>
+    </section>
+  </section>
+
+  <section class="visor-eventos">
+    <header class="visor-eventos__cabecera">
+      <h2 class="visor-eventos__titulo">Event Viewer</h2>
+      <span class="visor-eventos__actualizado">Last updated: 2s ago</span>
+    </header>
+    <ul class="visor-eventos__lista">
+      @for (entrada of obtenerEntradasFiltradas(); track entrada.hora) {
+        <li class="visor-eventos__entrada" [class.visor-eventos__entrada--error]="entrada.nivel === 'error'">
+          <span class="visor-eventos__hora">{{ entrada.hora }}</span>
+          <span class="visor-eventos__badge visor-eventos__badge--{{ entrada.nivel }}">{{ entrada.nivel | uppercase }}</span>
+          <span class="visor-eventos__mensaje" [class.visor-eventos__mensaje--destacado]="entrada.esDestacado">{{ entrada.mensaje }}</span>
+        </li>
+      }
+    </ul>
+  </section>
+
+  <section class="terminal-interactiva">
+    <header class="terminal-interactiva__barra">
+      <section class="terminal-interactiva__semaforo">
+        <span class="terminal-interactiva__punto terminal-interactiva__punto--rojo"></span>
+        <span class="terminal-interactiva__punto terminal-interactiva__punto--naranja"></span>
+        <span class="terminal-interactiva__punto terminal-interactiva__punto--verde"></span>
+      </section>
+      <span class="terminal-interactiva__titulo">Interactive Shell (Bash)</span>
+      <i class="fa-solid fa-expand terminal-interactiva__expandir"></i>
+    </header>
+    <section class="terminal-interactiva__cuerpo">
+      @for (linea of lineasDeTerminal(); track $index) {
+        @if (linea.tipo === 'prompt') {
+          <p class="terminal-interactiva__linea">
+            <span class="terminal-interactiva__prompt">autodeploy&#64;node-01:~$</span>
+            <span class="terminal-interactiva__comando">{{ linea.contenido }}</span>
+          </p>
+        } @else {
+          <p class="terminal-interactiva__salida">{{ linea.contenido }}</p>
+        }
+      }
+      <p class="terminal-interactiva__linea">
+        <span class="terminal-interactiva__prompt">autodeploy&#64;node-01:~$</span>
+        <span class="terminal-interactiva__cursor"></span>
+      </p>
+    </section>
+  </section>
+
+  <footer class="logs-terminal__pie">
+    <span class="logs-terminal__pie__item">
+      <i class="fa-solid fa-wifi"></i> Connected to AWS EAST-1
+    </span>
+    <span class="logs-terminal__pie__item">
+      <i class="fa-solid fa-server"></i> Uptime: 99.98%
+    </span>
+    <span class="logs-terminal__pie__item logs-terminal__pie__item--derecha">
+      UTF-8 &nbsp; v2.4.1-stable
+    </span>
+  </footer>
+</section>

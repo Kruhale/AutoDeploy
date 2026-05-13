@@ -1,0 +1,57 @@
+<section class="pagina-backups">
+
+  <app-migas-pan [migas]="[{ etiqueta: 'Dashboard', enlace: '/app/dashboard' }, { etiqueta: 'Backups' }]"></app-migas-pan>
+
+  <header class="pagina-backups__cabecera">
+    <section class="pagina-backups__cabecera__izquierda">
+      <h1 class="pagina-backups__titulo">Backups</h1>
+      <p class="pagina-backups__subtitulo">Manage server snapshots and restore points</p>
+    </section>
+    <button class="boton--primario" (click)="crearBackup()" [disabled]="creandoBackup()">
+      {{ creandoBackup() ? 'Creating...' : 'Create Backup' }}
+    </button>
+  </header>
+
+  <section class="pagina-backups__controles">
+    <section class="pagina-backups__auto">
+      <section class="pagina-backups__auto__info">
+        <span class="pagina-backups__auto__titulo">Automatic Backups</span>
+        <span class="pagina-backups__auto__detalle">Daily snapshots at 03:00 UTC, retained for 7 days</span>
+      </section>
+      <button class="interruptor" [class.interruptor--activo]="backupsAutomaticos()" (click)="backupsAutomaticos.set(!backupsAutomaticos())" type="button">
+        <span class="interruptor__circulo" [class.interruptor__circulo--activo]="backupsAutomaticos()"></span>
+      </button>
+    </section>
+  </section>
+
+  <section class="pagina-backups__seccion">
+    <h2 class="pagina-backups__seccion__titulo">Snapshots</h2>
+
+    @if (listaDeBackups().length === 0) {
+      <section class="pagina-backups__vacio">
+        <i class="fa-solid fa-hard-drive pagina-backups__vacio__icono"></i>
+        <p class="pagina-backups__vacio__texto">No backups available</p>
+        <p class="pagina-backups__vacio__detalle">Create your first backup or enable automatic snapshots</p>
+      </section>
+    } @else {
+      @for (backup of listaDeBackups(); track backup.id) {
+        <article class="pagina-backups__item">
+          <section class="pagina-backups__item__icono">
+            @if (backup.tipo === 'auto') {
+              <i class="fa-solid fa-clock"></i>
+            } @else {
+              <i class="fa-solid fa-hand"></i>
+            }
+          </section>
+          <section class="pagina-backups__item__info">
+            <span class="pagina-backups__item__fecha">{{ backup.fecha }}</span>
+            <span class="pagina-backups__item__meta">{{ backup.tamano }} &middot; {{ backup.tipo }}</span>
+          </section>
+          <span class="pagina-backups__badge pagina-backups__badge--{{ backup.estado }}">{{ backup.estado }}</span>
+          <button class="boton--ghost" (click)="restaurarBackup(backup.id)" [disabled]="backup.estado === 'in-progress'">Restore</button>
+        </article>
+      }
+    }
+  </section>
+
+</section>

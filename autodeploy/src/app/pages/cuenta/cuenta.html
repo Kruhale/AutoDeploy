@@ -1,0 +1,72 @@
+<section class="pagina-cuenta">
+
+  <header class="pagina-cuenta__cabecera">
+    <section class="pagina-cuenta__perfil">
+      <span class="pagina-cuenta__avatar">{{ inicialDelNombre() }}</span>
+      <section class="pagina-cuenta__perfil__datos">
+        <h1 class="pagina-cuenta__nombre">{{ usuarioService.nombre() || 'Your Account' }}</h1>
+        <span class="pagina-cuenta__email">{{ usuarioService.email() || '—' }}</span>
+      </section>
+    </section>
+    @if (planService.planActual() !== 'free') {
+      <span class="pagina-cuenta__badge-plan pagina-cuenta__badge-plan--{{ planService.planActual() }}">
+        {{ planService.planActual() | uppercase }}
+      </span>
+    }
+  </header>
+
+  <section class="pagina-cuenta__seccion">
+    <h2 class="pagina-cuenta__seccion__titulo">Profile</h2>
+    <section class="pagina-cuenta__formulario">
+      <section class="campo">
+        <label class="campo__etiqueta" for="cuenta-nombre">Name</label>
+        <input class="campo__input" id="cuenta-nombre" name="cuenta-nombre" type="text" placeholder="Your name" [ngModel]="nombreEditable()" (ngModelChange)="nombreEditable.set($event)">
+      </section>
+      <section class="campo">
+        <label class="campo__etiqueta" for="cuenta-email">Email</label>
+        <input class="campo__input" id="cuenta-email" name="cuenta-email" type="email" placeholder="your@email.com" [ngModel]="emailEditable()" (ngModelChange)="emailEditable.set($event)">
+      </section>
+    </section>
+
+    @if (mensajeGuardado()) {
+      <p class="pagina-cuenta__mensaje">{{ mensajeGuardado() }}</p>
+    }
+
+    <button class="boton--primario pagina-cuenta__boton-guardar" type="button" (click)="guardarCambios()" [disabled]="guardando()">
+      {{ guardando() ? 'Saving...' : 'Save changes' }}
+    </button>
+  </section>
+
+  <section class="pagina-cuenta__seccion">
+    <section class="pagina-cuenta__plan-cabecera">
+      <h2 class="pagina-cuenta__seccion__titulo">Plan</h2>
+      <a class="pagina-cuenta__enlace-planes" routerLink="/" fragment="pricing">Compare plans</a>
+    </section>
+    <section class="pagina-cuenta__planes">
+      @for (plan of planes; track plan.id) {
+        <article
+          class="pagina-cuenta__plan-opcion"
+          [class.pagina-cuenta__plan-opcion--activo]="planService.planActual() === plan.id"
+          (click)="cambiarPlan(plan.id)">
+          <section class="pagina-cuenta__plan-opcion__info">
+            <span class="pagina-cuenta__plan-opcion__nombre">{{ plan.nombre }}</span>
+            <span class="pagina-cuenta__plan-opcion__precio">
+              @if (plan.precio === 0) { Free } @else { €{{ plan.precio }}/mo }
+            </span>
+          </section>
+          @if (planService.planActual() === plan.id) {
+            <i class="fa-solid fa-check pagina-cuenta__plan-opcion__check"></i>
+          }
+        </article>
+      }
+    </section>
+  </section>
+
+  <section class="pagina-cuenta__seccion pagina-cuenta__seccion--peligro">
+    <button class="pagina-cuenta__boton-logout" type="button" (click)="cerrarSesion()">
+      <i class="fa-solid fa-arrow-right-from-bracket"></i>
+      Log out
+    </button>
+  </section>
+
+</section>

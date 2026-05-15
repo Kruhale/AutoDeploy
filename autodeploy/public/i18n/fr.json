@@ -406,16 +406,16 @@
     "subtitulo": "Saisissez vos identifiants pour accéder au panneau de contrôle.",
     "emailEtiqueta": "E-mail",
     "emailPlaceholder": "vous@email.com",
-    "passwordEtiqueta": "Mot de passe",
-    "passwordPlaceholder": "••••••••",
-    "ariaOcultarPassword": "Masquer le mot de passe",
-    "ariaVerPassword": "Afficher le mot de passe",
     "botonCargando": "Vérification",
     "boton": "Se connecter",
     "pieTexto": "Vous n'avez pas de compte ?",
     "pieEnlace": "Créer un compte",
     "errorCamposVacios": "L'e-mail et le mot de passe sont obligatoires",
-    "errorCredenciales": "Identifiants non valides"
+    "errorCredenciales": "Identifiants non valides",
+    "ariaOcultarClave": "Masquer le mot de passe",
+    "ariaVerClave": "Afficher le mot de passe",
+    "claveEtiqueta": "Mot de passe",
+    "clavePlaceholder": "••••••••"
   },
   "register": {
     "sello": "Édition 2026 · Inscription ouverte",
@@ -437,14 +437,8 @@
     "nombrePlaceholder": "Votre nom",
     "emailEtiqueta": "E-mail",
     "emailPlaceholder": "vous@email.com",
-    "passwordEtiqueta": "Mot de passe",
-    "passwordPlaceholder": "••••••••",
-    "ariaOcultarPassword": "Masquer le mot de passe",
-    "ariaVerPassword": "Afficher le mot de passe",
     "confirmarPasswordEtiqueta": "Confirmer le mot de passe",
     "confirmarPasswordPlaceholder": "••••••••",
-    "ariaOcultarConfirmPassword": "Masquer le mot de passe",
-    "ariaVerConfirmPassword": "Afficher le mot de passe",
     "criterioLongitud": "Au moins 8 caractères",
     "criterioMayuscula": "Une lettre majuscule",
     "criterioMinuscula": "Une lettre minuscule",
@@ -457,7 +451,13 @@
     "errorCamposVacios": "Tous les champs sont obligatoires",
     "errorPasswordInvalida": "Le mot de passe ne respecte pas toutes les exigences",
     "errorPasswordsNoCoinciden": "Les mots de passe ne correspondent pas",
-    "errorRegistro": "L'inscription a échoué"
+    "errorRegistro": "L'inscription a échoué",
+    "ariaOcultarClave": "Masquer le mot de passe",
+    "ariaVerClave": "Afficher le mot de passe",
+    "ariaOcultarConfirmar": "Masquer le mot de passe",
+    "ariaVerConfirmar": "Afficher le mot de passe",
+    "claveEtiqueta": "Mot de passe",
+    "clavePlaceholder": "••••••••"
   },
   "confirmarFree": {
     "volver": "Retour",
@@ -709,9 +709,9 @@
       "user": "Utilisateur",
       "authMethod": "Méthode d'authentification",
       "authMethodKey": "Clé SSH",
-      "passwordPlaceholder": "Saisissez le mot de passe du serveur",
       "contrasena": "Mot de passe",
-      "authMethodContrasena": "Mot de passe"
+      "authMethodContrasena": "Mot de passe",
+      "clavePlaceholder": "Saisissez le mot de passe du serveur"
     },
     "ayuda": {
       "titulo": "Besoin d'aide ?",

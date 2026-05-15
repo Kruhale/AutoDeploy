@@ -84,7 +84,7 @@
       @if (metodoAutenticacion() === 'password') {
         <section class="campo">
           <label class="campo__etiqueta">{{ "onboarding.formulario.contrasena" | translate }}</label>
-          <input class="campo__input" name="password" type="password" [placeholder]="'onboarding.formulario.passwordPlaceholder' | translate" [ngModel]="passwordServidor()" (ngModelChange)="passwordServidor.set($event)">
+          <input class="campo__input" name="password" type="password" [placeholder]="'onboarding.formulario.clavePlaceholder' | translate" [ngModel]="passwordServidor()" (ngModelChange)="passwordServidor.set($event)">
         </section>
       }
     </section>

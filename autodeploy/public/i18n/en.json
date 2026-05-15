@@ -406,16 +406,16 @@
     "subtitulo": "Enter your credentials to access the control panel.",
     "emailEtiqueta": "Email",
     "emailPlaceholder": "you@email.com",
-    "passwordEtiqueta": "Password",
-    "passwordPlaceholder": "••••••••",
-    "ariaOcultarPassword": "Hide password",
-    "ariaVerPassword": "Show password",
     "botonCargando": "Verifying",
     "boton": "Sign in",
     "pieTexto": "Don't have an account?",
     "pieEnlace": "Create account",
     "errorCamposVacios": "Email and password are required",
-    "errorCredenciales": "Invalid credentials"
+    "errorCredenciales": "Invalid credentials",
+    "ariaOcultarClave": "Hide password",
+    "ariaVerClave": "Show password",
+    "claveEtiqueta": "Password",
+    "clavePlaceholder": "••••••••"
   },
   "register": {
     "sello": "2026 Edition · Onboarding open",
@@ -437,14 +437,8 @@
     "nombrePlaceholder": "Your name",
     "emailEtiqueta": "Email",
     "emailPlaceholder": "you@email.com",
-    "passwordEtiqueta": "Password",
-    "passwordPlaceholder": "••••••••",
-    "ariaOcultarPassword": "Hide password",
-    "ariaVerPassword": "Show password",
     "confirmarPasswordEtiqueta": "Confirm password",
     "confirmarPasswordPlaceholder": "••••••••",
-    "ariaOcultarConfirmPassword": "Hide password",
-    "ariaVerConfirmPassword": "Show password",
     "criterioLongitud": "At least 8 characters",
     "criterioMayuscula": "One uppercase letter",
     "criterioMinuscula": "One lowercase letter",
@@ -457,7 +451,13 @@
     "errorCamposVacios": "All fields are required",
     "errorPasswordInvalida": "The password does not meet all requirements",
     "errorPasswordsNoCoinciden": "Passwords do not match",
-    "errorRegistro": "Registration failed"
+    "errorRegistro": "Registration failed",
+    "ariaOcultarClave": "Hide password",
+    "ariaVerClave": "Show password",
+    "ariaOcultarConfirmar": "Hide password",
+    "ariaVerConfirmar": "Show password",
+    "claveEtiqueta": "Password",
+    "clavePlaceholder": "••••••••"
   },
   "confirmarFree": {
     "volver": "Back",
@@ -709,9 +709,9 @@
       "user": "User",
       "authMethod": "Authentication method",
       "authMethodKey": "SSH key",
-      "passwordPlaceholder": "Enter the server password",
       "contrasena": "Password",
-      "authMethodContrasena": "Password"
+      "authMethodContrasena": "Password",
+      "clavePlaceholder": "Enter the server password"
     },
     "ayuda": {
       "titulo": "Need help?",

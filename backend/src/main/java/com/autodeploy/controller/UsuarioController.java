@@ -33,18 +33,18 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @Operation(summary = "Registrar usuario", description = "Crea una cuenta nueva y devuelve los datos del usuario")
+    @Operation(summary = "Registrar usuario")
     @PostMapping("/registro")
     public ResponseEntity<ApiResponse<LoginResponse>> registrar(@RequestBody @Valid RegistroRequest peticion) {
         Usuario usuario = usuarioService.registrar(peticion);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
         URI ubicacion = URI.create("/api/usuarios/" + usuario.getId());
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Usuario registrado", respuesta);
         return ResponseEntity.created(ubicacion).body(cuerpo);
     }
 
-    @Operation(summary = "Login", description = "Autentica al usuario con email y contraseña")
+    @Operation(summary = "Login")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody @Valid LoginRequest peticion) {
         LoginResponse respuesta = usuarioService.login(peticion);
@@ -56,7 +56,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<LoginResponse>> obtener(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "OK", respuesta);
         return ResponseEntity.ok(cuerpo);
@@ -70,7 +70,7 @@ public class UsuarioController {
         String email = datos.getOrDefault("email", "");
 
         Usuario usuario = usuarioService.actualizar(id, nombre, email);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Perfil actualizado", respuesta);
         return ResponseEntity.ok(cuerpo);
@@ -83,9 +83,18 @@ public class UsuarioController {
         String plan = datos.getOrDefault("plan", "free");
 
         Usuario usuario = usuarioService.actualizarPlan(id, plan);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Plan actualizado", respuesta);
+        return ResponseEntity.ok(cuerpo);
+    }
+
+    @PutMapping("/{id}/cancelar-suscripcion")
+    public ResponseEntity<ApiResponse<LoginResponse>> cancelarSuscripcion(@PathVariable String id) {
+        Usuario usuario = usuarioService.cancelarSuscripcion(id);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
+
+        ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Suscripción cancelada", respuesta);
         return ResponseEntity.ok(cuerpo);
     }
 

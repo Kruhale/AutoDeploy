@@ -16,9 +16,13 @@ public class Usuario {
     private String email;
     private String passwordHash;
     private LocalDateTime fechaCreacion;
+    private String plan;
+    private LocalDateTime fechaInicioSuscripcion;
+    private LocalDateTime fechaFinSuscripcion;
 
     public Usuario() {
         this.fechaCreacion = LocalDateTime.now();
+        this.plan = "free";
     }
 
     public Usuario(String nombre, String email, String passwordHash) {
@@ -26,6 +30,7 @@ public class Usuario {
         this.email = email;
         this.passwordHash = passwordHash;
         this.fechaCreacion = LocalDateTime.now();
+        this.plan = "free";
     }
 
     public String getId() { return id; }
@@ -41,4 +46,13 @@ public class Usuario {
     public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
 
     public LocalDateTime getFechaCreacion() { return fechaCreacion; }
+
+    public String getPlan() { return plan; }
+    public void setPlan(String plan) { this.plan = plan; }
+
+    public LocalDateTime getFechaInicioSuscripcion() { return fechaInicioSuscripcion; }
+    public void setFechaInicioSuscripcion(LocalDateTime fechaInicioSuscripcion) { this.fechaInicioSuscripcion = fechaInicioSuscripcion; }
+
+    public LocalDateTime getFechaFinSuscripcion() { return fechaFinSuscripcion; }
+    public void setFechaFinSuscripcion(LocalDateTime fechaFinSuscripcion) { this.fechaFinSuscripcion = fechaFinSuscripcion; }
 }

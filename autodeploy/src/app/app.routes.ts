@@ -89,6 +89,10 @@ export const routes: Routes = [
       {
         path: 'terminal/:servidorId',
         loadComponent: () => import('./pages/terminal-ssh/terminal-ssh').then(modulo => modulo.TerminalSsh),
+      },
+      {
+        path: 'pago',
+        loadComponent: () => import('./pages/pago/pago').then(modulo => modulo.Pago),
       }
     ]
   }

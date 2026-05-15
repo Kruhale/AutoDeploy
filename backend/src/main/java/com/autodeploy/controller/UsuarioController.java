@@ -76,6 +76,19 @@ public class UsuarioController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @PutMapping("/{id}/plan")
+    public ResponseEntity<ApiResponse<LoginResponse>> actualizarPlan(
+            @PathVariable String id,
+            @RequestBody Map<String, String> datos) {
+        String plan = datos.getOrDefault("plan", "free");
+
+        Usuario usuario = usuarioService.actualizarPlan(id, plan);
+        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
+
+        ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Plan actualizado", respuesta);
+        return ResponseEntity.ok(cuerpo);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
         usuarioService.eliminar(id);

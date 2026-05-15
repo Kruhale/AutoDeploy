@@ -67,6 +67,14 @@ public class UsuarioService {
         return usuarioActualizado;
     }
 
+    public Usuario actualizarPlan(String id, String plan) {
+        Usuario usuario = obtenerPorId(id);
+        usuario.setPlan(plan);
+
+        Usuario usuarioActualizado = usuarioRepository.save(usuario);
+        return usuarioActualizado;
+    }
+
     public void eliminar(String id) {
         boolean existe = usuarioRepository.existsById(id);
         if (!existe) {

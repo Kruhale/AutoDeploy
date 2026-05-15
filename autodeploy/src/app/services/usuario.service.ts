@@ -70,6 +70,27 @@ export class UsuarioService {
     });
   }
 
+  actualizarPlan(usuarioId: string, plan: string): Promise<DatosUsuario> {
+    const servicio = this;
+    const cuerpo = { plan: plan };
+
+    return new Promise(function(resolver, rechazar) {
+      servicio.http.put<RespuestaApi<DatosUsuario>>(servicio.urlBase + "/" + usuarioId + "/plan", cuerpo)
+        .subscribe({
+          next: function(respuesta: RespuestaApi<DatosUsuario>) {
+            if (respuesta.success) {
+              resolver(respuesta.data);
+            } else {
+              rechazar(new Error(respuesta.message));
+            }
+          },
+          error: function(error: any) {
+            rechazar(new Error("Error al actualizar plan"));
+          }
+        });
+    });
+  }
+
   actualizarPerfil(nombre: string, email: string): Promise<DatosUsuario> {
     const servicio = this;
     const idActual = this.usuarioId();

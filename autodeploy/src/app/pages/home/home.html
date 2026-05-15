@@ -200,7 +200,7 @@
           <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>3 custom domains</li>
           <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>Team management</li>
         </ul>
-        <a class="boton--primario tarjeta-plan__boton" routerLink="/register">Start with Pro</a>
+        <a class="boton--primario tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'pro' }">Start with Pro</a>
       </article>
 
       <article class="tarjeta-plan" [scrollReveal]="'escala'" [retraso]="200">
@@ -221,7 +221,7 @@
           <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Unlimited custom domains</li>
           <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Team management (10 users)</li>
         </ul>
-        <a class="boton--ghost tarjeta-plan__boton" routerLink="/register">Start with Business</a>
+        <a class="boton--ghost tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'business' }">Start with Business</a>
       </article>
 
     </section>

@@ -3,22 +3,22 @@
   <aside class="pagina-login__panel-marca">
     <header class="pagina-login__panel-marca__cabecera">
       <a class="pagina-login__logo" routerLink="/">
-        <img class="pagina-login__logo__imagen" src="logo.png" alt="">
+        <img class="pagina-login__logo__imagen" src="logo.png" alt="AutoDeploy">
         <span class="pagina-login__logo__texto">Auto<span class="pagina-login__logo__texto--acento">Deploy</span></span>
       </a>
       <span class="pagina-login__sello">
         <span class="pagina-login__sello__punto" aria-hidden="true"></span>
-        Edición 2026 · Acceso restringido
+        {{ 'login.sello' | translate }}
       </span>
     </header>
 
     <section class="pagina-login__panel-marca__cuerpo">
       <h2 class="pagina-login__panel-marca__titular">
-        Bienvenido<br>
-        de vuelta<span class="pagina-login__panel-marca__titular__punto">.</span>
+        {{ 'login.titularLinea1' | translate }}<br>
+        {{ 'login.titularLinea2' | translate }}<span class="pagina-login__panel-marca__titular__punto">.</span>
       </h2>
       <p class="pagina-login__panel-marca__texto">
-        Tu infraestructura te espera. Una sesión SSH persistente, un panel limpio y métricas en vivo desde el segundo cero.
+        {{ 'login.panelTexto' | translate }}
       </p>
 
       <ul class="pagina-login__panel-marca__lista">
@@ -26,19 +26,19 @@
           <span class="pagina-login__panel-marca__item__icono" aria-hidden="true">
             <i class="fa-solid fa-shield-halved"></i>
           </span>
-          <span class="pagina-login__panel-marca__item__texto">Conexiones cifradas extremo a extremo</span>
+          <span class="pagina-login__panel-marca__item__texto">{{ 'login.panelItem1' | translate }}</span>
         </li>
         <li class="pagina-login__panel-marca__item">
           <span class="pagina-login__panel-marca__item__icono" aria-hidden="true">
             <i class="fa-solid fa-bolt"></i>
           </span>
-          <span class="pagina-login__panel-marca__item__texto">Acceso inmediato a tus servidores y despliegues</span>
+          <span class="pagina-login__panel-marca__item__texto">{{ 'login.panelItem2' | translate }}</span>
         </li>
         <li class="pagina-login__panel-marca__item">
           <span class="pagina-login__panel-marca__item__icono" aria-hidden="true">
             <i class="fa-solid fa-eye"></i>
           </span>
-          <span class="pagina-login__panel-marca__item__texto">Métricas SSH en tiempo real, sin agentes intrusivos</span>
+          <span class="pagina-login__panel-marca__item__texto">{{ 'login.panelItem3' | translate }}</span>
         </li>
       </ul>
     </section>
@@ -46,21 +46,21 @@
     <footer class="pagina-login__panel-marca__pie">
       <span class="pagina-login__panel-marca__pie__codigo">№ {{ codigoSesion }}</span>
       <span class="pagina-login__panel-marca__pie__separador" aria-hidden="true"></span>
-      <span class="pagina-login__panel-marca__pie__texto">Personal dossier · maintained by AutoDeploy</span>
+      <span class="pagina-login__panel-marca__pie__texto">{{ 'login.panelPieTexto' | translate }}</span>
     </footer>
   </aside>
 
   <section class="pagina-login__panel-formulario">
     <a class="pagina-login__volver" routerLink="/">
       <span class="pagina-login__volver__flecha" aria-hidden="true">←</span>
-      Volver al inicio
+      {{ 'login.volver' | translate }}
     </a>
 
     <section class="pagina-login__panel-formulario__contenido">
       <header class="pagina-login__cabecera">
-        <span class="pagina-login__cabecera__numero" aria-hidden="true">01 · ACCESO</span>
-        <h1 class="pagina-login__titulo">Iniciar sesión<span class="pagina-login__titulo__punto" aria-hidden="true">.</span></h1>
-        <p class="pagina-login__subtitulo">Introduce tus credenciales para entrar al panel de control.</p>
+        <span class="pagina-login__cabecera__numero" aria-hidden="true">{{ 'login.cabeceraNumero' | translate }}</span>
+        <h1 class="pagina-login__titulo">{{ 'login.titulo' | translate }}<span class="pagina-login__titulo__punto" aria-hidden="true">.</span></h1>
+        <p class="pagina-login__subtitulo">{{ 'login.subtitulo' | translate }}</p>
       </header>
 
       <form class="pagina-login__formulario">
@@ -74,36 +74,36 @@
         <section class="campo">
           <label class="campo__etiqueta" for="email">
             <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
-            Email
+            {{ 'login.emailEtiqueta' | translate }}
           </label>
-          <input class="campo__input" id="email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
+          <input class="campo__input" id="email" name="email" type="email" [placeholder]="'login.emailPlaceholder' | translate" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
         </section>
 
         <section class="campo">
           <label class="campo__etiqueta" for="password">
             <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
-            Contraseña
+            {{ 'login.claveEtiqueta' | translate }}
           </label>
           <section class="pagina-login__campo-password">
             <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
-              placeholder="••••••••" autocomplete="current-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
+              [placeholder]="'login.clavePlaceholder' | translate" autocomplete="current-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
             <button class="pagina-login__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
-              [attr.aria-label]="passwordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
+              [attr.aria-label]="(passwordEsVisible() ? 'login.ariaOcultarClave' : 'login.ariaVerClave') | translate">
               <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
             </button>
           </section>
         </section>
 
         <button class="pagina-login__boton-enviar" type="button" (click)="iniciarSesion()" [disabled]="cargando()">
-          <span class="pagina-login__boton-enviar__texto">{{ cargando() ? "Verificando" : "Iniciar sesión" }}</span>
+          <span class="pagina-login__boton-enviar__texto">{{ (cargando() ? 'login.botonCargando' : 'login.boton') | translate }}</span>
           <span class="pagina-login__boton-enviar__flecha" aria-hidden="true">→</span>
         </button>
       </form>
 
       <footer class="pagina-login__pie">
-        <span class="pagina-login__pie__texto">¿No tienes cuenta?</span>
+        <span class="pagina-login__pie__texto">{{ 'login.pieTexto' | translate }}</span>
         <a class="pagina-login__enlace" routerLink="/register">
-          Crear cuenta
+          {{ 'login.pieEnlace' | translate }}
           <span aria-hidden="true">→</span>
         </a>
       </footer>

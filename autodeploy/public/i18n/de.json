@@ -406,16 +406,16 @@
     "subtitulo": "Geben Sie Ihre Zugangsdaten ein, um zum Bedienpanel zu gelangen.",
     "emailEtiqueta": "E-Mail",
     "emailPlaceholder": "sie@email.com",
-    "passwordEtiqueta": "Passwort",
-    "passwordPlaceholder": "••••••••",
-    "ariaOcultarPassword": "Passwort verbergen",
-    "ariaVerPassword": "Passwort anzeigen",
     "botonCargando": "Wird überprüft",
     "boton": "Anmelden",
     "pieTexto": "Noch kein Konto?",
     "pieEnlace": "Konto erstellen",
     "errorCamposVacios": "E-Mail und Passwort sind erforderlich",
-    "errorCredenciales": "Ungültige Zugangsdaten"
+    "errorCredenciales": "Ungültige Zugangsdaten",
+    "ariaOcultarClave": "Passwort verbergen",
+    "ariaVerClave": "Passwort anzeigen",
+    "claveEtiqueta": "Passwort",
+    "clavePlaceholder": "••••••••"
   },
   "register": {
     "sello": "Ausgabe 2026 · Registrierung geöffnet",
@@ -437,14 +437,8 @@
     "nombrePlaceholder": "Ihr Name",
     "emailEtiqueta": "E-Mail",
     "emailPlaceholder": "sie@email.com",
-    "passwordEtiqueta": "Passwort",
-    "passwordPlaceholder": "••••••••",
-    "ariaOcultarPassword": "Passwort verbergen",
-    "ariaVerPassword": "Passwort anzeigen",
     "confirmarPasswordEtiqueta": "Passwort bestätigen",
     "confirmarPasswordPlaceholder": "••••••••",
-    "ariaOcultarConfirmPassword": "Passwort verbergen",
-    "ariaVerConfirmPassword": "Passwort anzeigen",
     "criterioLongitud": "Mindestens 8 Zeichen",
     "criterioMayuscula": "Ein Großbuchstabe",
     "criterioMinuscula": "Ein Kleinbuchstabe",
@@ -457,7 +451,13 @@
     "errorCamposVacios": "Alle Felder sind erforderlich",
     "errorPasswordInvalida": "Das Passwort erfüllt nicht alle Anforderungen",
     "errorPasswordsNoCoinciden": "Die Passwörter stimmen nicht überein",
-    "errorRegistro": "Die Registrierung ist fehlgeschlagen"
+    "errorRegistro": "Die Registrierung ist fehlgeschlagen",
+    "ariaOcultarClave": "Passwort verbergen",
+    "ariaVerClave": "Passwort anzeigen",
+    "ariaOcultarConfirmar": "Passwort verbergen",
+    "ariaVerConfirmar": "Passwort anzeigen",
+    "claveEtiqueta": "Passwort",
+    "clavePlaceholder": "••••••••"
   },
   "confirmarFree": {
     "volver": "Zurück",
@@ -709,9 +709,9 @@
       "user": "Benutzer",
       "authMethod": "Authentifizierungsmethode",
       "authMethodKey": "SSH-Schlüssel",
-      "passwordPlaceholder": "Geben Sie das Server-Passwort ein",
       "contrasena": "Passwort",
-      "authMethodContrasena": "Passwort"
+      "authMethodContrasena": "Passwort",
+      "clavePlaceholder": "Geben Sie das Server-Passwort ein"
     },
     "ayuda": {
       "titulo": "Brauchen Sie Hilfe?",

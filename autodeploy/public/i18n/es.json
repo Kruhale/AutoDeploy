@@ -406,16 +406,16 @@
     "subtitulo": "Introduce tus credenciales para entrar al panel de control.",
     "emailEtiqueta": "Email",
     "emailPlaceholder": "tu@email.com",
-    "passwordEtiqueta": "Contraseña",
-    "passwordPlaceholder": "••••••••",
-    "ariaOcultarPassword": "Ocultar contraseña",
-    "ariaVerPassword": "Ver contraseña",
     "botonCargando": "Verificando",
     "boton": "Iniciar sesión",
     "pieTexto": "¿No tienes cuenta?",
     "pieEnlace": "Crear cuenta",
     "errorCamposVacios": "Email y contraseña son obligatorios",
-    "errorCredenciales": "Credenciales no válidas"
+    "errorCredenciales": "Credenciales no válidas",
+    "ariaOcultarClave": "Ocultar contraseña",
+    "ariaVerClave": "Ver contraseña",
+    "claveEtiqueta": "Contraseña",
+    "clavePlaceholder": "••••••••"
   },
   "register": {
     "sello": "Edición 2026 · Registro abierto",
@@ -437,14 +437,8 @@
     "nombrePlaceholder": "Tu nombre",
     "emailEtiqueta": "Email",
     "emailPlaceholder": "tu@email.com",
-    "passwordEtiqueta": "Contraseña",
-    "passwordPlaceholder": "••••••••",
-    "ariaOcultarPassword": "Ocultar contraseña",
-    "ariaVerPassword": "Ver contraseña",
     "confirmarPasswordEtiqueta": "Confirmar contraseña",
     "confirmarPasswordPlaceholder": "••••••••",
-    "ariaOcultarConfirmPassword": "Ocultar contraseña",
-    "ariaVerConfirmPassword": "Ver contraseña",
     "criterioLongitud": "Al menos 8 caracteres",
     "criterioMayuscula": "Una letra mayúscula",
     "criterioMinuscula": "Una letra minúscula",
@@ -457,7 +451,13 @@
     "errorCamposVacios": "Todos los campos son obligatorios",
     "errorPasswordInvalida": "La contraseña no cumple todos los requisitos",
     "errorPasswordsNoCoinciden": "Las contraseñas no coinciden",
-    "errorRegistro": "El registro ha fallado"
+    "errorRegistro": "El registro ha fallado",
+    "ariaOcultarClave": "Ocultar contraseña",
+    "ariaVerClave": "Ver contraseña",
+    "ariaOcultarConfirmar": "Ocultar contraseña",
+    "ariaVerConfirmar": "Ver contraseña",
+    "claveEtiqueta": "Contraseña",
+    "clavePlaceholder": "••••••••"
   },
   "confirmarFree": {
     "volver": "Volver",
@@ -709,9 +709,9 @@
       "user": "Usuario",
       "authMethod": "Método de autenticación",
       "authMethodKey": "Clave SSH",
-      "passwordPlaceholder": "Introduce la contraseña del servidor",
       "contrasena": "Contraseña",
-      "authMethodContrasena": "Contraseña"
+      "authMethodContrasena": "Contraseña",
+      "clavePlaceholder": "Introduce la contraseña del servidor"
     },
     "ayuda": {
       "titulo": "¿Necesitas ayuda?",

@@ -3,14 +3,14 @@
   <section class="pagina-registro__panel-formulario">
     <a class="pagina-registro__volver" routerLink="/">
       <span class="pagina-registro__volver__flecha" aria-hidden="true">←</span>
-      Volver al inicio
+      {{ 'register.volver' | translate }}
     </a>
 
     <section class="pagina-registro__panel-formulario__contenido">
       <header class="pagina-registro__cabecera">
-        <span class="pagina-registro__cabecera__numero" aria-hidden="true">02 · NUEVA CUENTA</span>
-        <h1 class="pagina-registro__titulo">Crear cuenta<span class="pagina-registro__titulo__punto" aria-hidden="true">.</span></h1>
-        <p class="pagina-registro__subtitulo">Empieza a gestionar tu infraestructura en minutos.</p>
+        <span class="pagina-registro__cabecera__numero" aria-hidden="true">{{ 'register.cabeceraNumero' | translate }}</span>
+        <h1 class="pagina-registro__titulo">{{ 'register.titulo' | translate }}<span class="pagina-registro__titulo__punto" aria-hidden="true">.</span></h1>
+        <p class="pagina-registro__subtitulo">{{ 'register.subtitulo' | translate }}</p>
       </header>
 
       <form class="pagina-registro__formulario">
@@ -24,29 +24,29 @@
         <section class="campo">
           <label class="campo__etiqueta" for="nombre">
             <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
-            Nombre completo
+            {{ 'register.nombreEtiqueta' | translate }}
           </label>
-          <input class="campo__input" id="nombre" name="nombre" type="text" placeholder="Tu nombre" autocomplete="name" [ngModel]="nombreCompleto()" (ngModelChange)="nombreCompleto.set($event)">
+          <input class="campo__input" id="nombre" name="nombre" type="text" [placeholder]="'register.nombrePlaceholder' | translate" autocomplete="name" [ngModel]="nombreCompleto()" (ngModelChange)="nombreCompleto.set($event)">
         </section>
 
         <section class="campo">
           <label class="campo__etiqueta" for="email">
             <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
-            Email
+            {{ 'register.emailEtiqueta' | translate }}
           </label>
-          <input class="campo__input" id="email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
+          <input class="campo__input" id="email" name="email" type="email" [placeholder]="'register.emailPlaceholder' | translate" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
         </section>
 
         <section class="campo">
           <label class="campo__etiqueta" for="password">
             <span class="campo__etiqueta__numero" aria-hidden="true">iii</span>
-            Contraseña
+            {{ 'register.claveEtiqueta' | translate }}
           </label>
           <section class="pagina-registro__campo-password">
             <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
-              placeholder="••••••••" autocomplete="new-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
+              [placeholder]="'register.clavePlaceholder' | translate" autocomplete="new-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
             <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
-              [attr.aria-label]="passwordEsVisible() ? 'Hide password' : 'Show password'">
+              [attr.aria-label]="(passwordEsVisible() ? 'register.ariaOcultarClave' : 'register.ariaVerClave') | translate">
               <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
             </button>
           </section>
@@ -56,31 +56,31 @@
                 <span class="pagina-registro__criterio__icono" aria-hidden="true">
                   <i [class]="criterioLongitud() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
                 </span>
-                At least 8 characters
+                {{ 'register.criterioLongitud' | translate }}
               </li>
               <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioMayuscula()">
                 <span class="pagina-registro__criterio__icono" aria-hidden="true">
                   <i [class]="criterioMayuscula() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
                 </span>
-                One uppercase letter
+                {{ 'register.criterioMayuscula' | translate }}
               </li>
               <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioMinuscula()">
                 <span class="pagina-registro__criterio__icono" aria-hidden="true">
                   <i [class]="criterioMinuscula() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
                 </span>
-                One lowercase letter
+                {{ 'register.criterioMinuscula' | translate }}
               </li>
               <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioNumero()">
                 <span class="pagina-registro__criterio__icono" aria-hidden="true">
                   <i [class]="criterioNumero() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
                 </span>
-                One number
+                {{ 'register.criterioNumero' | translate }}
               </li>
               <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioEspecial()">
                 <span class="pagina-registro__criterio__icono" aria-hidden="true">
                   <i [class]="criterioEspecial() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
                 </span>
-                One special character
+                {{ 'register.criterioEspecial' | translate }}
               </li>
             </ul>
           }
@@ -89,28 +89,28 @@
         <section class="campo">
           <label class="campo__etiqueta" for="confirmar-password">
             <span class="campo__etiqueta__numero" aria-hidden="true">iv</span>
-            Confirmar contraseña
+            {{ 'register.confirmarPasswordEtiqueta' | translate }}
           </label>
           <section class="pagina-registro__campo-password">
             <input class="campo__input" id="confirmar-password" name="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'"
-              placeholder="••••••••" autocomplete="new-password" [ngModel]="confirmPasswordUsuario()" (ngModelChange)="confirmPasswordUsuario.set($event)">
+              [placeholder]="'register.confirmarPasswordPlaceholder' | translate" autocomplete="new-password" [ngModel]="confirmPasswordUsuario()" (ngModelChange)="confirmPasswordUsuario.set($event)">
             <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadConfirmPassword()"
-              [attr.aria-label]="confirmPasswordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
+              [attr.aria-label]="(confirmPasswordEsVisible() ? 'register.ariaOcultarConfirmar' : 'register.ariaVerConfirmar') | translate">
               <i [class]="confirmPasswordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
             </button>
           </section>
         </section>
 
         <button class="pagina-registro__boton-enviar" type="button" (click)="crearCuenta()" [disabled]="cargando()">
-          <span class="pagina-registro__boton-enviar__texto">{{ cargando() ? "Creando" : "Crear cuenta" }}</span>
+          <span class="pagina-registro__boton-enviar__texto">{{ (cargando() ? 'register.botonCargando' : 'register.boton') | translate }}</span>
           <span class="pagina-registro__boton-enviar__flecha" aria-hidden="true">→</span>
         </button>
       </form>
 
       <footer class="pagina-registro__pie">
-        <span class="pagina-registro__pie__texto">¿Ya tienes cuenta?</span>
+        <span class="pagina-registro__pie__texto">{{ 'register.pieTexto' | translate }}</span>
         <a class="pagina-registro__enlace" routerLink="/login">
-          Iniciar sesión
+          {{ 'register.pieEnlace' | translate }}
           <span aria-hidden="true">→</span>
         </a>
       </footer>
@@ -121,43 +121,43 @@
     <header class="pagina-registro__panel-marca__cabecera">
       <span class="pagina-registro__sello">
         <span class="pagina-registro__sello__punto" aria-hidden="true"></span>
-        Edición 2026 · Onboarding abierto
+        {{ 'register.sello' | translate }}
       </span>
       <a class="pagina-registro__logo" routerLink="/">
-        <img class="pagina-registro__logo__imagen" src="logo.png" alt="">
+        <img class="pagina-registro__logo__imagen" src="logo.png" alt="AutoDeploy">
         <span class="pagina-registro__logo__texto">Auto<span class="pagina-registro__logo__texto--acento">Deploy</span></span>
       </a>
     </header>
 
     <section class="pagina-registro__panel-marca__cuerpo">
       <h2 class="pagina-registro__panel-marca__titular">
-        Empieza tu<br>
-        infraestructura<span class="pagina-registro__panel-marca__titular__punto">.</span>
+        {{ 'register.titularLinea1' | translate }}<br>
+        {{ 'register.titularLinea2' | translate }}<span class="pagina-registro__panel-marca__titular__punto">.</span>
       </h2>
       <p class="pagina-registro__panel-marca__texto">
-        Conecta tu VPS por SSH, despliega tus apps con un clic y monitoriza todo en tiempo real desde un único panel limpio.
+        {{ 'register.panelTexto' | translate }}
       </p>
 
       <ul class="pagina-registro__panel-marca__lista">
         <li class="pagina-registro__panel-marca__item">
           <span class="pagina-registro__panel-marca__item__numero" aria-hidden="true">01</span>
           <section class="pagina-registro__panel-marca__item__texto-cuerpo">
-            <span class="pagina-registro__panel-marca__item__titulo">Conecta tu primer servidor</span>
-            <span class="pagina-registro__panel-marca__item__descripcion">Credenciales SSH, sin scripts intrusivos ni agentes pesados.</span>
+            <span class="pagina-registro__panel-marca__item__titulo">{{ 'register.panelItem1Titulo' | translate }}</span>
+            <span class="pagina-registro__panel-marca__item__descripcion">{{ 'register.panelItem1Descripcion' | translate }}</span>
           </section>
         </li>
         <li class="pagina-registro__panel-marca__item">
           <span class="pagina-registro__panel-marca__item__numero" aria-hidden="true">02</span>
           <section class="pagina-registro__panel-marca__item__texto-cuerpo">
-            <span class="pagina-registro__panel-marca__item__titulo">Sube tu código</span>
-            <span class="pagina-registro__panel-marca__item__descripcion">ZIP o repo Git, lo que prefieras para tu flujo.</span>
+            <span class="pagina-registro__panel-marca__item__titulo">{{ 'register.panelItem2Titulo' | translate }}</span>
+            <span class="pagina-registro__panel-marca__item__descripcion">{{ 'register.panelItem2Descripcion' | translate }}</span>
           </section>
         </li>
         <li class="pagina-registro__panel-marca__item">
           <span class="pagina-registro__panel-marca__item__numero" aria-hidden="true">03</span>
           <section class="pagina-registro__panel-marca__item__texto-cuerpo">
-            <span class="pagina-registro__panel-marca__item__titulo">Despliega con un clic</span>
-            <span class="pagina-registro__panel-marca__item__descripcion">Nginx + SSL + PM2 / Docker configurados al instante.</span>
+            <span class="pagina-registro__panel-marca__item__titulo">{{ 'register.panelItem3Titulo' | translate }}</span>
+            <span class="pagina-registro__panel-marca__item__descripcion">{{ 'register.panelItem3Descripcion' | translate }}</span>
           </section>
         </li>
       </ul>
@@ -166,7 +166,7 @@
     <footer class="pagina-registro__panel-marca__pie">
       <span class="pagina-registro__panel-marca__pie__codigo">№ {{ codigoSesion }}</span>
       <span class="pagina-registro__panel-marca__pie__separador" aria-hidden="true"></span>
-      <span class="pagina-registro__panel-marca__pie__texto">Personal dossier · maintained by AutoDeploy</span>
+      <span class="pagina-registro__panel-marca__pie__texto">{{ 'register.panelPieTexto' | translate }}</span>
     </footer>
   </aside>
 

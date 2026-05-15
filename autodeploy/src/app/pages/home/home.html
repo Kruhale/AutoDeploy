@@ -17,7 +17,7 @@
       </p>
 
       <section class="seccion-bienvenida__botones animar animar--subir" style="--retraso: 300ms">
-        <a class="seccion-bienvenida__boton--primario" routerLink="/register">
+        <a class="seccion-bienvenida__boton--primario" [routerLink]="rutaEmpezar()">
           Get Started
           <i class="fa-solid fa-arrow-right"></i>
         </a>
@@ -178,7 +178,11 @@
           <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>Custom domains</li>
           <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>Team management</li>
         </ul>
-        <a class="boton--ghost tarjeta-plan__boton" routerLink="/register">Get started free</a>
+        @if (planActivo() === "free") {
+          <button class="boton--ghost tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>Tu plan actual</button>
+        } @else {
+          <a class="boton--ghost tarjeta-plan__boton" [routerLink]="rutaEmpezar()">Get started free</a>
+        }
       </article>
 
       <article class="tarjeta-plan tarjeta-plan--destacado" [scrollReveal]="'escala'" [retraso]="100">
@@ -200,7 +204,11 @@
           <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>3 custom domains</li>
           <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>Team management</li>
         </ul>
-        <a class="boton--primario tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'pro' }">Start with Pro</a>
+        @if (planActivo() === "pro") {
+          <button class="boton--primario tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>Tu plan actual</button>
+        } @else {
+          <a class="boton--primario tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'pro' }">Start with Pro</a>
+        }
       </article>
 
       <article class="tarjeta-plan" [scrollReveal]="'escala'" [retraso]="200">
@@ -221,7 +229,11 @@
           <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Unlimited custom domains</li>
           <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Team management (10 users)</li>
         </ul>
-        <a class="boton--ghost tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'business' }">Start with Business</a>
+        @if (planActivo() === "business") {
+          <button class="boton--ghost tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>Tu plan actual</button>
+        } @else {
+          <a class="boton--ghost tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'business' }">Start with Business</a>
+        }
       </article>
 
     </section>
@@ -235,7 +247,7 @@
         <p class="seccion-llamada-accion__descripcion">Join hundreds of developers who've ditched terminal hassles. Start free and scale up today.</p>
       </section>
       <section class="seccion-llamada-accion__botones">
-        <a class="seccion-llamada-accion__boton--primario" routerLink="/register">Start Free Now</a>
+        <a class="seccion-llamada-accion__boton--primario" [routerLink]="rutaEmpezar()">Start Free Now</a>
       </section>
     </section>
   </section>

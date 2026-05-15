@@ -11,6 +11,8 @@ import com.autodeploy.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class UsuarioService {
 
@@ -31,7 +33,6 @@ public class UsuarioService {
         }
 
         String hashPassword = passwordEncoder.encode(peticion.password());
-
         Usuario nuevoUsuario = new Usuario(peticion.nombre(), peticion.email(), hashPassword);
 
         Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);
@@ -48,31 +49,40 @@ public class UsuarioService {
         }
 
         String tokenJwt = jwtUtil.generarToken(usuario.getId(), usuario.getEmail());
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), tokenJwt);
-        return respuesta;
+        return construirLoginResponse(usuario, tokenJwt);
     }
 
     public Usuario obtenerPorId(String id) {
-        Usuario usuario = usuarioRepository.findById(id)
+        return usuarioRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado"));
-        return usuario;
     }
 
     public Usuario actualizar(String id, String nombre, String email) {
         Usuario usuario = obtenerPorId(id);
         usuario.setNombre(nombre);
         usuario.setEmail(email);
-
-        Usuario usuarioActualizado = usuarioRepository.save(usuario);
-        return usuarioActualizado;
+        return usuarioRepository.save(usuario);
     }
 
     public Usuario actualizarPlan(String id, String plan) {
         Usuario usuario = obtenerPorId(id);
         usuario.setPlan(plan);
+        usuario.setFechaInicioSuscripcion(LocalDateTime.now());
+        usuario.setFechaFinSuscripcion(null);
+        return usuarioRepository.save(usuario);
+    }
 
-        Usuario usuarioActualizado = usuarioRepository.save(usuario);
-        return usuarioActualizado;
+    public Usuario cancelarSuscripcion(String id) {
+        Usuario usuario = obtenerPorId(id);
+
+        LocalDateTime fechaInicio = usuario.getFechaInicioSuscripcion();
+        if (fechaInicio == null) {
+            fechaInicio = LocalDateTime.now();
+        }
+        LocalDateTime fechaFin = fechaInicio.plusMonths(1);
+
+        usuario.setFechaFinSuscripcion(fechaFin);
+        return usuarioRepository.save(usuario);
     }
 
     public void eliminar(String id) {
@@ -81,5 +91,16 @@ public class UsuarioService {
             throw new ResourceNotFoundException("Usuario no encontrado");
         }
         usuarioRepository.deleteById(id);
+    }
+
+    public LoginResponse construirLoginResponse(Usuario usuario, String token) {
+        return new LoginResponse(
+            usuario.getId(),
+            usuario.getNombre(),
+            usuario.getEmail(),
+            token,
+            usuario.getPlan() != null ? usuario.getPlan() : "free",
+            usuario.getFechaFinSuscripcion()
+        );
     }
 }

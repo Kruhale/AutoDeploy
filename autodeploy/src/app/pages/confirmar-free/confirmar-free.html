@@ -1,0 +1,133 @@
+<section class="confirmar-free">
+
+  <section class="confirmar-free__atmosfera" aria-hidden="true"></section>
+
+  <a class="confirmar-free__volver" routerLink="/" (click)="cancelar(); $event.preventDefault()">
+    <i class="fa-solid fa-arrow-left-long"></i>
+    <span>Volver</span>
+  </a>
+
+  <section class="confirmar-free__contenedor">
+
+    <section class="confirmar-free__visual">
+
+      <span class="confirmar-free__etiqueta">Plan seleccionado</span>
+
+      <section class="confirmar-free__nombre-precio">
+        <h2 class="confirmar-free__nombre">Free</h2>
+        <section class="confirmar-free__precio">
+          <span class="confirmar-free__precio__simbolo">€</span>
+          <span class="confirmar-free__precio__numero">0</span>
+          <span class="confirmar-free__precio__periodo">/mes</span>
+        </section>
+      </section>
+
+      <p class="confirmar-free__resumen">
+        Lo esencial para conectar tu primer servidor y empezar a desplegar sin pagar nada.
+      </p>
+
+      <section class="confirmar-free__lista">
+        <section class="confirmar-free__item">
+          <span class="confirmar-free__item__icono">01</span>
+          <span class="confirmar-free__item__texto">1 servidor VPS</span>
+        </section>
+        <section class="confirmar-free__item">
+          <span class="confirmar-free__item__icono">02</span>
+          <span class="confirmar-free__item__texto">5 despliegues al mes</span>
+        </section>
+        <section class="confirmar-free__item">
+          <span class="confirmar-free__item__icono">03</span>
+          <span class="confirmar-free__item__texto">Monitorización básica</span>
+        </section>
+        <section class="confirmar-free__item">
+          <span class="confirmar-free__item__icono">04</span>
+          <span class="confirmar-free__item__texto">Soporte de la comunidad</span>
+        </section>
+      </section>
+
+    </section>
+
+    <section class="confirmar-free__decision">
+
+      @if (esBajada()) {
+
+        <span class="confirmar-free__eyebrow confirmar-free__eyebrow--aviso">
+          Cambio de plan
+        </span>
+
+        <h1 class="confirmar-free__titulo">
+          Vas a bajar de <span class="confirmar-free__resaltar">{{ planActual() }}</span> al plan <span class="confirmar-free__resaltar">Free</span>.
+        </h1>
+
+        <p class="confirmar-free__descripcion">
+          Mantendrás tu cuenta y tus servidores, pero perderás el acceso inmediato a las funciones premium.
+        </p>
+
+        <section class="confirmar-free__perdidas">
+          <span class="confirmar-free__perdidas__titulo">Lo que perderás</span>
+          <section class="confirmar-free__perdidas__lista">
+            <section class="confirmar-free__perdida">
+              <span class="confirmar-free__perdida__icono">—</span>
+              <span>AI Assistant</span>
+            </section>
+            <section class="confirmar-free__perdida">
+              <span class="confirmar-free__perdida__icono">—</span>
+              <span>Dominios personalizados</span>
+            </section>
+            <section class="confirmar-free__perdida">
+              <span class="confirmar-free__perdida__icono">—</span>
+              <span>Despliegues ilimitados</span>
+            </section>
+          </section>
+        </section>
+
+      } @else {
+
+        <span class="confirmar-free__eyebrow">
+          Empieza gratis
+        </span>
+
+        <h1 class="confirmar-free__titulo">
+          Listo para desplegar tu primera app.
+        </h1>
+
+        <p class="confirmar-free__descripcion">
+          Sin tarjeta de crédito ni período de prueba. Crea tu cuenta y conecta tu servidor en menos de dos minutos.
+        </p>
+
+        <section class="confirmar-free__pasos">
+          <section class="confirmar-free__paso">
+            <span class="confirmar-free__paso__numero">01</span>
+            <span class="confirmar-free__paso__texto">Crea tu cuenta con email</span>
+          </section>
+          <section class="confirmar-free__paso">
+            <span class="confirmar-free__paso__numero">02</span>
+            <span class="confirmar-free__paso__texto">Conecta tu servidor por SSH</span>
+          </section>
+          <section class="confirmar-free__paso">
+            <span class="confirmar-free__paso__numero">03</span>
+            <span class="confirmar-free__paso__texto">Despliega tu primera app</span>
+          </section>
+        </section>
+
+      }
+
+      <section class="confirmar-free__acciones">
+        <button class="boton--ghost confirmar-free__boton confirmar-free__boton--secundario" type="button" (click)="cancelar()">
+          Cancelar
+        </button>
+        <button class="boton--primario confirmar-free__boton confirmar-free__boton--principal" type="button" (click)="confirmar()">
+          @if (esBajada()) {
+            Confirmar bajada
+          } @else {
+            Continuar al registro
+          }
+          <i class="fa-solid fa-arrow-right-long confirmar-free__boton__flecha"></i>
+        </button>
+      </section>
+
+    </section>
+
+  </section>
+
+</section>

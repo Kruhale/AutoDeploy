@@ -191,3 +191,50 @@
 .pagina-cuenta__boton-logout:hover {
   opacity: 0.8;
 }
+
+.pagina-cuenta__aviso-cancelacion {
+  display: flex;
+  gap: var(--spacing-size-l);
+  padding: var(--spacing-size-l) var(--spacing-size-2xl);
+  background: hsla(217, 91%, 60%, 0.08);
+  border: 1px solid hsla(217, 91%, 60%, 0.2);
+  border-radius: var(--radius-l);
+  margin-bottom: var(--spacing-size-l);
+}
+
+.pagina-cuenta__aviso-cancelacion__icono {
+  color: var(--azul-normal);
+  font-size: var(--font-size-lg);
+  flex-shrink: 0;
+  padding-top: 0.1rem;
+}
+
+.pagina-cuenta__aviso-cancelacion__titulo {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+  margin-bottom: var(--spacing-size-xs);
+}
+
+.pagina-cuenta__aviso-cancelacion__descripcion {
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+  line-height: var(--line-height-relaxed);
+}
+
+.pagina-cuenta__aviso-cancelacion__descripcion strong {
+  color: var(--texto-claro);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-cuenta__plan-opcion--deshabilitado {
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+.pagina-cuenta__plan-opcion__cancelado {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--naranja-normal);
+  white-space: nowrap;
+}

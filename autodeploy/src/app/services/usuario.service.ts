@@ -11,6 +11,8 @@ interface DatosUsuario {
   id: string;
   nombre: string;
   email: string;
+  plan: string;
+  fechaFinSuscripcion: string | null;
 }
 
 @Injectable({ providedIn: "root" })
@@ -21,6 +23,8 @@ export class UsuarioService {
   usuarioId = signal(sessionStorage.getItem("usuarioId") || "");
   nombre = signal(sessionStorage.getItem("nombre") || "");
   email = signal(sessionStorage.getItem("email") || "");
+  plan = signal(sessionStorage.getItem("plan") || "free");
+  fechaFinSuscripcion = signal<string | null>(sessionStorage.getItem("fechaFinSuscripcion"));
 
   constructor(private http: HttpClient) {}
 
@@ -79,6 +83,7 @@ export class UsuarioService {
         .subscribe({
           next: function(respuesta: RespuestaApi<DatosUsuario>) {
             if (respuesta.success) {
+              servicio.guardarEnSesion(respuesta.data);
               resolver(respuesta.data);
             } else {
               rechazar(new Error(respuesta.message));
@@ -86,6 +91,28 @@ export class UsuarioService {
           },
           error: function(error: any) {
             rechazar(new Error("Error al actualizar plan"));
+          }
+        });
+    });
+  }
+
+  cancelarSuscripcion(): Promise<DatosUsuario> {
+    const servicio = this;
+    const idActual = this.usuarioId();
+
+    return new Promise(function(resolver, rechazar) {
+      servicio.http.put<RespuestaApi<DatosUsuario>>(servicio.urlBase + "/" + idActual + "/cancelar-suscripcion", {})
+        .subscribe({
+          next: function(respuesta: RespuestaApi<DatosUsuario>) {
+            if (respuesta.success) {
+              servicio.guardarEnSesion(respuesta.data);
+              resolver(respuesta.data);
+            } else {
+              rechazar(new Error(respuesta.message));
+            }
+          },
+          error: function(error: any) {
+            rechazar(new Error("Error al cancelar suscripción"));
           }
         });
     });
@@ -118,17 +145,32 @@ export class UsuarioService {
     sessionStorage.removeItem("usuarioId");
     sessionStorage.removeItem("nombre");
     sessionStorage.removeItem("email");
+    sessionStorage.removeItem("plan");
+    sessionStorage.removeItem("fechaFinSuscripcion");
     this.usuarioId.set("");
     this.nombre.set("");
     this.email.set("");
+    this.plan.set("free");
+    this.fechaFinSuscripcion.set(null);
   }
 
   private guardarEnSesion(datos: DatosUsuario): void {
     sessionStorage.setItem("usuarioId", datos.id);
     sessionStorage.setItem("nombre", datos.nombre);
     sessionStorage.setItem("email", datos.email);
+    sessionStorage.setItem("plan", datos.plan || "free");
+
+    if (datos.fechaFinSuscripcion) {
+      sessionStorage.setItem("fechaFinSuscripcion", datos.fechaFinSuscripcion);
+      this.fechaFinSuscripcion.set(datos.fechaFinSuscripcion);
+    } else {
+      sessionStorage.removeItem("fechaFinSuscripcion");
+      this.fechaFinSuscripcion.set(null);
+    }
+
     this.usuarioId.set(datos.id);
     this.nombre.set(datos.nombre);
     this.email.set(datos.email);
+    this.plan.set(datos.plan || "free");
   }
 }

@@ -1,0 +1,220 @@
+<main class="pagina-pago">
+
+  @if (estadoPago() === "formulario" || estadoPago() === "procesando") {
+  <section class="pagina-pago__contenedor">
+
+    <header class="pagina-pago__cabecera">
+      <a class="pagina-pago__volver" routerLink="/">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path d="M19 12H5M5 12l7 7M5 12l7-7" />
+        </svg>
+        Volver
+      </a>
+      <a class="pagina-pago__logo" routerLink="/">
+        <img class="pagina-pago__logo__imagen" src="logo.png" alt="">
+        <span class="pagina-pago__logo__texto">Auto<span class="pagina-pago__logo__texto--acento">Deploy</span></span>
+      </a>
+    </header>
+
+    <section class="pagina-pago__cuerpo">
+
+      <section class="pagina-pago__columna-izquierda">
+        <section class="pagina-pago__resumen-plan">
+          <p class="pagina-pago__resumen-plan__etiqueta">Plan seleccionado</p>
+          <h2 class="pagina-pago__resumen-plan__nombre">{{ infoDelPlan().nombre }}</h2>
+          <p class="pagina-pago__resumen-plan__precio">{{ infoDelPlan().precio }}</p>
+          <p class="pagina-pago__resumen-plan__descripcion">{{ infoDelPlan().descripcion }}</p>
+        </section>
+
+        <article class="tarjeta-preview" [class.tarjeta-preview--visa]="tipoTarjeta() === 'visa'" [class.tarjeta-preview--mastercard]="tipoTarjeta() === 'mastercard'" [class.tarjeta-preview--amex]="tipoTarjeta() === 'amex'">
+          <section class="tarjeta-preview__cabecera">
+            <section class="tarjeta-preview__chip">
+              <section class="tarjeta-preview__chip__linea"></section>
+              <section class="tarjeta-preview__chip__linea"></section>
+            </section>
+            @if (tipoTarjeta() === 'visa') {
+            <span class="tarjeta-preview__marca tarjeta-preview__marca--visa">VISA</span>
+            }
+            @if (tipoTarjeta() === 'mastercard') {
+            <section class="tarjeta-preview__marca tarjeta-preview__marca--mastercard">
+              <span class="tarjeta-preview__marca__circulo tarjeta-preview__marca__circulo--rojo"></span>
+              <span class="tarjeta-preview__marca__circulo tarjeta-preview__marca__circulo--naranja"></span>
+            </section>
+            }
+            @if (tipoTarjeta() === 'amex') {
+            <span class="tarjeta-preview__marca tarjeta-preview__marca--amex">AMEX</span>
+            }
+          </section>
+
+          <p class="tarjeta-preview__numero">{{ numeroFormateado() }}</p>
+
+          <section class="tarjeta-preview__pie">
+            <section class="tarjeta-preview__titular">
+              <span class="tarjeta-preview__pie__etiqueta">Titular</span>
+              <span class="tarjeta-preview__pie__valor">{{ nombreTitular() || "NOMBRE APELLIDO" }}</span>
+            </section>
+            <section class="tarjeta-preview__expiracion">
+              <span class="tarjeta-preview__pie__etiqueta">Expira</span>
+              <span class="tarjeta-preview__pie__valor">{{ fechaExpiracion() || "MM/AA" }}</span>
+            </section>
+          </section>
+        </article>
+      </section>
+
+      <section class="pagina-pago__columna-derecha">
+        <h1 class="pagina-pago__titulo">Datos de pago</h1>
+        <p class="pagina-pago__subtitulo">Tu conexión está cifrada y segura</p>
+
+        <form class="pagina-pago__formulario" (ngSubmit)="procesarPago()">
+
+          <section class="campo">
+            <label class="campo__etiqueta" for="numero-tarjeta">Número de tarjeta</label>
+            <section class="campo__contenedor-input">
+              <input
+                class="campo__input"
+                id="numero-tarjeta"
+                type="text"
+                inputmode="numeric"
+                placeholder="1234 5678 9012 3456"
+                autocomplete="cc-number"
+                [value]="numeroTarjeta()"
+                (input)="formatearNumeroTarjeta($event)"
+                (blur)="validarNumero()"
+              >
+              @if (tipoTarjeta() !== 'desconocida') {
+              <span class="campo__icono-tarjeta">
+                @if (tipoTarjeta() === 'visa') { <i class="fa-brands fa-cc-visa"></i> }
+                @if (tipoTarjeta() === 'mastercard') { <i class="fa-brands fa-cc-mastercard"></i> }
+                @if (tipoTarjeta() === 'amex') { <i class="fa-brands fa-cc-amex"></i> }
+              </span>
+              }
+            </section>
+            @if (errorNumero()) {
+            <p class="campo__error">{{ errorNumero() }}</p>
+            }
+          </section>
+
+          <section class="campo">
+            <label class="campo__etiqueta" for="nombre-titular">Nombre del titular</label>
+            <input
+              class="campo__input"
+              id="nombre-titular"
+              type="text"
+              placeholder="Como aparece en la tarjeta"
+              autocomplete="cc-name"
+              [ngModel]="nombreTitular()"
+              (ngModelChange)="nombreTitular.set($event)"
+              (blur)="validarNombre()"
+              name="nombreTitular"
+            >
+            @if (errorNombre()) {
+            <p class="campo__error">{{ errorNombre() }}</p>
+            }
+          </section>
+
+          <section class="pagina-pago__fila-campos">
+            <section class="campo">
+              <label class="campo__etiqueta" for="fecha-expiracion">Fecha de expiración</label>
+              <input
+                class="campo__input"
+                id="fecha-expiracion"
+                type="text"
+                inputmode="numeric"
+                placeholder="MM/AA"
+                autocomplete="cc-exp"
+                [value]="fechaExpiracion()"
+                (input)="formatearFecha($event)"
+                (blur)="validarFecha()"
+              >
+              @if (errorFecha()) {
+              <p class="campo__error">{{ errorFecha() }}</p>
+              }
+            </section>
+
+            <section class="campo">
+              <label class="campo__etiqueta" for="cvv">
+                CVV
+                <span class="pagina-pago__cvv-info">
+                  <i class="fa-solid fa-circle-question"></i>
+                  <span class="pagina-pago__cvv-tooltip">{{ tipoTarjeta() === 'amex' ? '4 dígitos en la parte frontal' : '3 dígitos en la parte trasera' }}</span>
+                </span>
+              </label>
+              <section class="campo__contenedor-input">
+                <input
+                  class="campo__input"
+                  id="cvv"
+                  [type]="cvvVisible() ? 'text' : 'password'"
+                  inputmode="numeric"
+                  [placeholder]="tipoTarjeta() === 'amex' ? '••••' : '•••'"
+                  autocomplete="cc-csc"
+                  [value]="cvv()"
+                  (input)="formatearCvv($event)"
+                  (blur)="validarCvv()"
+                >
+                <button class="campo__boton-ver" type="button" (click)="cvvVisible.set(!cvvVisible())">
+                  <i [class]="cvvVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                </button>
+              </section>
+              @if (errorCvv()) {
+              <p class="campo__error">{{ errorCvv() }}</p>
+              }
+            </section>
+          </section>
+
+          <section class="pagina-pago__info-seguridad">
+            <i class="fa-solid fa-lock pagina-pago__info-seguridad__icono"></i>
+            <p class="pagina-pago__info-seguridad__texto">Pago simulado — no se realizará ningún cargo real</p>
+          </section>
+
+          <button
+            class="boton--primario pago__boton-pagar"
+            type="button"
+            (click)="procesarPago()"
+            [disabled]="estadoPago() === 'procesando'"
+          >
+            @if (estadoPago() === "procesando") {
+            <span class="pagina-pago__spinner"></span>
+            Procesando...
+            } @else {
+            <i class="fa-solid fa-lock"></i>
+            Pagar {{ infoDelPlan().precio }}
+            }
+          </button>
+
+        </form>
+      </section>
+
+    </section>
+  </section>
+  }
+
+  @if (estadoPago() === "exito") {
+  <section class="pagina-pago__resultado">
+    <section class="pagina-pago__resultado__icono pagina-pago__resultado__icono--exito">
+      <i class="fa-solid fa-check"></i>
+    </section>
+    <h1 class="pagina-pago__resultado__titulo">¡Pago completado!</h1>
+    <p class="pagina-pago__resultado__descripcion">
+      Tu plan <strong>{{ infoDelPlan().nombre }}</strong> ya está activo. Bienvenido a bordo.
+    </p>
+    <button class="boton--primario" type="button" (click)="irAlDashboard()">
+      Ir al dashboard
+      <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </section>
+  }
+
+  @if (estadoPago() === "error") {
+  <section class="pagina-pago__resultado">
+    <section class="pagina-pago__resultado__icono pagina-pago__resultado__icono--error">
+      <i class="fa-solid fa-xmark"></i>
+    </section>
+    <h1 class="pagina-pago__resultado__titulo">Error al procesar</h1>
+    <p class="pagina-pago__resultado__descripcion">No pudimos completar el pago. Inténtalo de nuevo.</p>
+    <button class="boton--ghost" type="button" (click)="reintentar()">
+      Reintentar
+    </button>
+  </section>
+  }
+
+</main>

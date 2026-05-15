@@ -15,6 +15,22 @@
     }
   </header>
 
+  @if (suscripcionCancelada()) {
+    <section class="pagina-cuenta__aviso-cancelacion">
+      <section class="pagina-cuenta__aviso-cancelacion__icono">
+        <i class="fa-solid fa-circle-info"></i>
+      </section>
+      <section class="pagina-cuenta__aviso-cancelacion__texto">
+        <p class="pagina-cuenta__aviso-cancelacion__titulo">Suscripción cancelada</p>
+        <p class="pagina-cuenta__aviso-cancelacion__descripcion">
+          Tu plan <strong>{{ planService.planActual() | uppercase }}</strong> permanecerá activo hasta el
+          <strong>{{ fechaFinFormateada() | date:'d \'de\' MMMM \'de\' yyyy':'':'es' }}</strong>.
+          Después pasarás automáticamente al plan Free.
+        </p>
+      </section>
+    </section>
+  }
+
   <section class="pagina-cuenta__seccion">
     <h2 class="pagina-cuenta__seccion__titulo">Profile</h2>
     <section class="pagina-cuenta__formulario">
@@ -47,6 +63,7 @@
         <article
           class="pagina-cuenta__plan-opcion"
           [class.pagina-cuenta__plan-opcion--activo]="planService.planActual() === plan.id"
+          [class.pagina-cuenta__plan-opcion--deshabilitado]="suscripcionCancelada() && plan.id === 'free'"
           (click)="cambiarPlan(plan.id)">
           <section class="pagina-cuenta__plan-opcion__info">
             <span class="pagina-cuenta__plan-opcion__nombre">{{ plan.nombre }}</span>
@@ -55,7 +72,11 @@
             </span>
           </section>
           @if (planService.planActual() === plan.id) {
-            <i class="fa-solid fa-check pagina-cuenta__plan-opcion__check"></i>
+            @if (suscripcionCancelada() && plan.id !== 'free') {
+              <span class="pagina-cuenta__plan-opcion__cancelado">Cancela el {{ fechaFinFormateada() | date:'d MMM':'':'es' }}</span>
+            } @else {
+              <i class="fa-solid fa-check pagina-cuenta__plan-opcion__check"></i>
+            }
           }
         </article>
       }

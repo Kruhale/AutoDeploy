@@ -4,8 +4,12 @@ import com.autodeploy.dto.ApiResponse;
 import com.autodeploy.dto.LoginRequest;
 import com.autodeploy.dto.LoginResponse;
 import com.autodeploy.dto.RegistroRequest;
+import com.autodeploy.model.ClaveSshUsuario;
+import com.autodeploy.model.PreferenciasNotificacion;
 import com.autodeploy.model.Usuario;
 import com.autodeploy.service.UsuarioService;
+
+import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -102,5 +106,41 @@ public class UsuarioController {
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
         usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    public record NuevaClaveRequest(String nombre, String claveCompleta) {}
+
+    @GetMapping("/{id}/claves-ssh")
+    public ResponseEntity<ApiResponse<List<ClaveSshUsuario>>> listarClavesSsh(@PathVariable String id) {
+        Usuario usuario = usuarioService.obtenerPorId(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuario.getClavesSsh()));
+    }
+
+    @PostMapping("/{id}/claves-ssh")
+    public ResponseEntity<ApiResponse<ClaveSshUsuario>> agregarClaveSsh(
+            @PathVariable String id,
+            @RequestBody NuevaClaveRequest peticion) {
+        ClaveSshUsuario nuevaClave = usuarioService.agregarClaveSsh(id, peticion.nombre(), peticion.claveCompleta());
+        return ResponseEntity.ok(new ApiResponse<>(true, "Clave SSH añadida", nuevaClave));
+    }
+
+    @DeleteMapping("/{idUsuario}/claves-ssh/{idClave}")
+    public ResponseEntity<Void> eliminarClaveSsh(@PathVariable String idUsuario, @PathVariable String idClave) {
+        usuarioService.eliminarClaveSsh(idUsuario, idClave);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/notificaciones")
+    public ResponseEntity<ApiResponse<PreferenciasNotificacion>> obtenerNotificaciones(@PathVariable String id) {
+        Usuario usuario = usuarioService.obtenerPorId(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuario.getPreferenciasNotificacion()));
+    }
+
+    @PutMapping("/{id}/notificaciones")
+    public ResponseEntity<ApiResponse<PreferenciasNotificacion>> actualizarNotificaciones(
+            @PathVariable String id,
+            @RequestBody PreferenciasNotificacion preferencias) {
+        PreferenciasNotificacion actualizadas = usuarioService.actualizarPreferenciasNotificacion(id, preferencias);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Preferencias actualizadas", actualizadas));
     }
 }

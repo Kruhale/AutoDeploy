@@ -5,6 +5,8 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "usuario")
 public class Usuario {
@@ -19,10 +21,14 @@ public class Usuario {
     private String plan;
     private LocalDateTime fechaInicioSuscripcion;
     private LocalDateTime fechaFinSuscripcion;
+    private List<ClaveSshUsuario> clavesSsh = new ArrayList<>();
+    private PreferenciasNotificacion preferenciasNotificacion = new PreferenciasNotificacion();
 
     public Usuario() {
         this.fechaCreacion = LocalDateTime.now();
         this.plan = "free";
+        this.clavesSsh = new ArrayList<>();
+        this.preferenciasNotificacion = new PreferenciasNotificacion();
     }
 
     public Usuario(String nombre, String email, String passwordHash) {
@@ -31,7 +37,21 @@ public class Usuario {
         this.passwordHash = passwordHash;
         this.fechaCreacion = LocalDateTime.now();
         this.plan = "free";
+        this.clavesSsh = new ArrayList<>();
+        this.preferenciasNotificacion = new PreferenciasNotificacion();
     }
+
+    public List<ClaveSshUsuario> getClavesSsh() {
+        if (clavesSsh == null) clavesSsh = new ArrayList<>();
+        return clavesSsh;
+    }
+    public void setClavesSsh(List<ClaveSshUsuario> clavesSsh) { this.clavesSsh = clavesSsh; }
+
+    public PreferenciasNotificacion getPreferenciasNotificacion() {
+        if (preferenciasNotificacion == null) preferenciasNotificacion = new PreferenciasNotificacion();
+        return preferenciasNotificacion;
+    }
+    public void setPreferenciasNotificacion(PreferenciasNotificacion preferenciasNotificacion) { this.preferenciasNotificacion = preferenciasNotificacion; }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

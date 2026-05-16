@@ -107,7 +107,8 @@ export const routes: Routes = [
       },
       {
         path: 'settings',
-        loadComponent: () => import('./pages/settings/settings').then((modulo) => modulo.Settings),
+        redirectTo: 'cuenta',
+        pathMatch: 'full',
       },
       {
         path: 'terminal',

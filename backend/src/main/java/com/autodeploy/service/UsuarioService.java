@@ -93,6 +93,44 @@ public class UsuarioService {
         usuarioRepository.deleteById(id);
     }
 
+    public com.autodeploy.model.ClaveSshUsuario agregarClaveSsh(String idUsuario, String nombre, String claveCompleta) {
+        Usuario usuario = obtenerPorId(idUsuario);
+        String huella = generarHuella(claveCompleta);
+        String idClave = java.util.UUID.randomUUID().toString();
+
+        com.autodeploy.model.ClaveSshUsuario nuevaClave = new com.autodeploy.model.ClaveSshUsuario(idClave, nombre, huella, claveCompleta);
+        usuario.getClavesSsh().add(nuevaClave);
+        usuarioRepository.save(usuario);
+        return nuevaClave;
+    }
+
+    public void eliminarClaveSsh(String idUsuario, String idClave) {
+        Usuario usuario = obtenerPorId(idUsuario);
+        usuario.getClavesSsh().removeIf(c -> idClave.equals(c.getId()));
+        usuarioRepository.save(usuario);
+    }
+
+    public com.autodeploy.model.PreferenciasNotificacion actualizarPreferenciasNotificacion(String idUsuario, com.autodeploy.model.PreferenciasNotificacion preferencias) {
+        Usuario usuario = obtenerPorId(idUsuario);
+        usuario.setPreferenciasNotificacion(preferencias);
+        usuarioRepository.save(usuario);
+        return preferencias;
+    }
+
+    private String generarHuella(String claveCompleta) {
+        if (claveCompleta == null || claveCompleta.isBlank()) return "—";
+        String[] partes = claveCompleta.trim().split("\\s+");
+        if (partes.length < 2) return "SHA256:invalid";
+        try {
+            byte[] bytesClave = java.util.Base64.getDecoder().decode(partes[1]);
+            byte[] hash = java.security.MessageDigest.getInstance("SHA-256").digest(bytesClave);
+            String base64 = java.util.Base64.getEncoder().withoutPadding().encodeToString(hash);
+            return "SHA256:" + base64.substring(0, Math.min(20, base64.length()));
+        } catch (Exception ignorado) {
+            return "SHA256:" + Integer.toHexString(claveCompleta.hashCode());
+        }
+    }
+
     public LoginResponse construirLoginResponse(Usuario usuario, String token) {
         return new LoginResponse(
             usuario.getId(),

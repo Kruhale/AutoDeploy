@@ -19,6 +19,8 @@ public class Servidor {
     private String claveSshPrivada;
     private String estado;
     private LocalDateTime fechaCreacion;
+    private boolean backupsAutomaticosActivos = false;
+    private String horaBackupAutomatico = "03:00";
 
     public Servidor() {
         this.puertoSsh = 22;
@@ -26,7 +28,15 @@ public class Servidor {
         this.metodoAutenticacion = "password";
         this.estado = "pendiente";
         this.fechaCreacion = LocalDateTime.now();
+        this.backupsAutomaticosActivos = false;
+        this.horaBackupAutomatico = "03:00";
     }
+
+    public boolean isBackupsAutomaticosActivos() { return backupsAutomaticosActivos; }
+    public void setBackupsAutomaticosActivos(boolean backupsAutomaticosActivos) { this.backupsAutomaticosActivos = backupsAutomaticosActivos; }
+
+    public String getHoraBackupAutomatico() { return horaBackupAutomatico; }
+    public void setHoraBackupAutomatico(String horaBackupAutomatico) { this.horaBackupAutomatico = horaBackupAutomatico; }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

@@ -5,8 +5,11 @@ import com.autodeploy.model.Despliegue;
 import com.autodeploy.repository.DespliegueRepository;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DespliegueService {
@@ -55,5 +58,30 @@ public class DespliegueService {
     public List<Despliegue> obtenerPorServidor(String servidorId) {
         List<Despliegue> listaDeDesplieguesDelServidor = despliegueRepository.findByServidorIdOrderByFechaInicioDesc(servidorId);
         return listaDeDesplieguesDelServidor;
+    }
+
+    public Despliegue obtenerPorId(String id) {
+        return despliegueRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Despliegue no encontrado"));
+    }
+
+    public Optional<Despliegue> buscarPorTokenWebhook(String tokenWebhook) {
+        return despliegueRepository.findByTokenWebhook(tokenWebhook);
+    }
+
+    public Despliegue actualizarMetadatosGit(String id, String tecnologia, String rama, String directorioRemoto, String tokenWebhook) {
+        Despliegue despliegue = obtenerPorId(id);
+        despliegue.setTecnologia(tecnologia);
+        despliegue.setRama(rama);
+        despliegue.setDirectorioRemoto(directorioRemoto);
+        despliegue.setTokenWebhook(tokenWebhook);
+        return despliegueRepository.save(despliegue);
+    }
+
+    public String generarTokenWebhook() {
+        SecureRandom generador = new SecureRandom();
+        byte[] bytesAleatorios = new byte[24];
+        generador.nextBytes(bytesAleatorios);
+        return Base64.getUrlEncoder().withoutPadding().encodeToString(bytesAleatorios);
     }
 }

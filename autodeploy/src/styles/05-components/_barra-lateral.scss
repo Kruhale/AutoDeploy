@@ -214,6 +214,23 @@
   display: none;
 }
 
+.barra-lateral--colapsada .barra-lateral__chip-pro {
+  display: none;
+}
+
+.barra-lateral__chip-pro {
+  margin-left: auto;
+  padding: 0.0625rem 0.4375rem;
+  background-color: var(--amarillo-transparente-008);
+  border: 1px solid var(--amarillo-transparente-030);
+  border-radius: var(--radius-full);
+  color: var(--amarillo-normal);
+  font-size: 0.625rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
 .barra-lateral--colapsada .barra-lateral__enlace {
   justify-content: center;
   padding: 0.625rem 0;

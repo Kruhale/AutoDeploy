@@ -1,0 +1,250 @@
+<section class="asistente-ia">
+
+  <header class="asistente-ia__cabecera">
+    <hgroup class="asistente-ia__intro">
+      <span class="asistente-ia__etiqueta">AutoDeploy · AI</span>
+      <h1 class="asistente-ia__titulo">Hola, soy <span class="asistente-ia__titulo__acento">Nimbus</span></h1>
+      <p class="asistente-ia__subtitulo">Pídeme cualquier acción sobre tu servidor en lenguaje natural. Antes de tocar nada, te enseño el comando exacto.</p>
+    </hgroup>
+
+    <section class="asistente-ia__controles">
+      <label class="asistente-ia__selector">
+        <span class="asistente-ia__selector__etiqueta">Servidor activo</span>
+        <select class="asistente-ia__selector__campo" [ngModel]="servidorSeleccionadoId()" (ngModelChange)="servidorSeleccionadoId.set($event)" name="servidorActivo">
+          @for (servidor of listaServidores(); track servidor.id) {
+            <option [value]="servidor.id">{{ servidor.nombre }} — {{ servidor.direccionIp }}</option>
+          }
+          @if (listaServidores().length === 0) {
+            <option value="" disabled>No tienes servidores conectados</option>
+          }
+        </select>
+      </label>
+      <button class="asistente-ia__boton-secundario" type="button" (click)="abrirConfiguracion()">
+        <i class="fa-solid fa-sliders"></i>
+        <span>Ajustes</span>
+      </button>
+    </section>
+  </header>
+
+  @if (!apiKeyYaConfigurada()) {
+    <article class="asistente-ia__aviso">
+      <i class="fa-solid fa-key asistente-ia__aviso__icono"></i>
+      <section class="asistente-ia__aviso__texto">
+        <strong>Aún no has configurado tu API key de OpenRouter.</strong>
+        <span>Necesitas una clave para conversar con la IA. Abre los ajustes para introducirla.</span>
+      </section>
+      <button class="asistente-ia__boton-acento" type="button" (click)="abrirConfiguracion()">Configurar ahora</button>
+    </article>
+  }
+
+  <article class="asistente-ia__conversacion" #contenedorMensajes>
+
+    @if (historialEstaVacio()) {
+      <section class="asistente-ia__bienvenida">
+        <span class="asistente-ia__bienvenida__halo">
+          <i class="fa-solid fa-robot"></i>
+        </span>
+        <h2 class="asistente-ia__bienvenida__titulo">¿En qué puedo ayudarte hoy?</h2>
+        <p class="asistente-ia__bienvenida__texto">Empieza por una de estas preguntas o escribe la tuya. Yo me encargo de traducirla a comandos shell.</p>
+        <ul class="asistente-ia__sugerencias">
+          @for (sugerencia of sugerencias; track sugerencia.texto) {
+            <li>
+              <button class="asistente-ia__sugerencia" type="button" (click)="usarSugerencia(sugerencia.texto)">
+                <i class="{{ sugerencia.icono }} asistente-ia__sugerencia__icono"></i>
+                <span class="asistente-ia__sugerencia__texto">{{ sugerencia.texto }}</span>
+                <i class="fa-solid fa-arrow-right asistente-ia__sugerencia__flecha"></i>
+              </button>
+            </li>
+          }
+        </ul>
+      </section>
+    }
+
+    @for (mensaje of asistenteService.historialMensajes(); track $index; let indice = $index) {
+      <article class="asistente-ia__mensaje" [class.asistente-ia__mensaje--usuario]="mensaje.rol === 'user'" [class.asistente-ia__mensaje--asistente]="mensaje.rol === 'assistant'">
+        <span class="asistente-ia__avatar">
+          @if (mensaje.rol === "assistant") {
+            <i class="fa-solid fa-robot"></i>
+          } @else {
+            <span class="asistente-ia__avatar__inicial">{{ (usuarioService.nombre()[0] || 'T').toUpperCase() }}</span>
+          }
+        </span>
+        <section class="asistente-ia__burbuja">
+          <p class="asistente-ia__burbuja__texto">{{ mensaje.contenido }}</p>
+
+          @if (mensaje.comandoPropuesto) {
+            <section class="tarjeta-comando" [class.tarjeta-comando--ejecutado]="mensaje.estadoComando === 'ejecutado'" [class.tarjeta-comando--rechazado]="mensaje.estadoComando === 'rechazado'">
+              <header class="tarjeta-comando__cabecera">
+                <span class="tarjeta-comando__chip">
+                  <i class="fa-solid fa-terminal"></i>
+                  <span>Comando propuesto</span>
+                </span>
+                @if (mensaje.estadoComando === "pendiente" && mensaje.requiereConfirmacion) {
+                  <span class="tarjeta-comando__estado tarjeta-comando__estado--pendiente">Requiere tu permiso</span>
+                }
+                @if (mensaje.estadoComando === "ejecutando") {
+                  <span class="tarjeta-comando__estado tarjeta-comando__estado--ejecutando">Ejecutando…</span>
+                }
+                @if (mensaje.estadoComando === "ejecutado") {
+                  <span class="tarjeta-comando__estado tarjeta-comando__estado--ejecutado"><i class="fa-solid fa-check"></i> Ejecutado</span>
+                }
+                @if (mensaje.estadoComando === "rechazado") {
+                  <span class="tarjeta-comando__estado tarjeta-comando__estado--rechazado"><i class="fa-solid fa-xmark"></i> Rechazado</span>
+                }
+              </header>
+              <pre class="tarjeta-comando__codigo">{{ mensaje.comandoPropuesto }}</pre>
+
+              @if (mensaje.razonamiento) {
+                <p class="tarjeta-comando__razonamiento">
+                  <i class="fa-solid fa-circle-info"></i>
+                  <span>{{ mensaje.razonamiento }}</span>
+                </p>
+              }
+
+              @if (mensaje.requiereConfirmacion && mensaje.estadoComando === "pendiente") {
+                <footer class="tarjeta-comando__acciones">
+                  <button class="tarjeta-comando__boton tarjeta-comando__boton--rechazar" type="button" (click)="rechazarComando(indice)">
+                    <i class="fa-solid fa-xmark"></i>
+                    <span>Cancelar</span>
+                  </button>
+                  <button class="tarjeta-comando__boton tarjeta-comando__boton--ejecutar" type="button" (click)="confirmarComando(indice)">
+                    <i class="fa-solid fa-play"></i>
+                    <span>Ejecutar en el servidor</span>
+                  </button>
+                </footer>
+              }
+
+              @if (mensaje.salidaComando) {
+                <section class="tarjeta-comando__salida">
+                  <span class="tarjeta-comando__salida__etiqueta">Salida</span>
+                  <pre class="tarjeta-comando__salida__codigo">{{ mensaje.salidaComando }}</pre>
+                </section>
+              }
+            </section>
+          }
+        </section>
+      </article>
+    }
+
+    @if (asistenteService.estaEscribiendo()) {
+      <article class="asistente-ia__mensaje asistente-ia__mensaje--asistente asistente-ia__mensaje--escribiendo">
+        <span class="asistente-ia__avatar"><i class="fa-solid fa-robot"></i></span>
+        <section class="asistente-ia__burbuja asistente-ia__burbuja--escribiendo">
+          <span class="asistente-ia__puntos">
+            <span class="asistente-ia__puntos__punto"></span>
+            <span class="asistente-ia__puntos__punto"></span>
+            <span class="asistente-ia__puntos__punto"></span>
+          </span>
+        </section>
+      </article>
+    }
+  </article>
+
+  @if (mensajeError()) {
+    <p class="asistente-ia__error" role="alert">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>{{ mensajeError() }}</span>
+    </p>
+  }
+
+  <footer class="asistente-ia__entrada">
+    @if (!historialEstaVacio()) {
+      <button class="asistente-ia__limpiar" type="button" (click)="limpiarConversacion()" aria-label="Limpiar conversación">
+        <i class="fa-solid fa-broom"></i>
+      </button>
+    }
+    <textarea
+      class="asistente-ia__textarea"
+      #areaEntrada
+      [ngModel]="mensajeEnEdicion()"
+      (ngModelChange)="mensajeEnEdicion.set($event)"
+      (keydown)="manejarTeclaEnInput($event)"
+      name="mensajeEnEdicion"
+      placeholder="Escribe lo que quieres hacer en tu servidor…"
+      rows="1"></textarea>
+    <button class="asistente-ia__enviar" type="button" (click)="enviarMensaje()" [disabled]="asistenteService.estaEscribiendo() || !mensajeEnEdicion().trim()">
+      <i class="fa-solid fa-paper-plane"></i>
+    </button>
+  </footer>
+
+</section>
+
+@if (mostrarPanelConfiguracion()) {
+  <section class="overlay-config" (click)="cerrarConfiguracion()">
+    <article class="overlay-config__panel" (click)="$event.stopPropagation()">
+      <header class="overlay-config__cabecera">
+        <hgroup>
+          <span class="overlay-config__etiqueta">Configuración</span>
+          <h2 class="overlay-config__titulo">Conexión con OpenRouter</h2>
+        </hgroup>
+        <button class="overlay-config__cerrar" type="button" (click)="cerrarConfiguracion()" aria-label="Cerrar">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </header>
+
+      <form class="overlay-config__formulario" (submit)="$event.preventDefault(); guardarConfiguracion()">
+        <section class="overlay-config__campo">
+          <label class="overlay-config__label" for="campo-api-key">API key de OpenRouter</label>
+          <input
+            class="overlay-config__input"
+            id="campo-api-key"
+            type="password"
+            autocomplete="off"
+            [ngModel]="apiKeyEnEdicion()"
+            (ngModelChange)="apiKeyEnEdicion.set($event)"
+            name="apiKeyEnEdicion"
+            placeholder="sk-or-v1-…">
+          <span class="overlay-config__ayuda">
+            @if (apiKeyYaConfigurada()) {
+              Ya tienes una key guardada. Déjalo vacío para mantenerla.
+            } @else {
+              Consíguela gratis en openrouter.ai/keys
+            }
+          </span>
+        </section>
+
+        <section class="overlay-config__campo">
+          <label class="overlay-config__label" for="campo-modelo">Modelo preferido</label>
+          <select class="overlay-config__input" id="campo-modelo" [ngModel]="modeloEnEdicion()" (ngModelChange)="modeloEnEdicion.set($event)" name="modeloEnEdicion">
+            @for (modelo of modelosDisponibles; track modelo.id) {
+              <option [value]="modelo.id">{{ modelo.nombre }}</option>
+            }
+          </select>
+          <span class="overlay-config__ayuda">Los marcados como gratis no consumen créditos.</span>
+        </section>
+
+        <section class="overlay-config__campo">
+          <label class="overlay-config__label" for="campo-comandos">Comandos auto-aprobados (uno por línea)</label>
+          <textarea
+            class="overlay-config__input overlay-config__input--textarea"
+            id="campo-comandos"
+            rows="5"
+            [ngModel]="comandosEnEdicion()"
+            (ngModelChange)="comandosEnEdicion.set($event)"
+            name="comandosEnEdicion"
+            placeholder="df&#10;free&#10;uptime&#10;systemctl status"></textarea>
+          <span class="overlay-config__ayuda">Comandos que empiecen por estos prefijos se ejecutarán sin pedir permiso. Vacío = pide permiso para todo.</span>
+        </section>
+
+        @if (mensajeError()) {
+          <p class="overlay-config__error">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>{{ mensajeError() }}</span>
+          </p>
+        }
+
+        <footer class="overlay-config__acciones">
+          <button class="overlay-config__boton overlay-config__boton--neutral" type="button" (click)="cerrarConfiguracion()">Cancelar</button>
+          <button class="overlay-config__boton overlay-config__boton--principal" type="submit" [disabled]="estaCargandoConfiguracion()">
+            @if (estaCargandoConfiguracion()) {
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            } @else {
+              <i class="fa-solid fa-floppy-disk"></i>
+            }
+            <span>Guardar configuración</span>
+          </button>
+        </footer>
+      </form>
+    </article>
+  </section>
+}

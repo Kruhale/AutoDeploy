@@ -3,6 +3,7 @@ package com.autodeploy.service;
 import com.autodeploy.dto.NotificacionDTO;
 import com.autodeploy.model.Notificacion;
 import com.autodeploy.repository.NotificacionRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,14 +12,29 @@ import java.util.stream.Collectors;
 public class NotificacionService {
 
 	private final NotificacionRepository notificacionRepository;
+	private final NotificacionesWebSocketHandler notificacionesWebSocketHandler;
 
-	public NotificacionService(NotificacionRepository notificacionRepository) {
+	public NotificacionService(NotificacionRepository notificacionRepository,
+	                            @Lazy NotificacionesWebSocketHandler notificacionesWebSocketHandler) {
 		this.notificacionRepository = notificacionRepository;
+		this.notificacionesWebSocketHandler = notificacionesWebSocketHandler;
 	}
 
 	public Notificacion crearNotificacion(String tipo, String titulo, String descripcion, String usuarioId) {
 		Notificacion notificacionNueva = new Notificacion(tipo, titulo, descripcion, usuarioId);
-		return notificacionRepository.save(notificacionNueva);
+		Notificacion notificacionGuardada = notificacionRepository.save(notificacionNueva);
+
+		NotificacionDTO dtoParaWs = new NotificacionDTO(
+			notificacionGuardada.getId(),
+			notificacionGuardada.getTipo(),
+			notificacionGuardada.getTitulo(),
+			notificacionGuardada.getDescripcion(),
+			notificacionGuardada.isLeida(),
+			notificacionGuardada.getFechaCreacion()
+		);
+		notificacionesWebSocketHandler.notificarUsuario(usuarioId, dtoParaWs);
+
+		return notificacionGuardada;
 	}
 
 	public List<NotificacionDTO> listarPorUsuario(String usuarioId) {

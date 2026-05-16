@@ -10,10 +10,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
+import java.util.Map;
 
 @Tag(name = "Notificaciones", description = "Gestión de notificaciones del usuario")
 @RestController
@@ -24,6 +27,27 @@ public class NotificacionController {
 
 	public NotificacionController(NotificacionService notificacionService) {
 		this.notificacionService = notificacionService;
+	}
+
+	@Operation(summary = "Crear notificación", description = "Crea una notificación y la empuja al WebSocket del usuario")
+	@PostMapping
+	public ResponseEntity<ApiResponse<NotificacionDTO>> crear(@RequestBody Map<String, String> peticion) {
+		String usuarioId = peticion.get("usuarioId");
+		String tipo = peticion.getOrDefault("tipo", "info");
+		String titulo = peticion.getOrDefault("titulo", "Notificación");
+		String descripcion = peticion.getOrDefault("descripcion", "");
+
+		Notificacion notificacionCreada = notificacionService.crearNotificacion(tipo, titulo, descripcion, usuarioId);
+		NotificacionDTO dto = new NotificacionDTO(
+			notificacionCreada.getId(),
+			notificacionCreada.getTipo(),
+			notificacionCreada.getTitulo(),
+			notificacionCreada.getDescripcion(),
+			notificacionCreada.isLeida(),
+			notificacionCreada.getFechaCreacion()
+		);
+		ApiResponse<NotificacionDTO> respuesta = new ApiResponse<>(true, "Notificación creada", dto);
+		return ResponseEntity.ok(respuesta);
 	}
 
 	@Operation(summary = "Listar notificaciones", description = "Obtiene todas las notificaciones del usuario")

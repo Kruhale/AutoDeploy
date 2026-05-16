@@ -1,93 +1,432 @@
-<section class="pagina-cuenta">
+<section class="cuenta">
 
-  <header class="pagina-cuenta__cabecera">
-    <section class="pagina-cuenta__perfil">
-      <span class="pagina-cuenta__avatar">{{ inicialDelNombre() }}</span>
-      <section class="pagina-cuenta__perfil__datos">
-        <h1 class="pagina-cuenta__nombre">{{ usuarioService.nombre() || 'Your Account' }}</h1>
-        <span class="pagina-cuenta__email">{{ usuarioService.email() || '—' }}</span>
+  <aside class="cuenta__indice-vertical" aria-hidden="true">
+    <span class="cuenta__indice-vertical__codigo">N° {{ anioActual }}.{{ idTruncado() }}</span>
+    <span class="cuenta__indice-vertical__rotulo">
+      @for (letra of letrasIndiceVertical; track $index) {
+        <span class="cuenta__indice-vertical__letra">{{ letra }}</span>
+      }
+      <span class="cuenta__indice-vertical__bullet">/</span>
+      @for (letra of letrasIndiceCuenta; track $index) {
+        <span class="cuenta__indice-vertical__letra">{{ letra }}</span>
+      }
+    </span>
+    <span class="cuenta__indice-vertical__estampa">PRESS · ARCHIVE</span>
+  </aside>
+
+  <header class="cuenta__hero">
+    <span class="cuenta__hero__spotlight" aria-hidden="true"></span>
+    <span class="cuenta__hero__grano" aria-hidden="true"></span>
+
+    <section class="cuenta__hero__capa-superior">
+      <p class="cuenta__hero__sello">
+        <span class="cuenta__hero__sello__circulo">·</span>
+        <span class="cuenta__hero__sello__texto">Personal dossier · Issue {{ anioActual }}</span>
+      </p>
+      <p class="cuenta__hero__fecha-edicion">{{ fechaCreacionCuenta() | date:"EEEE, d MMM yyyy":"":"en" }}</p>
+    </section>
+
+    <section class="cuenta__hero__bloque-principal">
+      <section class="cuenta__hero__columna-retrato">
+        <article class="cuenta__avatar" [attr.data-plan]="planService.planActual()">
+          <span class="cuenta__avatar__halo" aria-hidden="true"></span>
+          <span class="cuenta__avatar__halo cuenta__avatar__halo--secundario" aria-hidden="true"></span>
+          <span class="cuenta__avatar__inicial">{{ inicialDelNombre() }}</span>
+          <span class="cuenta__avatar__estado" aria-hidden="true"></span>
+        </article>
+        <ul class="cuenta__credenciales">
+          <li class="cuenta__credenciales__fila">
+            <span class="cuenta__credenciales__clave">Email</span>
+            <span class="cuenta__credenciales__valor">{{ usuarioService.email() || "—" }}</span>
+          </li>
+          <li class="cuenta__credenciales__fila">
+            <span class="cuenta__credenciales__clave">Reference</span>
+            <span class="cuenta__credenciales__valor">{{ idTruncado() || "—" }}</span>
+          </li>
+          <li class="cuenta__credenciales__fila">
+            <span class="cuenta__credenciales__clave">Member since</span>
+            <span class="cuenta__credenciales__valor">{{ fechaCreacionCuenta() | date:"d MMM yyyy":"":"en" }}</span>
+          </li>
+        </ul>
+      </section>
+
+      <section class="cuenta__hero__columna-titulo">
+        <h1 class="cuenta__hero__titulo">
+          <span class="cuenta__hero__titulo__overline">{{ planService.planActual() === "free" ? "Free tier holder" : "Subscriber to" }}</span>
+          <span class="cuenta__hero__titulo__principal">{{ usuarioService.nombre() || "Anonymous" }}<span class="cuenta__hero__titulo__estrella" aria-hidden="true">*</span></span>
+          <span class="cuenta__hero__titulo__plan">{{ detallePlanActual().nombre | uppercase }}</span>
+        </h1>
       </section>
     </section>
-    @if (planService.planActual() !== 'free') {
-      <span class="pagina-cuenta__badge-plan pagina-cuenta__badge-plan--{{ planService.planActual() }}">
-        {{ planService.planActual() | uppercase }}
+
+    <section class="cuenta__hero__marquee" aria-hidden="true">
+      <span class="cuenta__hero__marquee__pista">
+        <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
+        <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
+        <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
       </span>
-    }
+    </section>
   </header>
 
   @if (suscripcionCancelada()) {
-    <section class="pagina-cuenta__aviso-cancelacion">
-      <section class="pagina-cuenta__aviso-cancelacion__icono">
-        <i class="fa-solid fa-circle-info"></i>
-      </section>
-      <section class="pagina-cuenta__aviso-cancelacion__texto">
-        <p class="pagina-cuenta__aviso-cancelacion__titulo">Suscripción cancelada</p>
-        <p class="pagina-cuenta__aviso-cancelacion__descripcion">
-          Tu plan <strong>{{ planService.planActual() | uppercase }}</strong> permanecerá activo hasta el
-          <strong>{{ fechaFinFormateada() | date:'d \'de\' MMMM \'de\' yyyy':'':'es' }}</strong>.
-          Después pasarás automáticamente al plan Free.
+    <section class="cuenta__aviso">
+      <span class="cuenta__aviso__bandera" aria-hidden="true">!</span>
+      <section class="cuenta__aviso__cuerpo">
+        <p class="cuenta__aviso__titulo">Subscription scheduled to end</p>
+        <p class="cuenta__aviso__descripcion">
+          Your <strong>{{ detallePlanActual().nombre }}</strong> access remains intact until
+          <strong>{{ fechaFinFormateada() | date:"d MMMM yyyy":"":"en" }}</strong>. Afterwards the account downgrades to Free.
         </p>
       </section>
     </section>
   }
 
-  <section class="pagina-cuenta__seccion">
-    <h2 class="pagina-cuenta__seccion__titulo">Profile</h2>
-    <section class="pagina-cuenta__formulario">
-      <section class="campo">
-        <label class="campo__etiqueta" for="cuenta-nombre">Name</label>
-        <input class="campo__input" id="cuenta-nombre" name="cuenta-nombre" type="text" placeholder="Your name" [ngModel]="nombreEditable()" (ngModelChange)="nombreEditable.set($event)">
+  <section class="cuenta__bloque cuenta__bloque-tenure">
+    <header class="cuenta__cabecera-seccion">
+      <span class="cuenta__cabecera-seccion__indice">01</span>
+      <section class="cuenta__cabecera-seccion__texto">
+        <h2 class="cuenta__cabecera-seccion__titulo">Tenure</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">Calendar of activity since the account was first signed.</p>
       </section>
-      <section class="campo">
-        <label class="campo__etiqueta" for="cuenta-email">Email</label>
-        <input class="campo__input" id="cuenta-email" name="cuenta-email" type="email" placeholder="your@email.com" [ngModel]="emailEditable()" (ngModelChange)="emailEditable.set($event)">
+    </header>
+
+    <section class="cuenta__tenure">
+      <article class="cuenta__tenure__numero">
+        @if (diasComoMiembro() === 0) {
+          <span class="cuenta__tenure__numero__valor cuenta__tenure__numero__valor--inaugural">01</span>
+          <span class="cuenta__tenure__numero__unidad">Day 01 · just begun</span>
+        } @else {
+          <span class="cuenta__tenure__numero__valor">{{ diasComoMiembro() }}</span>
+          <span class="cuenta__tenure__numero__unidad">{{ diasComoMiembro() === 1 ? "day" : "days" }}</span>
+        }
+      </article>
+      <section class="cuenta__tenure__detalle">
+        <p class="cuenta__tenure__leyenda">
+          {{ diasComoMiembro() === 0 ? "Welcome on board. Your first day is being recorded." : "in continuous use" }}
+        </p>
+        <section class="cuenta__tenure__progreso">
+          <span class="cuenta__tenure__progreso__pista">
+            <span class="cuenta__tenure__progreso__relleno" [style.width.%]="progresoAniversarioPorcentaje()"></span>
+          </span>
+          <section class="cuenta__tenure__progreso__leyenda">
+            <span class="cuenta__tenure__progreso__borde">Day zero</span>
+            <span class="cuenta__tenure__progreso__hito">365 · one year mark</span>
+          </section>
+        </section>
       </section>
     </section>
-
-    @if (mensajeGuardado()) {
-      <p class="pagina-cuenta__mensaje">{{ mensajeGuardado() }}</p>
-    }
-
-    <button class="boton--primario pagina-cuenta__boton-guardar" type="button" (click)="guardarCambios()" [disabled]="guardando()">
-      {{ guardando() ? 'Saving...' : 'Save changes' }}
-    </button>
   </section>
 
-  <section class="pagina-cuenta__seccion">
-    <section class="pagina-cuenta__plan-cabecera">
-      <h2 class="pagina-cuenta__seccion__titulo">Plan</h2>
-      <a class="pagina-cuenta__enlace-planes" routerLink="/" fragment="pricing">Compare plans</a>
+  <section class="cuenta__bloque">
+    <header class="cuenta__cabecera-seccion">
+      <span class="cuenta__cabecera-seccion__indice">02</span>
+      <section class="cuenta__cabecera-seccion__texto">
+        <h2 class="cuenta__cabecera-seccion__titulo">Identity</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">The name and email shown to teammates inside this workspace.</p>
+      </section>
+    </header>
+
+    <section class="cuenta__formulario">
+      <section class="cuenta__campo-editorial">
+        <label class="cuenta__campo-editorial__etiqueta" for="cuenta-nombre">
+          <span class="cuenta__campo-editorial__numero">i</span>
+          Display name
+        </label>
+        <input
+          class="cuenta__campo-editorial__input"
+          id="cuenta-nombre"
+          name="cuenta-nombre"
+          type="text"
+          autocomplete="name"
+          placeholder="How should we call you"
+          [ngModel]="nombreEditable()"
+          (ngModelChange)="nombreEditable.set($event)">
+      </section>
+      <section class="cuenta__campo-editorial">
+        <label class="cuenta__campo-editorial__etiqueta" for="cuenta-email">
+          <span class="cuenta__campo-editorial__numero">ii</span>
+          Email address
+        </label>
+        <input
+          class="cuenta__campo-editorial__input"
+          id="cuenta-email"
+          name="cuenta-email"
+          type="email"
+          autocomplete="email"
+          placeholder="your@email.com"
+          [ngModel]="emailEditable()"
+          (ngModelChange)="emailEditable.set($event)">
+        <p class="cuenta__campo-editorial__pista">Used only for billing and security notifications.</p>
+      </section>
     </section>
-    <section class="pagina-cuenta__planes">
-      @for (plan of planes; track plan.id) {
-        <article
-          class="pagina-cuenta__plan-opcion"
-          [class.pagina-cuenta__plan-opcion--activo]="planService.planActual() === plan.id"
-          [class.pagina-cuenta__plan-opcion--deshabilitado]="suscripcionCancelada() && plan.id === 'free'"
-          (click)="cambiarPlan(plan.id)">
-          <section class="pagina-cuenta__plan-opcion__info">
-            <span class="pagina-cuenta__plan-opcion__nombre">{{ plan.nombre }}</span>
-            <span class="pagina-cuenta__plan-opcion__precio">
-              @if (plan.precio === 0) { Free } @else { €{{ plan.precio }}/mo }
-            </span>
-          </section>
-          @if (planService.planActual() === plan.id) {
-            @if (suscripcionCancelada() && plan.id !== 'free') {
-              <span class="pagina-cuenta__plan-opcion__cancelado">Cancela el {{ fechaFinFormateada() | date:'d MMM':'':'es' }}</span>
-            } @else {
-              <i class="fa-solid fa-check pagina-cuenta__plan-opcion__check"></i>
-            }
-          }
-        </article>
+
+    <section class="cuenta__acciones-formulario">
+      <button
+        class="cuenta__boton-guardar"
+        type="button"
+        (click)="guardarCambios()"
+        [disabled]="guardando()">
+        <span class="cuenta__boton-guardar__contenido">
+          <span class="cuenta__boton-guardar__texto">{{ guardando() ? "Saving" : "Commit changes" }}</span>
+          <span class="cuenta__boton-guardar__flecha" aria-hidden="true">→</span>
+        </span>
+        <span class="cuenta__boton-guardar__indicador" aria-hidden="true"></span>
+      </button>
+      @if (mensajeGuardado()) {
+        <span
+          class="cuenta__mensaje-estado"
+          [class.cuenta__mensaje-estado--error]="mensajeGuardado() === 'Error'">
+          <span class="cuenta__mensaje-estado__punto" aria-hidden="true"></span>
+          {{ mensajeGuardado() }}
+        </span>
       }
     </section>
   </section>
 
-  <section class="pagina-cuenta__seccion pagina-cuenta__seccion--peligro">
-    <button class="pagina-cuenta__boton-logout" type="button" (click)="cerrarSesion()">
-      <i class="fa-solid fa-arrow-right-from-bracket"></i>
-      Log out
+  <section class="cuenta__bloque">
+    <header class="cuenta__cabecera-seccion">
+      <span class="cuenta__cabecera-seccion__indice">03</span>
+      <section class="cuenta__cabecera-seccion__texto">
+        <h2 class="cuenta__cabecera-seccion__titulo">Tier</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">Three altitudes. Prorated billing on every switch.</p>
+      </section>
+    </header>
+
+    <section class="cuenta__timeline-planes">
+      <span class="cuenta__timeline-planes__rail" aria-hidden="true"></span>
+      @for (plan of planes; track plan.id) {
+        <article
+          class="cuenta__nodo-plan"
+          [class.cuenta__nodo-plan--activo]="planService.planActual() === plan.id"
+          [class.cuenta__nodo-plan--bloqueado]="suscripcionCancelada() && plan.id === 'free'"
+          (click)="cambiarPlan(plan.id)">
+          <span class="cuenta__nodo-plan__bullet" aria-hidden="true">
+            <span class="cuenta__nodo-plan__bullet__nucleo"></span>
+          </span>
+          <span class="cuenta__nodo-plan__nombre">{{ plan.nombre }}</span>
+          <span class="cuenta__nodo-plan__precio">
+            @if (plan.precio === 0) { Free } @else { €{{ plan.precio }}<small>/mo</small> }
+          </span>
+          @if (planService.planActual() === plan.id) {
+            <span class="cuenta__nodo-plan__marca">
+              @if (suscripcionCancelada() && plan.id !== "free") {
+                <span class="cuenta__nodo-plan__marca__texto cuenta__nodo-plan__marca__texto--aviso">Cancels {{ fechaFinFormateada() | date:"d MMM":"":"en" }}</span>
+              } @else {
+                <span class="cuenta__nodo-plan__marca__texto">Current</span>
+              }
+            </span>
+          }
+        </article>
+      }
+    </section>
+
+    <section class="cuenta__resumen">
+      @for (fila of resumenDeCuenta(); track fila.etiqueta) {
+        <article class="cuenta__resumen__fila">
+          <span class="cuenta__resumen__etiqueta">{{ fila.etiqueta }}</span>
+          <span
+            class="cuenta__resumen__valor"
+            [class.cuenta__resumen__valor--activo]="fila.estado === 'activo'"
+            [class.cuenta__resumen__valor--aviso]="fila.estado === 'aviso'"
+            [class.cuenta__resumen__valor--apagado]="fila.estado === 'apagado'">
+            {{ fila.valor }}
+          </span>
+        </article>
+      }
+    </section>
+
+    <a class="cuenta__enlace-comparar" routerLink="/" fragment="pricing">
+      <span class="cuenta__enlace-comparar__borde-izq" aria-hidden="true"></span>
+      <span>Read the full pricing manifesto</span>
+      <span class="cuenta__enlace-comparar__flecha" aria-hidden="true">→</span>
+    </a>
+  </section>
+
+  <section class="cuenta__bloque">
+    <header class="cuenta__cabecera-seccion">
+      <span class="cuenta__cabecera-seccion__indice">04</span>
+      <section class="cuenta__cabecera-seccion__texto">
+        <h2 class="cuenta__cabecera-seccion__titulo">SSH keys</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">Public keys for passwordless authentication on every server you connect.</p>
+      </section>
+      <button class="cuenta__boton-ghost" type="button" (click)="mostrarFormularioAgregarClave()" [disabled]="mostrarFormularioClave()">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i>
+        Add key
+      </button>
+    </header>
+
+    @if (mostrarFormularioClave()) {
+      <section class="cuenta__form-clave">
+        <section class="cuenta__campo-editorial">
+          <label class="cuenta__campo-editorial__etiqueta" for="ssh-nombre">
+            <span class="cuenta__campo-editorial__numero">i</span>
+            Key name
+          </label>
+          <input
+            class="cuenta__campo-editorial__input"
+            id="ssh-nombre"
+            type="text"
+            placeholder="My laptop"
+            [ngModel]="nombreNuevaClave()"
+            (ngModelChange)="nombreNuevaClave.set($event)">
+        </section>
+        <section class="cuenta__campo-editorial">
+          <label class="cuenta__campo-editorial__etiqueta" for="ssh-clave">
+            <span class="cuenta__campo-editorial__numero">ii</span>
+            Public key
+          </label>
+          <textarea
+            class="cuenta__campo-editorial__textarea"
+            id="ssh-clave"
+            rows="3"
+            placeholder="ssh-rsa AAAA..."
+            [ngModel]="contenidoNuevaClave()"
+            (ngModelChange)="contenidoNuevaClave.set($event)"></textarea>
+        </section>
+        <section class="cuenta__form-clave__acciones">
+          <button class="cuenta__form-clave__cancelar" type="button" (click)="cancelarFormularioClave()">Cancel</button>
+          <button class="cuenta__boton-guardar" type="button" (click)="agregarClaveSsh()">
+            <span class="cuenta__boton-guardar__contenido">
+              <span class="cuenta__boton-guardar__texto">Add key</span>
+              <span class="cuenta__boton-guardar__flecha" aria-hidden="true">→</span>
+            </span>
+          </button>
+        </section>
+      </section>
+    }
+
+    @if (listaDeClavesSsh().length === 0 && !mostrarFormularioClave()) {
+      <section class="cuenta__vacio">
+        <i class="fa-solid fa-key cuenta__vacio__icono" aria-hidden="true"></i>
+        <p class="cuenta__vacio__titulo">No SSH keys registered</p>
+        <p class="cuenta__vacio__detalle">Add a public key to enable passwordless connections.</p>
+      </section>
+    }
+
+    @if (listaDeClavesSsh().length > 0) {
+      <section class="cuenta__lista-claves">
+        @for (clave of listaDeClavesSsh(); track clave.id) {
+          <article class="cuenta__clave">
+            <span class="cuenta__clave__icono" aria-hidden="true">
+              <i class="fa-solid fa-key"></i>
+            </span>
+            <section class="cuenta__clave__info">
+              <span class="cuenta__clave__nombre">{{ clave.nombre }}</span>
+              <span class="cuenta__clave__huella">{{ clave.huella }}</span>
+            </section>
+            <span class="cuenta__clave__fecha">Added {{ clave.fechaCreacion }}</span>
+            <button class="cuenta__clave__eliminar" type="button" (click)="eliminarClaveSsh(clave.id)" aria-label="Remove key">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </article>
+        }
+      </section>
+    }
+  </section>
+
+  <section class="cuenta__bloque">
+    <header class="cuenta__cabecera-seccion">
+      <span class="cuenta__cabecera-seccion__indice">05</span>
+      <section class="cuenta__cabecera-seccion__texto">
+        <h2 class="cuenta__cabecera-seccion__titulo">Notifications</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">Choose which events reach your inbox. Everything is opt-in.</p>
+      </section>
+    </header>
+
+    <section class="cuenta__lista-toggles">
+      <article class="cuenta__toggle-fila">
+        <section class="cuenta__toggle-fila__info">
+          <span class="cuenta__toggle-fila__numero" aria-hidden="true">i</span>
+          <section class="cuenta__toggle-fila__texto">
+            <span class="cuenta__toggle-fila__titulo">Email notifications</span>
+            <span class="cuenta__toggle-fila__detalle">Receive deployment and status updates via email.</span>
+          </section>
+        </section>
+        <button
+          class="cuenta__interruptor"
+          type="button"
+          (click)="alternarNotificacion('email')"
+          [class.cuenta__interruptor--activo]="notificacionesEmail()"
+          [attr.aria-pressed]="notificacionesEmail()">
+          <span class="cuenta__interruptor__circulo" aria-hidden="true"></span>
+        </button>
+      </article>
+
+      <article class="cuenta__toggle-fila">
+        <section class="cuenta__toggle-fila__info">
+          <span class="cuenta__toggle-fila__numero" aria-hidden="true">ii</span>
+          <section class="cuenta__toggle-fila__texto">
+            <span class="cuenta__toggle-fila__titulo">Critical alerts</span>
+            <span class="cuenta__toggle-fila__detalle">Get notified when CPU, RAM or disk exceed 90% usage.</span>
+          </section>
+        </section>
+        <button
+          class="cuenta__interruptor"
+          type="button"
+          (click)="alternarNotificacion('criticas')"
+          [class.cuenta__interruptor--activo]="notificacionesAlertasCriticas()"
+          [attr.aria-pressed]="notificacionesAlertasCriticas()">
+          <span class="cuenta__interruptor__circulo" aria-hidden="true"></span>
+        </button>
+      </article>
+
+      <article class="cuenta__toggle-fila">
+        <section class="cuenta__toggle-fila__info">
+          <span class="cuenta__toggle-fila__numero" aria-hidden="true">iii</span>
+          <section class="cuenta__toggle-fila__texto">
+            <span class="cuenta__toggle-fila__titulo">Deployment events</span>
+            <span class="cuenta__toggle-fila__detalle">Every successful or failed build, the moment it lands.</span>
+          </section>
+        </section>
+        <button
+          class="cuenta__interruptor"
+          type="button"
+          (click)="alternarNotificacion('despliegues')"
+          [class.cuenta__interruptor--activo]="notificacionesDespliegues()"
+          [attr.aria-pressed]="notificacionesDespliegues()">
+          <span class="cuenta__interruptor__circulo" aria-hidden="true"></span>
+        </button>
+      </article>
+    </section>
+  </section>
+
+  <section class="cuenta__bloque cuenta__bloque--exit">
+    <header class="cuenta__cabecera-seccion cuenta__cabecera-seccion--peligro">
+      <span class="cuenta__cabecera-seccion__indice">06</span>
+      <section class="cuenta__cabecera-seccion__texto">
+        <h2 class="cuenta__cabecera-seccion__titulo">Exit</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">Hold the trigger for a full second to close this session.</p>
+      </section>
+    </header>
+
+    <button
+      class="cuenta__boton-salida"
+      [class.cuenta__boton-salida--cargando]="progresoSalidaActivo()"
+      type="button"
+      (mousedown)="iniciarSalida()"
+      (mouseup)="cancelarSalida()"
+      (mouseleave)="cancelarSalida()"
+      (touchstart)="iniciarSalida()"
+      (touchend)="cancelarSalida()"
+      (touchcancel)="cancelarSalida()">
+      <span class="cuenta__boton-salida__contenido">
+        <span class="cuenta__boton-salida__icono" aria-hidden="true">
+          <i class="fa-solid fa-arrow-right-from-bracket"></i>
+        </span>
+        <span class="cuenta__boton-salida__texto">
+          {{ progresoSalidaActivo() ? "Keep holding" : "Hold to sign out" }}
+        </span>
+      </span>
+      <span class="cuenta__boton-salida__progreso" aria-hidden="true"></span>
     </button>
   </section>
+
+  <footer class="cuenta__pie">
+    <span class="cuenta__pie__codigo">{{ idTruncado() }}</span>
+    <span class="cuenta__pie__separador" aria-hidden="true"></span>
+    <span class="cuenta__pie__notas">Personal dossier · maintained by AutoDeploy</span>
+    <span class="cuenta__pie__separador" aria-hidden="true"></span>
+    <span class="cuenta__pie__edicion">Edition {{ anioActual }}.{{ anioActual + 1 }}</span>
+  </footer>
 
 </section>

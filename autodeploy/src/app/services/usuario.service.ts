@@ -141,6 +141,61 @@ export class UsuarioService {
     });
   }
 
+  listarClavesSsh(): Promise<{ id: string; nombre: string; huella: string; fechaCreacion: string }[]> {
+    const servicio = this;
+    const idActual = this.usuarioId();
+    return new Promise(function(resolver, rechazar) {
+      servicio.http.get<RespuestaApi<any[]>>(servicio.urlBase + "/" + idActual + "/claves-ssh").subscribe({
+        next: function(respuesta) { resolver(respuesta.data || []); },
+        error: function() { rechazar(new Error("Could not load SSH keys")); }
+      });
+    });
+  }
+
+  agregarClaveSsh(nombre: string, claveCompleta: string): Promise<{ id: string; nombre: string; huella: string; fechaCreacion: string }> {
+    const servicio = this;
+    const idActual = this.usuarioId();
+    return new Promise(function(resolver, rechazar) {
+      servicio.http.post<RespuestaApi<any>>(servicio.urlBase + "/" + idActual + "/claves-ssh", { nombre: nombre, claveCompleta: claveCompleta }).subscribe({
+        next: function(respuesta) { resolver(respuesta.data); },
+        error: function() { rechazar(new Error("Could not save the SSH key")); }
+      });
+    });
+  }
+
+  eliminarClaveSsh(idClave: string): Promise<void> {
+    const servicio = this;
+    const idActual = this.usuarioId();
+    return new Promise(function(resolver, rechazar) {
+      servicio.http.delete(servicio.urlBase + "/" + idActual + "/claves-ssh/" + idClave).subscribe({
+        next: function() { resolver(); },
+        error: function() { rechazar(new Error("Could not delete the SSH key")); }
+      });
+    });
+  }
+
+  obtenerPreferenciasNotificacion(): Promise<{ email: boolean; alertasCriticas: boolean; eventosDespliegue: boolean }> {
+    const servicio = this;
+    const idActual = this.usuarioId();
+    return new Promise(function(resolver, rechazar) {
+      servicio.http.get<RespuestaApi<any>>(servicio.urlBase + "/" + idActual + "/notificaciones").subscribe({
+        next: function(respuesta) { resolver(respuesta.data); },
+        error: function() { rechazar(new Error("Could not load preferences")); }
+      });
+    });
+  }
+
+  guardarPreferenciasNotificacion(preferencias: { email: boolean; alertasCriticas: boolean; eventosDespliegue: boolean }): Promise<void> {
+    const servicio = this;
+    const idActual = this.usuarioId();
+    return new Promise(function(resolver, rechazar) {
+      servicio.http.put(servicio.urlBase + "/" + idActual + "/notificaciones", preferencias).subscribe({
+        next: function() { resolver(); },
+        error: function() { rechazar(new Error("Could not save preferences")); }
+      });
+    });
+  }
+
   limpiar(): void {
     sessionStorage.removeItem("usuarioId");
     sessionStorage.removeItem("nombre");

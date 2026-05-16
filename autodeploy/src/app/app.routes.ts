@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard } from './guards/auth.guard';
+import { planAsistenteGuard } from './guards/plan-asistente.guard';
 
 export const routes: Routes = [
   {
@@ -123,6 +124,12 @@ export const routes: Routes = [
       {
         path: 'pago',
         loadComponent: () => import('./pages/pago/pago').then((modulo) => modulo.Pago),
+      },
+      {
+        path: 'asistente-ia',
+        canActivate: [planAsistenteGuard],
+        loadComponent: () =>
+          import('./pages/asistente-ia/asistente-ia').then((modulo) => modulo.AsistenteIa),
       },
     ],
   },

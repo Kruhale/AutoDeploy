@@ -46,6 +46,15 @@
           </a>
         </li>
         <li>
+          <a class="barra-lateral__enlace" routerLink="/app/asistente-ia" routerLinkActive="barra-lateral__enlace--activo">
+            <i class="fa-solid fa-robot barra-lateral__enlace__icono"></i>
+            <span class="barra-lateral__enlace__texto">AI Assistant</span>
+            @if (planService.planActual() !== 'pro' && planService.planActual() !== 'business') {
+              <span class="barra-lateral__chip-pro">Pro</span>
+            }
+          </a>
+        </li>
+        <li>
           <a class="barra-lateral__enlace" routerLink="/app/nuevo-despliegue"
             routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-cubes barra-lateral__enlace__icono"></i>

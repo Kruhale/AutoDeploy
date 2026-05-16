@@ -3,10 +3,10 @@
     <section class="editorial__cabecera__izquierda">
       <p class="editorial__sello">
         <span class="editorial__sello__punto" aria-hidden="true"></span>
-        Workspace · Applications · New deployment
+        {{ "nuevoDespliegue.sello" | translate }}
       </p>
-      <h1 class="editorial__titulo">New deployment<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="editorial__subtitulo">Configure runtime, source and target server to roll out your application.</p>
+      <h1 class="editorial__titulo">{{ "nuevoDespliegue.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "nuevoDespliegue.subtitulo" | translate }}</p>
     </section>
     <button class="editorial__cta-principal" type="button" (click)="lanzarDespliegue()" [disabled]="desplegando()">
       <span class="editorial__cta-principal__icono" aria-hidden="true">
@@ -17,8 +17,8 @@
         }
       </span>
       <span class="editorial__cta-principal__texto">
-        <span class="editorial__cta-principal__principal">{{ desplegando() ? "Deploying" : "Deploy now" }}</span>
-        <span class="editorial__cta-principal__secundario">Build and roll out</span>
+        <span class="editorial__cta-principal__principal">{{ (desplegando() ? "nuevoDespliegue.deploying" : "nuevoDespliegue.deployNow") | translate }}</span>
+        <span class="editorial__cta-principal__secundario">{{ "nuevoDespliegue.ctaSecundario" | translate }}</span>
       </span>
     </button>
   </header>
@@ -28,12 +28,20 @@
     <section class="nuevo-despliegue__paso">
       <header class="editorial__bloque__cabecera">
         <span class="editorial__bloque__indice">01</span>
-        <h2 class="editorial__bloque__titulo"><em>Runtime</em> &amp; stack</h2>
-        <p class="editorial__bloque__meta">Pick one</p>
+        <h2 class="editorial__bloque__titulo">{{ "nuevoDespliegue.paso01.titulo" | translate }}</h2>
+        <p class="editorial__bloque__meta">{{ "nuevoDespliegue.paso01.meta" | translate }}</p>
       </header>
       <section class="nuevo-despliegue__tecnologias">
         @for (tech of opcionesDeTecnologia(); track tech.nombre) {
-          <article class="nuevo-despliegue__tech" [class.nuevo-despliegue__tech--activa]="tecnologiaSeleccionada() === tech.nombre" (click)="seleccionarTecnologia(tech.nombre)">
+          <article
+            class="nuevo-despliegue__tech"
+            [class.nuevo-despliegue__tech--activa]="tecnologiaSeleccionada() === tech.nombre"
+            role="button"
+            tabindex="0"
+            [attr.aria-pressed]="tecnologiaSeleccionada() === tech.nombre"
+            (click)="seleccionarTecnologia(tech.nombre)"
+            (keydown.enter)="seleccionarTecnologia(tech.nombre)"
+            (keydown.space)="seleccionarTecnologia(tech.nombre); $event.preventDefault()">
             @if (tech.icono) {
               <i class="nuevo-despliegue__tech__icono {{ tech.icono }}"></i>
             } @else {
@@ -50,72 +58,127 @@
       <section class="nuevo-despliegue__paso nuevo-despliegue__paso--columna">
         <header class="editorial__bloque__cabecera">
           <span class="editorial__bloque__indice">02</span>
-          <h2 class="editorial__bloque__titulo"><em>Source</em> code</h2>
-          <p class="editorial__bloque__meta">{{ origenCodigo() === 'git' ? 'Git remote' : 'Zip upload' }}</p>
+          <h2 class="editorial__bloque__titulo">{{ "nuevoDespliegue.paso02.titulo" | translate }}</h2>
+          <p class="editorial__bloque__meta">{{ (origenCodigo() === 'git' ? "nuevoDespliegue.paso02.metaGit" : "nuevoDespliegue.paso02.metaZip") | translate }}</p>
         </header>
         <section class="toggle">
           <button class="toggle__opcion" [class.toggle__opcion--activa]="origenCodigo() === 'git'" (click)="cambiarOrigenCodigo('git')">
-            <i class="fa-brands fa-github"></i> Git / GitHub
+            <i class="fa-brands fa-github"></i> {{ "nuevoDespliegue.paso02.toggleGit" | translate }}
           </button>
           <button class="toggle__opcion" [class.toggle__opcion--activa]="origenCodigo() === 'zip'" (click)="cambiarOrigenCodigo('zip')">
-            <i class="fa-solid fa-lock"></i> Upload ZIP
+            <i class="fa-solid fa-lock"></i> {{ "nuevoDespliegue.paso02.toggleZip" | translate }}
           </button>
         </section>
         @if (origenCodigo() === 'git') {
           <section class="campo">
-            <label class="campo__etiqueta">Repository URL</label>
-            <input class="campo__input" type="text" placeholder="https://github.com/user/repo.git" [ngModel]="repositorioUrl()" (ngModelChange)="repositorioUrl.set($event)">
+            <label class="campo__etiqueta" for="campo-repo-url">{{ "nuevoDespliegue.paso02.repositoryUrl" | translate }}</label>
+            <input id="campo-repo-url" class="campo__input" type="text" [placeholder]="'nuevoDespliegue.paso02.repositoryUrlPlaceholder' | translate" [ngModel]="repositorioUrl()" (ngModelChange)="repositorioUrl.set($event)">
           </section>
           <section class="nuevo-despliegue__fila-inputs">
             <section class="campo nuevo-despliegue__campo--mitad">
-              <label class="campo__etiqueta">Branch</label>
-              <input class="campo__input" type="text" placeholder="main" [ngModel]="rama()" (ngModelChange)="rama.set($event)">
+              <label class="campo__etiqueta" for="campo-rama">{{ "nuevoDespliegue.paso02.branch" | translate }}</label>
+              <input id="campo-rama" class="campo__input" type="text" [placeholder]="'nuevoDespliegue.paso02.branchPlaceholder' | translate" [ngModel]="rama()" (ngModelChange)="rama.set($event)">
             </section>
             <section class="campo nuevo-despliegue__campo--mitad">
-              <label class="campo__etiqueta">Root Directory</label>
-              <input class="campo__input" type="text" placeholder="./" [ngModel]="directorioRaiz()" (ngModelChange)="directorioRaiz.set($event)">
+              <label class="campo__etiqueta" for="campo-directorio-raiz">{{ "nuevoDespliegue.paso02.rootDirectory" | translate }}</label>
+              <input id="campo-directorio-raiz" class="campo__input" type="text" [placeholder]="'nuevoDespliegue.paso02.rootDirectoryPlaceholder' | translate" [ngModel]="directorioRaiz()" (ngModelChange)="directorioRaiz.set($event)">
             </section>
           </section>
+        } @else {
+          <section
+            class="zona-zip"
+            role="button"
+            tabindex="0"
+            [attr.aria-label]="'nuevoDespliegue.paso02.zip.arrastrar' | translate"
+            [class.zona-zip--activa]="archivoArrastrandose()"
+            [class.zona-zip--con-archivo]="archivoZipSeleccionado() !== null"
+            (dragover)="onDragOver($event)"
+            (dragleave)="onDragLeave($event)"
+            (drop)="onDropArchivo($event)"
+            (click)="entradaArchivo.click()"
+            (keydown.enter)="entradaArchivo.click()"
+            (keydown.space)="entradaArchivo.click(); $event.preventDefault()">
+            <input
+              #entradaArchivo
+              type="file"
+              accept=".zip"
+              hidden
+              (change)="onSeleccionarArchivo($event)">
+
+            @if (archivoZipSeleccionado() === null) {
+              <i class="fa-solid fa-cloud-arrow-up zona-zip__icono"></i>
+              <p class="zona-zip__titulo">{{ "nuevoDespliegue.paso02.zip.arrastrar" | translate }}</p>
+              <p class="zona-zip__detalle">{{ "nuevoDespliegue.paso02.zip.detalle" | translate }}</p>
+            } @else {
+              <i class="fa-solid fa-file-zipper zona-zip__icono zona-zip__icono--ok"></i>
+              <p class="zona-zip__nombre">{{ archivoZipSeleccionado()!.name }}</p>
+              <p class="zona-zip__detalle">{{ tamanoLegible(archivoZipSeleccionado()!.size) }}</p>
+              <button class="zona-zip__quitar" type="button" (click)="quitarArchivo($event)">
+                <i class="fa-solid fa-xmark"></i> {{ "nuevoDespliegue.paso02.zip.quitar" | translate }}
+              </button>
+            }
+          </section>
+
+          <section class="campo">
+            <label class="campo__etiqueta" for="campo-zip-destino">{{ "nuevoDespliegue.paso02.zip.directorioDestino" | translate }}</label>
+            <input id="campo-zip-destino" class="campo__input" type="text" [placeholder]="'nuevoDespliegue.paso02.zip.directorioDestinoPlaceholder' | translate" [ngModel]="directorioRemotoZip()" (ngModelChange)="directorioRemotoZip.set($event)">
+          </section>
+
+          @if (progresoSubida() > 0 && progresoSubida() < 100) {
+            <section class="barra-progreso">
+              <span class="barra-progreso__fondo">
+                <span class="barra-progreso__avance" [style.width.%]="progresoSubida()"></span>
+              </span>
+              <span class="barra-progreso__porcentaje">{{ progresoSubida() }}%</span>
+            </section>
+          }
         }
       </section>
 
       <section class="nuevo-despliegue__paso nuevo-despliegue__paso--columna">
         <header class="editorial__bloque__cabecera">
           <span class="editorial__bloque__indice">03</span>
-          <h2 class="editorial__bloque__titulo"><em>Network</em> &amp; SSL</h2>
-          <p class="editorial__bloque__meta">{{ sslActivo() ? 'TLS on' : 'TLS off' }}</p>
+          <h2 class="editorial__bloque__titulo">{{ "nuevoDespliegue.paso03.titulo" | translate }}</h2>
+          <p class="editorial__bloque__meta">{{ (sslActivo() ? "nuevoDespliegue.paso03.tlsOn" : "nuevoDespliegue.paso03.tlsOff") | translate }}</p>
         </header>
         <section class="nuevo-despliegue__ssl">
           <section class="nuevo-despliegue__ssl__info">
             <i class="fa-solid fa-lock nuevo-despliegue__ssl__icono"></i>
             <section class="nuevo-despliegue__ssl__texto">
-              <span class="nuevo-despliegue__ssl__titulo">SSL Let's Encrypt</span>
-              <span class="nuevo-despliegue__ssl__desc">Firewall enabled</span>
+              <span class="nuevo-despliegue__ssl__titulo">{{ "nuevoDespliegue.paso03.sslTitulo" | translate }}</span>
+              <span class="nuevo-despliegue__ssl__desc">{{ "nuevoDespliegue.paso03.sslDescripcion" | translate }}</span>
             </section>
           </section>
-          <span class="interruptor" [class.interruptor--activo]="sslActivo()" (click)="alternarSsl()">
-            <span class="interruptor__circulo" [class.interruptor__circulo--activo]="sslActivo()"></span>
-          </span>
+          <button
+            type="button"
+            class="interruptor"
+            role="switch"
+            [attr.aria-checked]="sslActivo()"
+            [attr.aria-label]="'nuevoDespliegue.paso03.sslTitulo' | translate"
+            [class.interruptor--activo]="sslActivo()"
+            (click)="alternarSsl()">
+            <span class="interruptor__circulo" [class.interruptor__circulo--activo]="sslActivo()" aria-hidden="true"></span>
+          </button>
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">Target server</label>
-          <select class="campo__input" [ngModel]="servidorDestinoId()" (ngModelChange)="servidorDestinoId.set($event)">
+          <label class="campo__etiqueta" for="campo-servidor-destino">{{ "nuevoDespliegue.paso03.targetServer" | translate }}</label>
+          <select id="campo-servidor-destino" class="campo__input" [ngModel]="servidorDestinoId()" (ngModelChange)="servidorDestinoId.set($event)">
             @for (servidor of listaServidores(); track servidor.id) {
               <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
             }
           </select>
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">Application Port</label>
-          <input class="campo__input" type="text" [ngModel]="puertoAplicacion()" (ngModelChange)="puertoAplicacion.set($event)">
+          <label class="campo__etiqueta" for="campo-puerto">{{ "nuevoDespliegue.paso03.applicationPort" | translate }}</label>
+          <input id="campo-puerto" class="campo__input" type="text" [ngModel]="puertoAplicacion()" (ngModelChange)="puertoAplicacion.set($event)">
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">Domain / Subdomain</label>
-          <input class="campo__input" type="text" placeholder="miapp.autodeploy.sh" [ngModel]="dominio()" (ngModelChange)="dominio.set($event)">
+          <label class="campo__etiqueta" for="campo-dominio">{{ "nuevoDespliegue.paso03.dominio" | translate }}</label>
+          <input id="campo-dominio" class="campo__input" type="text" [placeholder]="'nuevoDespliegue.paso03.dominioPlaceholder' | translate" [ngModel]="dominio()" (ngModelChange)="dominio.set($event)">
         </section>
         <section class="nuevo-despliegue__nota">
           <i class="fa-solid fa-circle-info nuevo-despliegue__nota__icono"></i>
-          <p class="nuevo-despliegue__nota__texto">We'll automatically configure an Nginx instance as a reverse proxy for this service.</p>
+          <p class="nuevo-despliegue__nota__texto">{{ "nuevoDespliegue.paso03.nota" | translate }}</p>
         </section>
       </section>
     </section>
@@ -134,10 +197,10 @@
 
   <footer class="editorial__pie">
     <section class="editorial__pie__izquierda">
-      <span class="editorial__pie__codigo">№ DEP-{{ origenCodigo() === 'git' ? 'GIT' : 'ZIP' }}</span>
+      <span class="editorial__pie__codigo">{{ "nuevoDespliegue.pie.codigoPrefijo" | translate }}{{ origenCodigo() === 'git' ? 'GIT' : 'ZIP' }}</span>
       <span class="editorial__pie__separador" aria-hidden="true">·</span>
-      <span class="editorial__pie__texto">{{ sslActivo() ? 'TLS handled automatically by Let\'s Encrypt' : 'TLS disabled — only enable for production' }}</span>
+      <span class="editorial__pie__texto">{{ (sslActivo() ? "nuevoDespliegue.pie.tlsOn" : "nuevoDespliegue.pie.tlsOff") | translate }}</span>
     </section>
-    <button class="boton--ghost" type="button" (click)="cancelar()">Cancel</button>
+    <button class="boton--ghost" type="button" (click)="cancelar()">{{ "nuevoDespliegue.cancelar" | translate }}</button>
   </footer>
 </section>

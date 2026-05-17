@@ -1,104 +1,141 @@
-.pagina-networking {
+/* Estilos específicos de Networking · usa también .editorial-* compartido */
+
+/* Formulario flotante para añadir dominio */
+
+.pagina-networking__formulario {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-3xl);
+  gap: var(--spacing-size-xl);
+  padding: var(--spacing-size-xl);
+  background-color: hsla(40, 33.33%, 91.37%, 0.025);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-xl);
+  animation: editorial-entrar 360ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.pagina-networking__cabecera {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-}
-
-.pagina-networking__cabecera__izquierda {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.pagina-networking__titulo {
-  font-family: var(--font-secondary);
-  font-size: 1.75rem;
-  font-weight: var(--font-weight-extrabold);
-  color: var(--texto-claro);
-  letter-spacing: -0.5px;
-}
-
-.pagina-networking__subtitulo {
-  font-size: var(--font-size-md);
-  color: var(--texto-medio);
-}
-
-.pagina-networking__seccion {
-  display: flex;
-  flex-direction: column;
+.pagina-networking__formulario__cabecera {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: baseline;
   gap: var(--spacing-size-l);
 }
 
-.pagina-networking__seccion__titulo {
-  font-family: var(--font-secondary);
-  font-size: var(--font-size-lg);
+.pagina-networking__formulario__indice {
+  font-family: var(--font-mono);
+  font-size: 0.95rem;
+  color: var(--amarillo-normal);
+  padding: 0.05rem 0.5rem;
+  border: 1px solid var(--amarillo-transparente-030);
+  border-radius: var(--radius-full);
   font-weight: var(--font-weight-bold);
+}
+
+.pagina-networking__formulario__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.pagina-networking__formulario__titulo {
+  font-family: var(--font-secondary);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.015em;
   color: var(--texto-claro);
 }
 
-.pagina-networking__vacio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-size-s);
-  padding: var(--spacing-size-5xl) 0;
-  text-align: center;
-}
-
-.pagina-networking__vacio__icono {
-  font-size: 1.5rem;
-  color: var(--texto-apagado);
-  opacity: 0.4;
-  margin-bottom: var(--spacing-size-s);
-}
-
-.pagina-networking__vacio__texto {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
+.pagina-networking__formulario__descripcion {
+  font-size: 0.85rem;
   color: var(--texto-medio);
 }
 
-.pagina-networking__vacio__detalle {
-  font-size: var(--font-size-sm);
+.pagina-networking__formulario__campos {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: var(--spacing-size-l);
+}
+
+.pagina-networking__formulario__acciones {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-size-l);
+}
+
+.pagina-networking__form-cancelar {
+  background: none;
+  border: none;
   color: var(--texto-apagado);
+  font-family: var(--font-secondary);
+  font-size: 0.9rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  padding: 0.5rem 0.75rem;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-networking__form-cancelar:hover {
+  color: var(--texto-claro);
+}
+
+/* Lista de dominios */
+
+.pagina-networking__lista {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--borde-normal);
 }
 
 .pagina-networking__dominio {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1.5fr) minmax(0, 1.2fr) auto;
   align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-size-l) 0;
+  gap: var(--spacing-size-l);
+  padding: var(--spacing-size-l) var(--spacing-size-m);
   border-bottom: 1px solid var(--borde-suave);
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-networking__dominio:hover {
+  background-color: rgba(240, 236, 226, 0.025);
+}
+
+.pagina-networking__dominio__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  background-color: hsla(191, 72%, 44%, 0.1);
+  border: 1px solid hsla(191, 72%, 44%, 0.28);
+  border-radius: 50%;
+  color: var(--cyan-normal);
+  font-size: 0.7rem;
 }
 
 .pagina-networking__dominio__info {
   display: flex;
-  align-items: center;
-  gap: var(--spacing-size-l);
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
 }
 
 .pagina-networking__dominio__nombre {
-  font-family: var(--font-mono);
+  font-family: var(--font-secondary);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-semibold);
   color: var(--texto-claro);
+  letter-spacing: -0.005em;
 }
 
 .pagina-networking__dominio__tipo {
-  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
   font-weight: var(--font-weight-bold);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  letter-spacing: 1px;
   color: var(--texto-apagado);
-  padding: 0.125rem 0.5rem;
-  background: rgba(240, 236, 226, 0.05);
-  border-radius: var(--radius-s);
 }
 
 .pagina-networking__dominio__ssl {
@@ -108,117 +145,384 @@
 }
 
 .pagina-networking__ssl-badge {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
-  font-size: var(--font-size-xs);
+  gap: 0.4rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
   font-weight: var(--font-weight-bold);
-  padding: 0.125rem 0.5rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
   border-radius: var(--radius-full);
+  border: 1px solid transparent;
 }
 
 .pagina-networking__ssl-badge--activo {
-  background: rgba(34, 197, 94, 0.1);
   color: var(--verde-normal);
+  background: hsla(142.09, 70.56%, 45.29%, 0.08);
+  border-color: hsla(142.09, 70.56%, 45.29%, 0.28);
 }
 
 .pagina-networking__ssl-badge--inactivo {
-  background: rgba(240, 236, 226, 0.05);
   color: var(--texto-apagado);
+  border-color: var(--borde-normal);
 }
 
 .pagina-networking__ssl-expira {
-  font-size: var(--font-size-xs);
-  color: var(--texto-apagado);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  color: var(--texto-medio);
 }
 
 .pagina-networking__dominio__estado {
-  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
   font-weight: var(--font-weight-bold);
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  padding: 0.2rem 0.55rem;
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
 }
 
 .pagina-networking__dominio__estado--active {
   color: var(--verde-normal);
+  background: hsla(142.09, 70.56%, 45.29%, 0.08);
+  border-color: hsla(142.09, 70.56%, 45.29%, 0.28);
 }
 
 .pagina-networking__dominio__estado--propagating {
-  color: var(--naranja-normal);
+  color: var(--amarillo-normal);
+  background: var(--amarillo-transparente-008);
+  border-color: var(--amarillo-transparente-030);
 }
 
 .pagina-networking__dominio__estado--error {
   color: var(--rojo-normal);
+  background: hsla(0, 79.17%, 60.59%, 0.08);
+  border-color: hsla(0, 79.17%, 60.59%, 0.28);
 }
 
+/* Mensaje flotante */
+
+.pagina-networking__mensaje {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.65rem 1rem;
+  background-color: var(--amarillo-transparente-008);
+  border: 1px solid var(--amarillo-transparente-030);
+  border-radius: var(--radius-m);
+  font-size: 0.85rem;
+  color: var(--amarillo-normal);
+  margin-bottom: var(--spacing-size-l);
+  align-self: flex-start;
+}
+
+.pagina-networking__mensaje__punto {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: var(--amarillo-normal);
+  animation: editorial-respirar 1.8s ease-in-out infinite;
+}
+
+/* Acciones rápidas */
+
 .pagina-networking__acciones {
-  display: flex;
-  gap: var(--spacing-size-l);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--spacing-size-m);
 }
 
 .pagina-networking__accion {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
   gap: var(--spacing-size-m);
-  flex: 1;
-  padding: var(--spacing-size-l);
-  background: none;
+  padding: var(--spacing-size-l) var(--spacing-size-xl);
+  background-color: hsla(40, 33.33%, 91.37%, 0.025);
   border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-l);
-  color: var(--texto-medio);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-medium);
-  font-family: var(--font-primary);
+  border-radius: var(--radius-xl);
+  color: var(--texto-claro);
+  font-family: inherit;
   cursor: pointer;
-  transition: border-color var(--duration-base) ease, color var(--duration-base) ease;
+  text-align: left;
+  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pagina-networking__accion:hover {
-  border-color: rgba(240, 236, 226, 0.15);
-  color: var(--texto-claro);
+  transform: translateY(-2px);
+  border-color: hsla(40, 33.33%, 91.37%, 0.18);
+  background-color: hsla(40, 33.33%, 91.37%, 0.045);
+}
+
+.pagina-networking__accion:active {
+  transform: scale(0.99);
 }
 
 .pagina-networking__accion__icono {
-  font-size: var(--font-size-base);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background-color: var(--amarillo-transparente-008);
+  border: 1px solid var(--amarillo-transparente-030);
+  color: var(--amarillo-normal);
+  font-size: 0.85rem;
+}
+
+.pagina-networking__accion__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.pagina-networking__accion__titulo {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.005em;
+  color: var(--texto-claro);
+}
+
+.pagina-networking__accion__detalle {
+  font-size: 0.78rem;
+  color: var(--texto-medio);
+  letter-spacing: -0.005em;
+}
+
+.pagina-networking__accion__flecha {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--texto-apagado);
+  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-networking__accion:hover .pagina-networking__accion__flecha {
+  transform: translateX(0.25rem);
   color: var(--amarillo-normal);
 }
 
-.pagina-networking__accion__texto {
-  font-size: var(--font-size-md);
+@media (max-width: 960px) {
+  .pagina-networking__formulario__campos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pagina-networking__acciones {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .pagina-networking__dominio {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .pagina-networking__dominio__ssl,
+  .pagina-networking__dominio__estado {
+    grid-column: 1 / -1;
+  }
 }
 
-.pagina-networking__formulario {
+/* === Modal DNS / Redirects === */
+.pagina-networking__modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--spacing-size-2xl);
+  animation: pagina-networking-fade 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes pagina-networking-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.pagina-networking__modal__caja {
+  width: 100%;
+  max-width: 52rem;
+  max-height: 85vh;
+  overflow-y: auto;
+  background: var(--fondo-oscuro);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-size-2xl);
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-l);
-  padding: var(--spacing-size-2xl);
+  gap: var(--spacing-size-xl);
+}
+
+.pagina-networking__modal__cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: var(--spacing-size-l);
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.pagina-networking__modal__titulo-zona {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.pagina-networking__modal__indice {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--texto-apagado);
+  text-transform: uppercase;
+}
+
+.pagina-networking__modal__titulo {
+  font-family: var(--font-secondary);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.035em;
+  color: var(--texto-claro);
+}
+
+.pagina-networking__modal__cerrar {
+  background: transparent;
   border: 1px solid var(--borde-normal);
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  color: var(--texto-medio);
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-networking__modal__cerrar:hover {
+  border-color: var(--rojo-normal);
+  color: var(--rojo-normal);
+}
+
+.pagina-networking__modal__busqueda {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: var(--spacing-size-m);
+}
+
+.pagina-networking__modal__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-m);
+}
+
+.pagina-networking__dns-fila {
+  display: grid;
+  grid-template-columns: 4.5rem minmax(0, 1fr);
+  align-items: flex-start;
+  gap: var(--spacing-size-m);
+  padding: var(--spacing-size-m) 0;
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.pagina-networking__dns-tipo {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--amarillo-normal);
+  letter-spacing: 0.1em;
+  padding-top: 0.1rem;
+}
+
+.pagina-networking__dns-valores {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.pagina-networking__dns-valor {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--texto-claro);
+  word-break: break-all;
+}
+
+.pagina-networking__dns-vacio {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--texto-apagado);
+  font-style: italic;
+}
+
+.pagina-networking__redirects-form {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 2fr) auto auto;
+  gap: var(--spacing-size-m);
+}
+
+.pagina-networking__redirects-vacio {
+  padding: var(--spacing-size-l);
+  text-align: center;
+  color: var(--texto-medio);
+  font-size: var(--font-size-sm);
+
+  code {
+    font-family: var(--font-mono);
+    background: rgba(240, 236, 226, 0.06);
+    padding: 0.15rem 0.45rem;
+    border-radius: 0.3rem;
+    color: var(--amarillo-normal);
+  }
+}
+
+.pagina-networking__redirects-lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-s);
+}
+
+.pagina-networking__redirect {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto minmax(0, 1.5fr) auto;
+  align-items: center;
+  gap: var(--spacing-size-m);
+  padding: var(--spacing-size-m);
+  background: rgba(240, 236, 226, 0.025);
+  border: 1px solid var(--borde-suave);
   border-radius: var(--radius-l);
 }
 
-.pagina-networking__formulario__fila {
-  display: flex;
-  gap: var(--spacing-size-l);
+.pagina-networking__redirect__codigo {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--amarillo-normal);
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--amarillo-normal);
+  border-radius: var(--radius-full);
+  letter-spacing: 0.06em;
 }
 
-.pagina-networking__formulario__fila .campo {
-  flex: 1;
+.pagina-networking__redirect__origen,
+.pagina-networking__redirect__destino {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--texto-claro);
+  word-break: break-all;
 }
 
-.pagina-networking__formulario__acciones {
-  display: flex;
-  gap: var(--spacing-size-l);
-  justify-content: flex-end;
+.pagina-networking__redirect__flecha {
+  color: var(--texto-apagado);
+  font-family: var(--font-mono);
 }
 
-.pagina-networking__mensaje {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--verde-normal);
-}
-
-@media (max-width: 768px) {
-  .pagina-networking__acciones {
-    flex-direction: column;
+@media (max-width: 720px) {
+  .pagina-networking__redirects-form {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .pagina-networking__redirect {
+    grid-template-columns: auto minmax(0, 1fr) auto;
   }
 }

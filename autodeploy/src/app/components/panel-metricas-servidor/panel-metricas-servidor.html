@@ -1,0 +1,123 @@
+@if (estaEsperandoDatos()) {
+  <section class="panel-metricas panel-metricas--vacio">
+    <header class="panel-metricas__cabecera">
+      <h3 class="panel-metricas__titulo">{{ nombreServidor || "Servidor" }}</h3>
+      <span class="panel-metricas__chip panel-metricas__chip--esperando">
+        <i class="fa-solid fa-satellite-dish"></i>
+        Esperando primer ciclo
+      </span>
+    </header>
+    <p class="panel-metricas__mensaje-vacio">
+      El backend está abriendo la sesión SSH y recolectando datos. Las métricas aparecerán aquí en unos segundos.
+    </p>
+  </section>
+}
+
+@if (!estaEsperandoDatos()) {
+  @let metrica = metricaActual();
+  <section class="panel-metricas">
+    <header class="panel-metricas__cabecera">
+      <article class="panel-metricas__identidad">
+        <h3 class="panel-metricas__titulo">{{ nombreServidor || "Servidor" }}</h3>
+        <span class="panel-metricas__uptime">
+          <i class="fa-solid fa-clock"></i>
+          {{ tiempoEncendidoTexto() }} encendido
+        </span>
+      </article>
+      @if (metrica && metrica.sesionActiva) {
+        <span class="panel-metricas__chip panel-metricas__chip--vivo">
+          <span class="panel-metricas__punto-vivo"></span>
+          Sesión SSH viva
+        </span>
+      }
+      @if (metrica && !metrica.sesionActiva) {
+        <span class="panel-metricas__chip panel-metricas__chip--caido">
+          <i class="fa-solid fa-plug-circle-xmark"></i>
+          Reconectando
+        </span>
+      }
+    </header>
+
+    <section class="panel-metricas__rejilla">
+      <article class="tarjeta-metrica">
+        <header class="tarjeta-metrica__cabecera">
+          <i class="fa-solid fa-microchip tarjeta-metrica__icono"></i>
+          <span class="tarjeta-metrica__etiqueta">CPU</span>
+        </header>
+        <strong class="tarjeta-metrica__valor">{{ metrica?.cpuPorcentaje?.toFixed(1) || 0 }}<small class="tarjeta-metrica__unidad">%</small></strong>
+        <section class="barra-progreso" [class]="obtenerClaseColorBarra(metrica?.cpuPorcentaje || 0)">
+          <span class="barra-progreso__relleno" [style.width.%]="metrica?.cpuPorcentaje || 0"></span>
+        </section>
+        <span class="tarjeta-metrica__nota">Carga {{ metrica?.cargaPromedio?.toFixed(2) || "0.00" }}</span>
+      </article>
+
+      <article class="tarjeta-metrica">
+        <header class="tarjeta-metrica__cabecera">
+          <i class="fa-solid fa-memory tarjeta-metrica__icono"></i>
+          <span class="tarjeta-metrica__etiqueta">RAM</span>
+        </header>
+        <strong class="tarjeta-metrica__valor">{{ porcentajeRam() }}<small class="tarjeta-metrica__unidad">%</small></strong>
+        <section class="barra-progreso" [class]="obtenerClaseColorBarra(porcentajeRam())">
+          <span class="barra-progreso__relleno" [style.width.%]="porcentajeRam()"></span>
+        </section>
+        <span class="tarjeta-metrica__nota">{{ metrica?.ramUsadaMb }} MB / {{ metrica?.ramTotalMb }} MB</span>
+      </article>
+
+      <article class="tarjeta-metrica">
+        <header class="tarjeta-metrica__cabecera">
+          <i class="fa-solid fa-hard-drive tarjeta-metrica__icono"></i>
+          <span class="tarjeta-metrica__etiqueta">Disco</span>
+        </header>
+        <strong class="tarjeta-metrica__valor">{{ metrica?.discoUsadoPorcentaje || 0 }}<small class="tarjeta-metrica__unidad">%</small></strong>
+        <section class="barra-progreso" [class]="obtenerClaseColorBarra(metrica?.discoUsadoPorcentaje || 0)">
+          <span class="barra-progreso__relleno" [style.width.%]="metrica?.discoUsadoPorcentaje || 0"></span>
+        </section>
+        <span class="tarjeta-metrica__nota">{{ metrica?.discoUsadoGb }} GB / {{ metrica?.discoTotalGb }} GB</span>
+      </article>
+    </section>
+
+    <section class="panel-metricas__listas">
+      <article class="lista-recursos">
+        <header class="lista-recursos__cabecera">
+          <i class="fa-solid fa-globe lista-recursos__icono"></i>
+          <h4 class="lista-recursos__titulo">Webs desplegadas</h4>
+          <span class="lista-recursos__contador">{{ metrica?.webDesplegadas?.length || 0 }}</span>
+        </header>
+        @if (metrica && metrica.webDesplegadas.length > 0) {
+          <ul class="lista-recursos__lista">
+            @for (web of metrica.webDesplegadas; track web) {
+              <li class="lista-recursos__item">
+                <span class="lista-recursos__punto"></span>
+                {{ web }}
+              </li>
+            }
+          </ul>
+        }
+        @if (!metrica || metrica.webDesplegadas.length === 0) {
+          <p class="lista-recursos__vacio">Sin sitios activos en /etc/nginx/sites-enabled</p>
+        }
+      </article>
+
+      <article class="lista-recursos">
+        <header class="lista-recursos__cabecera">
+          <i class="fa-brands fa-docker lista-recursos__icono"></i>
+          <h4 class="lista-recursos__titulo">Containers Docker</h4>
+          <span class="lista-recursos__contador">{{ metrica?.containersDocker?.length || 0 }}</span>
+        </header>
+        @if (metrica && metrica.containersDocker.length > 0) {
+          <ul class="lista-recursos__lista">
+            @for (contenedor of metrica.containersDocker; track contenedor) {
+              <li class="lista-recursos__item">
+                <span class="lista-recursos__punto"></span>
+                {{ contenedor }}
+              </li>
+            }
+          </ul>
+        }
+        @if (!metrica || metrica.containersDocker.length === 0) {
+          <p class="lista-recursos__vacio">Sin contenedores ejecutándose</p>
+        }
+      </article>
+    </section>
+  </section>
+}

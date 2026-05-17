@@ -19,6 +19,8 @@ export class Login {
   mensajeDeError = signal("");
   cargando = signal(false);
 
+  readonly codigoSesion = this.generarCodigoSesion();
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -54,5 +56,10 @@ export class Login {
     } finally {
       this.cargando.set(false);
     }
+  }
+
+  private generarCodigoSesion(): string {
+    const aleatorio = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
+    return ("000000" + aleatorio).slice(-6);
   }
 }

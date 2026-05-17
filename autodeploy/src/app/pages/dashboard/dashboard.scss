@@ -1,3 +1,35 @@
 :host {
   display: block;
 }
+
+.panel-principal__monitor-tiempo-real {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-l);
+  margin-top: var(--spacing-size-xl);
+}
+
+.panel-principal__monitor-cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.panel-principal__monitor-titulo {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+  margin: 0;
+}
+
+.panel-principal__monitor-subtitulo {
+  font-size: var(--font-size-sm);
+  color: var(--texto-medio);
+  margin: 0;
+}
+
+.panel-principal__monitor-paneles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-l);
+}

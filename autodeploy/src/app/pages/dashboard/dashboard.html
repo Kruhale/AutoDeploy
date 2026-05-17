@@ -2,23 +2,34 @@
 
   <header class="panel-principal__cabecera">
     <section class="panel-principal__cabecera__izquierda">
-      <h1 class="panel-principal__titulo">Dashboard</h1>
-      <p class="panel-principal__subtitulo">Infrastructure overview</p>
+      <p class="panel-principal__sello">
+        <span class="panel-principal__sello__circulo" aria-hidden="true"></span>
+        Operations · live monitor
+      </p>
+      <h1 class="panel-principal__titulo">Dashboard<span class="panel-principal__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="panel-principal__subtitulo">Realtime infrastructure overview · all systems streaming</p>
     </section>
-    <a class="boton--primario" routerLink="/app/onboarding">
-      <i class="fa-solid fa-plus"></i>
-      Add Server
+    <a class="panel-principal__cta-principal" routerLink="/app/onboarding">
+      <span class="panel-principal__cta-principal__icono" aria-hidden="true">
+        <i class="fa-solid fa-plus"></i>
+      </span>
+      <span class="panel-principal__cta-principal__texto">
+        <span class="panel-principal__cta-principal__principal">Add server</span>
+        <span class="panel-principal__cta-principal__secundario">Connect a new VPS</span>
+      </span>
     </a>
   </header>
 
   <section class="panel-principal__metricas">
-    <article class="panel-principal__metrica">
-      <span class="panel-principal__metrica__etiqueta">Servers</span>
+    <article class="panel-principal__metrica panel-principal__metrica--destacada">
+      <span class="panel-principal__metrica__etiqueta">Total servers</span>
       <span class="panel-principal__metrica__valor">{{ listaDeServidores().length }}</span>
+      <span class="panel-principal__metrica__nota">Active in this workspace</span>
     </article>
     <article class="panel-principal__metrica">
       <span class="panel-principal__metrica__etiqueta">Online</span>
       <span class="panel-principal__metrica__valor panel-principal__metrica__valor--verde">{{ contadorServidoresOnline() }}</span>
+      <span class="panel-principal__metrica__pulso" aria-hidden="true"></span>
     </article>
     <article class="panel-principal__metrica">
       <span class="panel-principal__metrica__etiqueta">Offline</span>
@@ -38,9 +49,28 @@
       <a class="boton--primario" routerLink="/app/onboarding">Connect Server</a>
     </section>
   } @else {
+    <section class="panel-principal__monitor-tiempo-real">
+      <header class="panel-principal__cabecera-seccion">
+        <span class="panel-principal__cabecera-seccion__indice">01</span>
+        <section class="panel-principal__cabecera-seccion__texto">
+          <h2 class="panel-principal__cabecera-seccion__titulo">Live monitoring</h2>
+          <p class="panel-principal__cabecera-seccion__descripcion">A persistent SSH session is held per server. Metrics refresh every 30 seconds.</p>
+        </section>
+      </header>
+      <section class="panel-principal__monitor-paneles">
+        @for (servidor of listaDeServidores(); track servidor.id) {
+          <app-panel-metricas-servidor [servidorId]="servidor.id" [nombreServidor]="servidor.nombre"></app-panel-metricas-servidor>
+        }
+      </section>
+    </section>
+
     <section class="panel-principal__servidores">
-      <header class="panel-principal__servidores__cabecera">
-        <h2 class="panel-principal__servidores__titulo">Servers</h2>
+      <header class="panel-principal__cabecera-seccion">
+        <span class="panel-principal__cabecera-seccion__indice">02</span>
+        <section class="panel-principal__cabecera-seccion__texto">
+          <h2 class="panel-principal__cabecera-seccion__titulo">Servers</h2>
+          <p class="panel-principal__cabecera-seccion__descripcion">Direct access by row · manage or jump into shell.</p>
+        </section>
       </header>
       <section class="panel-principal__servidores__lista">
         @for (servidor of listaDeServidores(); track servidor.id) {
@@ -53,7 +83,7 @@
               </section>
             </section>
             <section class="panel-principal__servidor__acciones">
-              <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">Manage</a>
+              <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">Manage <span aria-hidden="true">→</span></a>
               <a class="panel-principal__servidor__enlace panel-principal__servidor__enlace--ssh" [routerLink]="'/app/terminal/' + servidor.id">
                 <i class="fa-solid fa-terminal"></i>
                 SSH
@@ -67,8 +97,12 @@
 
   @if (listaDeSitios().length > 0) {
     <section class="panel-principal__sitios">
-      <header class="panel-principal__sitios__cabecera">
-        <h2 class="panel-principal__sitios__titulo">Active Sites</h2>
+      <header class="panel-principal__cabecera-seccion">
+        <span class="panel-principal__cabecera-seccion__indice">03</span>
+        <section class="panel-principal__cabecera-seccion__texto">
+          <h2 class="panel-principal__cabecera-seccion__titulo">Active sites</h2>
+          <p class="panel-principal__cabecera-seccion__descripcion">Domains currently published and reachable.</p>
+        </section>
       </header>
       <section class="panel-principal__sitios__lista">
         @for (sitio of listaDeSitios(); track sitio.dominio) {
@@ -91,8 +125,12 @@
 
   @if (listaDeActividad().length > 0) {
     <section class="panel-principal__actividad">
-      <header class="panel-principal__actividad__cabecera">
-        <h2 class="panel-principal__actividad__titulo">Recent Activity</h2>
+      <header class="panel-principal__cabecera-seccion">
+        <span class="panel-principal__cabecera-seccion__indice">04</span>
+        <section class="panel-principal__cabecera-seccion__texto">
+          <h2 class="panel-principal__cabecera-seccion__titulo">Recent activity</h2>
+          <p class="panel-principal__cabecera-seccion__descripcion">Latest events recorded across servers and deployments.</p>
+        </section>
       </header>
       <section class="panel-principal__actividad__lista">
         @for (evento of listaDeActividad(); track evento.texto) {
@@ -111,11 +149,15 @@
   }
 
   <section class="panel-principal__despliegues">
-    <header class="panel-principal__despliegues__cabecera">
-      <h2 class="panel-principal__despliegues__titulo">Despliegues recientes</h2>
+    <header class="panel-principal__cabecera-seccion">
+      <span class="panel-principal__cabecera-seccion__indice">05</span>
+      <section class="panel-principal__cabecera-seccion__texto">
+        <h2 class="panel-principal__cabecera-seccion__titulo">Recent deployments</h2>
+        <p class="panel-principal__cabecera-seccion__descripcion">Build runs and rollouts ordered by start time.</p>
+      </section>
     </header>
     @if (listaDespliegues().length === 0) {
-      <p class="panel-principal__despliegues__vacio">Sin despliegues registrados</p>
+      <p class="panel-principal__despliegues__vacio">No deployments registered yet</p>
     }
     @for (despliegue of listaDespliegues(); track despliegue.id) {
       <article class="panel-principal__despliegue">

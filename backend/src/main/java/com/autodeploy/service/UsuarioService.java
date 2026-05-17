@@ -6,6 +6,8 @@ import com.autodeploy.dto.RegistroRequest;
 import com.autodeploy.exception.BadRequestException;
 import com.autodeploy.exception.ResourceNotFoundException;
 import com.autodeploy.model.Usuario;
+import com.autodeploy.repository.ConfiguracionAsistenteIaRepository;
+import com.autodeploy.repository.NotificacionRepository;
 import com.autodeploy.repository.UsuarioRepository;
 import com.autodeploy.util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,11 +21,20 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final NotificacionRepository notificacionRepository;
+    private final ConfiguracionAsistenteIaRepository configuracionAsistenteRepository;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
+    public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder,
+            JwtUtil jwtUtil,
+            NotificacionRepository notificacionRepository,
+            ConfiguracionAsistenteIaRepository configuracionAsistenteRepository) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtUtil = jwtUtil;
+        this.notificacionRepository = notificacionRepository;
+        this.configuracionAsistenteRepository = configuracionAsistenteRepository;
     }
 
     public Usuario registrar(RegistroRequest peticion) {
@@ -90,6 +101,10 @@ public class UsuarioService {
         if (!existe) {
             throw new ResourceNotFoundException("Usuario no encontrado");
         }
+
+        notificacionRepository.deleteByUsuarioId(id);
+        configuracionAsistenteRepository.deleteByUsuarioId(id);
+
         usuarioRepository.deleteById(id);
     }
 
@@ -138,7 +153,18 @@ public class UsuarioService {
             usuario.getEmail(),
             token,
             usuario.getPlan() != null ? usuario.getPlan() : "free",
-            usuario.getFechaFinSuscripcion()
+            usuario.getFechaFinSuscripcion(),
+            usuario.getIdioma()
         );
+    }
+
+    public Usuario actualizarIdioma(String id, String idioma) {
+        boolean idiomaValido = idioma != null && java.util.Set.of("es", "en", "fr", "de", "it").contains(idioma);
+        if (!idiomaValido) {
+            throw new BadRequestException("Idioma no soportado");
+        }
+        Usuario usuario = obtenerPorId(id);
+        usuario.setIdioma(idioma);
+        return usuarioRepository.save(usuario);
     }
 }

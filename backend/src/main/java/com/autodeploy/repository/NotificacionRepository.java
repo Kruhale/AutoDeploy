@@ -10,4 +10,5 @@ public interface NotificacionRepository extends MongoRepository<Notificacion, St
 	List<Notificacion> findByUsuarioIdOrderByFechaCreacionDesc(String usuarioId);
 	List<Notificacion> findByUsuarioIdAndLeidaFalseOrderByFechaCreacionDesc(String usuarioId);
 	long countByUsuarioIdAndLeidaFalse(String usuarioId);
+	long deleteByUsuarioId(String usuarioId);
 }

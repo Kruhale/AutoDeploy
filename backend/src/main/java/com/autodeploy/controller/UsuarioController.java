@@ -102,6 +102,20 @@ public class UsuarioController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Actualizar idioma preferido del usuario")
+    @PutMapping("/{id}/idioma")
+    public ResponseEntity<ApiResponse<LoginResponse>> actualizarIdioma(
+            @PathVariable String id,
+            @RequestBody Map<String, String> datos) {
+        String idioma = datos.getOrDefault("idioma", "es");
+
+        Usuario usuario = usuarioService.actualizarIdioma(id, idioma);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
+
+        ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Idioma actualizado", respuesta);
+        return ResponseEntity.ok(cuerpo);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
         usuarioService.eliminar(id);

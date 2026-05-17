@@ -1,12 +1,13 @@
 import { Component, signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
 
 @Component({
   selector: "app-login",
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslateModule],
   templateUrl: "./login.html",
   styleUrl: "./login.scss"
 })
@@ -24,7 +25,8 @@ export class Login {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private translate: TranslateService
   ) {}
 
   alternarVisibilidadPassword(): void {
@@ -38,7 +40,7 @@ export class Login {
     const password = this.passwordUsuario();
 
     if (!email || !password) {
-      this.mensajeDeError.set("Email and password are required");
+      this.mensajeDeError.set(this.translate.instant("login.errorCamposVacios"));
       this.mensajeDeErrorVisible.set(true);
       return;
     }
@@ -51,7 +53,7 @@ export class Login {
       this.authService.login();
       this.router.navigate(["/app"]);
     } catch (error: any) {
-      this.mensajeDeError.set(error.message || "Invalid credentials");
+      this.mensajeDeError.set(error.message || this.translate.instant("login.errorCredenciales"));
       this.mensajeDeErrorVisible.set(true);
     } finally {
       this.cargando.set(false);

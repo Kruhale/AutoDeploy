@@ -35,3 +35,6 @@ Thumbs.db
 # OS
 .env.production.local
 .env.test.local
+
+# Entorno local de pruebas SSH (no producto)
+test-vps/

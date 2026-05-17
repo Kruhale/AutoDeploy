@@ -1,7 +1,8 @@
-import { Component, signal } from "@angular/core";
+import { Component, signal, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { MigasPan } from "../../components/shared/migas-pan/migas-pan";
 import { FormsModule } from "@angular/forms";
+import { HttpClient } from "@angular/common/http";
+import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 
 interface OpcionTecnologia {
   icono: string;
@@ -10,20 +11,14 @@ interface OpcionTecnologia {
   descripcion: string;
 }
 
-interface OpcionTecnologiaSimple {
-  valor: string;
-  etiqueta: string;
-}
-
 @Component({
   selector: "app-nuevo-despliegue",
-  imports: [MigasPan, FormsModule],
+  imports: [FormsModule],
   templateUrl: "./nuevo-despliegue.html",
   styleUrl: "./nuevo-despliegue.scss"
 })
-export class NuevoDespliegue {
+export class NuevoDespliegue implements OnInit {
   tecnologiaSeleccionada = signal<string>("Docker Compose");
-  tecnologiaValorSeleccionado = signal<string>("");
   origenCodigo = signal<"git" | "zip">("git");
   sslActivo = signal(true);
   desplegando = signal(false);
@@ -32,14 +27,10 @@ export class NuevoDespliegue {
   directorioRaiz = signal("./");
   puertoAplicacion = signal("8080");
   dominio = signal("");
-
-  opcionesTecnologiaSimple: OpcionTecnologiaSimple[] = [
-    { valor: "node", etiqueta: "Node.js" },
-    { valor: "python", etiqueta: "Python" },
-    { valor: "php", etiqueta: "PHP" },
-    { valor: "static", etiqueta: "Static HTML" },
-    { valor: "docker", etiqueta: "Docker" },
-  ];
+  servidorDestinoId = signal<string>("");
+  listaServidores = signal<ServidorRemoto[]>([]);
+  mensajeError = signal<string>("");
+  mensajeExito = signal<string>("");
 
   opcionesDeTecnologia = signal<OpcionTecnologia[]>([
     { icono: "fa-solid fa-gear", etiquetaTexto: "", nombre: "Docker Compose", descripcion: "Multi-container stack" },
@@ -48,7 +39,27 @@ export class NuevoDespliegue {
     { icono: "", etiquetaTexto: "PHP", nombre: "PHP", descripcion: "FPM & Apache/Nginx" },
   ]);
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private http: HttpClient,
+    private servidorService: ServidorService
+  ) {}
+
+  ngOnInit(): void {
+    this.cargarServidores();
+  }
+
+  private cargarServidores(): void {
+    const componente = this;
+    this.servidorService.listar().subscribe({
+      next: function(servidores: ServidorRemoto[]) {
+        componente.listaServidores.set(servidores);
+        if (servidores.length > 0 && !componente.servidorDestinoId()) {
+          componente.servidorDestinoId.set(servidores[0].id);
+        }
+      }
+    });
+  }
 
   seleccionarTecnologia(nombre: string): void {
     this.tecnologiaSeleccionada.set(nombre);
@@ -65,17 +76,40 @@ export class NuevoDespliegue {
   }
 
   lanzarDespliegue(): void {
-    if (!this.repositorioUrl() && this.origenCodigo() === "git") {
+    if (this.origenCodigo() === "git" && !this.repositorioUrl()) {
+      this.mensajeError.set("Repository URL is required for Git deployments.");
+      return;
+    }
+    if (!this.servidorDestinoId()) {
+      this.mensajeError.set("Pick a target server.");
       return;
     }
 
+    this.mensajeError.set("");
+    this.mensajeExito.set("");
     this.desplegando.set(true);
-    const componente = this;
 
-    setTimeout(function() {
-      componente.desplegando.set(false);
-      componente.router.navigate(["/app/dashboard"]);
-    }, 2000);
+    const componente = this;
+    const cuerpo = {
+      servidorId: this.servidorDestinoId(),
+      tipo: this.tecnologiaSeleccionada(),
+      url: this.repositorioUrl() || this.dominio() || null
+    };
+
+    this.http.post<{ success: boolean; message: string; data: any }>("/api/despliegues", cuerpo).subscribe({
+      next: function(respuesta) {
+        componente.desplegando.set(false);
+        componente.mensajeExito.set("Deployment registered. Redirecting to dashboard…");
+        setTimeout(function() {
+          componente.router.navigate(["/app/dashboard"]);
+        }, 1500);
+      },
+      error: function(error) {
+        componente.desplegando.set(false);
+        const detalle = error && error.error && error.error.message ? error.error.message : "Could not register the deployment.";
+        componente.mensajeError.set(detalle);
+      }
+    });
   }
 
   cancelar(): void {

@@ -1,22 +1,36 @@
-<section class="nuevo-despliegue">
-  <header class="nuevo-despliegue__barra-superior">
-    <app-migas-pan [migas]="[{ etiqueta: 'Home', enlace: '/app/dashboard' }, { etiqueta: 'New Deployment' }]"></app-migas-pan>
-    <section class="nuevo-despliegue__barra-acciones">
-      <button class="boton--primario" (click)="lanzarDespliegue()" [disabled]="desplegando()">
-        {{ desplegando() ? 'Deploying...' : 'Deploy Now' }}
-      </button>
+<section class="nuevo-despliegue editorial">
+  <header class="editorial__cabecera">
+    <section class="editorial__cabecera__izquierda">
+      <p class="editorial__sello">
+        <span class="editorial__sello__punto" aria-hidden="true"></span>
+        Workspace · Applications · New deployment
+      </p>
+      <h1 class="editorial__titulo">New deployment<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">Configure runtime, source and target server to roll out your application.</p>
     </section>
+    <button class="editorial__cta-principal" type="button" (click)="lanzarDespliegue()" [disabled]="desplegando()">
+      <span class="editorial__cta-principal__icono" aria-hidden="true">
+        @if (desplegando()) {
+          <i class="fa-solid fa-spinner fa-spin"></i>
+        } @else {
+          <i class="fa-solid fa-rocket"></i>
+        }
+      </span>
+      <span class="editorial__cta-principal__texto">
+        <span class="editorial__cta-principal__principal">{{ desplegando() ? "Deploying" : "Deploy now" }}</span>
+        <span class="editorial__cta-principal__secundario">Build and roll out</span>
+      </span>
+    </button>
   </header>
 
   <section class="nuevo-despliegue__contenido">
-    <h1 class="nuevo-despliegue__titulo">Configure New Service</h1>
-    <p class="nuevo-despliegue__descripcion">Complete the technical details to put your application online.</p>
 
     <section class="nuevo-despliegue__paso">
-      <h2 class="nuevo-despliegue__paso__titulo">
-        <i class="fa-solid fa-cog nuevo-despliegue__paso__icono"></i>
-        1. Selección de Tecnología
-      </h2>
+      <header class="editorial__bloque__cabecera">
+        <span class="editorial__bloque__indice">01</span>
+        <h2 class="editorial__bloque__titulo"><em>Runtime</em> &amp; stack</h2>
+        <p class="editorial__bloque__meta">Pick one</p>
+      </header>
       <section class="nuevo-despliegue__tecnologias">
         @for (tech of opcionesDeTecnologia(); track tech.nombre) {
           <article class="nuevo-despliegue__tech" [class.nuevo-despliegue__tech--activa]="tecnologiaSeleccionada() === tech.nombre" (click)="seleccionarTecnologia(tech.nombre)">
@@ -34,16 +48,17 @@
 
     <section class="nuevo-despliegue__columnas">
       <section class="nuevo-despliegue__paso nuevo-despliegue__paso--columna">
-        <h2 class="nuevo-despliegue__paso__titulo">
-          <i class="fa-solid fa-code nuevo-despliegue__paso__icono"></i>
-          2. Origen del Código
-        </h2>
+        <header class="editorial__bloque__cabecera">
+          <span class="editorial__bloque__indice">02</span>
+          <h2 class="editorial__bloque__titulo"><em>Source</em> code</h2>
+          <p class="editorial__bloque__meta">{{ origenCodigo() === 'git' ? 'Git remote' : 'Zip upload' }}</p>
+        </header>
         <section class="toggle">
           <button class="toggle__opcion" [class.toggle__opcion--activa]="origenCodigo() === 'git'" (click)="cambiarOrigenCodigo('git')">
             <i class="fa-brands fa-github"></i> Git / GitHub
           </button>
           <button class="toggle__opcion" [class.toggle__opcion--activa]="origenCodigo() === 'zip'" (click)="cambiarOrigenCodigo('zip')">
-            <i class="fa-solid fa-lock"></i> Subir ZIP
+            <i class="fa-solid fa-lock"></i> Upload ZIP
           </button>
         </section>
         @if (origenCodigo() === 'git') {
@@ -65,10 +80,11 @@
       </section>
 
       <section class="nuevo-despliegue__paso nuevo-despliegue__paso--columna">
-        <h2 class="nuevo-despliegue__paso__titulo">
-          <i class="fa-solid fa-network-wired nuevo-despliegue__paso__icono"></i>
-          3. Configuración de Red & SSL
-        </h2>
+        <header class="editorial__bloque__cabecera">
+          <span class="editorial__bloque__indice">03</span>
+          <h2 class="editorial__bloque__titulo"><em>Network</em> &amp; SSL</h2>
+          <p class="editorial__bloque__meta">{{ sslActivo() ? 'TLS on' : 'TLS off' }}</p>
+        </header>
         <section class="nuevo-despliegue__ssl">
           <section class="nuevo-despliegue__ssl__info">
             <i class="fa-solid fa-lock nuevo-despliegue__ssl__icono"></i>
@@ -80,6 +96,14 @@
           <span class="interruptor" [class.interruptor--activo]="sslActivo()" (click)="alternarSsl()">
             <span class="interruptor__circulo" [class.interruptor__circulo--activo]="sslActivo()"></span>
           </span>
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta">Target server</label>
+          <select class="campo__input" [ngModel]="servidorDestinoId()" (ngModelChange)="servidorDestinoId.set($event)">
+            @for (servidor of listaServidores(); track servidor.id) {
+              <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
+            }
+          </select>
         </section>
         <section class="campo">
           <label class="campo__etiqueta">Application Port</label>
@@ -95,26 +119,25 @@
         </section>
       </section>
     </section>
+
+    @if (mensajeError()) {
+      <p class="nuevo-despliegue__alerta nuevo-despliegue__alerta--error">
+        <i class="fa-solid fa-circle-exclamation"></i> {{ mensajeError() }}
+      </p>
+    }
+    @if (mensajeExito()) {
+      <p class="nuevo-despliegue__alerta nuevo-despliegue__alerta--exito">
+        <i class="fa-solid fa-circle-check"></i> {{ mensajeExito() }}
+      </p>
+    }
   </section>
 
-  <section class="nuevo-despliegue__selector-tecnologia">
-    <p class="campo__etiqueta">Tecnología</p>
-    <section class="nuevo-despliegue__tecnologias__opciones">
-      @for (tech of opcionesTecnologiaSimple; track tech.valor) {
-        <button
-          class="nuevo-despliegue__tecnologia"
-          [class.nuevo-despliegue__tecnologia--activa]="tecnologiaValorSeleccionado() === tech.valor"
-          (click)="tecnologiaValorSeleccionado.set(tech.valor)">
-          {{ tech.etiqueta }}
-        </button>
-      }
+  <footer class="editorial__pie">
+    <section class="editorial__pie__izquierda">
+      <span class="editorial__pie__codigo">№ DEP-{{ origenCodigo() === 'git' ? 'GIT' : 'ZIP' }}</span>
+      <span class="editorial__pie__separador" aria-hidden="true">·</span>
+      <span class="editorial__pie__texto">{{ sslActivo() ? 'TLS handled automatically by Let\'s Encrypt' : 'TLS disabled — only enable for production' }}</span>
     </section>
-  </section>
-
-  <footer class="nuevo-despliegue__pie">
-    <button class="boton--ghost" (click)="cancelar()">Cancel</button>
-    <button class="boton--primario" (click)="lanzarDespliegue()" [disabled]="desplegando()">
-      {{ desplegando() ? 'Deploying...' : 'Launch Deployment' }}
-    </button>
+    <button class="boton--ghost" type="button" (click)="cancelar()">Cancel</button>
   </footer>
 </section>

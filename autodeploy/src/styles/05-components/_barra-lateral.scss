@@ -1,28 +1,46 @@
 .barra-lateral {
+  position: sticky;
+  top: 0;
   display: flex;
   flex-direction: column;
   width: var(--sidebar-ancho);
   height: 100vh;
-  position: sticky;
-  top: 0;
   background-color: var(--fondo-normal);
   border-right: 1px solid var(--borde-normal);
-  padding: var(--spacing-size-2xl) 0;
+  padding: var(--spacing-size-2xl) 0 var(--spacing-size-l);
   flex-shrink: 0;
   overflow-y: auto;
+  overflow-x: hidden;
   transition: width var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* Línea decorativa vertical sutil al borde derecho */
+.barra-lateral::after {
+  content: "";
+  position: absolute;
+  top: 8%;
+  right: 0;
+  width: 1px;
+  height: 84%;
+  background: linear-gradient(180deg, transparent, var(--borde-normal) 22%, var(--borde-normal) 78%, transparent);
+  pointer-events: none;
+}
+
+/* =====================================================
+   LOGO con micro-versión flotante
+   ===================================================== */
+
 .barra-lateral__logo {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--spacing-size-s);
-  padding: 0 var(--spacing-size-l);
-  margin-bottom: var(--spacing-size-5xl);
+  padding: 0 var(--spacing-size-xl);
+  margin-bottom: var(--spacing-size-4xl);
 }
 
 .barra-lateral__logo__imagen {
-  height: 1.75rem;
+  height: 1.625rem;
   width: auto;
 }
 
@@ -31,81 +49,194 @@
   font-size: 1.125rem;
   font-weight: var(--font-weight-bold);
   color: var(--texto-claro);
-  letter-spacing: -0.5px;
+  letter-spacing: -0.025em;
 }
 
 .barra-lateral__logo__texto--acento {
   color: var(--amarillo-normal);
 }
 
+.barra-lateral__logo__version {
+  position: absolute;
+  top: -0.2rem;
+  right: var(--spacing-size-l);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.18em;
+  color: var(--texto-apagado);
+  text-transform: uppercase;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-full);
+  line-height: 1;
+}
+
+/* =====================================================
+   NAVEGACIÓN — secciones con índice numérico
+   ===================================================== */
+
 .barra-lateral__navegacion {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-size-3xl);
   flex: 1;
+  padding: 0 var(--spacing-size-s);
 }
 
 .barra-lateral__seccion {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: var(--spacing-size-s);
+}
+
+.barra-lateral__seccion__cabecera {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding: 0 var(--spacing-size-l);
+  margin-bottom: var(--spacing-size-xs);
+}
+
+.barra-lateral__seccion__numero {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.18em;
+  color: var(--texto-apagado);
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-full);
 }
 
 .barra-lateral__seccion__titulo {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
+  font-family: var(--font-secondary);
+  font-size: 0.7rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--texto-apagado);
-  padding: 0 var(--spacing-size-l);
-  margin-bottom: var(--spacing-size-s);
+  color: var(--texto-medio);
 }
 
 .barra-lateral__lista {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 0.1rem;
 }
 
+/* =====================================================
+   ENLACES — Línea izquierda creciente + chevron derecha
+   ===================================================== */
+
 .barra-lateral__enlace {
+  position: relative;
   display: flex;
   align-items: center;
   gap: var(--spacing-size-m);
-  padding: 0.625rem var(--spacing-size-l);
+  padding: 0.55rem var(--spacing-size-l);
   color: var(--texto-medio);
+  font-family: var(--font-secondary);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-medium);
-  border-left: 3px solid transparent;
   background: none;
-  border-top: none;
-  border-right: none;
-  border-bottom: none;
+  border: none;
   width: 100%;
   text-align: left;
   cursor: pointer;
-  transition: color var(--duration-base) ease, background-color var(--duration-base) ease;
+  border-radius: var(--radius-m);
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Línea acento izquierda — invisible hasta hover/active */
+.barra-lateral__enlace::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 2px;
+  height: 0%;
+  background-color: var(--amarillo-normal);
+  border-radius: 0 2px 2px 0;
+  transform: translateY(-50%);
+  transition: height var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .barra-lateral__enlace:hover {
   color: var(--texto-claro);
-  background-color: rgba(240, 236, 226, 0.03);
+  background-color: rgba(240, 236, 226, 0.04);
+}
+
+.barra-lateral__enlace:hover::before {
+  height: 50%;
+  background-color: var(--texto-medio);
 }
 
 .barra-lateral__enlace--activo {
   color: var(--amarillo-normal);
-  border-left-color: var(--amarillo-normal);
-  background-color: rgba(245, 214, 35, 0.05);
+  background: linear-gradient(90deg, hsla(47, 86%, 56%, 0.08), transparent 70%);
+}
+
+.barra-lateral__enlace--activo::before {
+  height: 70%;
+  background-color: var(--amarillo-normal);
 }
 
 .barra-lateral__enlace__icono {
   width: 1.125rem;
   text-align: center;
-  font-size: var(--font-size-md);
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.barra-lateral__enlace:hover .barra-lateral__enlace__icono {
+  transform: translateX(2px);
 }
 
 .barra-lateral__enlace__texto {
   white-space: nowrap;
+  letter-spacing: -0.005em;
+  flex: 1;
 }
+
+.barra-lateral__enlace__indicador {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--amarillo-normal);
+  opacity: 0;
+  transform: scale(0.6);
+  transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.barra-lateral__enlace--activo .barra-lateral__enlace__indicador {
+  opacity: 1;
+  transform: scale(1);
+  animation: latido-indicador-sidebar 2.4s ease-in-out infinite;
+}
+
+@keyframes latido-indicador-sidebar {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.85); }
+}
+
+/* Chip PRO en enlaces no activos */
+.barra-lateral__chip-pro {
+  padding: 0.05rem 0.45rem;
+  background-color: var(--amarillo-transparente-008);
+  border: 1px solid var(--amarillo-transparente-030);
+  border-radius: var(--radius-full);
+  color: var(--amarillo-normal);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+/* =====================================================
+   ZONA INFERIOR — Collapse + User card
+   ===================================================== */
 
 .barra-lateral__inferior {
   display: flex;
@@ -119,140 +250,200 @@
   display: flex;
   align-items: center;
   gap: var(--spacing-size-m);
-  padding: 0.625rem 0;
-  color: var(--texto-medio);
-  font-size: var(--font-size-md);
+  padding: 0.5rem var(--spacing-size-s);
+  color: var(--texto-apagado);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   background: none;
   border: none;
+  border-radius: var(--radius-m);
   cursor: pointer;
-  transition: color var(--duration-base) ease;
+  text-align: left;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .barra-lateral__colapsar:hover {
   color: var(--texto-claro);
+  background-color: rgba(240, 236, 226, 0.04);
 }
 
 .barra-lateral__colapsar__icono {
   width: 1.125rem;
   text-align: center;
+  font-size: 0.75rem;
+  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.barra-lateral__colapsar:hover .barra-lateral__colapsar__icono {
+  transform: translateX(-2px);
 }
 
 .barra-lateral__colapsar__texto {
   white-space: nowrap;
+  letter-spacing: 0.04em;
 }
 
 .barra-lateral__usuario {
   display: flex;
   align-items: center;
   gap: var(--spacing-size-m);
-  padding-top: var(--spacing-size-l);
-  border-top: 1px solid var(--borde-normal);
+  padding: var(--spacing-size-m);
+  background-color: rgba(240, 236, 226, 0.03);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l);
   cursor: pointer;
-  transition: opacity var(--duration-base) ease;
+  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .barra-lateral__usuario:hover {
-  opacity: 0.85;
+  transform: translateY(-1px);
+  border-color: hsla(40, 33.33%, 91.37%, 0.18);
+  background-color: rgba(240, 236, 226, 0.05);
 }
 
-.barra-lateral__usuario__gear {
-  margin-left: auto;
-  font-size: var(--font-size-sm);
-  color: var(--texto-apagado);
-  transition: color var(--duration-base) ease;
-}
-
-.barra-lateral__usuario:hover .barra-lateral__usuario__gear {
-  color: var(--texto-claro);
+.barra-lateral__usuario:active {
+  transform: scale(0.985);
 }
 
 .barra-lateral__usuario__avatar {
-  width: 2.5rem;
-  height: 2.5rem;
+  position: relative;
+  width: 2.25rem;
+  height: 2.25rem;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--naranja-normal), var(--rojo-normal));
   flex-shrink: 0;
+  box-shadow: inset 0 1px 0 hsla(0, 0%, 100%, 0.18);
+}
+
+.barra-lateral__usuario[data-plan="business"] .barra-lateral__usuario__avatar {
+  background: linear-gradient(135deg, var(--cyan-normal), var(--teal-normal));
+}
+
+.barra-lateral__usuario[data-plan="pro"] .barra-lateral__usuario__avatar {
+  background: linear-gradient(135deg, var(--amarillo-normal), var(--naranja-normal));
+}
+
+.barra-lateral__usuario[data-plan="free"] .barra-lateral__usuario__avatar {
+  background: linear-gradient(135deg, hsl(32, 7%, 38%), hsl(30, 5%, 22%));
+}
+
+.barra-lateral__usuario__avatar__estado {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 50%;
+  background-color: var(--verde-normal);
+  border: 2px solid var(--fondo-normal);
+  animation: latido-indicador-sidebar 2.4s ease-in-out infinite;
 }
 
 .barra-lateral__usuario__info {
   display: flex;
   flex-direction: column;
+  gap: 0.05rem;
+  flex: 1;
+  min-width: 0;
 }
 
 .barra-lateral__usuario__nombre {
+  font-family: var(--font-secondary);
   font-size: var(--font-size-md);
   font-weight: var(--font-weight-semibold);
   color: var(--texto-claro);
+  letter-spacing: -0.005em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .barra-lateral__usuario__plan {
-  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
   font-weight: var(--font-weight-bold);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 0.22em;
   color: var(--texto-apagado);
 }
+
+.barra-lateral__usuario__gear {
+  font-size: 0.7rem;
+  color: var(--texto-apagado);
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.barra-lateral__usuario:hover .barra-lateral__usuario__gear {
+  color: var(--texto-claro);
+  transform: translateX(2px);
+}
+
+/* =====================================================
+   COLAPSADA
+   ===================================================== */
 
 .barra-lateral--colapsada {
   width: 4.5rem;
 }
 
-.barra-lateral--colapsada .barra-lateral__logo__texto {
+.barra-lateral--colapsada .barra-lateral__logo {
+  justify-content: center;
+  padding: 0;
+}
+
+.barra-lateral--colapsada .barra-lateral__logo__texto,
+.barra-lateral--colapsada .barra-lateral__logo__version {
   display: none;
 }
 
-.barra-lateral--colapsada .barra-lateral__logo__imagen {
-  margin: 0 auto;
+.barra-lateral--colapsada .barra-lateral__seccion__cabecera {
+  justify-content: center;
+  padding: 0;
 }
 
 .barra-lateral--colapsada .barra-lateral__seccion__titulo {
   display: none;
 }
 
-.barra-lateral--colapsada .barra-lateral__enlace__texto {
-  display: none;
-}
-
-.barra-lateral--colapsada .barra-lateral__chip-pro {
-  display: none;
-}
-
-.barra-lateral__chip-pro {
-  margin-left: auto;
-  padding: 0.0625rem 0.4375rem;
-  background-color: var(--amarillo-transparente-008);
-  border: 1px solid var(--amarillo-transparente-030);
-  border-radius: var(--radius-full);
-  color: var(--amarillo-normal);
-  font-size: 0.625rem;
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 1px;
-  text-transform: uppercase;
+.barra-lateral--colapsada .barra-lateral__seccion__numero {
+  font-size: 0.5rem;
+  padding: 0.05rem 0.3rem;
 }
 
 .barra-lateral--colapsada .barra-lateral__enlace {
   justify-content: center;
-  padding: 0.625rem 0;
-  border-left: none;
+  padding: 0.55rem 0;
+}
+
+.barra-lateral--colapsada .barra-lateral__enlace__texto,
+.barra-lateral--colapsada .barra-lateral__chip-pro,
+.barra-lateral--colapsada .barra-lateral__enlace__indicador {
+  display: none;
 }
 
 .barra-lateral--colapsada .barra-lateral__colapsar {
   justify-content: center;
 }
 
-.barra-lateral--colapsada .barra-lateral__usuario__info {
+.barra-lateral--colapsada .barra-lateral__usuario {
+  justify-content: center;
+  padding: var(--spacing-size-s);
+}
+
+.barra-lateral--colapsada .barra-lateral__usuario__info,
+.barra-lateral--colapsada .barra-lateral__usuario__gear {
   display: none;
 }
 
-.barra-lateral--colapsada .barra-lateral__usuario {
-  justify-content: center;
+.barra-lateral--colapsada .barra-lateral__usuario__avatar {
+  width: 1.875rem;
+  height: 1.875rem;
 }
 
-.barra-lateral--colapsada .barra-lateral__usuario__avatar {
-  width: 2rem;
-  height: 2rem;
-}
+/* =====================================================
+   MOBILE
+   ===================================================== */
 
 @media (max-width: 768px) {
   .barra-lateral {

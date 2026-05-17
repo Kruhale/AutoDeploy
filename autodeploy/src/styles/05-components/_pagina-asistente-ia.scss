@@ -24,11 +24,10 @@
 .asistente-ia {
   display: flex;
   flex-direction: column;
-  height: 100%;
   min-height: calc(100dvh - 5rem);
-  padding: var(--spacing-size-3xl) var(--spacing-size-4xl);
+  width: 100%;
   gap: var(--spacing-size-2xl);
-  background: linear-gradient(180deg, var(--fondo-normal) 0%, var(--fondo-oscuro) 100%);
+  animation: entrar-abajo 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ── CABECERA ─────────────────────────────────────── */
@@ -51,29 +50,42 @@
 }
 
 .asistente-ia__etiqueta {
+  display: none;
+}
+
+.asistente-ia__sello {
   display: inline-flex;
-  align-self: flex-start;
   align-items: center;
-  gap: var(--spacing-size-xs);
-  padding: 0.25rem var(--spacing-size-m);
+  gap: 0.55rem;
+  font-family: var(--font-mono);
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 1.5px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--amarillo-normal);
-  background-color: var(--amarillo-transparente-008);
-  border: 1px solid var(--amarillo-transparente-030);
-  border-radius: var(--radius-full);
+  color: var(--texto-apagado);
+}
+
+.asistente-ia__sello__punto {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: var(--amarillo-normal);
+  animation: editorial-respirar 2.4s ease-in-out infinite;
 }
 
 .asistente-ia__titulo {
   font-family: var(--font-secondary);
-  font-size: var(--font-size-4xl);
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
   font-weight: var(--font-weight-bold);
-  line-height: var(--line-height-tight);
-  letter-spacing: -1.5px;
+  line-height: 1;
+  letter-spacing: -0.045em;
   color: var(--texto-claro);
   margin: 0;
+}
+
+.asistente-ia__titulo__punto {
+  color: var(--amarillo-normal);
+  margin-left: 0.05em;
 }
 
 .asistente-ia__titulo__acento {

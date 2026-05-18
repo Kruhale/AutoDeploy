@@ -116,9 +116,11 @@ jobs:
             docker compose -f docker-compose.prod.yml ps
 
       - name: Smoke test al dominio público
-        if: ${{ secrets.SSH_HOST != '' }}
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+        if: env.SSH_HOST != ''
         run: |
           # Verifica que el servicio responde por HTTPS (cert puede ser autofirmado, por eso -k)
-          curl -ksSf --max-time 30 "https://${{ secrets.SSH_HOST }}/api/estado" \
+          curl -ksSf --max-time 30 "https://${SSH_HOST}/api/estado" \
             -o /dev/null \
             -w "Smoke test HTTP %{http_code} en %{time_total}s\n"

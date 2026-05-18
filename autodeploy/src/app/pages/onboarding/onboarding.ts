@@ -1,11 +1,12 @@
 import { Component, signal } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, PeticionConexionSsh } from "../../services/servidor.service";
 
 @Component({
   selector: "app-onboarding",
-  imports: [FormsModule],
+  imports: [FormsModule, TranslateModule],
   templateUrl: "./onboarding.html",
   styleUrl: "./onboarding.scss"
 })
@@ -21,12 +22,15 @@ export class Onboarding {
 
   conectando = signal(false);
   estadoConexion = signal<"waiting" | "testing" | "success" | "error">("waiting");
-  mensajeEstado = signal("Waiting for connection");
+  mensajeEstado = signal("");
 
   constructor(
     private servidorService: ServidorService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private translate: TranslateService
+  ) {
+    this.mensajeEstado.set(this.translate.instant("onboarding.estado.esperando"));
+  }
 
   cambiarMetodoAuth(nuevoMetodoDeAutenticacion: "key" | "password"): void {
     this.metodoAutenticacion.set(nuevoMetodoDeAutenticacion);
@@ -38,13 +42,13 @@ export class Onboarding {
 
     if (!nombre || !ip) {
       this.estadoConexion.set("error");
-      this.mensajeEstado.set("Name and IP are required");
+      this.mensajeEstado.set(this.translate.instant("onboarding.errorNombreIp"));
       return;
     }
 
     this.conectando.set(true);
     this.estadoConexion.set("testing");
-    this.mensajeEstado.set("Testing connection...");
+    this.mensajeEstado.set(this.translate.instant("onboarding.estado.probando"));
 
     const peticion: PeticionConexionSsh = {
       nombre: nombre,
@@ -61,13 +65,13 @@ export class Onboarding {
     this.servidorService.registrar(peticion).subscribe({
       next: function(servidor) {
         componente.estadoConexion.set("success");
-        componente.mensajeEstado.set("Connected");
+        componente.mensajeEstado.set(componente.translate.instant("onboarding.estado.conectado"));
         componente.conectando.set(false);
         componente.router.navigate(["/app/terminal", servidor.id]);
       },
       error: function(error) {
         componente.estadoConexion.set("error");
-        componente.mensajeEstado.set("Connection failed");
+        componente.mensajeEstado.set(componente.translate.instant("onboarding.estado.fallido"));
         componente.conectando.set(false);
       }
     });

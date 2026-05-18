@@ -1,0 +1,208 @@
+@use "../00-settings/css-variables" as *;
+
+.pagina-estado__banner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  padding: var(--spacing-size-2xl);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-xl);
+}
+
+.pagina-estado__banner--ok {
+  background-color: hsla(142, 70%, 45%, 0.08);
+  border-color: hsla(142, 70%, 45%, 0.25);
+}
+
+.pagina-estado__banner--aviso {
+  background-color: hsla(37, 92%, 50%, 0.08);
+  border-color: hsla(37, 92%, 50%, 0.25);
+}
+
+.pagina-estado__banner--error {
+  background-color: hsla(0, 79%, 60%, 0.08);
+  border-color: hsla(0, 79%, 60%, 0.25);
+}
+
+.pagina-estado__banner__icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-estado__banner--ok .pagina-estado__banner__icono {
+  background-color: hsla(142, 70%, 45%, 0.2);
+  color: var(--verde-normal);
+}
+
+.pagina-estado__banner--aviso .pagina-estado__banner__icono {
+  background-color: hsla(37, 92%, 50%, 0.2);
+  color: var(--naranja-normal);
+}
+
+.pagina-estado__banner--error .pagina-estado__banner__icono {
+  background-color: hsla(0, 79%, 60%, 0.2);
+  color: var(--rojo-normal);
+}
+
+.pagina-estado__banner__titulo {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+}
+
+.pagina-estado__lista {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+
+.pagina-estado__servicio {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  padding: var(--spacing-size-l) var(--spacing-size-2xl);
+  background-color: var(--fondo-tarjeta);
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.pagina-estado__servicio:last-child {
+  border-bottom: none;
+}
+
+.pagina-estado__servicio__indicador {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  animation: estado-latido 2s ease-in-out infinite;
+}
+
+.pagina-estado__servicio__indicador--up {
+  background-color: var(--verde-normal);
+  box-shadow: 0 0 8px hsla(142, 70%, 45%, 0.5);
+}
+
+.pagina-estado__servicio__indicador--degraded {
+  background-color: var(--naranja-normal);
+  box-shadow: 0 0 8px hsla(37, 92%, 50%, 0.5);
+}
+
+.pagina-estado__servicio__indicador--down {
+  background-color: var(--rojo-normal);
+  box-shadow: 0 0 8px hsla(0, 79%, 60%, 0.5);
+}
+
+.pagina-estado__servicio__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.pagina-estado__servicio__nombre {
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+}
+
+.pagina-estado__servicio__descripcion {
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+}
+
+.pagina-estado__servicio__etiqueta {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.12em;
+  padding: 0.35rem var(--spacing-size-m);
+  border-radius: var(--radius-full);
+}
+
+.pagina-estado__servicio__etiqueta--up {
+  background-color: hsla(142, 70%, 45%, 0.12);
+  color: var(--verde-normal);
+}
+
+.pagina-estado__servicio__etiqueta--degraded {
+  background-color: hsla(37, 92%, 50%, 0.12);
+  color: var(--naranja-normal);
+}
+
+.pagina-estado__servicio__etiqueta--down {
+  background-color: hsla(0, 79%, 60%, 0.12);
+  color: var(--rojo-normal);
+}
+
+.pagina-estado__acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+  flex-wrap: wrap;
+}
+
+.pagina-estado__nota {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-estado__cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-size-l);
+  padding: var(--spacing-size-7xl);
+  color: var(--texto-medio);
+}
+
+.pagina-estado__cargando__circulo {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 3px solid var(--borde-normal);
+  border-top-color: var(--amarillo-normal);
+  border-radius: 50%;
+  animation: estado-girar 0.9s linear infinite;
+}
+
+@keyframes estado-latido {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(0.8);
+  }
+}
+
+@keyframes estado-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .pagina-estado__servicio {
+    padding: var(--spacing-size-m) var(--spacing-size-l);
+    gap: var(--spacing-size-m);
+  }
+
+  .pagina-estado__servicio__nombre {
+    font-size: var(--font-size-md);
+  }
+}

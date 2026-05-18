@@ -6,32 +6,61 @@ services:
       - mongodb-datos:/data/db
     networks:
       - red-interna
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
     restart: unless-stopped
 
   backend:
+    image: ghcr.io/kruhale/autodeploy-backend:${IMAGE_TAG:-latest}
     build: ./backend
     container_name: autodeploy-backend
     depends_on:
-      - mongodb
+      mongodb:
+        condition: service_healthy
     environment:
       SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/autodeploy
       AUTODEPLOY_JWT_SECRET: ${AUTODEPLOY_JWT_SECRET}
       AUTODEPLOY_CIFRADO_CLAVE: ${AUTODEPLOY_CIFRADO_CLAVE}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemini-2.5-pro}
+    volumes:
+      - backend-logs:/var/log/autodeploy
     networks:
       - red-interna
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
     restart: unless-stopped
 
   frontend:
+    image: ghcr.io/kruhale/autodeploy-frontend:${IMAGE_TAG:-latest}
     build: ./autodeploy
     container_name: autodeploy-frontend
-    ports:
-      - "8081:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    # Solo HTTP en un puerto interno del VPS (8082).
+    # El nginx-host del VPS hace TLS termination (Let's Encrypt) y proxy_pass
+    # desde el dominio público a http://localhost:8082/.
+    ports:
+      - "${HOST_PORT:-8082}:80"
+    volumes:
+      - nginx-logs:/var/log/nginx
     networks:
       - red-interna
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
     restart: unless-stopped
 
 networks:
@@ -40,3 +69,5 @@ networks:
 
 volumes:
   mongodb-datos:
+  backend-logs:
+  nginx-logs:

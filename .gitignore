@@ -13,6 +13,8 @@ backend/target/
 backend/.classpath
 backend/.project
 backend/.settings/
+backend/.m2/
+**/.m2/
 
 # Sistema
 .DS_Store
@@ -33,3 +35,6 @@ Thumbs.db
 # OS
 .env.production.local
 .env.test.local
+
+# Entorno local de pruebas SSH (no producto)
+test-vps/

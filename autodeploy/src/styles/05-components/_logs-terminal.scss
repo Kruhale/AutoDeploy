@@ -1,13 +1,12 @@
 .logs-terminal {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-l);
+  gap: var(--spacing-size-2xl);
+  width: 100%;
 }
 
 .logs-terminal__cabecera {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: flex-end;
 }
 
 .logs-terminal__cabecera__izquierda {

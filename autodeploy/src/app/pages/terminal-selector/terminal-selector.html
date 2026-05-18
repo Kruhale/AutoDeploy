@@ -1,32 +1,68 @@
-<section class="pagina-terminal-selector">
+<section class="pagina-terminal-selector editorial">
 
-  <header class="pagina-terminal-selector__cabecera">
-    <h1 class="pagina-terminal-selector__titulo">Terminal</h1>
-    <p class="pagina-terminal-selector__subtitulo">Select a server to open an SSH session</p>
+  <header class="editorial__cabecera editorial__cabecera--simple">
+    <section class="editorial__cabecera__izquierda">
+      <p class="editorial__sello">
+        <span class="editorial__sello__punto" aria-hidden="true"></span>
+        {{ "terminalSelector.sello" | translate }}
+      </p>
+      <h1 class="editorial__titulo">{{ "terminalSelector.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "terminalSelector.subtitulo" | translate }}</p>
+    </section>
   </header>
 
   @if (listaDeServidores().length === 0) {
-    <section class="pagina-terminal-selector__vacio">
-      <i class="fa-solid fa-terminal pagina-terminal-selector__vacio__icono"></i>
-      <p class="pagina-terminal-selector__vacio__texto">No servers connected</p>
-      <p class="pagina-terminal-selector__vacio__detalle">Add a server first from Connect Server</p>
-      <a class="boton--primario" routerLink="/app/onboarding">Connect Server</a>
+    <section class="editorial__vacio">
+      <span class="editorial__vacio__icono" aria-hidden="true">
+        <i class="fa-solid fa-terminal"></i>
+      </span>
+      <p class="editorial__vacio__titulo">{{ "terminalSelector.vacioTitulo" | translate }}</p>
+      <p class="editorial__vacio__detalle">{{ "terminalSelector.vacioDetalle" | translate }}</p>
+      <a class="editorial__cta-principal" routerLink="/app/onboarding" style="margin-top: 1rem;">
+        <span class="editorial__cta-principal__icono" aria-hidden="true">
+          <i class="fa-solid fa-plug"></i>
+        </span>
+        <span class="editorial__cta-principal__texto">
+          <span class="editorial__cta-principal__principal">{{ "terminalSelector.ctaPrincipal" | translate }}</span>
+          <span class="editorial__cta-principal__secundario">{{ "terminalSelector.ctaSecundario" | translate }}</span>
+        </span>
+      </a>
     </section>
   } @else {
-    <section class="pagina-terminal-selector__lista">
-      @for (servidor of listaDeServidores(); track servidor.id) {
-        <a class="pagina-terminal-selector__servidor" [routerLink]="'/app/terminal/' + servidor.id">
-          <section class="pagina-terminal-selector__servidor__info">
-            <span class="pagina-terminal-selector__servidor__nombre">{{ servidor.nombre }}</span>
-            <span class="pagina-terminal-selector__servidor__ip">{{ servidor.direccionIp }}:{{ servidor.puertoSsh }}</span>
-          </section>
-          <section class="pagina-terminal-selector__servidor__derecha">
-            <span class="pagina-terminal-selector__servidor__usuario">{{ servidor.usuarioSsh }}@</span>
-            <i class="fa-solid fa-arrow-right pagina-terminal-selector__servidor__flecha"></i>
-          </section>
-        </a>
-      }
+    <section class="editorial__bloque">
+      <header class="editorial__bloque__cabecera">
+        <span class="editorial__bloque__indice">01</span>
+        <section class="editorial__bloque__texto">
+          <h2 class="editorial__bloque__titulo">{{ "terminalSelector.bloqueTitulo" | translate }}</h2>
+          <p class="editorial__bloque__descripcion">{{ "terminalSelector.bloqueDescripcion" | translate }}</p>
+        </section>
+      </header>
+      <section class="pagina-terminal-selector__lista">
+        @for (servidor of listaDeServidores(); track servidor.id) {
+          <a class="pagina-terminal-selector__servidor" [routerLink]="'/app/terminal/' + servidor.id">
+            <span class="pagina-terminal-selector__servidor__icono" aria-hidden="true">
+              <i class="fa-solid fa-terminal"></i>
+            </span>
+            <section class="pagina-terminal-selector__servidor__info">
+              <span class="pagina-terminal-selector__servidor__nombre">{{ servidor.nombre }}</span>
+              <span class="pagina-terminal-selector__servidor__ip">{{ servidor.direccionIp }}:{{ servidor.puertoSsh }}</span>
+            </section>
+            <section class="pagina-terminal-selector__servidor__derecha">
+              <span class="pagina-terminal-selector__servidor__usuario">{{ servidor.usuarioSsh }}<small>{{ "terminalSelector.hostSufijo" | translate }}</small></span>
+              <span class="pagina-terminal-selector__servidor__flecha" aria-hidden="true">→</span>
+            </section>
+          </a>
+        }
+      </section>
     </section>
   }
+
+  <footer class="editorial__pie">
+    <span class="editorial__pie__codigo">{{ "terminalSelector.pieCodigo" | translate: { count: listaDeServidores().length } }}</span>
+    <span class="editorial__pie__separador" aria-hidden="true"></span>
+    <span class="editorial__pie__texto">{{ "terminalSelector.pieTexto" | translate }}</span>
+    <span class="editorial__pie__separador" aria-hidden="true"></span>
+    <span class="editorial__pie__edicion">{{ "terminalSelector.pieEdicion" | translate }}</span>
+  </footer>
 
 </section>

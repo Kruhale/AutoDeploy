@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild, OnDestroy, afterNextRender, signal } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
 import { Terminal } from "@xterm/xterm";
 import { FitAddon } from "@xterm/addon-fit";
 import { TerminalSshService } from "../../services/terminal-ssh.service";
@@ -8,7 +9,7 @@ import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-terminal-ssh",
-  imports: [RouterLink],
+  imports: [RouterLink, TranslateModule],
   templateUrl: "./terminal-ssh.html",
   styleUrl: "./terminal-ssh.scss"
 })

@@ -35,6 +35,15 @@ public class DeployGitController {
         Servidor servidor = servidorService.obtenerPorId(peticion.servidorId());
         Despliegue despliegue = despliegueService.registrar(peticion.servidorId(), "git", peticion.repoUrl());
 
+        String tokenWebhook = despliegueService.generarTokenWebhook();
+        despliegueService.actualizarMetadatosGit(
+                despliegue.getId(),
+                peticion.tecnologia(),
+                peticion.rama(),
+                peticion.directorio(),
+                tokenWebhook
+        );
+
         try {
             String salidaDelComando = gitDeployService.desplegarConGit(servidor, peticion.repoUrl(), peticion.directorio());
             Despliegue despliegueCompletado = despliegueService.completar(despliegue.getId(), salidaDelComando);

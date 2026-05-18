@@ -10,5 +10,9 @@ public record GitDeployRequest(
         String repoUrl,
 
         @NotBlank(message = "El directorio no puede estar vacio")
-        String directorio
+        String directorio,
+
+        String rama,
+
+        String tecnologia
 ) {}

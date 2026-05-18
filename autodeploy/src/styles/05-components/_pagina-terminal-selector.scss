@@ -1,111 +1,91 @@
-.pagina-terminal-selector {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-size-3xl);
-}
-
-.pagina-terminal-selector__cabecera {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.pagina-terminal-selector__titulo {
-  font-family: var(--font-secondary);
-  font-size: 1.75rem;
-  font-weight: var(--font-weight-extrabold);
-  color: var(--texto-claro);
-  letter-spacing: -0.5px;
-}
-
-.pagina-terminal-selector__subtitulo {
-  font-size: var(--font-size-md);
-  color: var(--texto-medio);
-}
-
-.pagina-terminal-selector__vacio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-size-s);
-  padding: var(--spacing-size-5xl) 0;
-  text-align: center;
-}
-
-.pagina-terminal-selector__vacio__icono {
-  font-size: 1.5rem;
-  color: var(--texto-apagado);
-  opacity: 0.4;
-  margin-bottom: var(--spacing-size-s);
-}
-
-.pagina-terminal-selector__vacio__texto {
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  color: var(--texto-medio);
-}
-
-.pagina-terminal-selector__vacio__detalle {
-  font-size: var(--font-size-sm);
-  color: var(--texto-apagado);
-  margin-bottom: var(--spacing-size-l);
-}
-
 .pagina-terminal-selector__lista {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  border-top: 1px solid var(--borde-normal);
 }
 
 .pagina-terminal-selector__servidor {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
   align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-size-2xl);
+  gap: var(--spacing-size-l);
+  padding: var(--spacing-size-l) var(--spacing-size-m);
   border-bottom: 1px solid var(--borde-suave);
-  transition: background-color var(--duration-base) ease;
-  cursor: pointer;
-}
-
-.pagina-terminal-selector__servidor:first-child {
-  border-top: 1px solid var(--borde-suave);
+  text-decoration: none;
+  color: inherit;
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pagina-terminal-selector__servidor:hover {
-  background-color: rgba(240, 236, 226, 0.03);
+  background-color: rgba(240, 236, 226, 0.035);
+}
+
+.pagina-terminal-selector__servidor__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background-color: rgba(240, 236, 226, 0.04);
+  border: 1px solid var(--borde-normal);
+  color: var(--texto-medio);
+  font-size: 0.85rem;
+}
+
+.pagina-terminal-selector__servidor:hover .pagina-terminal-selector__servidor__icono {
+  background-color: var(--amarillo-transparente-008);
+  border-color: var(--amarillo-transparente-030);
+  color: var(--amarillo-normal);
 }
 
 .pagina-terminal-selector__servidor__info {
   display: flex;
   flex-direction: column;
-  gap: 0.125rem;
+  gap: 0.1rem;
+  min-width: 0;
 }
 
 .pagina-terminal-selector__servidor__nombre {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-bold);
+  font-family: var(--font-secondary);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
   color: var(--texto-claro);
+  letter-spacing: -0.005em;
 }
 
 .pagina-terminal-selector__servidor__ip {
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: 0.7rem;
+  letter-spacing: 0.06em;
   color: var(--texto-apagado);
 }
 
 .pagina-terminal-selector__servidor__derecha {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--spacing-size-l);
 }
 
 .pagina-terminal-selector__servidor__usuario {
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
   color: var(--texto-medio);
 }
 
+.pagina-terminal-selector__servidor__usuario small {
+  color: var(--texto-apagado);
+}
+
 .pagina-terminal-selector__servidor__flecha {
-  font-size: var(--font-size-sm);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--texto-apagado);
+  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-terminal-selector__servidor:hover .pagina-terminal-selector__servidor__flecha {
+  transform: translateX(0.3rem);
   color: var(--amarillo-normal);
 }

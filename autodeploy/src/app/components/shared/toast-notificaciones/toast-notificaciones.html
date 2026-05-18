@@ -1,6 +1,6 @@
 <div class="contenedor-toasts">
-	<div *ngFor="let toast of toastsMostrados" 
-		 class="toast" 
+	<div *ngFor="let toast of toastsMostrados"
+		 class="toast"
 		 [ngClass]="obtenerClasePorTipo(toast.notificacion.tipo)">
 		<div class="toast__icono">
 			<i class="fa-solid" [ngClass]="'fa-' + obtenerIconoPorTipo(toast.notificacion.tipo)"></i>
@@ -11,7 +11,7 @@
 			<p class="toast__descripcion">{{ toast.notificacion.descripcion }}</p>
 		</div>
 
-		<button class="toast__cerrar" (click)="cerrarToast(toast.id)" aria-label="Cerrar">
+		<button class="toast__cerrar" (click)="cerrarToast(toast.id)" [attr.aria-label]="'toastNotificaciones.ariaCerrar' | translate">
 			<i class="fa-solid fa-xmark"></i>
 		</button>
 	</div>

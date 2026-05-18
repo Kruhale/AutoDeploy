@@ -1,5 +1,6 @@
 import { Component, input } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 
 interface Miga {
   etiqueta: string;
@@ -8,7 +9,7 @@ interface Miga {
 
 @Component({
   selector: 'app-migas-pan',
-  imports: [RouterLink],
+  imports: [RouterLink, TranslateModule],
   templateUrl: './migas-pan.html',
   styleUrl: './migas-pan.scss'
 })

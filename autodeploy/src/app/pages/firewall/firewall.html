@@ -1,54 +1,90 @@
-<section class="pagina-firewall">
+<section class="pagina-firewall editorial">
 
-  <app-migas-pan [migas]="[{ etiqueta: 'Dashboard', enlace: '/app/dashboard' }, { etiqueta: 'Firewall' }]"></app-migas-pan>
-
-  <header class="pagina-firewall__cabecera">
-    <section class="pagina-firewall__cabecera__izquierda">
-      <h1 class="pagina-firewall__titulo">Firewall</h1>
-      <p class="pagina-firewall__subtitulo">Control inbound and outbound traffic rules</p>
+  <header class="editorial__cabecera">
+    <section class="editorial__cabecera__izquierda">
+      <p class="editorial__sello">
+        <span class="editorial__sello__punto" [class.editorial__sello__punto--verde]="firewallActivo()" [class.editorial__sello__punto--rojo]="!firewallActivo()" aria-hidden="true"></span>
+        {{ "firewall.selloPrefijo" | translate }}{{ firewallActivo() ? ("firewall.estadoActivo" | translate) : ("firewall.estadoInactivo" | translate) }}
+      </p>
+      <h1 class="editorial__titulo">{{ "firewall.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "firewall.subtitulo" | translate }}</p>
     </section>
-    <section class="pagina-firewall__cabecera__acciones">
-      <section class="pagina-firewall__estado">
-        <span class="pagina-firewall__estado__punto" [class.pagina-firewall__estado__punto--activo]="firewallActivo()"></span>
-        <span class="pagina-firewall__estado__texto">{{ firewallActivo() ? 'Active' : 'Inactive' }}</span>
-      </section>
-      <button class="boton--primario" (click)="mostrarFormularioAgregar()">Add Rule</button>
-    </section>
+    <button class="editorial__cta-principal" type="button" (click)="mostrarFormularioAgregar()">
+      <span class="editorial__cta-principal__icono" aria-hidden="true">
+        <i class="fa-solid fa-plus"></i>
+      </span>
+      <span class="editorial__cta-principal__texto">
+        <span class="editorial__cta-principal__principal">{{ "firewall.ctaPrincipal" | translate }}</span>
+        <span class="editorial__cta-principal__secundario">{{ "firewall.ctaSecundario" | translate }}</span>
+      </span>
+    </button>
   </header>
 
+  @if (listaServidores().length > 1) {
+    <section class="pagina-firewall__selector-servidor">
+      <label class="pagina-firewall__selector-servidor__etiqueta">{{ "firewall.selectorServidor" | translate }}</label>
+      <select class="pagina-firewall__selector-servidor__select" [value]="servidorSeleccionadoId()" (change)="cambiarServidor($any($event.target).value)">
+        @for (servidor of listaServidores(); track servidor.id) {
+          <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
+        }
+      </select>
+    </section>
+  }
+
+  @if (mensajeError()) {
+    <p class="pagina-firewall__alerta">
+      <i class="fa-solid fa-circle-exclamation"></i> {{ mensajeError() }}
+    </p>
+  }
+
   <section class="pagina-firewall__presets">
-    <span class="pagina-firewall__presets__etiqueta">Presets</span>
-    <button class="pagina-firewall__preset" (click)="agregarPreset('22', 'SSH Access')">
-      <span class="pagina-firewall__preset__puerto">22</span>
-      SSH
-    </button>
-    <button class="pagina-firewall__preset" (click)="agregarPreset('80', 'HTTP Traffic')">
-      <span class="pagina-firewall__preset__puerto">80</span>
-      HTTP
-    </button>
-    <button class="pagina-firewall__preset" (click)="agregarPreset('443', 'HTTPS Traffic')">
-      <span class="pagina-firewall__preset__puerto">443</span>
-      HTTPS
-    </button>
-    <button class="pagina-firewall__preset" (click)="agregarPreset('3306', 'MySQL Database')">
-      <span class="pagina-firewall__preset__puerto">3306</span>
-      MySQL
-    </button>
-    <button class="pagina-firewall__preset" (click)="agregarPreset('5432', 'PostgreSQL Database')">
-      <span class="pagina-firewall__preset__puerto">5432</span>
-      Postgres
-    </button>
+    <span class="pagina-firewall__presets__etiqueta">{{ "firewall.presetsEtiqueta" | translate }}</span>
+    <section class="pagina-firewall__presets__lista">
+      <button class="pagina-firewall__preset" type="button" (click)="agregarPresetSsh()">
+        <span class="pagina-firewall__preset__puerto">22</span>
+        <span class="pagina-firewall__preset__nombre">{{ "firewall.presetSsh" | translate }}</span>
+      </button>
+      <button class="pagina-firewall__preset" type="button" (click)="agregarPresetHttp()">
+        <span class="pagina-firewall__preset__puerto">80</span>
+        <span class="pagina-firewall__preset__nombre">{{ "firewall.presetHttp" | translate }}</span>
+      </button>
+      <button class="pagina-firewall__preset" type="button" (click)="agregarPresetHttps()">
+        <span class="pagina-firewall__preset__puerto">443</span>
+        <span class="pagina-firewall__preset__nombre">{{ "firewall.presetHttps" | translate }}</span>
+      </button>
+      <button class="pagina-firewall__preset" type="button" (click)="agregarPresetMysql()">
+        <span class="pagina-firewall__preset__puerto">3306</span>
+        <span class="pagina-firewall__preset__nombre">{{ "firewall.presetMysql" | translate }}</span>
+      </button>
+      <button class="pagina-firewall__preset" type="button" (click)="agregarPresetPostgres()">
+        <span class="pagina-firewall__preset__puerto">5432</span>
+        <span class="pagina-firewall__preset__nombre">{{ "firewall.presetPostgres" | translate }}</span>
+      </button>
+    </section>
   </section>
 
   @if (mostrarFormulario()) {
     <section class="pagina-firewall__formulario">
-      <section class="pagina-firewall__formulario__fila">
+      <header class="pagina-firewall__formulario__cabecera">
+        <span class="pagina-firewall__formulario__indice">+</span>
+        <section class="pagina-firewall__formulario__texto">
+          <h3 class="pagina-firewall__formulario__titulo">{{ "firewall.formularioTitulo" | translate }}</h3>
+          <p class="pagina-firewall__formulario__descripcion">{{ "firewall.formularioDescripcion" | translate }}</p>
+        </section>
+      </header>
+      <section class="pagina-firewall__formulario__campos">
         <section class="campo">
-          <label class="campo__etiqueta">Port</label>
-          <input class="campo__input" type="text" placeholder="8080" [ngModel]="nuevoPuerto()" (ngModelChange)="nuevoPuerto.set($event)">
+          <label class="campo__etiqueta">
+            <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
+            {{ "firewall.puerto" | translate }}
+          </label>
+          <input class="campo__input" type="text" [placeholder]="'firewall.puertoPlaceholder' | translate" [ngModel]="nuevoPuerto()" (ngModelChange)="nuevoPuerto.set($event)">
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">Protocol</label>
+          <label class="campo__etiqueta">
+            <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
+            {{ "firewall.protocolo" | translate }}
+          </label>
           <select class="campo__select" [ngModel]="nuevoProtocolo()" (ngModelChange)="nuevoProtocolo.set($event)">
             <option value="TCP">TCP</option>
             <option value="UDP">UDP</option>
@@ -56,71 +92,92 @@
           </select>
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">Action</label>
+          <label class="campo__etiqueta">
+            <span class="campo__etiqueta__numero" aria-hidden="true">iii</span>
+            {{ "firewall.accion" | translate }}
+          </label>
           <select class="campo__select" [ngModel]="nuevaAccion()" (ngModelChange)="nuevaAccion.set($event)">
-            <option value="allow">Allow</option>
-            <option value="deny">Deny</option>
+            <option value="allow">{{ "firewall.accionAllow" | translate }}</option>
+            <option value="deny">{{ "firewall.accionDeny" | translate }}</option>
           </select>
         </section>
-      </section>
-      <section class="pagina-firewall__formulario__fila">
         <section class="campo">
-          <label class="campo__etiqueta">Source</label>
-          <input class="campo__input" type="text" placeholder="0.0.0.0/0" [ngModel]="nuevoOrigen()" (ngModelChange)="nuevoOrigen.set($event)">
+          <label class="campo__etiqueta">
+            <span class="campo__etiqueta__numero" aria-hidden="true">iv</span>
+            {{ "firewall.origen" | translate }}
+          </label>
+          <input class="campo__input" type="text" [placeholder]="'firewall.origenPlaceholder' | translate" [ngModel]="nuevoOrigen()" (ngModelChange)="nuevoOrigen.set($event)">
         </section>
-        <section class="campo">
-          <label class="campo__etiqueta">Description</label>
-          <input class="campo__input" type="text" placeholder="Custom rule" [ngModel]="nuevaDescripcion()" (ngModelChange)="nuevaDescripcion.set($event)">
+        <section class="campo pagina-firewall__formulario__campo-ancho">
+          <label class="campo__etiqueta">
+            <span class="campo__etiqueta__numero" aria-hidden="true">v</span>
+            {{ "firewall.descripcion" | translate }}
+          </label>
+          <input class="campo__input" type="text" [placeholder]="'firewall.descripcionPlaceholder' | translate" [ngModel]="nuevaDescripcion()" (ngModelChange)="nuevaDescripcion.set($event)">
         </section>
       </section>
       <section class="pagina-firewall__formulario__acciones">
-        <button class="boton--ghost" (click)="cancelarFormulario()">Cancel</button>
-        <button class="boton--primario" (click)="agregarRegla()">Add</button>
+        <button class="pagina-firewall__form-cancelar" type="button" (click)="cancelarFormulario()">{{ "firewall.cancelar" | translate }}</button>
+        <button class="editorial__cta-principal" type="button" (click)="agregarRegla()">
+          <span class="editorial__cta-principal__texto">
+            <span class="editorial__cta-principal__principal">{{ "firewall.aplicar" | translate }}</span>
+          </span>
+        </button>
       </section>
     </section>
   }
 
-  <section class="pagina-firewall__seccion">
-    <h2 class="pagina-firewall__seccion__titulo">Rules</h2>
+  <section class="editorial__bloque">
+    <header class="editorial__bloque__cabecera">
+      <span class="editorial__bloque__indice">01</span>
+      <section class="editorial__bloque__texto">
+        <h2 class="editorial__bloque__titulo">{{ "firewall.reglasTitulo" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "firewall.reglasDescripcion" | translate }}</p>
+      </section>
+    </header>
 
     @if (listaDeReglas().length === 0) {
-      <section class="pagina-firewall__vacio">
-        <i class="fa-solid fa-shield-halved pagina-firewall__vacio__icono"></i>
-        <p class="pagina-firewall__vacio__texto">No rules configured</p>
-        <p class="pagina-firewall__vacio__detalle">Add rules or use presets to secure your server</p>
+      <section class="editorial__vacio">
+        <span class="editorial__vacio__icono" aria-hidden="true">
+          <i class="fa-solid fa-shield-halved"></i>
+        </span>
+        <p class="editorial__vacio__titulo">{{ "firewall.vacioTitulo" | translate }}</p>
+        <p class="editorial__vacio__detalle">{{ "firewall.vacioDetalle" | translate }}</p>
       </section>
     } @else {
-      <table class="pagina-firewall__tabla">
-        <thead>
-          <tr class="pagina-firewall__tabla__fila-cabecera">
-            <th class="pagina-firewall__tabla__th">Port</th>
-            <th class="pagina-firewall__tabla__th">Protocol</th>
-            <th class="pagina-firewall__tabla__th">Action</th>
-            <th class="pagina-firewall__tabla__th">Source</th>
-            <th class="pagina-firewall__tabla__th">Description</th>
-            <th class="pagina-firewall__tabla__th"></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (regla of listaDeReglas(); track regla.puerto) {
-            <tr class="pagina-firewall__tabla__fila">
-              <td class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.puerto }}</td>
-              <td class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.protocolo }}</td>
-              <td class="pagina-firewall__tabla__td">
-                <span class="pagina-firewall__badge pagina-firewall__badge--{{ regla.accion }}">{{ regla.accion }}</span>
-              </td>
-              <td class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.origen }}</td>
-              <td class="pagina-firewall__tabla__td">{{ regla.descripcion }}</td>
-              <td class="pagina-firewall__tabla__td">
-                <button class="pagina-firewall__eliminar" (click)="eliminarRegla(regla.puerto)">
-                  <i class="fa-solid fa-trash"></i>
-                </button>
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <section class="pagina-firewall__tabla">
+        <header class="pagina-firewall__tabla__cabecera">
+          <span class="pagina-firewall__tabla__th">{{ "firewall.tablaPuerto" | translate }}</span>
+          <span class="pagina-firewall__tabla__th">{{ "firewall.tablaProtocolo" | translate }}</span>
+          <span class="pagina-firewall__tabla__th">{{ "firewall.tablaAccion" | translate }}</span>
+          <span class="pagina-firewall__tabla__th">{{ "firewall.tablaOrigen" | translate }}</span>
+          <span class="pagina-firewall__tabla__th">{{ "firewall.tablaDescripcion" | translate }}</span>
+          <span class="pagina-firewall__tabla__th" aria-hidden="true"></span>
+        </header>
+        @for (regla of listaDeReglas(); track regla.id) {
+          <article class="pagina-firewall__tabla__fila">
+            <span class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.puerto }}</span>
+            <span class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.protocolo }}</span>
+            <span class="pagina-firewall__tabla__td">
+              <span class="pagina-firewall__badge pagina-firewall__badge--{{ regla.accion }}">{{ regla.accion }}</span>
+            </span>
+            <span class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.origen }}</span>
+            <span class="pagina-firewall__tabla__td">{{ regla.descripcion }}</span>
+            <button class="pagina-firewall__eliminar" type="button" (click)="eliminarRegla(regla.id)" [attr.aria-label]="'firewall.ariaEliminar' | translate">
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </article>
+        }
+      </section>
     }
   </section>
+
+  <footer class="editorial__pie">
+    <span class="editorial__pie__codigo">{{ "firewall.pieCodigo" | translate: { count: listaDeReglas().length } }}</span>
+    <span class="editorial__pie__separador" aria-hidden="true"></span>
+    <span class="editorial__pie__texto">{{ "firewall.pieTexto" | translate }}</span>
+    <span class="editorial__pie__separador" aria-hidden="true"></span>
+    <span class="editorial__pie__edicion">{{ "firewall.pieEdicion" | translate }}</span>
+  </footer>
 
 </section>

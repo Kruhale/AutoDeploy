@@ -1,0 +1,60 @@
+@if (modo === "desplegable") {
+  <section class="selector-idioma">
+    <button
+      class="selector-idioma__disparador"
+      type="button"
+      (click)="abrirCerrarDesplegable()"
+      [attr.aria-expanded]="desplegableAbierto"
+      [attr.aria-label]="'selectorIdioma.aria.abrir' | translate">
+      <span class="selector-idioma__disparador__bandera">{{ idiomaActivoActual()?.bandera }}</span>
+      <span class="selector-idioma__disparador__nombre">{{ idiomaActivoActual()?.nombre }}</span>
+      <span class="selector-idioma__disparador__flecha" aria-hidden="true">
+        <i class="fa-solid fa-chevron-down"></i>
+      </span>
+    </button>
+
+    @if (desplegableAbierto) {
+      <ul class="selector-idioma__lista" role="listbox">
+        @for (idioma of idiomaService.idiomasSoportados; track idioma.codigo) {
+          <li class="selector-idioma__item">
+            <button
+              class="selector-idioma__opcion"
+              type="button"
+              role="option"
+              [class.selector-idioma__opcion--activo]="idioma.codigo === idiomaService.idiomaActual()"
+              [attr.aria-selected]="idioma.codigo === idiomaService.idiomaActual()"
+              (click)="seleccionarIdioma(idioma.codigo)">
+              <span class="selector-idioma__opcion__bandera">{{ idioma.bandera }}</span>
+              <span class="selector-idioma__opcion__nombre">{{ idioma.nombre }}</span>
+              @if (idioma.codigo === idiomaService.idiomaActual()) {
+                <span class="selector-idioma__opcion__check" aria-hidden="true">
+                  <i class="fa-solid fa-check"></i>
+                </span>
+              }
+            </button>
+          </li>
+        }
+      </ul>
+    }
+  </section>
+}
+
+@if (modo === "expandido") {
+  <section class="selector-idioma-expandido" role="radiogroup" [attr.aria-label]="'selectorIdioma.aria.grupo' | translate">
+    @for (idioma of idiomaService.idiomasSoportados; track idioma.codigo) {
+      <button
+        class="selector-idioma-expandido__opcion"
+        type="button"
+        role="radio"
+        [class.selector-idioma-expandido__opcion--activo]="idioma.codigo === idiomaService.idiomaActual()"
+        [attr.aria-checked]="idioma.codigo === idiomaService.idiomaActual()"
+        (click)="seleccionarIdioma(idioma.codigo)">
+        <span class="selector-idioma-expandido__opcion__bandera">{{ idioma.bandera }}</span>
+        <span class="selector-idioma-expandido__opcion__nombre">{{ idioma.nombre }}</span>
+        @if (idioma.codigo === idiomaService.idiomaActual()) {
+          <span class="selector-idioma-expandido__opcion__indicador" aria-hidden="true"></span>
+        }
+      </button>
+    }
+  </section>
+}

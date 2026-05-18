@@ -1,62 +1,59 @@
 <main class="pagina-legal">
   <section class="pagina-legal__contenedor">
-    <h1 class="pagina-legal__titulo">Política de Cookies</h1>
-    <p class="pagina-legal__fecha">Última actualización: abril 2026</p>
+    <h1 class="pagina-legal__titulo">{{ 'politicaCookies.titulo' | translate }}</h1>
+    <p class="pagina-legal__fecha">{{ 'politicaCookies.fecha' | translate }}</p>
 
     <section class="pagina-legal__seccion">
-      <h2 class="pagina-legal__subtitulo">¿Qué son las cookies?</h2>
+      <h2 class="pagina-legal__subtitulo">{{ 'politicaCookies.seccion1.titulo' | translate }}</h2>
       <p class="pagina-legal__parrafo">
-        Las cookies son pequeños archivos de texto que los sitios web almacenan en tu dispositivo al visitarlos.
-        Se usan para recordar tus preferencias, mantenerte autenticado y analizar el uso del sitio.
+        {{ 'politicaCookies.seccion1.parrafo' | translate }}
       </p>
     </section>
 
     <section class="pagina-legal__seccion">
-      <h2 class="pagina-legal__subtitulo">Cookies que usamos</h2>
+      <h2 class="pagina-legal__subtitulo">{{ 'politicaCookies.tabla.titulo' | translate }}</h2>
       <table class="pagina-legal__tabla">
         <thead>
           <tr>
-            <th class="pagina-legal__tabla__cabecera">Nombre</th>
-            <th class="pagina-legal__tabla__cabecera">Tipo</th>
-            <th class="pagina-legal__tabla__cabecera">Duración</th>
-            <th class="pagina-legal__tabla__cabecera">Finalidad</th>
+            <th class="pagina-legal__tabla__cabecera">{{ 'politicaCookies.tabla.nombre' | translate }}</th>
+            <th class="pagina-legal__tabla__cabecera">{{ 'politicaCookies.tabla.tipo' | translate }}</th>
+            <th class="pagina-legal__tabla__cabecera">{{ 'politicaCookies.tabla.duracion' | translate }}</th>
+            <th class="pagina-legal__tabla__cabecera">{{ 'politicaCookies.tabla.finalidad' | translate }}</th>
           </tr>
         </thead>
         <tbody>
           <tr class="pagina-legal__tabla__fila">
-            <td class="pagina-legal__tabla__celda"><code>logueado</code></td>
-            <td class="pagina-legal__tabla__celda">Técnica</td>
-            <td class="pagina-legal__tabla__celda">Sesión</td>
-            <td class="pagina-legal__tabla__celda">Mantener la sesión iniciada</td>
+            <td class="pagina-legal__tabla__celda"><code>{{ 'politicaCookies.tabla.fila1.nombre' | translate }}</code></td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila1.tipo' | translate }}</td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila1.duracion' | translate }}</td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila1.finalidad' | translate }}</td>
           </tr>
           <tr class="pagina-legal__tabla__fila">
-            <td class="pagina-legal__tabla__celda"><code>tema</code></td>
-            <td class="pagina-legal__tabla__celda">Preferencia</td>
-            <td class="pagina-legal__tabla__celda">Persistente</td>
-            <td class="pagina-legal__tabla__celda">Recordar el tema (claro/oscuro)</td>
+            <td class="pagina-legal__tabla__celda"><code>{{ 'politicaCookies.tabla.fila2.nombre' | translate }}</code></td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila2.tipo' | translate }}</td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila2.duracion' | translate }}</td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila2.finalidad' | translate }}</td>
           </tr>
           <tr class="pagina-legal__tabla__fila">
-            <td class="pagina-legal__tabla__celda"><code>cookies</code></td>
-            <td class="pagina-legal__tabla__celda">Técnica</td>
-            <td class="pagina-legal__tabla__celda">Persistente</td>
-            <td class="pagina-legal__tabla__celda">Guardar tu preferencia de cookies</td>
+            <td class="pagina-legal__tabla__celda"><code>{{ 'politicaCookies.tabla.fila3.nombre' | translate }}</code></td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila3.tipo' | translate }}</td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila3.duracion' | translate }}</td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila3.finalidad' | translate }}</td>
           </tr>
           <tr class="pagina-legal__tabla__fila">
-            <td class="pagina-legal__tabla__celda"><code>plan</code></td>
-            <td class="pagina-legal__tabla__celda">Funcional</td>
-            <td class="pagina-legal__tabla__celda">Sesión</td>
-            <td class="pagina-legal__tabla__celda">Recordar tu plan de suscripción activo</td>
+            <td class="pagina-legal__tabla__celda"><code>{{ 'politicaCookies.tabla.fila4.nombre' | translate }}</code></td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila4.tipo' | translate }}</td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila4.duracion' | translate }}</td>
+            <td class="pagina-legal__tabla__celda">{{ 'politicaCookies.tabla.fila4.finalidad' | translate }}</td>
           </tr>
         </tbody>
       </table>
     </section>
 
     <section class="pagina-legal__seccion">
-      <h2 class="pagina-legal__subtitulo">Cómo gestionar las cookies</h2>
+      <h2 class="pagina-legal__subtitulo">{{ 'politicaCookies.gestion.titulo' | translate }}</h2>
       <p class="pagina-legal__parrafo">
-        Puedes aceptar o rechazar las cookies no esenciales desde el banner que aparece al visitar el sitio.
-        También puedes eliminar las cookies desde la configuración de tu navegador en cualquier momento.
-        Ten en cuenta que deshabilitar las cookies técnicas puede afectar al funcionamiento del servicio.
+        {{ 'politicaCookies.gestion.parrafo' | translate }}
       </p>
     </section>
   </section>

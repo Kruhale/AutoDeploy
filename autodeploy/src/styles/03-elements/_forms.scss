@@ -32,6 +32,11 @@
   border-color: var(--amarillo-normal);
 }
 
+.campo__input:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
+}
+
 .campo__textarea {
   padding: 0.625rem var(--spacing-size-l);
   background: rgba(240, 236, 226, 0.03);
@@ -51,6 +56,11 @@
 .campo__textarea:focus {
   outline: none;
   border-color: var(--amarillo-normal);
+}
+
+.campo__textarea:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
 }
 
 .campo__select {
@@ -94,9 +104,16 @@
   width: 2.75rem;
   height: 1.5rem;
   background: rgba(240, 236, 226, 0.1);
+  border: none;
+  padding: 0;
   border-radius: var(--radius-full);
   cursor: pointer;
   transition: background-color var(--duration-base) ease;
+}
+
+.interruptor:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
 }
 
 .interruptor--activo {

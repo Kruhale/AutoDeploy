@@ -46,15 +46,17 @@ services:
     depends_on:
       backend:
         condition: service_healthy
+    # Solo HTTP en un puerto interno del VPS (8082).
+    # El nginx-host del VPS hace TLS termination (Let's Encrypt) y proxy_pass
+    # desde el dominio público a http://localhost:8082/.
     ports:
-      - "80:80"
-      - "443:443"
+      - "${HOST_PORT:-8082}:80"
     volumes:
       - nginx-logs:/var/log/nginx
     networks:
       - red-interna
     healthcheck:
-      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider --no-check-certificate https://localhost/ || exit 1"]
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://localhost/ || exit 1"]
       interval: 30s
       timeout: 5s
       retries: 5

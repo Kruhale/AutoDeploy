@@ -2,44 +2,56 @@
 
 AutoDeploy es una aplicación web SaaS de **3 capas + servicios externos** que permite a los usuarios gestionar sus servidores VPS desde un panel centralizado: despliegues Git/ZIP, métricas en vivo, terminal SSH en el navegador, asistente IA con ejecución de comandos, backups, firewall, DNS y SSL.
 
-## Vista general
+## Vista general (despliegue en VPS compartido)
 
 ```mermaid
 flowchart LR
-    navegador["Navegador<br/>(Angular SPA)"]
-    nginx["nginx<br/>(reverse proxy + TLS)"]
-    backend["Spring Boot<br/>(API REST + WebSocket)"]
-    mongo["MongoDB<br/>(persistencia)"]
-    openrouter["OpenRouter API<br/>(asistente IA)"]
-    vps["VPS del usuario<br/>(SSH/SFTP)"]
+    navegador["Navegador"]
+    host_nginx["nginx-host VPS<br/>:443 + :80<br/>(TLS + Let's Encrypt)"]
+    container_nginx["nginx contenedor<br/>:80 interno"]
+    backend["Spring Boot<br/>:8080"]
+    mongo["MongoDB<br/>:27017"]
+    openrouter["OpenRouter API"]
+    vps_remoto["VPS del usuario<br/>(SSH/SFTP)"]
 
-    navegador -->|"HTTPS :443<br/>HTML/JS/CSS estático"| nginx
-    navegador <-->|"WSS /ws/*<br/>terminal · métricas · notifs"| nginx
-
-    nginx -->|"/api/* :8080"| backend
-    nginx -->|"/ws/* :8080 upgrade"| backend
-    nginx -->|"/swagger-ui/*, /v3/api-docs"| backend
+    navegador -->|"HTTPS :443"| host_nginx
+    host_nginx -->|"proxy_pass<br/>localhost:8082"| container_nginx
+    container_nginx -->|"/api/* + /actuator/*<br/>:8080"| backend
+    container_nginx -->|"/ws/* upgrade<br/>:8080"| backend
 
     backend -->|"mongodb://mongodb:27017"| mongo
     backend -->|"HTTPS"| openrouter
-    backend -->|"SSH 22 + SFTP<br/>Apache MINA SSHD"| vps
+    backend -->|"SSH :22 + SFTP"| vps_remoto
 
-    subgraph red-interna["Red Docker interna (`red-interna`)"]
-        nginx
-        backend
-        mongo
+    subgraph host_vps["Host VPS"]
+        host_nginx
+        subgraph red_docker["Red Docker red-interna"]
+            container_nginx
+            backend
+            mongo
+        end
     end
 ```
 
+El `nginx-host` ya está corriendo en el VPS gestionando otros dominios (lo típico es 2-3 webs en un mismo VPS). AutoDeploy se añade como **un server block más**, apuntando a `http://localhost:8082` donde el compose publica el frontend.
+
+**Ventaja clave**: los certificados Let's Encrypt se gestionan centralizadamente en el host con `certbot --nginx`; no hay que reemitir nada al actualizar la app.
+
 ## Servicios
 
-| Servicio | Imagen / Stack | Puerto interno | Puerto expuesto | Red | Volumen |
-|----------|----------------|----------------|-----------------|-----|---------|
-| `frontend` (nginx) | `ghcr.io/kruhale/autodeploy-frontend` (build local de Angular 20 + nginx alpine) | 80, 443 | **80, 443** | `red-interna` | `nginx-logs` |
-| `backend` (Spring Boot) | `ghcr.io/kruhale/autodeploy-backend` (Eclipse Temurin 21 JRE) | 8080 | — *(solo accesible vía nginx)* | `red-interna` | `backend-logs` |
+| Servicio | Imagen / Stack | Puerto interno | Puerto expuesto al host | Red | Volumen |
+|----------|----------------|----------------|--------------------------|-----|---------|
+| `frontend` (nginx) | `ghcr.io/kruhale/autodeploy-frontend` (build local de Angular 20 + nginx alpine) | 80 | **8082** (configurable con `HOST_PORT`) | `red-interna` | `nginx-logs` |
+| `backend` (Spring Boot) | `ghcr.io/kruhale/autodeploy-backend` (Eclipse Temurin 21 JRE) | 8080 | — *(solo accesible vía nginx-contenedor)* | `red-interna` | `backend-logs` |
 | `mongodb` | `mongo:8` oficial | 27017 | — *(solo accesible vía red interna)* | `red-interna` | `mongodb-datos` |
 
-Solo el **frontend nginx publica puertos al host** (80 y 443). El backend y MongoDB son inaccesibles desde fuera del host por diseño: cualquier petición externa pasa obligatoriamente por nginx.
+Solo el **frontend nginx publica un puerto interno del VPS** (`8082` por defecto). Backend y MongoDB son inaccesibles desde fuera por diseño. Y el puerto `8082` **tampoco** está expuesto al exterior: solo lo usa el `nginx-host` del VPS para hacer `proxy_pass` desde el dominio público.
+
+**Cadena completa** desde fuera:
+
+```
+Internet :443 → nginx-host VPS (TLS) → localhost:8082 → nginx-container → backend:8080 → mongodb:27017
+```
 
 ## Comunicaciones
 

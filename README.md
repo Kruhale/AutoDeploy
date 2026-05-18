@@ -39,26 +39,28 @@ Panel SaaS de gestión y despliegue automático para servidores VPS. Permite con
 ```mermaid
 flowchart LR
     user["Navegador"]
-    nginx["nginx<br/>(:80 → :443)"]
-    backend["Spring Boot<br/>(:8080)"]
-    mongo["MongoDB<br/>(:27017)"]
+    host_nginx["nginx-host VPS<br/>:443 + TLS"]
+    nginx["nginx contenedor<br/>:80 interno"]
+    backend["Spring Boot<br/>:8080"]
+    mongo["MongoDB<br/>:27017"]
     openrouter["OpenRouter API"]
     vps["VPS del usuario<br/>(SSH/SFTP)"]
 
-    user -->|HTTPS| nginx
+    user -->|HTTPS| host_nginx
+    host_nginx -->|"proxy_pass<br/>localhost:8082"| nginx
     nginx -->|"/api/* + /ws/*"| backend
     backend --> mongo
     backend -->|HTTPS| openrouter
     backend -->|SSH:22| vps
 
-    subgraph docker[red-interna - Docker]
+    subgraph docker[red-interna Docker]
         nginx
         backend
         mongo
     end
 ```
 
-Solo los puertos 80 y 443 están expuestos al host. Detalle completo en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+El VPS ya tiene un nginx-host gestionando otras webs y los certificados Let's Encrypt centralizados. AutoDeploy se publica en un puerto interno del host (`8082` por defecto) y el nginx-host hace `proxy_pass` desde el dominio público. Backend y MongoDB no se exponen nunca al exterior. Detalle completo en [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
 
 ## Quick start
 
@@ -83,14 +85,22 @@ Espera ~30 s a que los tres servicios estén `(healthy)`:
 docker compose -f docker-compose.prod.yml ps
 ```
 
-Abre `https://localhost/` en el navegador (acepta el cert autofirmado).
+Abre `http://localhost:8082/` en el navegador (en local sin nginx-host por delante).
+En producción con dominio + nginx-host: `https://tu-dominio.es/` con cert válido Let's Encrypt.
 
-### Verificación rápida
+### Verificación rápida (local sin nginx-host)
 
 ```bash
-curl -I http://localhost/                  # 301 → HTTPS
-curl -ksI https://localhost/               # 200 (Angular SPA)
-curl -ks https://localhost/api/estado | jq # {"success":true,...}
+curl -I http://localhost:8082/                  # 200 (Angular SPA)
+curl -s http://localhost:8082/api/estado | jq   # {"success":true,...}
+curl -s http://localhost:8082/actuator/health   # {"status":"UP"}
+```
+
+### Verificación rápida (en VPS con nginx-host + Let's Encrypt)
+
+```bash
+curl -I https://tu-dominio.es/            # 200, HTTP/2, cert válido
+curl -s https://tu-dominio.es/api/estado  # {"success":true,...}
 ```
 
 ## Variables de entorno

@@ -6,7 +6,10 @@ import com.autodeploy.dto.RegistroRequest;
 import com.autodeploy.exception.BadRequestException;
 import com.autodeploy.exception.ResourceNotFoundException;
 import com.autodeploy.model.Usuario;
+import com.autodeploy.repository.ConfiguracionAsistenteIaRepository;
+import com.autodeploy.repository.NotificacionRepository;
 import com.autodeploy.repository.UsuarioRepository;
+import com.autodeploy.util.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -34,6 +37,15 @@ class UsuarioServiceTest {
 
     @Mock
     private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtUtil jwtUtil;
+
+    @Mock
+    private NotificacionRepository notificacionRepository;
+
+    @Mock
+    private ConfiguracionAsistenteIaRepository configuracionAsistenteRepository;
 
     @InjectMocks
     private UsuarioService usuarioService;
@@ -84,6 +96,7 @@ class UsuarioServiceTest {
     void login_deberiaRetornarLoginResponse_cuandoCredencialesSonCorrectas() {
         when(usuarioRepository.findByEmail("ana@correo.com")).thenReturn(Optional.of(usuarioExistente));
         when(passwordEncoder.matches("clave123", "hashDeLaClave")).thenReturn(true);
+        when(jwtUtil.generarToken(anyString(), anyString())).thenReturn("token-jwt-fake");
 
         LoginResponse respuesta = usuarioService.login(peticionLoginValida);
 
@@ -91,6 +104,7 @@ class UsuarioServiceTest {
         assertThat(respuesta.id()).isEqualTo("id-usuario-123");
         assertThat(respuesta.nombre()).isEqualTo("Ana Garcia");
         assertThat(respuesta.email()).isEqualTo("ana@correo.com");
+        assertThat(respuesta.token()).isEqualTo("token-jwt-fake");
     }
 
     @Test

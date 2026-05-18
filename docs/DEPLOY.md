@@ -95,7 +95,132 @@ curl -ks https://localhost/api/estado | jq
 
 Abre el navegador en `https://localhost/`. La primera vez verás el aviso del cert autofirmado: avanzar (en Chrome: "Configuración avanzada" → "Acceder a localhost").
 
-## Despliegue al VPS
+## Despliegue al VPS compartido (con nginx-host)
+
+Este es el escenario típico cuando el VPS ya tiene un nginx en los puertos 80/443 sirviendo otras aplicaciones. AutoDeploy se publica en un **puerto interno del host** (por defecto `8082`) y el `nginx-host` del VPS hace `proxy_pass` desde el dominio público.
+
+```
+Internet ─► nginx-host VPS :443 (TLS, Let's Encrypt) ─► localhost:8082 ─► nginx-container (HTTP) ─► backend / mongo
+```
+
+### Pasos completos (primera vez)
+
+#### 1. Comprobar que el puerto interno está libre
+
+```bash
+sudo ss -tlnp | grep 8082
+```
+
+Si no devuelve nada, está libre. Si está ocupado, cambia `HOST_PORT` en `.env` a otro puerto disponible.
+
+#### 2. Clonar y configurar `.env`
+
+```bash
+cd /opt
+sudo git clone https://github.com/Kruhale/AutoDeploy.git
+sudo chown -R $USER:$USER AutoDeploy
+cd AutoDeploy
+cp .env.example .env
+# Editar y rellenar AUTODEPLOY_JWT_SECRET, AUTODEPLOY_CIFRADO_CLAVE, OPENROUTER_API_KEY, HOST_PORT
+nano .env
+```
+
+#### 3. Levantar el stack
+
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+docker compose -f docker-compose.prod.yml ps
+```
+
+Verifica que el contenedor `autodeploy-frontend` esté publicando `8082:80`. Prueba interna:
+
+```bash
+curl -fsS http://localhost:8082/api/estado | jq
+```
+
+Si responde el JSON `{"success":true,...}` está OK.
+
+#### 4. Configurar el nginx-host del VPS
+
+Copia el snippet preparado:
+
+```bash
+sudo cp docs/snippets/nginx-host-autodeploy.conf /etc/nginx/sites-available/autodeploy
+# Reemplazar TU-DOMINIO.com por el dominio real
+sudo sed -i 's/TU-DOMINIO\.com/midominio.es/g' /etc/nginx/sites-available/autodeploy
+sudo ln -s /etc/nginx/sites-available/autodeploy /etc/nginx/sites-enabled/
+sudo nginx -t
+sudo systemctl reload nginx
+```
+
+#### 5. Asegurarse de que el A record del dominio apunta a la IP del VPS
+
+En el panel del registrador:
+
+| Tipo | Nombre | Valor |
+|------|--------|-------|
+| A | `@` (o el subdominio) | `<IP-pública-del-VPS>` |
+
+Espera unos minutos a que propague:
+
+```bash
+dig +short midominio.es
+# Debe devolver la IP del VPS
+```
+
+#### 6. Emitir certificado Let's Encrypt
+
+```bash
+sudo certbot --nginx -d midominio.es
+```
+
+Certbot:
+- Detecta el `server_name midominio.es` en `/etc/nginx/sites-available/autodeploy`.
+- Hace el challenge HTTP-01 en el puerto 80.
+- Rellena automáticamente `ssl_certificate` y `ssl_certificate_key`.
+- Añade el redirect 301 HTTP→HTTPS (opción 2 cuando lo pregunte).
+- Programa la renovación automática cada 60 días (`/etc/cron.d/certbot`).
+
+#### 7. Verificación final
+
+```bash
+# Cert válido
+curl -I https://midominio.es/
+# HTTP/2 200, server: nginx, sin warnings
+
+# API funcional
+curl https://midominio.es/api/estado | jq
+```
+
+Abre `https://midominio.es` en el navegador — debe mostrar el dashboard con candado verde.
+
+### Cuando se hace push a main (CD automático)
+
+El workflow `cd.yml`:
+
+1. Construye las imágenes y las publica en GHCR.
+2. Conecta por SSH al VPS y ejecuta:
+
+   ```bash
+   cd /opt/AutoDeploy
+   git pull origin main
+   docker compose -f docker-compose.prod.yml pull
+   docker compose -f docker-compose.prod.yml up -d --remove-orphans
+   ```
+
+3. Hace smoke test contra `https://midominio.es/api/estado`.
+
+El nginx-host del VPS **no se toca** en cada despliegue: solo se reconfigura cuando cambian rutas o el dominio.
+
+## Despliegue al VPS (en VPS dedicado, sin nginx-host)
+
+Si el VPS solo aloja AutoDeploy y no tiene nginx propio, se puede usar el contenedor para hacer TLS termination. Para ello:
+
+1. Cambiar `docker-compose.prod.yml` para publicar `80:80` y `443:443`.
+2. Generar cert (autofirmado o Let's Encrypt con DNS challenge).
+3. Restaurar el bloque `listen 443 ssl` en `autodeploy/nginx.conf`.
+
+Ver el commit anterior al rediseño para esta variante.
 
 ### Opción A — automático con GitHub Actions
 
@@ -182,10 +307,11 @@ curl -ksf https://<dominio>/actuator/health | jq
 # 4. Métricas Prometheus (opcional)
 curl -ks https://<dominio>/actuator/prometheus | head -20
 
-# 5. Login real
+# 5. Login real (sustituye EMAIL y PWD por credenciales válidas)
+EMAIL="demo@test.com"; PWD="ejemplo-no-real"
 curl -ks -X POST https://<dominio>/api/usuarios/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"demo@test.com","password":"DemoPass123"}' | jq
+  -d "{\"email\":\"$EMAIL\",\"password\":\"$PWD\"}" | jq
 ```
 
 ## Troubleshooting
@@ -231,7 +357,7 @@ docker compose -f docker-compose.prod.yml up -d --build --no-cache
 
 ### CD desde GitHub Actions falla con `Permission denied (publickey)`
 
-Verifica el secret `SSH_PRIVATE_KEY`: tiene que ser la clave privada **completa** incluyendo las líneas `-----BEGIN OPENSSH PRIVATE KEY-----` y `-----END OPENSSH PRIVATE KEY-----`. La clave pública correspondiente debe estar en `~/.ssh/authorized_keys` del usuario `SSH_USER` en el VPS.
+Verifica el secret `SSH_PRIVATE_KEY`: tiene que ser la clave privada **completa** incluyendo las cabeceras `BEGIN/END OPENSSH PRIVATE KEY` (formato OpenSSH, generado con `ssh-keygen -t ed25519`). La clave pública correspondiente debe estar en `~/.ssh/authorized_keys` del usuario `SSH_USER` en el VPS.
 
 ### Volumen `mongodb-datos` corrupto / quiero empezar de cero
 

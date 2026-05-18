@@ -1,0 +1,124 @@
+name: CD
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_BACKEND: ghcr.io/${{ github.repository_owner }}/autodeploy-backend
+  IMAGE_FRONTEND: ghcr.io/${{ github.repository_owner }}/autodeploy-frontend
+
+jobs:
+  build-and-push:
+    name: Construir y publicar imágenes en GHCR
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Configurar Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login en GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Calcular tag corto del commit
+        id: tag
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Lowercase del owner (ghcr exige minúsculas)
+        id: owner
+        run: echo "lc=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Build & push imagen backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.lc }}/autodeploy-backend:latest
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.lc }}/autodeploy-backend:${{ steps.tag.outputs.sha_short }}
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,scope=backend,mode=max
+
+      - name: Build & push imagen frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./autodeploy
+          file: ./autodeploy/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.lc }}/autodeploy-frontend:latest
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.lc }}/autodeploy-frontend:${{ steps.tag.outputs.sha_short }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,scope=frontend,mode=max
+
+  deploy-vps:
+    name: Desplegar al VPS por SSH
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Calcular tag corto del commit
+        id: tag
+        run: echo "sha_short=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_OUTPUT"
+
+      - name: Deploy via SSH al VPS
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          script: |
+            set -e
+            cd /opt/autodeploy
+            echo "==> Pull del código en main"
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "==> Actualizando .env con el tag del commit"
+            grep -v '^IMAGE_TAG=' .env > .env.tmp || true
+            echo "IMAGE_TAG=${{ steps.tag.outputs.sha_short }}" >> .env.tmp
+            mv .env.tmp .env
+
+            echo "==> Login en GHCR"
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+            echo "==> Pull de imágenes y up"
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            echo "==> Limpieza de imágenes obsoletas"
+            docker image prune -f
+
+            echo "==> Esperando 30 segundos a que arranquen los healthchecks"
+            sleep 30
+
+            echo "==> Estado final"
+            docker compose -f docker-compose.prod.yml ps
+
+      - name: Smoke test al dominio público
+        if: ${{ secrets.SSH_HOST != '' }}
+        run: |
+          # Verifica que el servicio responde por HTTPS (cert puede ser autofirmado, por eso -k)
+          curl -ksSf --max-time 30 "https://${{ secrets.SSH_HOST }}/api/estado" \
+            -o /dev/null \
+            -w "Smoke test HTTP %{http_code} en %{time_total}s\n"

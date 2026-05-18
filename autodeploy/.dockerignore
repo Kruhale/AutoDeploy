@@ -1,0 +1,14 @@
+node_modules
+dist
+.angular
+*.log
+.git
+.gitignore
+e2e
+playwright-report
+test-results
+**/*.spec.ts
+coverage
+.vscode
+.idea
+.DS_Store

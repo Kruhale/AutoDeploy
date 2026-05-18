@@ -23,8 +23,11 @@ describe("Dashboard", function() {
 
     metricasServiceMock = {
       conectarTiempoReal: jasmine.createSpy("conectarTiempoReal"),
-      metricasPorServidor: signal({})
-    };
+      desconectar: jasmine.createSpy("desconectar"),
+      cargarUltimaMetrica: jasmine.createSpy("cargarUltimaMetrica").and.returnValue(of(null)),
+      recolectarAhora: jasmine.createSpy("recolectarAhora").and.returnValue(of(null)),
+      metricasPorServidor: signal(new Map())
+    } as any;
 
     await TestBed.configureTestingModule({
       imports: [Dashboard, HttpClientTestingModule, TranslateModule.forRoot()],

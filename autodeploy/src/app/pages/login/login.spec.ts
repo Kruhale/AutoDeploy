@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { Router } from "@angular/router";
+import { provideRouter, Router } from "@angular/router";
 import { provideHttpClient } from "@angular/common/http";
-import { TranslateModule, TranslateService } from "@ngx-translate/core";
+import { TranslateModule } from "@ngx-translate/core";
 import { Login } from "./login";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
@@ -11,22 +11,24 @@ describe("Login", function() {
   let fixture: ComponentFixture<Login>;
   let authServiceSpy: jasmine.SpyObj<AuthService>;
   let usuarioServiceSpy: jasmine.SpyObj<UsuarioService>;
-  let routerSpy: jasmine.SpyObj<Router>;
+  let routerNavigateSpy: jasmine.Spy;
 
   beforeEach(async function() {
     authServiceSpy = jasmine.createSpyObj<AuthService>("AuthService", ["login", "logout"]);
     usuarioServiceSpy = jasmine.createSpyObj<UsuarioService>("UsuarioService", ["login"]);
-    routerSpy = jasmine.createSpyObj<Router>("Router", ["navigate"]);
 
     await TestBed.configureTestingModule({
       imports: [Login, TranslateModule.forRoot()],
       providers: [
+        provideRouter([]),
         provideHttpClient(),
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: UsuarioService, useValue: usuarioServiceSpy },
-        { provide: Router, useValue: routerSpy }
+        { provide: UsuarioService, useValue: usuarioServiceSpy }
       ]
     }).compileComponents();
+
+    const router = TestBed.inject(Router);
+    routerNavigateSpy = spyOn(router, "navigate").and.returnValue(Promise.resolve(true));
 
     fixture = TestBed.createComponent(Login);
     componente = fixture.componentInstance;
@@ -58,7 +60,7 @@ describe("Login", function() {
 
     expect(usuarioServiceSpy.login).toHaveBeenCalledOnceWith("test@test.com", "password123");
     expect(authServiceSpy.login).toHaveBeenCalled();
-    expect(routerSpy.navigate).toHaveBeenCalledOnceWith(["/app"]);
+    expect(routerNavigateSpy).toHaveBeenCalledOnceWith(["/app"]);
   }));
 
   it("debe mostrar mensaje de error si login falla", fakeAsync(function() {
@@ -71,7 +73,7 @@ describe("Login", function() {
 
     expect(componente.mensajeDeErrorVisible()).toBe(true);
     expect(componente.mensajeDeError()).toBe("Credenciales invalidas");
-    expect(routerSpy.navigate).not.toHaveBeenCalled();
+    expect(routerNavigateSpy).not.toHaveBeenCalled();
   }));
 
   it("alternarVisibilidadPassword debe alternar el flag", function() {

@@ -1,7 +1,10 @@
-import { Component, signal, computed, Signal, OnInit } from "@angular/core";
+import { Component, signal, computed, Signal, OnInit, OnDestroy } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
+import { MetricasServidorService } from "../../services/metricas-servidor.service";
+import { PanelMetricasServidor } from "../../components/panel-metricas-servidor/panel-metricas-servidor";
 
 interface ServidorDashboard {
   id: string;
@@ -44,11 +47,11 @@ interface DespliegueReciente {
 
 @Component({
   selector: "app-dashboard",
-  imports: [RouterLink],
+  imports: [RouterLink, PanelMetricasServidor, TranslateModule],
   templateUrl: "./dashboard.html",
   styleUrl: "./dashboard.scss"
 })
-export class Dashboard implements OnInit {
+export class Dashboard implements OnInit, OnDestroy {
   listaDeServidores = signal<ServidorDashboard[]>([]);
   listaDeSitios = signal<SitioWeb[]>([]);
   listaDeActividad = signal<Actividad[]>([]);
@@ -58,7 +61,9 @@ export class Dashboard implements OnInit {
 
   constructor(
     private servidorService: ServidorService,
-    private http: HttpClient
+    private http: HttpClient,
+    private metricasService: MetricasServidorService,
+    private translate: TranslateService
   ) {
     const componente = this;
 
@@ -83,13 +88,57 @@ export class Dashboard implements OnInit {
     this.cargarServidores();
     this.cargarActividad();
     this.cargarDespliegues();
+    this.metricasService.conectarTiempoReal();
+  }
+
+  private cargarSitios(servidores: ServidorRemoto[]): void {
+    if (servidores.length === 0) {
+      this.listaDeSitios.set([]);
+      return;
+    }
+    const componente = this;
+    const acumulado: SitioWeb[] = [];
+    let respondidos = 0;
+
+    servidores.forEach(function(servidor) {
+      componente.http.get<any>("/api/subdominios/servidor/" + servidor.id).subscribe({
+        next: function(respuesta: any) {
+          const subdominios = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
+          subdominios.forEach(function(subdominio: { nombre: string; tipo: string; destino: string; sslActivo: boolean }) {
+            acumulado.push({
+              nombre: subdominio.nombre,
+              icono: "fa-solid fa-globe",
+              colorIcono: subdominio.sslActivo ? "verde" : "amarillo",
+              dominio: subdominio.destino || subdominio.nombre,
+              estado: "operativo",
+              textoEstado: subdominio.sslActivo ? "HTTPS" : "HTTP"
+            });
+          });
+          respondidos = respondidos + 1;
+          if (respondidos === servidores.length) {
+            componente.listaDeSitios.set([...acumulado]);
+          }
+        },
+        error: function() {
+          respondidos = respondidos + 1;
+          if (respondidos === servidores.length) {
+            componente.listaDeSitios.set([...acumulado]);
+          }
+        }
+      });
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.metricasService.desconectar();
   }
 
   cargarActividad(): void {
     const componente = this;
 
-    this.http.get<ActividadApi[]>("http://localhost:8080/api/actividad").subscribe({
-      next: function(actividadesApi: ActividadApi[]) {
+    this.http.get<any>("/api/actividad").subscribe({
+      next: function(respuesta: any) {
+        const actividadesApi: ActividadApi[] = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
         const actividadesMapeadas = actividadesApi.map(function(actividadApi: ActividadApi) {
           const colorIcono = componente.resolverColorIcono(actividadApi.tipo);
           const tiempoRelativo = componente.calcularTiempoRelativo(actividadApi.fechaCreacion);
@@ -127,26 +176,27 @@ export class Dashboard implements OnInit {
     const diferenciaEnMinutos = Math.floor(diferenciaEnMs / 60000);
 
     if (diferenciaEnMinutos < 1) {
-      return "hace un momento";
+      return this.translate.instant("dashboard.tiempoRelativo.haceUnMomento");
     }
     if (diferenciaEnMinutos < 60) {
-      return "hace " + diferenciaEnMinutos + " min";
+      return this.translate.instant("dashboard.tiempoRelativo.minutos", { n: diferenciaEnMinutos });
     }
 
     const diferenciaEnHoras = Math.floor(diferenciaEnMinutos / 60);
     if (diferenciaEnHoras < 24) {
-      return "hace " + diferenciaEnHoras + " h";
+      return this.translate.instant("dashboard.tiempoRelativo.horas", { n: diferenciaEnHoras });
     }
 
     const diferenciaEnDias = Math.floor(diferenciaEnHoras / 24);
-    return "hace " + diferenciaEnDias + " d";
+    return this.translate.instant("dashboard.tiempoRelativo.dias", { n: diferenciaEnDias });
   }
 
   cargarDespliegues(): void {
     const componente = this;
 
-    this.http.get<DespliegueReciente[]>("http://localhost:8080/api/despliegues").subscribe({
-      next: function(despliegues: DespliegueReciente[]) {
+    this.http.get<any>("/api/despliegues").subscribe({
+      next: function(respuesta: any) {
+        const despliegues: DespliegueReciente[] = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
         componente.listaDespliegues.set(despliegues);
       }
     });
@@ -167,6 +217,7 @@ export class Dashboard implements OnInit {
           return servidorDashboard;
         });
         componente.listaDeServidores.set(servidoresMapeados);
+        componente.cargarSitios(servidoresRemotos);
       }
     });
   }

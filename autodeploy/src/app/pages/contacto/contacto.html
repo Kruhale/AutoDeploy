@@ -1,0 +1,152 @@
+<main class="pagina-recursos">
+  <section class="pagina-recursos__hero">
+    <section class="pagina-recursos__hero__izquierda">
+      <span class="pagina-recursos__sello">
+        <span class="pagina-recursos__sello__punto"></span>
+        {{ "contacto.sello" | translate }}
+      </span>
+      <h1 class="pagina-recursos__titulo">{{ "contacto.titulo" | translate }}</h1>
+      <p class="pagina-recursos__subtitulo">{{ "contacto.subtitulo" | translate }}</p>
+    </section>
+    <section class="pagina-recursos__hero__derecha">
+      <p class="pagina-recursos__hero__meta">{{ "contacto.respuestaEn" | translate }}</p>
+      <p class="pagina-recursos__hero__meta-valor">24-48h</p>
+    </section>
+  </section>
+
+  <section class="pagina-contacto">
+    <section class="pagina-contacto__formulario">
+      <h2 class="pagina-contacto__titulo">{{ "contacto.formulario.titulo" | translate }}</h2>
+
+      @if (enviado()) {
+        <section class="pagina-contacto__exito">
+          <span class="pagina-contacto__exito__icono">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12l5 5L20 7"></path>
+            </svg>
+          </span>
+          <h3 class="pagina-contacto__exito__titulo">{{ "contacto.exito.titulo" | translate }}</h3>
+          <p class="pagina-contacto__exito__texto">{{ "contacto.exito.texto" | translate }}</p>
+          <button type="button" class="pagina-recursos__boton pagina-recursos__boton--secundario" (click)="resetearFormulario()">
+            {{ "contacto.exito.botonNuevo" | translate }}
+          </button>
+        </section>
+      } @else {
+        <form class="pagina-contacto__campos" (ngSubmit)="enviarPorEmail()">
+          <section class="pagina-contacto__campo">
+            <label class="pagina-contacto__etiqueta" for="contacto-nombre">{{ "contacto.formulario.nombre" | translate }}</label>
+            <input
+              id="contacto-nombre"
+              class="pagina-contacto__entrada"
+              type="text"
+              [ngModel]="nombreUsuario()"
+              (ngModelChange)="nombreUsuario.set($event)"
+              name="nombre"
+              required
+            />
+          </section>
+
+          <section class="pagina-contacto__campo">
+            <label class="pagina-contacto__etiqueta" for="contacto-email">{{ "contacto.formulario.email" | translate }}</label>
+            <input
+              id="contacto-email"
+              class="pagina-contacto__entrada"
+              type="email"
+              [ngModel]="emailUsuario()"
+              (ngModelChange)="emailUsuario.set($event)"
+              name="email"
+              required
+            />
+          </section>
+
+          <section class="pagina-contacto__campo">
+            <label class="pagina-contacto__etiqueta" for="contacto-asunto">{{ "contacto.formulario.asunto" | translate }}</label>
+            <input
+              id="contacto-asunto"
+              class="pagina-contacto__entrada"
+              type="text"
+              [ngModel]="asuntoMensaje()"
+              (ngModelChange)="asuntoMensaje.set($event)"
+              name="asunto"
+              required
+            />
+          </section>
+
+          <section class="pagina-contacto__campo">
+            <label class="pagina-contacto__etiqueta" for="contacto-mensaje">{{ "contacto.formulario.mensaje" | translate }}</label>
+            <textarea
+              id="contacto-mensaje"
+              class="pagina-contacto__entrada pagina-contacto__entrada--area"
+              rows="6"
+              [ngModel]="cuerpoMensaje()"
+              (ngModelChange)="cuerpoMensaje.set($event)"
+              name="mensaje"
+              required
+            ></textarea>
+          </section>
+
+          <button type="submit" class="pagina-recursos__boton">
+            {{ "contacto.formulario.enviar" | translate }}
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 12l18-9-4 18-4-8-10-1z"></path>
+            </svg>
+          </button>
+        </form>
+      }
+    </section>
+
+    <aside class="pagina-contacto__canales">
+      <h2 class="pagina-contacto__titulo">{{ "contacto.canales.titulo" | translate }}</h2>
+
+      <article class="pagina-contacto__canal">
+        <span class="pagina-contacto__canal__icono">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 7l9 6 9-6"></path>
+            <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+          </svg>
+        </span>
+        <section class="pagina-contacto__canal__info">
+          <p class="pagina-contacto__canal__titulo">{{ "contacto.canales.email" | translate }}</p>
+          <a class="pagina-contacto__canal__valor" href="mailto:contacto&#64;autodeploy.dev">contacto&#64;autodeploy.dev</a>
+        </section>
+      </article>
+
+      <article class="pagina-contacto__canal">
+        <span class="pagina-contacto__canal__icono">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+          </svg>
+        </span>
+        <section class="pagina-contacto__canal__info">
+          <p class="pagina-contacto__canal__titulo">{{ "contacto.canales.github" | translate }}</p>
+          <a class="pagina-contacto__canal__valor" href="https://github.com/autodeploy" target="_blank" rel="noopener">github.com/autodeploy</a>
+        </section>
+      </article>
+
+      <article class="pagina-contacto__canal">
+        <span class="pagina-contacto__canal__icono">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+          </svg>
+        </span>
+        <section class="pagina-contacto__canal__info">
+          <p class="pagina-contacto__canal__titulo">{{ "contacto.canales.redes" | translate }}</p>
+          <a class="pagina-contacto__canal__valor" href="https://x.com/autodeploy" target="_blank" rel="noopener">&#64;autodeploy</a>
+        </section>
+      </article>
+
+      <article class="pagina-contacto__canal pagina-contacto__canal--horario">
+        <span class="pagina-contacto__canal__icono">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="9"></circle>
+            <path d="M12 7v5l3 2"></path>
+          </svg>
+        </span>
+        <section class="pagina-contacto__canal__info">
+          <p class="pagina-contacto__canal__titulo">{{ "contacto.canales.horario" | translate }}</p>
+          <p class="pagina-contacto__canal__valor">{{ "contacto.canales.horarioValor" | translate }}</p>
+        </section>
+      </article>
+    </aside>
+  </section>
+</main>

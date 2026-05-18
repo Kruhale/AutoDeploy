@@ -2,7 +2,10 @@
   <span class="barra-pie-app__copyright">&copy; 2026 AutoDeployService</span>
   <span class="barra-pie-app__estado">
     <span class="barra-pie-app__estado__punto"></span>
-    All systems operational
+    {{ "barraPie.estado" | translate }}
   </span>
-  <span class="barra-pie-app__version">v2.41</span>
+  <span class="barra-pie-app__derecha">
+    <app-selector-idioma modo="desplegable"></app-selector-idioma>
+    <span class="barra-pie-app__version">{{ "barraPie.version" | translate }}</span>
+  </span>
 </footer>

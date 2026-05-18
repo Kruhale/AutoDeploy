@@ -1,95 +1,173 @@
 <main class="pagina-registro">
-  <section class="pagina-registro__tarjeta">
 
-    <header class="pagina-registro__cabecera">
-      <a class="pagina-registro__volver" routerLink="/">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-          <path d="M19 12H5M5 12l7 7M5 12l7-7" />
-        </svg>
-        Volver
-      </a>
+  <section class="pagina-registro__panel-formulario">
+    <a class="pagina-registro__volver" routerLink="/">
+      <span class="pagina-registro__volver__flecha" aria-hidden="true">←</span>
+      {{ 'register.volver' | translate }}
+    </a>
+
+    <section class="pagina-registro__panel-formulario__contenido">
+      <header class="pagina-registro__cabecera">
+        <span class="pagina-registro__cabecera__numero" aria-hidden="true">{{ 'register.cabeceraNumero' | translate }}</span>
+        <h1 class="pagina-registro__titulo">{{ 'register.titulo' | translate }}<span class="pagina-registro__titulo__punto" aria-hidden="true">.</span></h1>
+        <p class="pagina-registro__subtitulo">{{ 'register.subtitulo' | translate }}</p>
+      </header>
+
+      <form class="pagina-registro__formulario">
+        @if (mensajeDeErrorVisible()) {
+          <p class="pagina-registro__error">
+            <span class="pagina-registro__error__punto" aria-hidden="true"></span>
+            {{ mensajeDeError() }}
+          </p>
+        }
+
+        <section class="campo">
+          <label class="campo__etiqueta" for="nombre">
+            <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
+            {{ 'register.nombreEtiqueta' | translate }}
+          </label>
+          <input class="campo__input" id="nombre" name="nombre" type="text" [placeholder]="'register.nombrePlaceholder' | translate" autocomplete="name" [ngModel]="nombreCompleto()" (ngModelChange)="nombreCompleto.set($event)">
+        </section>
+
+        <section class="campo">
+          <label class="campo__etiqueta" for="email">
+            <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
+            {{ 'register.emailEtiqueta' | translate }}
+          </label>
+          <input class="campo__input" id="email" name="email" type="email" [placeholder]="'register.emailPlaceholder' | translate" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
+        </section>
+
+        <section class="campo">
+          <label class="campo__etiqueta" for="password">
+            <span class="campo__etiqueta__numero" aria-hidden="true">iii</span>
+            {{ 'register.claveEtiqueta' | translate }}
+          </label>
+          <section class="pagina-registro__campo-password">
+            <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
+              [placeholder]="'register.clavePlaceholder' | translate" autocomplete="new-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
+            <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
+              [attr.aria-label]="(passwordEsVisible() ? 'register.ariaOcultarClave' : 'register.ariaVerClave') | translate">
+              <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+            </button>
+          </section>
+          @if (passwordUsuario().length > 0) {
+            <ul class="pagina-registro__criterios">
+              <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioLongitud()">
+                <span class="pagina-registro__criterio__icono" aria-hidden="true">
+                  <i [class]="criterioLongitud() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+                </span>
+                {{ 'register.criterioLongitud' | translate }}
+              </li>
+              <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioMayuscula()">
+                <span class="pagina-registro__criterio__icono" aria-hidden="true">
+                  <i [class]="criterioMayuscula() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+                </span>
+                {{ 'register.criterioMayuscula' | translate }}
+              </li>
+              <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioMinuscula()">
+                <span class="pagina-registro__criterio__icono" aria-hidden="true">
+                  <i [class]="criterioMinuscula() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+                </span>
+                {{ 'register.criterioMinuscula' | translate }}
+              </li>
+              <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioNumero()">
+                <span class="pagina-registro__criterio__icono" aria-hidden="true">
+                  <i [class]="criterioNumero() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+                </span>
+                {{ 'register.criterioNumero' | translate }}
+              </li>
+              <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioEspecial()">
+                <span class="pagina-registro__criterio__icono" aria-hidden="true">
+                  <i [class]="criterioEspecial() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
+                </span>
+                {{ 'register.criterioEspecial' | translate }}
+              </li>
+            </ul>
+          }
+        </section>
+
+        <section class="campo">
+          <label class="campo__etiqueta" for="confirmar-password">
+            <span class="campo__etiqueta__numero" aria-hidden="true">iv</span>
+            {{ 'register.confirmarPasswordEtiqueta' | translate }}
+          </label>
+          <section class="pagina-registro__campo-password">
+            <input class="campo__input" id="confirmar-password" name="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'"
+              [placeholder]="'register.confirmarPasswordPlaceholder' | translate" autocomplete="new-password" [ngModel]="confirmPasswordUsuario()" (ngModelChange)="confirmPasswordUsuario.set($event)">
+            <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadConfirmPassword()"
+              [attr.aria-label]="(confirmPasswordEsVisible() ? 'register.ariaOcultarConfirmar' : 'register.ariaVerConfirmar') | translate">
+              <i [class]="confirmPasswordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+            </button>
+          </section>
+        </section>
+
+        <button class="pagina-registro__boton-enviar" type="button" (click)="crearCuenta()" [disabled]="cargando()">
+          <span class="pagina-registro__boton-enviar__texto">{{ (cargando() ? 'register.botonCargando' : 'register.boton') | translate }}</span>
+          <span class="pagina-registro__boton-enviar__flecha" aria-hidden="true">→</span>
+        </button>
+      </form>
+
+      <footer class="pagina-registro__pie">
+        <span class="pagina-registro__pie__texto">{{ 'register.pieTexto' | translate }}</span>
+        <a class="pagina-registro__enlace" routerLink="/login">
+          {{ 'register.pieEnlace' | translate }}
+          <span aria-hidden="true">→</span>
+        </a>
+      </footer>
+    </section>
+  </section>
+
+  <aside class="pagina-registro__panel-marca">
+    <header class="pagina-registro__panel-marca__cabecera">
+      <span class="pagina-registro__sello">
+        <span class="pagina-registro__sello__punto" aria-hidden="true"></span>
+        {{ 'register.sello' | translate }}
+      </span>
       <a class="pagina-registro__logo" routerLink="/">
-        <img class="pagina-registro__logo__imagen" src="logo.png" alt="">
+        <img class="pagina-registro__logo__imagen" src="logo.png" alt="AutoDeploy">
         <span class="pagina-registro__logo__texto">Auto<span class="pagina-registro__logo__texto--acento">Deploy</span></span>
       </a>
-      <h1 class="pagina-registro__titulo">Crear cuenta</h1>
-      <p class="pagina-registro__subtitulo">Empieza a gestionar tu infraestructura</p>
     </header>
 
-    <form class="pagina-registro__formulario">
+    <section class="pagina-registro__panel-marca__cuerpo">
+      <h2 class="pagina-registro__panel-marca__titular">
+        {{ 'register.titularLinea1' | translate }}<br>
+        {{ 'register.titularLinea2' | translate }}<span class="pagina-registro__panel-marca__titular__punto">.</span>
+      </h2>
+      <p class="pagina-registro__panel-marca__texto">
+        {{ 'register.panelTexto' | translate }}
+      </p>
 
-      @if (mensajeDeErrorVisible()) {
-      <p class="pagina-registro__error">{{ mensajeDeError() }}</p>
-      }
+      <ul class="pagina-registro__panel-marca__lista">
+        <li class="pagina-registro__panel-marca__item">
+          <span class="pagina-registro__panel-marca__item__numero" aria-hidden="true">01</span>
+          <section class="pagina-registro__panel-marca__item__texto-cuerpo">
+            <span class="pagina-registro__panel-marca__item__titulo">{{ 'register.panelItem1Titulo' | translate }}</span>
+            <span class="pagina-registro__panel-marca__item__descripcion">{{ 'register.panelItem1Descripcion' | translate }}</span>
+          </section>
+        </li>
+        <li class="pagina-registro__panel-marca__item">
+          <span class="pagina-registro__panel-marca__item__numero" aria-hidden="true">02</span>
+          <section class="pagina-registro__panel-marca__item__texto-cuerpo">
+            <span class="pagina-registro__panel-marca__item__titulo">{{ 'register.panelItem2Titulo' | translate }}</span>
+            <span class="pagina-registro__panel-marca__item__descripcion">{{ 'register.panelItem2Descripcion' | translate }}</span>
+          </section>
+        </li>
+        <li class="pagina-registro__panel-marca__item">
+          <span class="pagina-registro__panel-marca__item__numero" aria-hidden="true">03</span>
+          <section class="pagina-registro__panel-marca__item__texto-cuerpo">
+            <span class="pagina-registro__panel-marca__item__titulo">{{ 'register.panelItem3Titulo' | translate }}</span>
+            <span class="pagina-registro__panel-marca__item__descripcion">{{ 'register.panelItem3Descripcion' | translate }}</span>
+          </section>
+        </li>
+      </ul>
+    </section>
 
-      <section class="campo">
-        <label class="campo__etiqueta" for="nombre">Nombre completo</label>
-        <input class="campo__input" id="nombre" name="nombre" type="text" placeholder="Tu nombre" autocomplete="name" [ngModel]="nombreCompleto()" (ngModelChange)="nombreCompleto.set($event)">
-      </section>
-
-      <section class="campo">
-        <label class="campo__etiqueta" for="email">Email</label>
-        <input class="campo__input" id="email" name="email" type="email" placeholder="tu@email.com" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
-      </section>
-
-      <section class="campo">
-        <label class="campo__etiqueta" for="password">Password</label>
-        <section class="pagina-registro__campo-password">
-          <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
-            placeholder="••••••••" autocomplete="new-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
-          <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
-            [attr.aria-label]="passwordEsVisible() ? 'Hide password' : 'Show password'">
-            <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-          </button>
-        </section>
-        @if (passwordUsuario().length > 0) {
-          <ul class="pagina-registro__criterios">
-            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioLongitud()">
-              <i [class]="criterioLongitud() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
-              At least 8 characters
-            </li>
-            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioMayuscula()">
-              <i [class]="criterioMayuscula() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
-              One uppercase letter
-            </li>
-            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioMinuscula()">
-              <i [class]="criterioMinuscula() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
-              One lowercase letter
-            </li>
-            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioNumero()">
-              <i [class]="criterioNumero() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
-              One number
-            </li>
-            <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioEspecial()">
-              <i [class]="criterioEspecial() ? 'fa-solid fa-check' : 'fa-solid fa-xmark'"></i>
-              One special character
-            </li>
-          </ul>
-        }
-      </section>
-
-      <section class="campo">
-        <label class="campo__etiqueta" for="confirmar-password">Confirmar contraseña</label>
-        <section class="pagina-registro__campo-password">
-          <input class="campo__input" id="confirmar-password" name="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'"
-            placeholder="••••••••" autocomplete="new-password" [ngModel]="confirmPasswordUsuario()" (ngModelChange)="confirmPasswordUsuario.set($event)">
-          <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadConfirmPassword()"
-            [attr.aria-label]="confirmPasswordEsVisible() ? 'Ocultar contraseña' : 'Ver contraseña'">
-            <i [class]="confirmPasswordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
-          </button>
-        </section>
-      </section>
-
-      <button class="boton--primario pagina-registro__boton-enviar" type="button" (click)="crearCuenta()" [disabled]="cargando()">
-        {{ cargando() ? 'Creating...' : 'Crear cuenta' }}
-      </button>
-
-    </form>
-
-    <footer class="pagina-registro__pie">
-      <span>¿Ya tienes cuenta?</span>
-      <a class="pagina-registro__enlace" routerLink="/login">Inicia sesión</a>
+    <footer class="pagina-registro__panel-marca__pie">
+      <span class="pagina-registro__panel-marca__pie__codigo">№ {{ codigoSesion }}</span>
+      <span class="pagina-registro__panel-marca__pie__separador" aria-hidden="true"></span>
+      <span class="pagina-registro__panel-marca__pie__texto">{{ 'register.panelPieTexto' | translate }}</span>
     </footer>
+  </aside>
 
-  </section>
 </main>

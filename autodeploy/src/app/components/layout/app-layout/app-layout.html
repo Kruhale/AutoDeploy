@@ -1,6 +1,6 @@
 <section class="disposicion-app">
   <header class="disposicion-app__cabecera-movil">
-    <button class="disposicion-app__hamburguesa" (click)="alternarSidebar()" aria-label="Abrir menú">
+    <button class="disposicion-app__hamburguesa" (click)="alternarSidebar()" [attr.aria-label]="'comun.menu' | translate">
       <i class="fa-solid fa-bars"></i>
     </button>
     <a class="disposicion-app__logo-movil" routerLink="/">

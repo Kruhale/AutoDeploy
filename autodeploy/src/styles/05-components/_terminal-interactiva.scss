@@ -55,15 +55,108 @@
   cursor: pointer;
 }
 
-.terminal-interactiva__cuerpo {
+.terminal-interactiva__controles {
   display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  padding: var(--spacing-size-l) var(--spacing-size-2xl);
+  align-items: center;
+  gap: var(--spacing-size-s);
+}
+
+.terminal-interactiva__selector {
+  background-color: rgba(240, 236, 226, 0.06);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-s);
+  color: var(--texto-claro);
   font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+}
+
+.terminal-interactiva__estado {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  color: var(--texto-apagado);
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+.terminal-interactiva__estado--conectado {
+  color: var(--verde-normal);
+}
+
+.terminal-interactiva__estado--conectando {
+  color: var(--amarillo-normal);
+}
+
+.terminal-interactiva__estado--error {
+  color: var(--rojo-normal);
+}
+
+.terminal-interactiva__conectar,
+.terminal-interactiva__desconectar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.85rem;
+  background-color: transparent;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-full);
+  color: var(--texto-claro);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 200ms cubic-bezier(0.16, 1, 0.3, 1);
+
+  i {
+    font-size: 0.7rem;
+  }
+
+  &:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+}
+
+.terminal-interactiva__conectar:not(:disabled):hover {
+  border-color: var(--verde-normal);
+  color: var(--verde-normal);
+  transform: translateY(-1px);
+}
+
+.terminal-interactiva__desconectar {
+  border-color: hsla(0, 79%, 60%, 0.3);
+  color: var(--rojo-normal);
+
+  &:hover {
+    border-color: var(--rojo-normal);
+    transform: translateY(-1px);
+  }
+}
+
+.terminal-interactiva__vacio {
+  padding: var(--spacing-size-2xl) var(--spacing-size-l);
+  text-align: center;
   font-size: var(--font-size-sm);
-  line-height: 1.6;
+  color: var(--texto-apagado);
   min-height: 12rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.terminal-interactiva__cuerpo {
+  padding: var(--spacing-size-s) var(--spacing-size-m);
+  min-height: 20rem;
+  height: 20rem;
+  font-family: var(--font-mono);
+}
+
+.terminal-interactiva__cuerpo .xterm,
+.terminal-interactiva__cuerpo .xterm-screen,
+.terminal-interactiva__cuerpo .xterm-rows {
+  font-family: var(--font-mono);
 }
 
 .terminal-interactiva__linea {

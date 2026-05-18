@@ -1,106 +1,145 @@
 .seccion-precios {
-  padding: var(--spacing-size-8xl) 0;
+  padding: 6rem 0 5rem;
 }
 
 .seccion-precios__cabecera {
-  margin-bottom: var(--spacing-size-5xl);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 42rem;
+  margin-bottom: 3.5rem;
+}
+
+.seccion-precios__cabecera::before {
+  content: "03 · TIERS";
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  color: var(--texto-apagado);
+  text-transform: uppercase;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-full);
+  align-self: flex-start;
+  margin-bottom: 0.5rem;
 }
 
 .seccion-precios__titulo {
   font-family: var(--font-secondary);
-  font-size: var(--font-size-4xl);
-  font-weight: var(--font-weight-extrabold);
+  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+  font-weight: var(--font-weight-bold);
   color: var(--texto-claro);
-  letter-spacing: -1px;
-  line-height: var(--line-height-tight);
+  letter-spacing: -0.045em;
+  line-height: 0.98;
 }
 
 .seccion-precios__descripcion {
-  font-size: var(--font-size-base);
+  font-size: 1.05rem;
   color: var(--texto-medio);
-  margin-top: var(--spacing-size-m);
+  letter-spacing: -0.005em;
 }
 
 .seccion-precios__cuadricula {
   display: grid;
-  grid-template-columns: 1fr 1.08fr 1fr;
-  gap: var(--spacing-size-2xl);
-  align-items: start;
+  grid-template-columns: 1fr 1.18fr 1fr;
+  gap: 1.25rem;
+  align-items: stretch;
 }
 
-/* ── TARJETA PLAN ─────────────────────────── */
+/* =====================================================
+   TARJETA PLAN — editorial card con price gigante
+   ===================================================== */
 
 .tarjeta-plan {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-3xl);
-  padding: var(--spacing-size-3xl);
-  background-color: var(--fondo-tarjeta);
+  gap: 1.75rem;
+  padding: 1.85rem;
+  background-color: hsla(40, 33.33%, 91.37%, 0.015);
   border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-xl);
-  transition: border-color var(--duration-base) ease;
+  border-radius: var(--radius-2xl);
+  transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tarjeta-plan:hover {
-  border-color: hsla(40, 33.33%, 91.37%, 0.14);
+  border-color: hsla(40, 33.33%, 91.37%, 0.18);
+  background-color: hsla(40, 33.33%, 91.37%, 0.03);
+  transform: translateY(-2px);
 }
 
 .tarjeta-plan--destacado {
-  border-color: var(--amarillo-normal);
-  background-color: var(--fondo-tarjeta);
-  box-shadow: var(--shadow-hover-amarillo);
-  padding-top: calc(var(--spacing-size-3xl) + 0.5rem);
+  border-color: hsla(47, 86%, 56%, 0.36);
+  background: linear-gradient(180deg, hsla(47, 86%, 56%, 0.05), transparent 65%);
+  padding-top: 2.5rem;
 }
 
 .tarjeta-plan--destacado:hover {
   border-color: var(--amarillo-normal);
+  background: linear-gradient(180deg, hsla(47, 86%, 56%, 0.08), transparent 65%);
 }
 
 .tarjeta-plan__badge {
   position: absolute;
-  top: -0.875rem;
-  left: 50%;
-  transform: translateX(-50%);
+  top: -0.7rem;
+  left: 1.85rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   background-color: var(--amarillo-normal);
   color: var(--fondo-oscuro);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-extrabold);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-bold);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  padding: 0.25rem 0.875rem;
+  letter-spacing: 0.22em;
+  padding: 0.3rem 0.7rem;
   border-radius: var(--radius-full);
   white-space: nowrap;
+  box-shadow: 0 0.4rem 1rem hsla(47, 86%, 56%, 0.25);
+}
+
+.tarjeta-plan__badge::before {
+  content: "";
+  width: 0.35rem;
+  height: 0.35rem;
+  border-radius: 50%;
+  background-color: var(--fondo-oscuro);
+  animation: bienvenida-respirar 2s ease-in-out infinite;
 }
 
 .tarjeta-plan__cabecera {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-s);
+  gap: 0.65rem;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--borde-suave);
 }
 
 .tarjeta-plan__nombre {
-  font-family: var(--font-secondary);
-  font-size: var(--font-size-base);
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
   font-weight: var(--font-weight-bold);
-  color: var(--texto-claro);
+  color: var(--texto-apagado);
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 0.28em;
 }
 
 .tarjeta-plan__precio {
   display: flex;
   align-items: baseline;
-  gap: 0.25rem;
-  margin-top: var(--spacing-size-xs);
+  gap: 0.2rem;
+  margin-top: 0.2rem;
 }
 
 .tarjeta-plan__precio__numero {
   font-family: var(--font-secondary);
-  font-size: var(--font-size-5xl);
-  font-weight: var(--font-weight-black);
+  font-size: clamp(2.75rem, 5vw, 3.75rem);
+  font-weight: var(--font-weight-semibold);
   color: var(--texto-claro);
   line-height: 1;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
 }
 
 .tarjeta-plan--destacado .tarjeta-plan__precio__numero {
@@ -108,54 +147,83 @@
 }
 
 .tarjeta-plan__precio__periodo {
-  font-size: var(--font-size-md);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   color: var(--texto-apagado);
+  letter-spacing: 0.04em;
 }
 
 .tarjeta-plan__descripcion {
-  font-size: var(--font-size-md);
+  font-size: 0.875rem;
   color: var(--texto-medio);
-  line-height: var(--line-height-relaxed);
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  margin-top: 0.4rem;
 }
 
-/* ── LISTA FEATURES ──────────────────────── */
+/* =====================================================
+   LISTA FEATURES — dividers sutiles, no bullets
+   ===================================================== */
 
 .tarjeta-plan__lista {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-m);
   flex: 1;
 }
 
 .tarjeta-plan__item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-size-m);
-  font-size: var(--font-size-md);
-  color: var(--texto-medio);
+  gap: 0.85rem;
+  padding: 0.65rem 0;
+  font-size: 0.875rem;
+  color: var(--texto-claro);
+  letter-spacing: -0.005em;
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.tarjeta-plan__item:last-child {
+  border-bottom: none;
 }
 
 .tarjeta-plan__item--inactivo {
-  opacity: 0.4;
+  color: var(--texto-apagado);
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--borde-normal);
 }
 
 .tarjeta-plan__item__check {
-  color: var(--verde-normal);
-  font-size: 0.75rem;
+  color: var(--amarillo-normal);
+  font-size: 0.65rem;
   width: 1rem;
-  text-align: center;
+  height: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid hsla(47, 86%, 56%, 0.4);
+  border-radius: 50%;
+  background-color: hsla(47, 86%, 56%, 0.08);
   flex-shrink: 0;
 }
 
 .tarjeta-plan__item__xmark {
   color: var(--texto-apagado);
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   width: 1rem;
-  text-align: center;
+  height: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--borde-normal);
+  border-radius: 50%;
   flex-shrink: 0;
+  opacity: 0.6;
 }
 
-/* ── BOTÓN ───────────────────────────────── */
+/* =====================================================
+   BOTÓN
+   ===================================================== */
 
 .tarjeta-plan__boton {
   display: flex;
@@ -163,4 +231,27 @@
   justify-content: center;
   width: 100%;
   margin-top: auto;
+  font-family: var(--font-secondary);
+  letter-spacing: -0.005em;
+}
+
+.tarjeta-plan__boton--actual {
+  cursor: not-allowed;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 960px) {
+  .seccion-precios__cuadricula {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .tarjeta-plan--destacado {
+    padding-top: 2.5rem;
+  }
 }

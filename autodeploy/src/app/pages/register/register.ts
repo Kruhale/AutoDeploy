@@ -1,12 +1,13 @@
 import { Component, signal, computed, Signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { FormsModule } from "@angular/forms";
+import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
 
 @Component({
   selector: "app-register",
-  imports: [RouterLink, FormsModule],
+  imports: [RouterLink, FormsModule, TranslateModule],
   templateUrl: "./register.html",
   styleUrl: "./register.scss"
 })
@@ -29,10 +30,13 @@ export class Register {
   criterioEspecial: Signal<boolean>;
   passwordEsValida: Signal<boolean>;
 
+  readonly codigoSesion = this.generarCodigoSesion();
+
   constructor(
     private router: Router,
     private authService: AuthService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private translate: TranslateService
   ) {
     const componente = this;
 
@@ -84,19 +88,19 @@ export class Register {
     const confirmPassword = this.confirmPasswordUsuario();
 
     if (!nombre || !email || !password) {
-      this.mensajeDeError.set("All fields are required");
+      this.mensajeDeError.set(this.translate.instant("register.errorCamposVacios"));
       this.mensajeDeErrorVisible.set(true);
       return;
     }
 
     if (!this.passwordEsValida()) {
-      this.mensajeDeError.set("Password does not meet all requirements");
+      this.mensajeDeError.set(this.translate.instant("register.errorPasswordInvalida"));
       this.mensajeDeErrorVisible.set(true);
       return;
     }
 
     if (password !== confirmPassword) {
-      this.mensajeDeError.set("Passwords do not match");
+      this.mensajeDeError.set(this.translate.instant("register.errorPasswordsNoCoinciden"));
       this.mensajeDeErrorVisible.set(true);
       return;
     }
@@ -109,10 +113,15 @@ export class Register {
       this.authService.login();
       this.router.navigate(["/app"]);
     } catch (error: any) {
-      this.mensajeDeError.set(error.message || "Registration failed");
+      this.mensajeDeError.set(error.message || this.translate.instant("register.errorRegistro"));
       this.mensajeDeErrorVisible.set(true);
     } finally {
       this.cargando.set(false);
     }
+  }
+
+  private generarCodigoSesion(): string {
+    const aleatorio = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
+    return ("000000" + aleatorio).slice(-6);
   }
 }

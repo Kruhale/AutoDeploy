@@ -15,6 +15,10 @@ public class Despliegue {
     private String estado;
     private String mensaje;
     private String url;
+    private String directorioRemoto;
+    private String tecnologia;
+    private String rama;
+    private String tokenWebhook;
     private LocalDateTime fechaInicio;
     private LocalDateTime fechaFin;
 
@@ -27,6 +31,18 @@ public class Despliegue {
         this.estado = "en_progreso";
         this.fechaInicio = LocalDateTime.now();
     }
+
+    public String getDirectorioRemoto() { return directorioRemoto; }
+    public void setDirectorioRemoto(String directorioRemoto) { this.directorioRemoto = directorioRemoto; }
+
+    public String getTecnologia() { return tecnologia; }
+    public void setTecnologia(String tecnologia) { this.tecnologia = tecnologia; }
+
+    public String getRama() { return rama; }
+    public void setRama(String rama) { this.rama = rama; }
+
+    public String getTokenWebhook() { return tokenWebhook; }
+    public void setTokenWebhook(String tokenWebhook) { this.tokenWebhook = tokenWebhook; }
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }

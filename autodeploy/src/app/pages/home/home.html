@@ -5,23 +5,23 @@
     <section class="seccion-bienvenida__contenido">
       <section class="seccion-bienvenida__etiqueta animar animar--subir" style="--retraso: 0ms">
         <span class="seccion-bienvenida__etiqueta__punto"></span>
-        <span class="seccion-bienvenida__etiqueta__texto">VPS Management Panel</span>
+        <span class="seccion-bienvenida__etiqueta__texto">{{ 'home.hero.etiqueta' | translate }}</span>
       </section>
 
       <h1 class="seccion-bienvenida__titulo animar animar--subir" style="--retraso: 100ms">
-        Manage Your VPS Easily&mdash;No Terminal Needed
+        {{ 'home.hero.titulo' | translate }}
       </h1>
 
       <p class="seccion-bienvenida__descripcion animar animar--subir" style="--retraso: 200ms">
-        Skip complicated commands. Connect via SSH and deploy your apps instantly using a sleek, powerful interface.
+        {{ 'home.hero.descripcion' | translate }}
       </p>
 
       <section class="seccion-bienvenida__botones animar animar--subir" style="--retraso: 300ms">
-        <a class="seccion-bienvenida__boton--primario" routerLink="/register">
-          Get Started
+        <a class="seccion-bienvenida__boton--primario" [routerLink]="rutaEmpezar()">
+          {{ 'home.hero.ctaPrimario' | translate }}
           <i class="fa-solid fa-arrow-right"></i>
         </a>
-        <a class="seccion-bienvenida__boton--secundario" href="#how-it-works">How It Works</a>
+        <a class="seccion-bienvenida__boton--secundario" href="#how-it-works">{{ 'home.hero.ctaSecundario' | translate }}</a>
       </section>
 
       <section class="seccion-bienvenida__tecnologias animar animar--subir" style="--retraso: 400ms">
@@ -38,7 +38,7 @@
         <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--rojo"></span>
         <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--naranja"></span>
         <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--verde"></span>
-        <span class="seccion-bienvenida__terminal__titulo">autodeploy &mdash; terminal</span>
+        <span class="seccion-bienvenida__terminal__titulo">{{ 'home.hero.terminal.titulo' | translate }}</span>
       </section>
       <section class="seccion-bienvenida__terminal__cuerpo">
         <p class="seccion-bienvenida__terminal__linea">
@@ -46,10 +46,10 @@
           <span class="seccion-bienvenida__terminal__comando">autodeploy connect vps-prod-01</span>
         </p>
         <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;Connecting via SSH... <span class="seccion-bienvenida__terminal__exito">done</span>
+          &nbsp;&nbsp;{{ 'home.hero.terminal.linea1' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
         </p>
         <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;Environment configured
+          &nbsp;&nbsp;{{ 'home.hero.terminal.linea2' | translate }}
         </p>
         <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--vacia">&nbsp;</p>
         <p class="seccion-bienvenida__terminal__linea">
@@ -57,17 +57,17 @@
           <span class="seccion-bienvenida__terminal__comando">autodeploy deploy --app my-site</span>
         </p>
         <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;Uploading files... <span class="seccion-bienvenida__terminal__exito">done</span>
+          &nbsp;&nbsp;{{ 'home.hero.terminal.linea3' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
         </p>
         <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;Configuring Nginx... <span class="seccion-bienvenida__terminal__exito">done</span>
+          &nbsp;&nbsp;{{ 'home.hero.terminal.linea4' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
         </p>
         <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;SSL active (Let's Encrypt) <span class="seccion-bienvenida__terminal__exito">done</span>
+          &nbsp;&nbsp;{{ 'home.hero.terminal.linea5' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
         </p>
         <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--vacia">&nbsp;</p>
         <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;<span class="seccion-bienvenida__terminal__url-resultado">&#8594; https://my-site.com is live</span>
+          &nbsp;&nbsp;<span class="seccion-bienvenida__terminal__url-resultado">{{ 'home.hero.terminal.urlFinal' | translate }}</span>
         </p>
       </section>
     </section>
@@ -76,8 +76,8 @@
   <!-- FUNCIONALIDADES -->
   <section class="seccion-funcionalidades" id="features">
     <section class="seccion-funcionalidades__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
-      <h2 class="seccion-funcionalidades__titulo">What You Get</h2>
-      <p class="seccion-funcionalidades__descripcion">Smooth, fast workflows designed for teams that prioritize speed.</p>
+      <h2 class="seccion-funcionalidades__titulo">{{ 'home.funcionalidades.titulo' | translate }}</h2>
+      <p class="seccion-funcionalidades__descripcion">{{ 'home.funcionalidades.descripcion' | translate }}</p>
     </section>
 
     <section class="seccion-funcionalidades__contenido">
@@ -85,8 +85,8 @@
         <section class="seccion-funcionalidades__item__icono">
           <i class="fa-solid fa-display"></i>
         </section>
-        <h3 class="seccion-funcionalidades__item__titulo">No Installation Needed</h3>
-        <p class="seccion-funcionalidades__item__descripcion">Connect to your server securely via SSH&mdash;no intrusive scripts or heavy agents required. Your credentials stay encrypted end-to-end.</p>
+        <h3 class="seccion-funcionalidades__item__titulo">{{ 'home.funcionalidades.item1.titulo' | translate }}</h3>
+        <p class="seccion-funcionalidades__item__descripcion">{{ 'home.funcionalidades.item1.descripcion' | translate }}</p>
       </article>
 
       <section class="seccion-funcionalidades__fila">
@@ -94,16 +94,16 @@
           <section class="seccion-funcionalidades__item__icono seccion-funcionalidades__item__icono--cyan">
             <i class="fa-solid fa-cloud-arrow-up"></i>
           </section>
-          <h3 class="seccion-funcionalidades__item__titulo">ZIP Deploy</h3>
-          <p class="seccion-funcionalidades__item__descripcion">Upload compressed projects or link a Git repo. Ideal for prototypes without complex CI/CD pipelines.</p>
+          <h3 class="seccion-funcionalidades__item__titulo">{{ 'home.funcionalidades.item2.titulo' | translate }}</h3>
+          <p class="seccion-funcionalidades__item__descripcion">{{ 'home.funcionalidades.item2.descripcion' | translate }}</p>
         </article>
 
         <article class="seccion-funcionalidades__item" [scrollReveal]="'arriba'" [retraso]="200">
           <section class="seccion-funcionalidades__item__icono seccion-funcionalidades__item__icono--amarillo">
             <i class="fa-solid fa-lock"></i>
           </section>
-          <h3 class="seccion-funcionalidades__item__titulo">End-to-End Encrypted</h3>
-          <p class="seccion-funcionalidades__item__descripcion">Complete encryption ensures your infrastructure management is fully secure and private at every step.</p>
+          <h3 class="seccion-funcionalidades__item__titulo">{{ 'home.funcionalidades.item3.titulo' | translate }}</h3>
+          <p class="seccion-funcionalidades__item__descripcion">{{ 'home.funcionalidades.item3.descripcion' | translate }}</p>
         </article>
       </section>
 
@@ -111,8 +111,8 @@
         <section class="seccion-funcionalidades__item__icono seccion-funcionalidades__item__icono--teal">
           <i class="fa-solid fa-robot"></i>
         </section>
-        <h3 class="seccion-funcionalidades__item__titulo">AI Assistant</h3>
-        <p class="seccion-funcionalidades__item__descripcion">Optimize settings and resolve issues with our infrastructure copilot. Get suggestions based on your server's real-time state.</p>
+        <h3 class="seccion-funcionalidades__item__titulo">{{ 'home.funcionalidades.item4.titulo' | translate }}</h3>
+        <p class="seccion-funcionalidades__item__descripcion">{{ 'home.funcionalidades.item4.descripcion' | translate }}</p>
       </article>
     </section>
   </section>
@@ -120,32 +120,32 @@
   <!-- HOW IT WORKS -->
   <section class="workflow" id="how-it-works">
     <section class="workflow__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
-      <h2 class="workflow__titulo">How It Works</h2>
-      <p class="workflow__descripcion">From code to production in three steps</p>
+      <h2 class="workflow__titulo">{{ 'home.comoFunciona.titulo' | translate }}</h2>
+      <p class="workflow__descripcion">{{ 'home.comoFunciona.descripcion' | translate }}</p>
     </section>
 
     <section class="workflow__pasos">
       <section class="workflow__paso" [scrollReveal]="'izquierda'" [retraso]="0">
         <span class="workflow__paso__numero">01</span>
         <section class="workflow__paso__contenido">
-          <h3 class="workflow__paso__titulo">Connect Your Server</h3>
-          <p class="workflow__paso__descripcion">Provide your SSH credentials. The platform auto-configures your environment to meet current security standards.</p>
+          <h3 class="workflow__paso__titulo">{{ 'home.comoFunciona.paso1.titulo' | translate }}</h3>
+          <p class="workflow__paso__descripcion">{{ 'home.comoFunciona.paso1.descripcion' | translate }}</p>
         </section>
       </section>
 
       <section class="workflow__paso" [scrollReveal]="'izquierda'" [retraso]="120">
         <span class="workflow__paso__numero">02</span>
         <section class="workflow__paso__contenido">
-          <h3 class="workflow__paso__titulo">Upload Your Code</h3>
-          <p class="workflow__paso__descripcion">Drag and drop ZIP files or link Git repos&mdash;choose what fits your workflow best.</p>
+          <h3 class="workflow__paso__titulo">{{ 'home.comoFunciona.paso2.titulo' | translate }}</h3>
+          <p class="workflow__paso__descripcion">{{ 'home.comoFunciona.paso2.descripcion' | translate }}</p>
         </section>
       </section>
 
       <section class="workflow__paso" [scrollReveal]="'izquierda'" [retraso]="240">
         <span class="workflow__paso__numero">03</span>
         <section class="workflow__paso__contenido">
-          <h3 class="workflow__paso__titulo">Deploy with One Click</h3>
-          <p class="workflow__paso__descripcion">Nginx, SSL via Let's Encrypt, and process management with PM2 or Docker. Your app is live instantly.</p>
+          <h3 class="workflow__paso__titulo">{{ 'home.comoFunciona.paso3.titulo' | translate }}</h3>
+          <p class="workflow__paso__descripcion">{{ 'home.comoFunciona.paso3.descripcion' | translate }}</p>
         </section>
       </section>
     </section>
@@ -154,74 +154,86 @@
   <!-- PRICING -->
   <section class="seccion-precios" id="pricing">
     <section class="seccion-precios__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
-      <h2 class="seccion-precios__titulo">Simple Pricing</h2>
-      <p class="seccion-precios__descripcion">Start free. Scale when you need to. No hidden fees.</p>
+      <h2 class="seccion-precios__titulo">{{ 'home.precios.titulo' | translate }}</h2>
+      <p class="seccion-precios__descripcion">{{ 'home.precios.descripcion' | translate }}</p>
     </section>
 
     <section class="seccion-precios__cuadricula">
 
       <article class="tarjeta-plan" [scrollReveal]="'escala'" [retraso]="0">
         <section class="tarjeta-plan__cabecera">
-          <span class="tarjeta-plan__nombre">Free</span>
+          <span class="tarjeta-plan__nombre">{{ 'home.precios.free.nombre' | translate }}</span>
           <section class="tarjeta-plan__precio">
-            <span class="tarjeta-plan__precio__numero">€0</span>
-            <span class="tarjeta-plan__precio__periodo">/month</span>
+            <span class="tarjeta-plan__precio__numero">{{ 'home.precios.free.precio' | translate }}</span>
+            <span class="tarjeta-plan__precio__periodo">{{ 'home.precios.periodo' | translate }}</span>
           </section>
-          <p class="tarjeta-plan__descripcion">For developers exploring the platform.</p>
+          <p class="tarjeta-plan__descripcion">{{ 'home.precios.free.descripcion' | translate }}</p>
         </section>
         <ul class="tarjeta-plan__lista">
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>1 VPS server</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>5 deployments/month</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Basic monitoring</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Community support</li>
-          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>AI Assistant</li>
-          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>Custom domains</li>
-          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>Team management</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.free.features.servidores' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.free.features.despliegues' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.free.features.monitorizacion' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.free.features.soporte' | translate }}</li>
+          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>{{ 'home.precios.free.features.ia' | translate }}</li>
+          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>{{ 'home.precios.free.features.dominios' | translate }}</li>
+          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>{{ 'home.precios.free.features.equipo' | translate }}</li>
         </ul>
-        <a class="boton--ghost tarjeta-plan__boton" routerLink="/register">Get started free</a>
+        @if (planActivo() === "free") {
+          <button class="boton--ghost tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+        } @else {
+          <a class="boton--ghost tarjeta-plan__boton" [routerLink]="rutaEmpezar()">{{ 'home.precios.free.cta' | translate }}</a>
+        }
       </article>
 
       <article class="tarjeta-plan tarjeta-plan--destacado" [scrollReveal]="'escala'" [retraso]="100">
-        <span class="tarjeta-plan__badge">Most Popular</span>
+        <span class="tarjeta-plan__badge">{{ 'home.precios.pro.badge' | translate }}</span>
         <section class="tarjeta-plan__cabecera">
-          <span class="tarjeta-plan__nombre">Pro</span>
+          <span class="tarjeta-plan__nombre">{{ 'home.precios.pro.nombre' | translate }}</span>
           <section class="tarjeta-plan__precio">
-            <span class="tarjeta-plan__precio__numero">€9</span>
-            <span class="tarjeta-plan__precio__periodo">/month</span>
+            <span class="tarjeta-plan__precio__numero">{{ 'home.precios.pro.precio' | translate }}</span>
+            <span class="tarjeta-plan__precio__periodo">{{ 'home.precios.periodo' | translate }}</span>
           </section>
-          <p class="tarjeta-plan__descripcion">For teams shipping production apps.</p>
+          <p class="tarjeta-plan__descripcion">{{ 'home.precios.pro.descripcion' | translate }}</p>
         </section>
         <ul class="tarjeta-plan__lista">
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>5 VPS servers</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Unlimited deployments</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Advanced monitoring</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Priority support</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>AI Assistant</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>3 custom domains</li>
-          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>Team management</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.servidores' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.despliegues' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.monitorizacion' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.soporte' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.ia' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.dominios' | translate }}</li>
+          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>{{ 'home.precios.pro.features.equipo' | translate }}</li>
         </ul>
-        <a class="boton--primario tarjeta-plan__boton" routerLink="/register">Start with Pro</a>
+        @if (planActivo() === "pro") {
+          <button class="boton--primario tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+        } @else {
+          <a class="boton--primario tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'pro' }">{{ 'home.precios.pro.cta' | translate }}</a>
+        }
       </article>
 
       <article class="tarjeta-plan" [scrollReveal]="'escala'" [retraso]="200">
         <section class="tarjeta-plan__cabecera">
-          <span class="tarjeta-plan__nombre">Business</span>
+          <span class="tarjeta-plan__nombre">{{ 'home.precios.business.nombre' | translate }}</span>
           <section class="tarjeta-plan__precio">
-            <span class="tarjeta-plan__precio__numero">€29</span>
-            <span class="tarjeta-plan__precio__periodo">/month</span>
+            <span class="tarjeta-plan__precio__numero">{{ 'home.precios.business.precio' | translate }}</span>
+            <span class="tarjeta-plan__precio__periodo">{{ 'home.precios.periodo' | translate }}</span>
           </section>
-          <p class="tarjeta-plan__descripcion">For scaling infrastructure without limits.</p>
+          <p class="tarjeta-plan__descripcion">{{ 'home.precios.business.descripcion' | translate }}</p>
         </section>
         <ul class="tarjeta-plan__lista">
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Unlimited servers</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Unlimited deployments</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Analytics dashboard</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Dedicated support</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>AI Assistant</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Unlimited custom domains</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>Team management (10 users)</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.servidores' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.despliegues' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.monitorizacion' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.soporte' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.ia' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.dominios' | translate }}</li>
+          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.equipo' | translate }}</li>
         </ul>
-        <a class="boton--ghost tarjeta-plan__boton" routerLink="/register">Start with Business</a>
+        @if (planActivo() === "business") {
+          <button class="boton--ghost tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+        } @else {
+          <a class="boton--ghost tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'business' }">{{ 'home.precios.business.cta' | translate }}</a>
+        }
       </article>
 
     </section>
@@ -231,11 +243,11 @@
   <section class="seccion-llamada-accion" [scrollReveal]="'arriba'" [retraso]="0">
     <section class="seccion-llamada-accion__contenedor">
       <section class="seccion-llamada-accion__texto">
-        <h2 class="seccion-llamada-accion__titulo">Ready to Simplify Your Infrastructure?</h2>
-        <p class="seccion-llamada-accion__descripcion">Join hundreds of developers who've ditched terminal hassles. Start free and scale up today.</p>
+        <h2 class="seccion-llamada-accion__titulo">{{ 'home.cta.titulo' | translate }}</h2>
+        <p class="seccion-llamada-accion__descripcion">{{ 'home.cta.descripcion' | translate }}</p>
       </section>
       <section class="seccion-llamada-accion__botones">
-        <a class="seccion-llamada-accion__boton--primario" routerLink="/register">Start Free Now</a>
+        <a class="seccion-llamada-accion__boton--primario" [routerLink]="rutaEmpezar()">{{ 'home.cta.boton' | translate }}</a>
       </section>
     </section>
   </section>

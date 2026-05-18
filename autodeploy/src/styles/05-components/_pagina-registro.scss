@@ -1,84 +1,89 @@
 .pagina-registro {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 100dvh;
+  background-color: var(--fondo-normal);
+  overflow: hidden;
+}
+
+/* =====================================================
+   PANEL IZQUIERDO — Formulario
+   ===================================================== */
+
+.pagina-registro__panel-formulario {
+  position: relative;
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: var(--spacing-size-3xl);
+  flex-direction: column;
+  padding: 2.5rem 3rem;
   background-color: var(--fondo-normal);
 }
 
-.pagina-registro__tarjeta {
+.pagina-registro__volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  align-self: flex-start;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-registro__volver:hover {
+  color: var(--texto-claro);
+  gap: 0.7rem;
+}
+
+.pagina-registro__volver__flecha {
+  font-size: 0.8rem;
+}
+
+.pagina-registro__panel-formulario__contenido {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.85rem;
+  max-width: 28rem;
   width: 100%;
-  max-width: 24rem;
-  padding: 2.5rem;
-  background-color: var(--fondo-tarjeta);
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-xl);
+  margin: auto 0;
 }
 
 .pagina-registro__cabecera {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
-.pagina-registro__volver {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-size-xs);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--texto-apagado);
-  margin-bottom: var(--spacing-size-s);
-  transition: color var(--duration-base) ease;
-}
-
-.pagina-registro__volver:hover {
-  color: var(--texto-claro);
-}
-
-.pagina-registro__volver svg {
-  width: 1rem;
-  height: 1rem;
-}
-
-.pagina-registro__logo {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-size-s);
-  margin-bottom: var(--spacing-size-s);
-}
-
-.pagina-registro__logo__imagen {
-  height: 1.75rem;
-  width: auto;
-}
-
-.pagina-registro__logo__texto {
-  font-family: var(--font-secondary);
-  font-size: 1.125rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--texto-claro);
-  letter-spacing: -0.5px;
-}
-
-.pagina-registro__logo__texto--acento {
+.pagina-registro__cabecera__numero {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   color: var(--amarillo-normal);
+  margin-bottom: 0.1rem;
 }
 
 .pagina-registro__titulo {
   font-family: var(--font-secondary);
-  font-size: 1.5rem;
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
   font-weight: var(--font-weight-bold);
+  letter-spacing: -0.04em;
+  line-height: 1;
   color: var(--texto-claro);
 }
 
+.pagina-registro__titulo__punto {
+  color: var(--amarillo-normal);
+}
+
 .pagina-registro__subtitulo {
-  font-size: var(--font-size-sm);
+  font-size: 0.95rem;
   color: var(--texto-medio);
+  letter-spacing: -0.005em;
+  line-height: 1.55;
+  margin-top: 0.25rem;
 }
 
 .pagina-registro__formulario {
@@ -88,12 +93,24 @@
 }
 
 .pagina-registro__error {
-  padding: 0.75rem 1rem;
-  background-color: rgba(239, 68, 68, 0.1);
-  border: 1px solid rgba(239, 68, 68, 0.2);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 1rem;
+  background-color: hsla(0, 79.17%, 60.59%, 0.08);
+  border: 1px solid hsla(0, 79.17%, 60.59%, 0.28);
   border-radius: var(--radius-m);
-  font-size: var(--font-size-sm);
+  font-size: 0.85rem;
   color: var(--rojo-normal);
+  letter-spacing: -0.005em;
+}
+
+.pagina-registro__error__punto {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: var(--rojo-normal);
+  animation: registro-respirar 1.8s ease-in-out infinite;
 }
 
 .pagina-registro__campo-password {
@@ -109,67 +126,379 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
+  width: 2.85rem;
   flex-shrink: 0;
-  background: rgba(240, 236, 226, 0.03);
+  background: transparent;
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-m);
   color: var(--texto-medio);
   font-size: 0.875rem;
   cursor: pointer;
-  transition: color var(--duration-base) ease;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pagina-registro__boton-ver:hover {
   color: var(--texto-claro);
-}
-
-.pagina-registro__boton-enviar {
-  width: 100%;
-  margin-top: 0.5rem;
-}
-
-.pagina-registro__pie {
-  display: flex;
-  justify-content: center;
-  gap: 0.375rem;
-  font-size: var(--font-size-sm);
-  color: var(--texto-medio);
-}
-
-.pagina-registro__enlace {
-  color: var(--amarillo-normal);
-  font-weight: var(--font-weight-semibold);
-  transition: opacity var(--duration-base) ease;
-}
-
-.pagina-registro__enlace:hover {
-  opacity: 0.8;
+  border-color: hsla(40, 33.33%, 91.37%, 0.18);
 }
 
 .pagina-registro__criterios {
-  display: flex;
-  flex-direction: column;
-  gap: 0.375rem;
-  margin-top: var(--spacing-size-s);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.4rem 1rem;
+  margin-top: 0.65rem;
+  padding: 0.75rem 0.85rem;
+  background-color: rgba(240, 236, 226, 0.025);
+  border: 1px solid var(--borde-suave);
+  border-radius: var(--radius-m);
 }
 
 .pagina-registro__criterio {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--texto-apagado);
-  transition: color var(--duration-base) ease;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.pagina-registro__criterio i {
-  width: 0.75rem;
-  text-align: center;
+.pagina-registro__criterio__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 0.95rem;
+  height: 0.95rem;
+  border-radius: 50%;
+  background-color: transparent;
+  border: 1px solid var(--borde-normal);
   font-size: 0.5rem;
+  flex-shrink: 0;
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pagina-registro__criterio--ok {
   color: var(--verde-normal);
+}
+
+.pagina-registro__criterio--ok .pagina-registro__criterio__icono {
+  background-color: hsla(142.09, 70.56%, 45.29%, 0.12);
+  border-color: hsla(142.09, 70.56%, 45.29%, 0.4);
+  color: var(--verde-normal);
+}
+
+.pagina-registro__boton-enviar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.7rem;
+  padding: 1rem 1.4rem;
+  background-color: var(--amarillo-normal);
+  color: var(--fondo-oscuro);
+  border: none;
+  border-radius: var(--radius-m);
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 0.5rem;
+}
+
+.pagina-registro__boton-enviar:hover:not(:disabled) {
+  background-color: var(--amarillo-normal-hover);
+  transform: translateY(-1px);
+  gap: 0.9rem;
+  box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
+}
+
+.pagina-registro__boton-enviar:active:not(:disabled) {
+  transform: scale(0.985);
+}
+
+.pagina-registro__boton-enviar:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.pagina-registro__boton-enviar__flecha {
+  font-family: var(--font-mono);
+  font-weight: var(--font-weight-bold);
+  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-registro__boton-enviar:hover:not(:disabled) .pagina-registro__boton-enviar__flecha {
+  transform: translateX(0.2rem);
+}
+
+.pagina-registro__pie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-size-s);
+  padding-top: var(--spacing-size-xl);
+  border-top: 1px solid var(--borde-suave);
+  font-size: 0.875rem;
+  color: var(--texto-medio);
+}
+
+.pagina-registro__pie__texto {
+  letter-spacing: -0.005em;
+}
+
+.pagina-registro__enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--amarillo-normal);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.005em;
+  transition: gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-registro__enlace:hover {
+  gap: 0.55rem;
+}
+
+/* =====================================================
+   PANEL DERECHO — Brand side
+   ===================================================== */
+
+.pagina-registro__panel-marca {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 2.5rem 3rem;
+  background: linear-gradient(170deg, var(--fondo-negro), var(--fondo-oscuro));
+  border-left: 1px solid var(--borde-normal);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pagina-registro__panel-marca::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(45% 30% at 80% 20%, hsla(47, 86%, 56%, 0.06), transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pagina-registro__panel-marca::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0.14 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.pagina-registro__panel-marca > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pagina-registro__panel-marca__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+}
+
+.pagina-registro__sello {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-registro__sello__punto {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--verde-normal);
+  animation: registro-respirar 2.4s ease-in-out infinite;
+}
+
+.pagina-registro__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.pagina-registro__logo__imagen {
+  height: 1.85rem;
+  width: auto;
+}
+
+.pagina-registro__logo__texto {
+  font-family: var(--font-secondary);
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-claro);
+  letter-spacing: -0.025em;
+}
+
+.pagina-registro__logo__texto--acento {
+  color: var(--amarillo-normal);
+}
+
+.pagina-registro__panel-marca__cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  max-width: 30rem;
+}
+
+.pagina-registro__panel-marca__titular {
+  font-family: var(--font-secondary);
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: var(--texto-claro);
+}
+
+.pagina-registro__panel-marca__titular__punto {
+  color: var(--amarillo-normal);
+}
+
+.pagina-registro__panel-marca__texto {
+  font-size: 1rem;
+  line-height: 1.65;
+  color: var(--texto-medio);
+  letter-spacing: -0.005em;
+}
+
+.pagina-registro__panel-marca__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 0.5rem;
+}
+
+.pagina-registro__panel-marca__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.pagina-registro__panel-marca__item:last-child {
+  border-bottom: none;
+}
+
+.pagina-registro__panel-marca__item__numero {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.18em;
+  color: var(--amarillo-normal);
+  padding: 0.18rem 0.5rem;
+  border: 1px solid var(--amarillo-transparente-030);
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  margin-top: 0.05rem;
+}
+
+.pagina-registro__panel-marca__item__texto-cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.18rem;
+}
+
+.pagina-registro__panel-marca__item__titulo {
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+  letter-spacing: -0.005em;
+}
+
+.pagina-registro__panel-marca__item__descripcion {
+  font-size: 0.825rem;
+  color: var(--texto-medio);
+  line-height: 1.55;
+}
+
+.pagina-registro__panel-marca__pie {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  padding-top: var(--spacing-size-l);
+  border-top: 1px solid var(--borde-suave);
+}
+
+.pagina-registro__panel-marca__pie__codigo {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  color: var(--texto-medio);
+}
+
+.pagina-registro__panel-marca__pie__separador {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--borde-suave), transparent, var(--borde-suave));
+}
+
+.pagina-registro__panel-marca__pie__texto {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-style: italic;
+}
+
+/* =====================================================
+   ANIMACIONES
+   ===================================================== */
+
+@keyframes registro-respirar {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.82); }
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 960px) {
+  .pagina-registro {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+
+  .pagina-registro__panel-formulario {
+    order: 2;
+    padding: 2rem 1.5rem;
+  }
+
+  .pagina-registro__panel-marca {
+    order: 1;
+    border-left: none;
+    border-bottom: 1px solid var(--borde-normal);
+    padding: 2rem 1.5rem;
+  }
+
+  .pagina-registro__panel-marca__cuerpo {
+    max-width: none;
+  }
+
+  .pagina-registro__criterios {
+    grid-template-columns: 1fr;
+  }
 }

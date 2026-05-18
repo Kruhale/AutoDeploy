@@ -1,191 +1,920 @@
 .pagina-billing {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-3xl);
+  gap: var(--spacing-size-5xl);
+  width: 100%;
+  animation: billing-entrar 620ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+/* =====================================================
+   HERO ASIMÉTRICO
+   ===================================================== */
+
 .pagina-billing__cabecera {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: flex-end;
+  gap: var(--spacing-size-3xl);
+  padding-bottom: var(--spacing-size-2xl);
+  border-bottom: 1px solid var(--borde-normal);
 }
 
 .pagina-billing__cabecera__izquierda {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: 0.4rem;
+}
+
+.pagina-billing__sello {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-family: var(--font-mono);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-billing__sello__punto {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: var(--amarillo-normal);
+  animation: billing-respirar 2.4s ease-in-out infinite;
 }
 
 .pagina-billing__titulo {
   font-family: var(--font-secondary);
-  font-size: 1.75rem;
-  font-weight: var(--font-weight-extrabold);
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.045em;
+  line-height: 1;
   color: var(--texto-claro);
-  letter-spacing: -0.5px;
+}
+
+.pagina-billing__titulo__punto {
+  color: var(--amarillo-normal);
+  margin-left: 0.05em;
 }
 
 .pagina-billing__subtitulo {
   font-size: var(--font-size-md);
   color: var(--texto-medio);
+  letter-spacing: -0.005em;
+  margin-top: 0.15rem;
 }
 
-.pagina-billing__plan {
-  display: flex;
+.pagina-billing__cta-principal {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  padding: var(--spacing-size-2xl);
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-l);
+  gap: var(--spacing-size-l);
+  padding: 0.85rem 1.1rem 0.85rem 0.85rem;
+  background-color: var(--amarillo-normal);
+  color: var(--fondo-oscuro);
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-secondary);
+  cursor: pointer;
+  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.pagina-billing__plan__info {
+.pagina-billing__cta-principal:hover {
+  background-color: var(--amarillo-normal-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
+}
+
+.pagina-billing__cta-principal:active {
+  transform: scale(0.98);
+}
+
+.pagina-billing__cta-principal__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background-color: hsla(0, 0%, 0%, 0.18);
+  font-size: 0.75rem;
+}
+
+.pagina-billing__cta-principal__texto {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  line-height: 1.1;
+}
+
+.pagina-billing__cta-principal__principal {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.01em;
+}
+
+.pagina-billing__cta-principal__secundario {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.65;
+}
+
+/* =====================================================
+   PLAN CARD ASIMÉTRICO con grid 1.3fr / 1fr
+   ===================================================== */
+
+.pagina-billing__plan {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: var(--spacing-size-4xl);
+  padding: var(--spacing-size-3xl);
+  background-color: hsla(40, 33.33%, 91.37%, 0.025);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+}
+
+.pagina-billing__plan::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: linear-gradient(180deg, var(--amarillo-normal), var(--naranja-normal));
+}
+
+.pagina-billing__plan::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(50% 50% at 90% 100%, hsla(47, 86%, 56%, 0.07), transparent 60%);
+  pointer-events: none;
+}
+
+.pagina-billing__plan > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pagina-billing__plan__columna-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  padding-left: var(--spacing-size-s);
 }
 
 .pagina-billing__plan__etiqueta {
-  font-size: var(--font-size-xs);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
   font-weight: var(--font-weight-bold);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
   color: var(--texto-apagado);
 }
 
 .pagina-billing__plan__nombre {
   font-family: var(--font-secondary);
-  font-size: var(--font-size-xl);
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
   font-weight: var(--font-weight-bold);
+  letter-spacing: -0.04em;
+  line-height: 0.98;
   color: var(--texto-claro);
 }
 
-.pagina-billing__plan__detalle {
-  font-size: var(--font-size-sm);
+.pagina-billing__plan__descripcion {
+  font-size: 0.95rem;
+  color: var(--texto-medio);
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+  max-width: 32rem;
+  margin-top: 0.15rem;
+}
+
+.pagina-billing__plan__features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem 1.5rem;
+  margin-top: 0.85rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--borde-suave);
+}
+
+.pagina-billing__plan__features__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-size: 0.85rem;
+  color: var(--texto-claro);
+  letter-spacing: -0.005em;
+}
+
+.pagina-billing__plan__features__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.45rem;
+  height: 1.45rem;
+  border-radius: 50%;
+  background-color: var(--amarillo-transparente-008);
+  border: 1px solid var(--amarillo-transparente-030);
+  color: var(--amarillo-normal);
+  font-size: 0.65rem;
+  flex-shrink: 0;
+}
+
+.pagina-billing__plan__columna-precio {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-size-xl);
+  padding-left: var(--spacing-size-xl);
+  border-left: 1px solid var(--borde-suave);
+}
+
+.pagina-billing__plan__price {
+  display: inline-flex;
+  align-items: flex-start;
+  font-family: var(--font-secondary);
+  font-size: clamp(3rem, 6vw, 5rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.055em;
+  line-height: 0.85;
+  color: var(--amarillo-normal);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagina-billing__plan__price__moneda {
+  font-size: 0.55em;
+  margin-top: 0.2em;
+  margin-right: 0.05em;
+  color: var(--amarillo-normal);
+  opacity: 0.7;
+}
+
+.pagina-billing__plan__price__periodo {
+  font-family: var(--font-mono);
+  font-size: 0.18em;
+  color: var(--texto-apagado);
+  margin-top: 0.55em;
+  margin-left: 0.15em;
+  letter-spacing: 0.04em;
+  align-self: flex-end;
+}
+
+.pagina-billing__plan__marca {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  text-align: right;
+}
+
+.pagina-billing__plan__renovacion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.18rem;
+  padding-top: 1rem;
+  border-top: 1px dashed var(--borde-suave);
+  width: 100%;
+}
+
+.pagina-billing__plan__renovacion__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-billing__plan__renovacion__fecha {
+  font-family: var(--font-secondary);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.015em;
+  color: var(--texto-claro);
+}
+
+.pagina-billing__plan__renovacion__detalle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   color: var(--texto-medio);
 }
+
+/* =====================================================
+   CABECERAS DE SECCIÓN
+   ===================================================== */
 
 .pagina-billing__seccion {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-l);
 }
 
-.pagina-billing__seccion__cabecera {
+.pagina-billing__cabecera-seccion {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--spacing-size-xl);
+  margin-bottom: var(--spacing-size-xl);
+}
+
+.pagina-billing__cabecera-seccion__indice {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--texto-apagado);
+  padding: 0.12rem 0.5rem;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-full);
+  align-self: flex-start;
+  margin-top: 0.35rem;
+}
+
+.pagina-billing__cabecera-seccion__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-width: 44rem;
+}
+
+.pagina-billing__cabecera-seccion__titulo {
+  font-family: var(--font-secondary);
+  font-size: clamp(1.4rem, 2.2vw, 1.85rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.03em;
+  color: var(--texto-claro);
+  line-height: 1.05;
+}
+
+.pagina-billing__cabecera-seccion__descripcion {
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+  line-height: var(--line-height-normal);
+}
+
+.pagina-billing__boton-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1rem;
+  background-color: transparent;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-full);
+  color: var(--texto-claro);
+  font-family: var(--font-secondary);
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  align-self: flex-start;
+  margin-top: 0.35rem;
+}
+
+.pagina-billing__boton-ghost:hover {
+  border-color: hsla(40, 33.33%, 91.37%, 0.22);
+  background-color: rgba(240, 236, 226, 0.04);
+  transform: translateY(-1px);
+}
+
+.pagina-billing__boton-ghost:active {
+  transform: scale(0.98);
+}
+
+/* =====================================================
+   USO — 3 barras de progreso editoriales
+   ===================================================== */
+
+.pagina-billing__uso {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0;
+}
+
+.pagina-billing__uso-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: var(--spacing-size-l) var(--spacing-size-2xl) var(--spacing-size-l) 0;
+  border-right: 1px solid var(--borde-suave);
+}
+
+.pagina-billing__uso-item:not(:first-child) {
+  padding-left: var(--spacing-size-2xl);
+}
+
+.pagina-billing__uso-item:last-child {
+  border-right: none;
+  padding-right: 0;
+}
+
+.pagina-billing__uso-item__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-billing__uso-item__valor {
+  font-family: var(--font-secondary);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: var(--texto-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagina-billing__uso-item__detalle {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-medio);
+  margin-bottom: 0.4rem;
+}
+
+.pagina-billing__uso-item__barra {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 0.25rem;
+  background-color: hsla(40, 33.33%, 91.37%, 0.05);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.pagina-billing__uso-item__barra__relleno {
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: linear-gradient(90deg, var(--amarillo-normal), var(--naranja-normal));
+  border-radius: 999px;
+  transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* =====================================================
+   MÉTODO DE PAGO — tarjeta fantasma + texto
+   ===================================================== */
+
+.pagina-billing__mensaje {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.7rem 1rem;
+  background-color: var(--amarillo-transparente-008);
+  border: 1px solid var(--amarillo-transparente-030);
+  border-radius: var(--radius-m);
+  font-size: 0.85rem;
+  color: var(--amarillo-normal);
+  margin-bottom: var(--spacing-size-l);
+  align-self: flex-start;
+}
+
+.pagina-billing__mensaje__punto {
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: var(--amarillo-normal);
+  animation: billing-respirar 1.8s ease-in-out infinite;
+}
+
+.pagina-billing__metodo-pago-vacio {
+  display: grid;
+  grid-template-columns: 22rem minmax(0, 1fr);
+  gap: var(--spacing-size-3xl);
+  padding: var(--spacing-size-2xl);
+  border: 1px dashed var(--borde-normal);
+  border-radius: var(--radius-xl);
+  align-items: center;
+}
+
+.pagina-billing__tarjeta-fantasma {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 12rem;
+  padding: 1.4rem 1.5rem;
+  background: linear-gradient(135deg, hsl(28, 8%, 14%), hsl(30, 6%, 9%));
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: 0 1.25rem 2rem hsla(0, 0%, 0%, 0.35), inset 0 1px 0 hsla(0, 0%, 100%, 0.04);
+}
+
+.pagina-billing__tarjeta-fantasma::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(60% 50% at 100% 0%, hsla(47, 86%, 56%, 0.08), transparent 60%);
+  pointer-events: none;
+}
+
+.pagina-billing__tarjeta-fantasma > * {
+  position: relative;
+  z-index: 1;
+}
+
+.pagina-billing__tarjeta-fantasma__cabecera {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.pagina-billing__seccion__titulo {
+.pagina-billing__tarjeta-fantasma__chip {
+  width: 2.5rem;
+  height: 1.85rem;
+  border-radius: 0.4rem;
+  background: linear-gradient(135deg, hsl(40, 12%, 28%), hsl(35, 8%, 20%));
+  border: 1px solid hsla(40, 33.33%, 91.37%, 0.08);
+}
+
+.pagina-billing__tarjeta-fantasma__marca {
   font-family: var(--font-secondary);
-  font-size: var(--font-size-lg);
+  font-size: 0.95rem;
   font-weight: var(--font-weight-bold);
+  letter-spacing: -0.02em;
+  color: var(--texto-apagado);
+  opacity: 0.5;
+}
+
+.pagina-billing__tarjeta-fantasma__numero {
+  font-family: var(--font-mono);
+  font-size: 1.05rem;
+  letter-spacing: 0.22em;
+  color: var(--texto-apagado);
+  opacity: 0.55;
+}
+
+.pagina-billing__tarjeta-fantasma__pie {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+}
+
+.pagina-billing__tarjeta-fantasma__pie__bloque {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.pagina-billing__tarjeta-fantasma__pie__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  opacity: 0.6;
+}
+
+.pagina-billing__tarjeta-fantasma__pie__valor {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  color: var(--texto-medio);
+  opacity: 0.7;
+}
+
+.pagina-billing__metodo-pago-vacio__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: flex-start;
+}
+
+.pagina-billing__metodo-pago-vacio__titulo {
+  font-family: var(--font-secondary);
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
   color: var(--texto-claro);
 }
 
-.pagina-billing__vacio {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-size-s);
-  padding: var(--spacing-size-5xl) 0;
-  color: var(--texto-apagado);
-  font-size: var(--font-size-md);
-  text-align: center;
+.pagina-billing__metodo-pago-vacio__detalle {
+  font-size: 0.9rem;
+  color: var(--texto-medio);
+  line-height: 1.6;
+  max-width: 32rem;
 }
 
-.pagina-billing__vacio__icono {
-  font-size: 1.5rem;
-  opacity: 0.4;
-  margin-bottom: var(--spacing-size-s);
+.pagina-billing__metodo-pago-vacio__boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background-color: var(--amarillo-normal);
+  color: var(--fondo-oscuro);
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-secondary);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-billing__metodo-pago-vacio__boton:hover {
+  background-color: var(--amarillo-normal-hover);
+  transform: translateY(-1px);
+  gap: 0.7rem;
+  box-shadow: 0 0.5rem 1rem hsla(47, 86%, 56%, 0.22);
+}
+
+.pagina-billing__metodo-pago-vacio__boton:active {
+  transform: scale(0.98);
+}
+
+/* =====================================================
+   INVOICES — empty + tabla
+   ===================================================== */
+
+.pagina-billing__vacio-invoices {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: var(--spacing-size-2xl);
+  padding: var(--spacing-size-3xl);
+  border: 1px dashed var(--borde-normal);
+  border-radius: var(--radius-xl);
+}
+
+.pagina-billing__vacio-invoices__icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  border: 1px solid var(--borde-normal);
+  background-color: rgba(240, 236, 226, 0.025);
+  color: var(--texto-apagado);
+  font-size: 1.15rem;
+}
+
+.pagina-billing__vacio-invoices__texto {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.pagina-billing__vacio-invoices__titulo {
+  font-family: var(--font-secondary);
+  font-size: 1.15rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.015em;
+  color: var(--texto-claro);
+}
+
+.pagina-billing__vacio-invoices__detalle {
+  font-size: 0.9rem;
+  color: var(--texto-medio);
+  line-height: 1.55;
+  max-width: 38rem;
 }
 
 .pagina-billing__tabla {
-  width: 100%;
-  border-collapse: collapse;
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--borde-normal);
 }
 
-.pagina-billing__tabla__fila-cabecera {
+.pagina-billing__tabla__cabecera,
+.pagina-billing__tabla__fila {
+  display: grid;
+  grid-template-columns: 7rem minmax(0, 1fr) 7rem 8rem 2.5rem;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  padding: var(--spacing-size-l) var(--spacing-size-m);
+}
+
+.pagina-billing__tabla__cabecera {
   border-bottom: 1px solid var(--borde-normal);
-}
-
-.pagina-billing__tabla__th {
-  padding: var(--spacing-size-m) var(--spacing-size-l);
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  color: var(--texto-apagado);
-  text-align: left;
+  padding-top: 0;
+  padding-bottom: var(--spacing-size-m);
 }
 
 .pagina-billing__tabla__fila {
   border-bottom: 1px solid var(--borde-suave);
-  transition: background-color var(--duration-fast) ease;
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pagina-billing__tabla__fila:hover {
-  background-color: rgba(240, 236, 226, 0.02);
+  background-color: rgba(240, 236, 226, 0.025);
+}
+
+.pagina-billing__tabla__th {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-billing__tabla__th--importe {
+  text-align: right;
 }
 
 .pagina-billing__tabla__td {
-  padding: var(--spacing-size-l);
-  font-size: var(--font-size-md);
+  font-size: var(--font-size-sm);
   color: var(--texto-claro);
+  letter-spacing: -0.005em;
 }
 
 .pagina-billing__tabla__td--mono {
   font-family: var(--font-mono);
-  font-size: var(--font-size-sm);
+  font-size: 0.75rem;
+  color: var(--texto-medio);
+  letter-spacing: 0.04em;
+}
+
+.pagina-billing__tabla__td--importe {
+  text-align: right;
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+}
+
+.pagina-billing__tabla__descarga {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--borde-normal);
+  border-radius: 50%;
+  color: var(--texto-apagado);
+  font-size: 0.7rem;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-billing__tabla__descarga:hover {
+  color: var(--amarillo-normal);
+  border-color: var(--amarillo-transparente-030);
+  background-color: var(--amarillo-transparente-008);
+  transform: translateY(-1px);
 }
 
 .pagina-billing__badge {
   display: inline-flex;
-  padding: 0.125rem 0.5rem;
-  font-size: var(--font-size-xs);
+  padding: 0.2rem 0.55rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
   font-weight: var(--font-weight-bold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
   border-radius: var(--radius-full);
+  border: 1px solid transparent;
 }
 
 .pagina-billing__badge--paid {
-  background: rgba(34, 197, 94, 0.1);
+  background: hsla(142.09, 70.56%, 45.29%, 0.08);
   color: var(--verde-normal);
+  border-color: hsla(142.09, 70.56%, 45.29%, 0.28);
 }
 
 .pagina-billing__badge--pending {
-  background: rgba(245, 158, 11, 0.1);
-  color: var(--naranja-normal);
+  background: var(--amarillo-transparente-008);
+  color: var(--amarillo-normal);
+  border-color: var(--amarillo-transparente-030);
 }
 
 .pagina-billing__badge--failed {
-  background: rgba(239, 68, 68, 0.1);
+  background: hsla(0, 79.17%, 60.59%, 0.08);
   color: var(--rojo-normal);
+  border-color: hsla(0, 79.17%, 60.59%, 0.28);
 }
 
-.pagina-billing__mensaje {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
+/* =====================================================
+   PIE EDITORIAL
+   ===================================================== */
+
+.pagina-billing__pie {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  padding: var(--spacing-size-l) 0 var(--spacing-size-xl);
+  margin-top: var(--spacing-size-xl);
+  border-top: 1px solid var(--borde-suave);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-billing__pie__codigo {
   color: var(--texto-medio);
 }
 
-@media (max-width: 768px) {
-  .pagina-billing__cabecera {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: var(--spacing-size-l);
-  }
+.pagina-billing__pie__texto {
+  font-style: italic;
+  text-transform: none;
+  letter-spacing: 0.04em;
+}
 
+.pagina-billing__pie__separador {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--borde-suave), transparent, var(--borde-suave));
+}
+
+.pagina-billing__pie__edicion {
+  color: var(--texto-medio);
+}
+
+/* =====================================================
+   ANIMACIONES
+   ===================================================== */
+
+@keyframes billing-entrar {
+  from { opacity: 0; transform: translateY(0.6rem); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes billing-respirar {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.82); }
+}
+
+/* =====================================================
+   RESPONSIVE
+   ===================================================== */
+
+@media (max-width: 960px) {
   .pagina-billing__plan {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--spacing-size-2xl);
+  }
+
+  .pagina-billing__plan__columna-precio {
+    border-left: none;
+    padding-left: 0;
     align-items: flex-start;
-    gap: var(--spacing-size-l);
+    padding-top: var(--spacing-size-l);
+    border-top: 1px solid var(--borde-suave);
   }
 
-  .pagina-billing__seccion {
-    overflow-x: auto;
+  .pagina-billing__plan__renovacion {
+    align-items: flex-start;
   }
 
-  .pagina-billing__tabla {
-    min-width: 36rem;
+  .pagina-billing__plan__marca {
+    text-align: left;
+  }
+
+  .pagina-billing__uso {
+    grid-template-columns: 1fr;
+  }
+
+  .pagina-billing__uso-item {
+    border-right: none;
+    border-bottom: 1px solid var(--borde-suave);
+    padding: var(--spacing-size-l) 0;
+  }
+
+  .pagina-billing__uso-item:not(:first-child) {
+    padding-left: 0;
+  }
+
+  .pagina-billing__metodo-pago-vacio {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 720px) {
+  .pagina-billing__cabecera {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: flex-start;
+  }
+
+  .pagina-billing__plan__features {
+    grid-template-columns: 1fr;
+  }
+
+  .pagina-billing__tabla__cabecera,
+  .pagina-billing__tabla__fila {
+    grid-template-columns: 1fr;
+    gap: 0.4rem;
+  }
+
+  .pagina-billing__tabla__th--fecha,
+  .pagina-billing__tabla__th--importe,
+  .pagina-billing__tabla__th--estado,
+  .pagina-billing__tabla__th--acciones {
+    display: none;
   }
 }

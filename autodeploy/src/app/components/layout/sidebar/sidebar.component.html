@@ -2,78 +2,98 @@
   <a class="barra-lateral__logo" routerLink="/">
     <img class="barra-lateral__logo__imagen" src="logo.png" alt="">
     <span class="barra-lateral__logo__texto">Auto<span class="barra-lateral__logo__texto--acento">Deploy</span></span>
+    <span class="barra-lateral__logo__version" aria-hidden="true">v2.41</span>
   </a>
 
   <nav class="barra-lateral__navegacion">
-    <section class="barra-lateral__seccion">
-      <span class="barra-lateral__seccion__titulo">Main Menu</span>
+    <section class="barra-lateral__seccion" data-indice="01">
+      <header class="barra-lateral__seccion__cabecera">
+        <span class="barra-lateral__seccion__numero" aria-hidden="true">01</span>
+        <span class="barra-lateral__seccion__titulo">{{ "sidebar.secciones.principal" | translate }}</span>
+      </header>
       <ul class="barra-lateral__lista">
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/dashboard" routerLinkActive="barra-lateral__enlace--activo"
             [routerLinkActiveOptions]="{ exact: true }">
             <i class="fa-solid fa-table-columns barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Dashboard</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.dashboard" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/onboarding" routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-plug barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Connect Server</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.conectarServidor" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/logs" routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-chart-line barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Activity</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.actividad" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/billing" routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-credit-card barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Billing</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.billing" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
       </ul>
     </section>
 
-    <section class="barra-lateral__seccion">
-      <span class="barra-lateral__seccion__titulo">Server Actions</span>
+    <section class="barra-lateral__seccion" data-indice="02">
+      <header class="barra-lateral__seccion__cabecera">
+        <span class="barra-lateral__seccion__numero" aria-hidden="true">02</span>
+        <span class="barra-lateral__seccion__titulo">{{ "sidebar.secciones.servidor" | translate }}</span>
+      </header>
       <ul class="barra-lateral__lista">
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/terminal" routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-terminal barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Terminal</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.terminal" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
+          </a>
+        </li>
+        <li>
+          <a class="barra-lateral__enlace" routerLink="/app/asistente-ia" routerLinkActive="barra-lateral__enlace--activo">
+            <i class="fa-solid fa-robot barra-lateral__enlace__icono"></i>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.asistenteIa" | translate }}</span>
+            @if (planService.planActual() !== 'pro' && planService.planActual() !== 'business') {
+              <span class="barra-lateral__chip-pro">{{ "sidebar.chipPro" | translate }}</span>
+            }
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/nuevo-despliegue"
             routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-cubes barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Applications</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.aplicaciones" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/networking" routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-globe barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Networking & SSL</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.networking" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/firewall" routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-shield-halved barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Firewall</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.firewall" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/backups" routerLinkActive="barra-lateral__enlace--activo">
             <i class="fa-solid fa-hard-drive barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Backups</span>
-          </a>
-        </li>
-        <li>
-          <a class="barra-lateral__enlace" routerLink="/app/settings" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-gear barra-lateral__enlace__icono"></i>
-            <span class="barra-lateral__enlace__texto">Settings</span>
+            <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.backups" | translate }}</span>
+            <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
       </ul>
@@ -84,16 +104,18 @@
     <button class="barra-lateral__colapsar" (click)="alternarColapso()">
       <i class="barra-lateral__colapsar__icono" [class]="colapsada() ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'"></i>
       @if (!colapsada()) {
-        <span class="barra-lateral__colapsar__texto">Collapse</span>
+        <span class="barra-lateral__colapsar__texto">{{ "sidebar.colapsar" | translate }}</span>
       }
     </button>
-    <a class="barra-lateral__usuario" routerLink="/app/cuenta">
-      <span class="barra-lateral__usuario__avatar"></span>
+    <a class="barra-lateral__usuario" routerLink="/app/cuenta" [attr.data-plan]="planService.planActual()">
+      <span class="barra-lateral__usuario__avatar" aria-hidden="true">
+        <span class="barra-lateral__usuario__avatar__estado" aria-hidden="true"></span>
+      </span>
       <section class="barra-lateral__usuario__info">
-        <span class="barra-lateral__usuario__nombre">{{ usuarioService.nombre() || 'My Account' }}</span>
+        <span class="barra-lateral__usuario__nombre">{{ usuarioService.nombre() || ("sidebar.fallbackCuenta" | translate) }}</span>
         <span class="barra-lateral__usuario__plan">{{ planService.planActual() }}</span>
       </section>
-      <i class="fa-solid fa-gear barra-lateral__usuario__gear"></i>
+      <i class="fa-solid fa-chevron-right barra-lateral__usuario__gear" aria-hidden="true"></i>
     </a>
   </footer>
 </aside>

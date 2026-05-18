@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
@@ -22,7 +23,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.KeyPair;
-import java.security.KeyPairGenerator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +35,7 @@ public class SshWebSocketHandler extends TextWebSocketHandler {
     private static final String ATTR_SSH_SESSION = "sshSession";
     private static final String ATTR_SSH_CHANNEL = "sshChannel";
     private static final String ATTR_OUTPUT_STREAM = "outputStream";
+    private static final String ATTR_SESION_SINCRONIZADA = "sesionSincronizada";
 
     private final ServidorService servidorService;
     private final ObjectMapper objectMapper;
@@ -47,16 +48,27 @@ public class SshWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     protected void handleTextMessage(WebSocketSession sesionWs, TextMessage mensaje) throws Exception {
+        WebSocketSession sesionSegura = obtenerSesionSegura(sesionWs);
         JsonNode json = objectMapper.readTree(mensaje.getPayload());
         String tipo = json.get("tipo").asText();
 
         if ("connect".equals(tipo)) {
-            manejarConexion(sesionWs, json);
+            manejarConexion(sesionSegura, json);
         } else if ("input".equals(tipo)) {
-            manejarEntrada(sesionWs, json);
+            manejarEntrada(sesionSegura, json);
         } else if ("resize".equals(tipo)) {
-            manejarRedimensionar(sesionWs, json);
+            manejarRedimensionar(sesionSegura, json);
         }
+    }
+
+    private WebSocketSession obtenerSesionSegura(WebSocketSession sesionWs) {
+        WebSocketSession existente = (WebSocketSession) sesionWs.getAttributes().get(ATTR_SESION_SINCRONIZADA);
+        if (existente != null) {
+            return existente;
+        }
+        WebSocketSession decorada = new ConcurrentWebSocketSessionDecorator(sesionWs, 5000, 1024 * 1024);
+        sesionWs.getAttributes().put(ATTR_SESION_SINCRONIZADA, decorada);
+        return decorada;
     }
 
     private void manejarConexion(WebSocketSession sesionWs, JsonNode json) {
@@ -135,14 +147,51 @@ public class SshWebSocketHandler extends TextWebSocketHandler {
         } catch (Exception excepcion) {
             log.error("Error al conectar SSH: {}", excepcion.getMessage());
             try {
+                String mensajeLegible = traducirErrorConexion(excepcion);
                 String mensajeError = objectMapper.writeValueAsString(
-                        Map.of("tipo", "error", "mensaje", "Error de conexion: " + excepcion.getMessage())
+                        Map.of("tipo", "error", "mensaje", mensajeLegible)
                 );
                 sesionWs.sendMessage(new TextMessage(mensajeError));
             } catch (IOException ioExcepcion) {
                 log.error("Error al enviar mensaje de error", ioExcepcion);
             }
         }
+    }
+
+    private String traducirErrorConexion(Exception excepcion) {
+        String causaTextual = obtenerCausaRaiz(excepcion).toLowerCase();
+
+        if (causaTextual.contains("unresolved") || causaTextual.contains("nodename") || causaTextual.contains("no such host")) {
+            return "No se pudo resolver el nombre del servidor. Verifica la dirección IP o el dominio.";
+        }
+        if (causaTextual.contains("connection refused")) {
+            return "Conexión rechazada. El servidor SSH no está escuchando en ese puerto.";
+        }
+        if (causaTextual.contains("timeout") || causaTextual.contains("timed out")) {
+            return "Tiempo de espera agotado. El servidor no responde.";
+        }
+        if (causaTextual.contains("auth")) {
+            return "Autenticación fallida. Revisa el usuario, la contraseña o la clave SSH.";
+        }
+        if (causaTextual.contains("network is unreachable") || causaTextual.contains("no route to host")) {
+            return "Red inalcanzable. Comprueba la conectividad de red con el servidor.";
+        }
+
+        String mensaje = excepcion.getMessage();
+        return mensaje != null ? mensaje : "Error desconocido al conectar.";
+    }
+
+    private String obtenerCausaRaiz(Throwable excepcion) {
+        Throwable causa = excepcion;
+        StringBuilder acumulado = new StringBuilder();
+        while (causa != null) {
+            if (causa.getMessage() != null) {
+                acumulado.append(causa.getMessage()).append(" ");
+            }
+            acumulado.append(causa.getClass().getSimpleName()).append(" ");
+            causa = causa.getCause();
+        }
+        return acumulado.toString();
     }
 
     private void manejarEntrada(WebSocketSession sesionWs, JsonNode json) throws IOException {

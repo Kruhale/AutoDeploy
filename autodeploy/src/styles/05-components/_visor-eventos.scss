@@ -28,6 +28,40 @@
   color: var(--texto-apagado);
 }
 
+.visor-eventos__cargando,
+.visor-eventos__vacio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  padding: var(--spacing-size-4xl) var(--spacing-size-2xl);
+  color: var(--texto-medio);
+  font-size: var(--font-size-sm);
+  text-align: center;
+  min-height: 12rem;
+}
+
+.visor-eventos__vacio__icono {
+  font-size: 1.4rem;
+  color: var(--texto-apagado);
+  margin-bottom: 0.2rem;
+}
+
+.visor-eventos__vacio__titulo {
+  font-family: var(--font-secondary);
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+  letter-spacing: -0.01em;
+}
+
+.visor-eventos__vacio__detalle {
+  max-width: 32rem;
+  color: var(--texto-medio);
+  line-height: 1.5;
+}
+
 .visor-eventos__lista {
   display: flex;
   flex-direction: column;

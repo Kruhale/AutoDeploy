@@ -4,8 +4,12 @@ import com.autodeploy.dto.ApiResponse;
 import com.autodeploy.dto.LoginRequest;
 import com.autodeploy.dto.LoginResponse;
 import com.autodeploy.dto.RegistroRequest;
+import com.autodeploy.model.ClaveSshUsuario;
+import com.autodeploy.model.PreferenciasNotificacion;
 import com.autodeploy.model.Usuario;
 import com.autodeploy.service.UsuarioService;
+
+import java.util.List;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -33,18 +37,18 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-    @Operation(summary = "Registrar usuario", description = "Crea una cuenta nueva y devuelve los datos del usuario")
+    @Operation(summary = "Registrar usuario")
     @PostMapping("/registro")
     public ResponseEntity<ApiResponse<LoginResponse>> registrar(@RequestBody @Valid RegistroRequest peticion) {
         Usuario usuario = usuarioService.registrar(peticion);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
         URI ubicacion = URI.create("/api/usuarios/" + usuario.getId());
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Usuario registrado", respuesta);
         return ResponseEntity.created(ubicacion).body(cuerpo);
     }
 
-    @Operation(summary = "Login", description = "Autentica al usuario con email y contraseña")
+    @Operation(summary = "Login")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<LoginResponse>> login(@RequestBody @Valid LoginRequest peticion) {
         LoginResponse respuesta = usuarioService.login(peticion);
@@ -56,7 +60,7 @@ public class UsuarioController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<LoginResponse>> obtener(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "OK", respuesta);
         return ResponseEntity.ok(cuerpo);
@@ -70,9 +74,45 @@ public class UsuarioController {
         String email = datos.getOrDefault("email", "");
 
         Usuario usuario = usuarioService.actualizar(id, nombre, email);
-        LoginResponse respuesta = new LoginResponse(usuario.getId(), usuario.getNombre(), usuario.getEmail(), null);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
 
         ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Perfil actualizado", respuesta);
+        return ResponseEntity.ok(cuerpo);
+    }
+
+    @PutMapping("/{id}/plan")
+    public ResponseEntity<ApiResponse<LoginResponse>> actualizarPlan(
+            @PathVariable String id,
+            @RequestBody Map<String, String> datos) {
+        String plan = datos.getOrDefault("plan", "free");
+
+        Usuario usuario = usuarioService.actualizarPlan(id, plan);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
+
+        ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Plan actualizado", respuesta);
+        return ResponseEntity.ok(cuerpo);
+    }
+
+    @PutMapping("/{id}/cancelar-suscripcion")
+    public ResponseEntity<ApiResponse<LoginResponse>> cancelarSuscripcion(@PathVariable String id) {
+        Usuario usuario = usuarioService.cancelarSuscripcion(id);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
+
+        ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Suscripción cancelada", respuesta);
+        return ResponseEntity.ok(cuerpo);
+    }
+
+    @Operation(summary = "Actualizar idioma preferido del usuario")
+    @PutMapping("/{id}/idioma")
+    public ResponseEntity<ApiResponse<LoginResponse>> actualizarIdioma(
+            @PathVariable String id,
+            @RequestBody Map<String, String> datos) {
+        String idioma = datos.getOrDefault("idioma", "es");
+
+        Usuario usuario = usuarioService.actualizarIdioma(id, idioma);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
+
+        ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Idioma actualizado", respuesta);
         return ResponseEntity.ok(cuerpo);
     }
 
@@ -80,5 +120,41 @@ public class UsuarioController {
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
         usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
+    }
+
+    public record NuevaClaveRequest(String nombre, String claveCompleta) {}
+
+    @GetMapping("/{id}/claves-ssh")
+    public ResponseEntity<ApiResponse<List<ClaveSshUsuario>>> listarClavesSsh(@PathVariable String id) {
+        Usuario usuario = usuarioService.obtenerPorId(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuario.getClavesSsh()));
+    }
+
+    @PostMapping("/{id}/claves-ssh")
+    public ResponseEntity<ApiResponse<ClaveSshUsuario>> agregarClaveSsh(
+            @PathVariable String id,
+            @RequestBody NuevaClaveRequest peticion) {
+        ClaveSshUsuario nuevaClave = usuarioService.agregarClaveSsh(id, peticion.nombre(), peticion.claveCompleta());
+        return ResponseEntity.ok(new ApiResponse<>(true, "Clave SSH añadida", nuevaClave));
+    }
+
+    @DeleteMapping("/{idUsuario}/claves-ssh/{idClave}")
+    public ResponseEntity<Void> eliminarClaveSsh(@PathVariable String idUsuario, @PathVariable String idClave) {
+        usuarioService.eliminarClaveSsh(idUsuario, idClave);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{id}/notificaciones")
+    public ResponseEntity<ApiResponse<PreferenciasNotificacion>> obtenerNotificaciones(@PathVariable String id) {
+        Usuario usuario = usuarioService.obtenerPorId(id);
+        return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuario.getPreferenciasNotificacion()));
+    }
+
+    @PutMapping("/{id}/notificaciones")
+    public ResponseEntity<ApiResponse<PreferenciasNotificacion>> actualizarNotificaciones(
+            @PathVariable String id,
+            @RequestBody PreferenciasNotificacion preferencias) {
+        PreferenciasNotificacion actualizadas = usuarioService.actualizarPreferenciasNotificacion(id, preferencias);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Preferencias actualizadas", actualizadas));
     }
 }

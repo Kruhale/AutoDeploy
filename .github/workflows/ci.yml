@@ -31,7 +31,10 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
-      - name: Compilar y empaquetar (sin tests)
+      - name: Tests unitarios e integración
+        run: mvn -B test
+
+      - name: Compilar y empaquetar
         run: mvn -B -DskipTests package
 
       - name: Subir JAR como artefacto

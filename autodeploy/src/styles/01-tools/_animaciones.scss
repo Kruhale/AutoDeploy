@@ -1,0 +1,82 @@
+// Tools: animaciones reutilizables (keyframes + clases helpers).
+// Las animaciones específicas de un componente viven con su componente
+// (p.ej. .seccion-bienvenida__terminal__linea está en _seccion-bienvenida.scss).
+
+// Keyframes globales -----------------------------------------------------
+
+@keyframes entrar-abajo {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes entrar-derecha {
+  from { opacity: 0; transform: translateX(28px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes entrar-escala {
+  from { opacity: 0; transform: scale(0.93); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes parpadeo-cursor {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0; }
+}
+
+@keyframes pulso-estado {
+  0%   { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5); }
+  70%  { box-shadow: 0 0 0 7px rgba(74, 222, 128, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+}
+
+@keyframes latido {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.25); }
+}
+
+// Animaciones de carga (page load, sin scroll) ---------------------------
+
+.animar {
+  animation-fill-mode: both;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  animation-duration: 0.7s;
+  animation-delay: var(--retraso, 0ms);
+}
+
+.animar--subir   { animation-name: entrar-abajo; }
+.animar--derecha { animation-name: entrar-derecha; }
+.animar--escala  { animation-name: entrar-escala; }
+
+// Scroll reveal (IntersectionObserver directive) -------------------------
+
+.revelar {
+  opacity: 0;
+  transition:
+    opacity   0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms),
+    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms);
+}
+
+.revelar--arriba    { transform: translateY(28px); }
+.revelar--izquierda { transform: translateX(-28px); }
+.revelar--derecha   { transform: translateX(28px); }
+.revelar--escala    { transform: scale(0.94); }
+
+.revelar--visible {
+  opacity: 1;
+  transform: none;
+}
+
+// Stagger automático (hijos de un contenedor) ----------------------------
+
+.animar-hijos > * {
+  opacity: 0;
+  animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animar-hijos > *:nth-child(1) { animation-delay: 0ms;   }
+.animar-hijos > *:nth-child(2) { animation-delay: 80ms;  }
+.animar-hijos > *:nth-child(3) { animation-delay: 160ms; }
+.animar-hijos > *:nth-child(4) { animation-delay: 240ms; }
+.animar-hijos > *:nth-child(5) { animation-delay: 320ms; }
+.animar-hijos > *:nth-child(6) { animation-delay: 400ms; }

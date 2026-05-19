@@ -635,3 +635,9 @@
     gap: var(--spacing-size-l);
   }
 }
+
+// Animaciones específicas del componente ---------------------------------
+
+.gestion-servidor__badge--online .gestion-servidor__badge__punto {
+  animation: pulso-estado 2s ease-out infinite;
+}

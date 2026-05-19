@@ -1,0 +1,22 @@
+// Utilidades de visibilidad. Prefijo .u- para distinguirlas de componentes.
+// Pensadas para sobreescribir comportamiento puntual sin romper el componente.
+
+.u-oculto {
+  display: none;
+}
+
+.u-invisible {
+  visibility: hidden;
+}
+
+.u-solo-lectores-pantalla {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

@@ -750,3 +750,15 @@
     gap: var(--spacing-size-s);
   }
 }
+
+// Animaciones de entrada del componente ----------------------------------
+
+.panel-principal__cabecera {
+  animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 0ms;
+}
+
+.panel-principal__estadisticas {
+  animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: 80ms;
+}

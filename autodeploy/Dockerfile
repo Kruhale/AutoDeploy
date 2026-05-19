@@ -24,8 +24,10 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
-# Healthcheck contra el propio nginx
+# Healthcheck contra el propio nginx.
+# Usamos 127.0.0.1 explícitamente porque en Alpine 'localhost' resuelve
+# antes a ::1 (IPv6) que a 127.0.0.1 y nginx escucha solo en IPv4.
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
-    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+    CMD wget --quiet --tries=1 --spider http://127.0.0.1/ || exit 1
 
 CMD ["nginx", "-g", "daemon off;"]

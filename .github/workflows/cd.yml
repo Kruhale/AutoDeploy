@@ -1,31 +1,61 @@
 name: CD
 
+# Solo dispara cuando el workflow CI ha terminado correctamente sobre main,
+# o cuando se lanza manualmente desde la pestaña Actions.
 on:
-  push:
+  workflow_run:
+    workflows: ["CI"]
     branches: ["main"]
+    types: [completed]
   workflow_dispatch:
 
 permissions:
   contents: read
   packages: write
+  actions: read
+
+# Evita que dos deploys se pisen
+concurrency:
+  group: cd-deploy
+  cancel-in-progress: false
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_BACKEND: ghcr.io/${{ github.repository_owner }}/autodeploy-backend
-  IMAGE_FRONTEND: ghcr.io/${{ github.repository_owner }}/autodeploy-frontend
 
 jobs:
   build-and-push:
     name: Construir y publicar imágenes en GHCR
     runs-on: ubuntu-latest
     timeout-minutes: 25
+    # Si vino por workflow_run, exigir que CI haya pasado
+    if: >
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    outputs:
+      sha_short: ${{ steps.tag.outputs.sha_short }}
+      owner_lc: ${{ steps.owner.outputs.lc }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Determinar SHA a desplegar
+        id: tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+            FULL_SHA="${{ github.event.workflow_run.head_sha }}"
+          else
+            FULL_SHA="${{ github.sha }}"
+          fi
+          echo "full_sha=$FULL_SHA" >> "$GITHUB_OUTPUT"
+          echo "sha_short=${FULL_SHA:0:7}" >> "$GITHUB_OUTPUT"
+          echo "::notice::Building SHA $FULL_SHA"
 
-      - name: Configurar QEMU
-        uses: docker/setup-qemu-action@v3
+      - name: Checkout en el SHA correcto
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.full_sha }}
+
+      - name: Owner en minúsculas (ghcr lo exige)
+        id: owner
+        run: echo "lc=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
 
       - name: Configurar Buildx
         uses: docker/setup-buildx-action@v3
@@ -36,14 +66,6 @@ jobs:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Calcular tag corto del commit
-        id: tag
-        run: echo "sha_short=$(git rev-parse --short HEAD)" >> "$GITHUB_OUTPUT"
-
-      - name: Lowercase del owner (ghcr exige minúsculas)
-        id: owner
-        run: echo "lc=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
 
       - name: Build & push imagen backend
         uses: docker/build-push-action@v5
@@ -70,55 +92,110 @@ jobs:
           cache-to: type=gha,scope=frontend,mode=max
 
   deploy-vps:
-    name: Desplegar al VPS por SSH
+    name: Desplegar al VPS (SSH + health + smoke + rollback)
     needs: build-and-push
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
-      - name: Calcular tag corto del commit
-        id: tag
-        run: echo "sha_short=$(echo ${{ github.sha }} | cut -c1-7)" >> "$GITHUB_OUTPUT"
-
-      - name: Deploy via SSH al VPS
+      - name: Deploy y verificación
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          NEW_TAG: ${{ needs.build-and-push.outputs.sha_short }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+          SMOKE_URL: ${{ secrets.SMOKE_URL }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT || 22 }}
+          envs: NEW_TAG,GHCR_TOKEN,GHCR_USER,SMOKE_URL,DEPLOY_PATH
+          command_timeout: 8m
+          script_stop: false
           script: |
-            set -e
-            cd /opt/autodeploy
-            echo "==> Pull del código en main"
+            set -uo pipefail
+            cd "$DEPLOY_PATH"
+            COMPOSE="docker compose -f docker-compose.prod.yml"
+
+            echo "==> 1) git fetch + reset --hard origin/main"
             git fetch origin main
             git reset --hard origin/main
 
-            echo "==> Actualizando .env con el tag del commit"
-            grep -v '^IMAGE_TAG=' .env > .env.tmp || true
-            echo "IMAGE_TAG=${{ steps.tag.outputs.sha_short }}" >> .env.tmp
-            mv .env.tmp .env
+            echo "==> 2) Guardando IMAGE_TAG anterior para rollback"
+            PREV_TAG=$(grep '^IMAGE_TAG=' .env 2>/dev/null | cut -d= -f2- || echo "latest")
+            echo "    PREV_TAG=$PREV_TAG | NEW_TAG=$NEW_TAG"
 
-            echo "==> Login en GHCR"
-            echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+            echo "==> 3) Apuntando .env al nuevo SHA"
+            if grep -q '^IMAGE_TAG=' .env; then
+              sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=$NEW_TAG|" .env
+            else
+              echo "IMAGE_TAG=$NEW_TAG" >> .env
+            fi
 
-            echo "==> Pull de imágenes y up"
-            docker compose -f docker-compose.prod.yml pull
-            docker compose -f docker-compose.prod.yml up -d --remove-orphans
+            echo "==> 4) Login en GHCR (token de la run)"
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
-            echo "==> Limpieza de imágenes obsoletas"
-            docker image prune -f
+            echo "==> 5) Pull imágenes nuevas"
+            $COMPOSE pull
 
-            echo "==> Esperando 30 segundos a que arranquen los healthchecks"
-            sleep 30
+            echo "==> 6) Recrear contenedores"
+            $COMPOSE up -d --remove-orphans
 
-            echo "==> Estado final"
-            docker compose -f docker-compose.prod.yml ps
+            echo "==> 7) Esperando que los 3 servicios reporten (healthy), timeout 120s"
+            DEADLINE=$((SECONDS + 120))
+            HEALTHY=0
+            while [ $SECONDS -lt $DEADLINE ]; do
+              CNT=$($COMPOSE ps | grep -c '(healthy)' || true)
+              echo "    healthy=$CNT/3"
+              if [ "$CNT" -ge 3 ]; then HEALTHY=1; break; fi
+              sleep 5
+            done
 
-      - name: Smoke test al dominio público
-        if: ${{ secrets.SSH_HOST != '' }}
+            rollback() {
+              echo "==> ROLLBACK: restaurando IMAGE_TAG=$PREV_TAG"
+              sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=$PREV_TAG|" .env
+              $COMPOSE up -d
+              echo "==> Estado tras rollback:"
+              $COMPOSE ps
+            }
+
+            if [ "$HEALTHY" -ne 1 ]; then
+              echo "::error::Healthcheck timeout. Estado:"
+              $COMPOSE ps
+              echo "Últimas líneas de logs por servicio:"
+              $COMPOSE logs --tail 80 || true
+              rollback
+              exit 1
+            fi
+            echo "✅ Stack healthy"
+
+            echo "==> 8) Smoke test contra $SMOKE_URL/api/estado"
+            BODY=$(curl -fsS --max-time 15 "$SMOKE_URL/api/estado" || true)
+            if ! echo "$BODY" | grep -q '"estadoGeneral":"UP"'; then
+              echo "::error::Smoke test falló. Respuesta:"
+              echo "$BODY" | head -c 500
+              rollback
+              exit 1
+            fi
+            echo "✅ Smoke OK"
+
+            echo "==> 9) Limpieza imágenes huérfanas"
+            docker image prune -f >/dev/null || true
+
+            echo "::notice::Deploy completo en SHA=$NEW_TAG"
+
+      - name: Verificación externa final (desde GHA)
         run: |
-          # Verifica que el servicio responde por HTTPS (cert puede ser autofirmado, por eso -k)
-          curl -ksSf --max-time 30 "https://${{ secrets.SSH_HOST }}/api/estado" \
+          curl -fsS --max-time 15 "${{ secrets.SMOKE_URL }}/api/estado" \
             -o /dev/null \
-            -w "Smoke test HTTP %{http_code} en %{time_total}s\n"
+            -w "External smoke: HTTP %{http_code} en %{time_total}s\n"
+
+      - name: Resumen
+        if: always()
+        run: |
+          echo "## 🚀 Deploy" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **SHA desplegado:** \`${{ needs.build-and-push.outputs.sha_short }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **URL:** ${{ secrets.SMOKE_URL }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Estado:** ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"

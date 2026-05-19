@@ -22,7 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-@AutoConfigureMockMvc
+// Saltamos la cadena de filtros (JwtAuthenticationFilter) para testear el
+// controlador sin tener que generar JWTs reales. Si en un futuro se quiere
+// cubrir la integración con seguridad, hacerlo con @WithMockUser o un test
+// específico dedicado.
+@AutoConfigureMockMvc(addFilters = false)
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ServidorControllerTest {

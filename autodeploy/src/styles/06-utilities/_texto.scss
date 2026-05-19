@@ -1,0 +1,28 @@
+// Utilidades de texto. Prefijo .u- para distinguirlas de componentes.
+
+.u-texto-centrado {
+  text-align: center;
+}
+
+.u-texto-derecha {
+  text-align: right;
+}
+
+.u-texto-izquierda {
+  text-align: left;
+}
+
+.u-texto-truncado {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.u-mayusculas {
+  text-transform: uppercase;
+}
+
+.u-romper-palabra {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}

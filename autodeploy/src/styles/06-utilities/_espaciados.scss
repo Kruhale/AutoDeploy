@@ -1,0 +1,15 @@
+// Utilidades de espaciado. Reutilizan los tokens de spacing del proyecto.
+// Útiles para ajustes puntuales fuera del flujo BEM.
+
+.u-sin-margen     { margin: 0; }
+.u-sin-padding    { padding: 0; }
+
+.u-mt-s  { margin-top: var(--spacing-size-s); }
+.u-mt-m  { margin-top: var(--spacing-size-m); }
+.u-mt-l  { margin-top: var(--spacing-size-l); }
+.u-mt-xl { margin-top: var(--spacing-size-xl); }
+
+.u-mb-s  { margin-bottom: var(--spacing-size-s); }
+.u-mb-m  { margin-bottom: var(--spacing-size-m); }
+.u-mb-l  { margin-bottom: var(--spacing-size-l); }
+.u-mb-xl { margin-bottom: var(--spacing-size-xl); }

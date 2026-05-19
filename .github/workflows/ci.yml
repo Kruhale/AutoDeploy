@@ -12,8 +12,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  backend-build:
-    name: Backend (Java 21 + Maven)
+  backend-test:
+    name: Backend (Java 21 + Maven, tests + package)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -31,18 +31,27 @@ jobs:
           distribution: "temurin"
           cache: "maven"
 
-      - name: Compilar y empaquetar (sin tests)
-        run: mvn -B -DskipTests package
+      - name: Verify (compilar + tests + empaquetar)
+        run: mvn -B verify
 
       - name: Subir JAR como artefacto
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar-${{ github.sha }}
           path: backend/target/*.jar
           retention-days: 7
 
-  frontend-build:
-    name: Frontend (Node 22 + Angular)
+      - name: Subir reportes de tests (siempre, incluso si fallan)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports-${{ github.sha }}
+          path: backend/target/surefire-reports/
+          retention-days: 7
+
+  frontend-test:
+    name: Frontend (Node 22 + Angular, tests + build)
     runs-on: ubuntu-latest
     timeout-minutes: 15
     defaults:
@@ -63,15 +72,14 @@ jobs:
       - name: Instalar dependencias (npm ci)
         run: npm ci --no-audit --no-fund
 
+      - name: Tests unitarios (Karma + ChromeHeadless)
+        run: npm run test:unit
+
       - name: Build de producción
         run: npm run build
 
-      - name: Tests unitarios (Karma headless)
-        run: npm run test:unit
-        env:
-          CHROME_BIN: /usr/bin/chromium-browser
-
       - name: Subir bundle como artefacto
+        if: success()
         uses: actions/upload-artifact@v4
         with:
           name: frontend-dist-${{ github.sha }}
@@ -87,14 +95,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: hadolint sobre backend/Dockerfile
+      - name: hadolint backend/Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: backend/Dockerfile
           failure-threshold: warning
           ignore: DL3008,DL3018
 
-      - name: hadolint sobre autodeploy/Dockerfile
+      - name: hadolint autodeploy/Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: autodeploy/Dockerfile

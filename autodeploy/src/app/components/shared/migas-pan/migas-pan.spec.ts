@@ -1,23 +1,25 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideRouter } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { MigasPan } from "./migas-pan";
 
-import { MigasPan } from './migas-pan';
-
-describe('MigasPan', () => {
+describe("MigasPan", function() {
   let component: MigasPan;
   let fixture: ComponentFixture<MigasPan>;
 
-  beforeEach(async () => {
+  beforeEach(async function() {
     await TestBed.configureTestingModule({
-      imports: [MigasPan]
-    })
-    .compileComponents();
+      imports: [MigasPan, TranslateModule.forRoot()],
+      providers: [provideRouter([])]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(MigasPan);
+    fixture.componentRef.setInput("migas", []);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
 });

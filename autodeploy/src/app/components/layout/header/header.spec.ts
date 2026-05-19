@@ -1,23 +1,30 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { provideHttpClient } from "@angular/common/http";
+import { provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideRouter } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
+import { Header } from "./header";
 
-import { Header } from './header';
-
-describe('Header', () => {
+describe("Header", function() {
   let component: Header;
   let fixture: ComponentFixture<Header>;
 
-  beforeEach(async () => {
+  beforeEach(async function() {
     await TestBed.configureTestingModule({
-      imports: [Header]
-    })
-    .compileComponents();
+      imports: [Header, TranslateModule.forRoot()],
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting()
+      ]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Header);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
 });

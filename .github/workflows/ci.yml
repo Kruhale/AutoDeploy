@@ -85,12 +85,21 @@ jobs:
       - name: Instalar dependencias (npm ci)
         run: npm ci --no-audit --no-fund
 
-      - name: Tests unitarios (Karma + ChromeHeadlessCI)
-        run: npm run test:ci
+      - name: Wrapper de Chrome con --no-sandbox para CI
+        # Algunos entornos CI (sandboxing/cgroups) hacen que Chromium falle al
+        # crear su sandbox. Envolviendo el binario en un script que añade
+        # --no-sandbox evitamos tener que tocar la config de Karma.
+        run: |
+          cat > /tmp/chrome-ci <<'SH'
+          #!/bin/bash
+          exec /usr/bin/google-chrome --no-sandbox --disable-gpu --disable-dev-shm-usage "$@"
+          SH
+          chmod +x /tmp/chrome-ci
+
+      - name: Tests unitarios (Karma + ChromeHeadless via wrapper)
+        run: npm run test:unit
         env:
-          # En el runner ubuntu-latest Google Chrome viene preinstalado aquí.
-          # karma-chrome-launcher usa CHROME_BIN para localizarlo.
-          CHROME_BIN: /usr/bin/google-chrome
+          CHROME_BIN: /tmp/chrome-ci
 
       - name: Build de producción
         run: npm run build

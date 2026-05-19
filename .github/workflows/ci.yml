@@ -19,6 +19,19 @@ jobs:
     defaults:
       run:
         working-directory: backend
+    # MongoDB efímero para los @SpringBootTest (config en application-test.properties
+    # apunta a mongodb://localhost:27017/autodeploy-test).
+    services:
+      mongodb:
+        image: mongo:8
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1}).ok' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --health-start-period 30s
 
     steps:
       - name: Checkout
@@ -74,6 +87,10 @@ jobs:
 
       - name: Tests unitarios (Karma + ChromeHeadless)
         run: npm run test:unit
+        env:
+          # En el runner ubuntu-latest Google Chrome viene preinstalado aquí.
+          # karma-chrome-launcher usa CHROME_BIN para localizarlo.
+          CHROME_BIN: /usr/bin/google-chrome
 
       - name: Build de producción
         run: npm run build

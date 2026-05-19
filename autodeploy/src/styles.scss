@@ -1,11 +1,27 @@
+// Orquestador ITCSS. Las capas se cargan de menos a más específicas.
+// Cambiar este orden rompe la cascada — siempre añadir nuevos archivos en
+// la sección de su capa.
+
+// 00 · Settings — variables y tokens, no genera CSS por sí solo.
 @use "styles/00-settings/fonts";
 @use "styles/00-settings/css-variables";
 @use "styles/00-settings/variables";
+
+// 01 · Tools — mixins, helpers y animaciones reutilizables.
 @use "styles/01-tools/mixins";
+@use "styles/01-tools/animaciones";
+
+// 02 · Generic — reset, normalize.
 @use "styles/02-generic/reset";
+
+// 03 · Elements — estilos base sobre tags HTML (button, input, ...).
 @use "styles/03-elements/buttons";
 @use "styles/03-elements/forms";
+
+// 04 · Layout — estructura de página (header, main, footer, grids).
 @use "styles/04-layout/layout";
+
+// 05 · Components — bloques BEM concretos. Orden: marketing → app → páginas.
 @use "styles/05-components/seccion-bienvenida";
 @use "styles/05-components/seccion-funcionalidades";
 @use "styles/05-components/workflow";
@@ -25,17 +41,16 @@
 @use "styles/05-components/logs-terminal";
 @use "styles/05-components/visor-eventos";
 @use "styles/05-components/terminal-interactiva";
+@use "styles/05-components/terminal-ssh";
+@use "styles/05-components/banner-cookies";
+@use "styles/05-components/editorial-comunes";
 @use "styles/05-components/pagina-login";
 @use "styles/05-components/pagina-registro";
-@use "styles/05-components/animaciones";
 @use "styles/05-components/pagina-legal";
-@use "styles/05-components/banner-cookies";
 @use "styles/05-components/pagina-billing";
 @use "styles/05-components/pagina-networking";
 @use "styles/05-components/pagina-firewall";
 @use "styles/05-components/pagina-backups";
-@use "styles/05-components/editorial-comunes";
-@use "styles/05-components/terminal-ssh";
 @use "styles/05-components/pagina-terminal-selector";
 @use "styles/05-components/pagina-asistente-ia";
 @use "styles/05-components/pagina-recursos";
@@ -44,4 +59,10 @@
 @use "styles/05-components/pagina-contacto";
 @use "styles/05-components/pagina-comunidad";
 
+// 06 · Utilities — helpers con prefijo .u-. Última capa, gana por orden.
+@use "styles/06-utilities/visibilidad";
+@use "styles/06-utilities/texto";
+@use "styles/06-utilities/espaciados";
+
+// Vendor CSS (xterm) — al final para que el reset no lo machaque.
 @import "@xterm/xterm/css/xterm.css";

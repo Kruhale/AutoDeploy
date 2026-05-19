@@ -110,6 +110,7 @@ export class Register {
 
     try {
       await this.usuarioService.registrar(nombre, email, password);
+      await this.usuarioService.login(email, password);
       this.authService.login();
       this.router.navigate(["/app"]);
     } catch (error: any) {

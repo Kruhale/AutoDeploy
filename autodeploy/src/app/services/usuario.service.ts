@@ -15,6 +15,7 @@ interface DatosUsuario {
   plan: string;
   fechaFinSuscripcion: string | null;
   idioma: string;
+  token?: string | null;
 }
 
 @Injectable({ providedIn: "root" })
@@ -201,6 +202,7 @@ export class UsuarioService {
   }
 
   limpiar(): void {
+    sessionStorage.removeItem("token");
     sessionStorage.removeItem("usuarioId");
     sessionStorage.removeItem("nombre");
     sessionStorage.removeItem("email");
@@ -214,6 +216,10 @@ export class UsuarioService {
   }
 
   private guardarEnSesion(datos: DatosUsuario): void {
+    if (datos.token) {
+      sessionStorage.setItem("token", datos.token);
+    }
+
     sessionStorage.setItem("usuarioId", datos.id);
     sessionStorage.setItem("nombre", datos.nombre);
     sessionStorage.setItem("email", datos.email);

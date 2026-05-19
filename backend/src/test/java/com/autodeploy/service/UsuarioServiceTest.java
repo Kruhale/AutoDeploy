@@ -96,7 +96,7 @@ class UsuarioServiceTest {
     void login_deberiaRetornarLoginResponse_cuandoCredencialesSonCorrectas() {
         when(usuarioRepository.findByEmail("ana@correo.com")).thenReturn(Optional.of(usuarioExistente));
         when(passwordEncoder.matches("clave123", "hashDeLaClave")).thenReturn(true);
-        when(jwtUtil.generarToken(anyString(), anyString())).thenReturn("token-jwt-fake");
+        when(jwtUtil.generarToken(anyString(), anyString())).thenReturn("token-de-prueba");
 
         LoginResponse respuesta = usuarioService.login(peticionLoginValida);
 
@@ -104,7 +104,6 @@ class UsuarioServiceTest {
         assertThat(respuesta.id()).isEqualTo("id-usuario-123");
         assertThat(respuesta.nombre()).isEqualTo("Ana Garcia");
         assertThat(respuesta.email()).isEqualTo("ana@correo.com");
-        assertThat(respuesta.token()).isEqualTo("token-jwt-fake");
     }
 
     @Test

@@ -87,6 +87,13 @@
           <input class="campo__input" name="password" type="password" [placeholder]="'onboarding.formulario.clavePlaceholder' | translate" [ngModel]="passwordServidor()" (ngModelChange)="passwordServidor.set($event)">
         </section>
       }
+      @if (metodoAutenticacion() === 'key') {
+        <section class="campo">
+          <label class="campo__etiqueta">{{ "onboarding.formulario.claveSsh" | translate }}</label>
+          <textarea class="campo__textarea" name="claveSshPrivada" rows="8" spellcheck="false" autocomplete="off" [placeholder]="'onboarding.formulario.claveSshPlaceholder' | translate" [ngModel]="claveSshPrivada()" (ngModelChange)="claveSshPrivada.set($event)"></textarea>
+          <p class="campo__pista">{{ "onboarding.formulario.claveSshPista" | translate }}</p>
+        </section>
+      }
     </section>
   </section>
 

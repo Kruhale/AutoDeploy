@@ -39,6 +39,30 @@ services:
       start_period: 60s
     restart: unless-stopped
 
+  # Contenedor sandbox para probar la conexión SSH del asistente IA sin tocar
+  # un VPS externo real. Sin sudo, claves SSH solamente, reseteable con
+  # `docker compose restart sandbox-ssh`. El SSH del contenedor escucha en 2222
+  # y se publica en el puerto 2222 del host, así desde la app se configura como
+  # un servidor más: host = autodeploy.kruhale.com, puerto = 2222, usuario = demo.
+  sandbox-ssh:
+    image: linuxserver/openssh-server:latest
+    container_name: autodeploy-sandbox
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Madrid
+      USER_NAME: demo
+      PASSWORD_ACCESS: "false"
+      SUDO_ACCESS: "false"
+      PUBLIC_KEY: ${SANDBOX_PUBLIC_KEY}
+    volumes:
+      - sandbox-config:/config
+    ports:
+      - "2222:2222"
+    networks:
+      - red-interna
+    restart: unless-stopped
+
   frontend:
     image: ghcr.io/kruhale/autodeploy-frontend:${IMAGE_TAG:-latest}
     build: ./autodeploy
@@ -71,3 +95,4 @@ volumes:
   mongodb-datos:
   backend-logs:
   nginx-logs:
+  sandbox-config:

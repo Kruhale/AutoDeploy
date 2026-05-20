@@ -21,6 +21,7 @@ public class Servidor {
     private LocalDateTime fechaCreacion;
     private boolean backupsAutomaticosActivos = false;
     private String horaBackupAutomatico = "03:00";
+    private int fallosConsecutivosSsh = 0;
 
     public Servidor() {
         this.puertoSsh = 22;
@@ -30,7 +31,11 @@ public class Servidor {
         this.fechaCreacion = LocalDateTime.now();
         this.backupsAutomaticosActivos = false;
         this.horaBackupAutomatico = "03:00";
+        this.fallosConsecutivosSsh = 0;
     }
+
+    public int getFallosConsecutivosSsh() { return fallosConsecutivosSsh; }
+    public void setFallosConsecutivosSsh(int fallosConsecutivosSsh) { this.fallosConsecutivosSsh = fallosConsecutivosSsh; }
 
     public boolean isBackupsAutomaticosActivos() { return backupsAutomaticosActivos; }
     public void setBackupsAutomaticosActivos(boolean backupsAutomaticosActivos) { this.backupsAutomaticosActivos = backupsAutomaticosActivos; }

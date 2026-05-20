@@ -32,16 +32,19 @@ public class MonitorMetricasService {
     private final MetricaServidorRepository metricaServidorRepository;
     private final GestorSesionesSshService gestorSesionesSshService;
     private final MetricasWebSocketHandler metricasWebSocketHandler;
+    private final ReconexionService reconexionService;
 
     public MonitorMetricasService(
             ServidorRepository servidorRepository,
             MetricaServidorRepository metricaServidorRepository,
             GestorSesionesSshService gestorSesionesSshService,
-            MetricasWebSocketHandler metricasWebSocketHandler) {
+            MetricasWebSocketHandler metricasWebSocketHandler,
+            ReconexionService reconexionService) {
         this.servidorRepository = servidorRepository;
         this.metricaServidorRepository = metricaServidorRepository;
         this.gestorSesionesSshService = gestorSesionesSshService;
         this.metricasWebSocketHandler = metricasWebSocketHandler;
+        this.reconexionService = reconexionService;
     }
 
     @Scheduled(fixedDelay = 30000, initialDelay = 10000)
@@ -60,15 +63,20 @@ public class MonitorMetricasService {
         MetricaServidor metricaResultado = new MetricaServidor();
         metricaResultado.setServidorId(servidor.getId());
 
+        boolean conexionFunciono;
         try {
             String salidaCruda = gestorSesionesSshService.ejecutar(servidor.getId(), COMANDO_RECOLECCION);
             rellenarDesdeSalida(metricaResultado, salidaCruda);
             metricaResultado.setSesionActiva(true);
+            conexionFunciono = true;
         } catch (Exception excepcionRecoleccion) {
             LOGGER.warn("No se pudo recolectar metricas de {} ({}): {}",
                     servidor.getNombre(), servidor.getDireccionIp(), excepcionRecoleccion.getMessage());
             metricaResultado.setSesionActiva(false);
+            conexionFunciono = false;
         }
+
+        reconexionService.anotarPing(servidor, conexionFunciono);
 
         MetricaServidor metricaGuardada = metricaServidorRepository.save(metricaResultado);
         metricasWebSocketHandler.difundirMetrica(metricaGuardada);

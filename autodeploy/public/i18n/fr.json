@@ -711,7 +711,10 @@
       "authMethodKey": "Clé SSH",
       "contrasena": "Mot de passe",
       "authMethodContrasena": "Mot de passe",
-      "clavePlaceholder": "Saisissez le mot de passe du serveur"
+      "clavePlaceholder": "Saisissez le mot de passe du serveur",
+      "claveSsh": "Clé SSH privée",
+      "claveSshPlaceholder": "-----BEGIN OPENSSH PRIVATE KEY-----\n…\n-----END OPENSSH PRIVATE KEY-----",
+      "claveSshPista": "Collez le contenu complet de votre clé privée, y compris les lignes BEGIN et END."
     },
     "ayuda": {
       "titulo": "Besoin d'aide ?",

@@ -63,6 +63,11 @@
   outline-offset: 2px;
 }
 
+.campo__pista {
+  font-size: var(--font-size-xs);
+  color: var(--texto-apagado);
+}
+
 .campo__select {
   padding: 0.625rem var(--spacing-size-l);
   background: rgba(240, 236, 226, 0.03);

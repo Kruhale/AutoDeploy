@@ -66,7 +66,7 @@
     transition: border-color var(--duration-base) ease, background-color var(--duration-base) ease;
 
     &:hover {
-      border-color: rgba(240, 236, 226, 0.2);
+      border-color: var(--superficie-hover);
     }
 
     &:focus {

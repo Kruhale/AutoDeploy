@@ -343,11 +343,11 @@
     transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
-      background-color: rgba(240, 236, 226, 0.025);
+      background-color: var(--superficie-suave);
     }
 
     &:focus-within {
-      background-color: rgba(240, 236, 226, 0.04);
+      background-color: var(--superficie-normal);
       outline: 2px solid var(--amarillo-normal);
       outline-offset: -2px;
     }
@@ -462,7 +462,7 @@
     transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
-      background-color: rgba(240, 236, 226, 0.025);
+      background-color: var(--superficie-suave);
     }
 
     &:focus-within {
@@ -662,7 +662,7 @@
       border: 1px solid transparent;
 
       &--tipo {
-        background: rgba(240, 236, 226, 0.04);
+        background: var(--superficie-normal);
         color: var(--texto-medio);
         border-color: var(--borde-normal);
       }

@@ -103,7 +103,7 @@
         background-color: var(--amarillo-normal-hover);
         transform: translateY(-1px);
         gap: 0.95rem;
-        box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
+        box-shadow: 0 0.625rem 1.25rem var(--amarillo-transparente-022);
       }
 
       &:active {
@@ -136,7 +136,7 @@
 
       &:hover {
         border-color: hsla(40, 33.33%, 91.37%, 0.26);
-        background-color: rgba(240, 236, 226, 0.03);
+        background-color: var(--superficie-suave);
         transform: translateY(-1px);
       }
 
@@ -203,7 +203,7 @@
       align-items: center;
       gap: 0.45rem;
       padding: 0.85rem 1.1rem;
-      background: rgba(240, 236, 226, 0.025);
+      background: var(--superficie-suave);
       border-bottom: 1px solid var(--borde-suave);
     }
 

@@ -31,12 +31,12 @@
 
   &--secundario {
     @extend %boton-base;
-    background: rgba(240, 236, 226, 0.03);
+    background: var(--superficie-suave);
     color: var(--texto-claro);
     font-weight: var(--font-weight-semibold);
     border: 1px solid var(--borde-normal);
 
-    &:hover     { border-color: rgba(240, 236, 226, 0.2); }
+    &:hover     { border-color: var(--superficie-hover); }
     &:active    { transform: scale(0.98); }
     &:focus-visible {
       outline: 2px solid var(--amarillo-normal);
@@ -54,7 +54,7 @@
 
     &:hover {
       color: var(--texto-claro);
-      border-color: rgba(240, 236, 226, 0.2);
+      border-color: var(--superficie-hover);
     }
     &:active    { transform: scale(0.98); }
     &:focus-visible {
@@ -66,12 +66,12 @@
 
   &--peligro {
     @extend %boton-base;
-    background: rgba(239, 68, 68, 0.08);
+    background: var(--rojo-transparente-008);
     color: var(--rojo-normal);
     font-weight: var(--font-weight-semibold);
-    border: 1px solid rgba(239, 68, 68, 0.15);
+    border: 1px solid var(--rojo-transparente-015);
 
-    &:hover     { background: rgba(239, 68, 68, 0.15); }
+    &:hover     { background: var(--rojo-transparente-015); }
     &:active    { transform: scale(0.98); }
     &:focus-visible {
       outline: 2px solid var(--rojo-normal);

@@ -14,7 +14,7 @@
 
   &__input {
     padding: 0.625rem var(--spacing-size-l);
-    background: rgba(240, 236, 226, 0.03);
+    background: var(--superficie-suave);
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-m);
     color: var(--texto-claro);
@@ -38,7 +38,7 @@
 
   &__textarea {
     padding: 0.625rem var(--spacing-size-l);
-    background: rgba(240, 236, 226, 0.03);
+    background: var(--superficie-suave);
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-m);
     color: var(--texto-claro);
@@ -68,7 +68,7 @@
 
   &__select {
     padding: 0.625rem var(--spacing-size-l);
-    background: rgba(240, 236, 226, 0.03);
+    background: var(--superficie-suave);
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-m);
     color: var(--texto-claro);
@@ -122,7 +122,7 @@
   position: relative;
   width: 2.75rem;
   height: 1.5rem;
-  background: rgba(240, 236, 226, 0.1);
+  background: var(--superficie-hover);
   border: none;
   padding: 0;
   border-radius: var(--radius-full);

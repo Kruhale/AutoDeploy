@@ -26,7 +26,7 @@
     transition: background-color var(--duration-base) ease;
 
     &:hover {
-      background-color: rgba(240, 236, 226, 0.04);
+      background-color: var(--superficie-normal);
     }
 
     &:focus-within {
@@ -46,12 +46,12 @@
     font-size: var(--font-size-sm);
 
     &--verde {
-      background: rgba(34, 197, 94, 0.15);
+      background: var(--verde-transparente-015);
       color: var(--verde-normal);
     }
 
     &--rojo {
-      background: rgba(239, 68, 68, 0.15);
+      background: var(--rojo-transparente-015);
       color: var(--rojo-normal);
     }
 

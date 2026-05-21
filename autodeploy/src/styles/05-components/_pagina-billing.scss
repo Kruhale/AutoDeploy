@@ -86,7 +86,7 @@
     &:hover {
       background-color: var(--amarillo-normal-hover);
       transform: translateY(-1px);
-      box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
+      box-shadow: 0 0.625rem 1.25rem var(--amarillo-transparente-022);
     }
 
     &:active {
@@ -412,7 +412,7 @@
 
     &:hover {
       border-color: hsla(40, 33.33%, 91.37%, 0.22);
-      background-color: rgba(240, 236, 226, 0.04);
+      background-color: var(--superficie-normal);
       transform: translateY(-1px);
     }
 
@@ -503,7 +503,7 @@
       &__relleno {
         position: absolute;
         inset: 0 auto 0 0;
-        background: linear-gradient(90deg, var(--amarillo-normal), var(--naranja-normal));
+        background: var(--gradient-acento-amarillo-naranja);
         border-radius: 999px;
         transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
       }
@@ -593,7 +593,7 @@
         background-color: var(--amarillo-normal-hover);
         transform: translateY(-1px);
         gap: 0.7rem;
-        box-shadow: 0 0.5rem 1rem hsla(47, 86%, 56%, 0.22);
+        box-shadow: 0 0.5rem 1rem var(--amarillo-transparente-022);
       }
 
       &:active {
@@ -713,7 +713,7 @@
       height: 3.5rem;
       border-radius: 50%;
       border: 1px solid var(--borde-normal);
-      background-color: rgba(240, 236, 226, 0.025);
+      background-color: var(--superficie-suave);
       color: var(--texto-apagado);
       font-size: 1.15rem;
     }
@@ -770,7 +770,7 @@
       transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
       &:hover {
-        background-color: rgba(240, 236, 226, 0.025);
+        background-color: var(--superficie-suave);
       }
 
       &:focus-within {

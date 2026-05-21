@@ -3,7 +3,7 @@
 .asistente-ia {
   display: flex;
   flex-direction: column;
-  min-height: calc(100dvh - 5rem);
+  min-height: calc(100dvh - var(--altura-cabecera-con-margen));
   width: 100%;
   gap: var(--spacing-size-2xl);
   animation: entrar-abajo 620ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -177,7 +177,7 @@
     &:hover {
       color: var(--texto-claro);
       border-color: var(--texto-apagado);
-      background-color: rgba(240, 236, 226, 0.03);
+      background-color: var(--superficie-suave);
     }
 
     &:active {

@@ -54,7 +54,7 @@
     align-items: center;
     gap: var(--spacing-size-s);
     padding: 0.5rem var(--spacing-size-l);
-    background: rgba(240, 236, 226, 0.03);
+    background: var(--superficie-suave);
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-m);
     color: var(--texto-apagado);
@@ -136,7 +136,7 @@
 
     &:hover {
       color: var(--texto-claro);
-      background: rgba(240, 236, 226, 0.03);
+      background: var(--superficie-suave);
     }
 
     &:focus-visible {

@@ -103,7 +103,7 @@
     &:hover {
       background-color: var(--amarillo-normal-hover);
       transform: translateY(-1px);
-      box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
+      box-shadow: 0 0.625rem 1.25rem var(--amarillo-transparente-022);
     }
 
     &:active {
@@ -280,7 +280,7 @@
 
     &:hover:not(:disabled) {
       border-color: hsla(40, 33.33%, 91.37%, 0.24);
-      background-color: rgba(240, 236, 226, 0.045);
+      background-color: var(--superficie-normal);
       transform: translateY(-1px);
     }
 
@@ -318,7 +318,7 @@
       height: 3rem;
       border-radius: 50%;
       border: 1px solid var(--borde-normal);
-      background-color: rgba(240, 236, 226, 0.025);
+      background-color: var(--superficie-suave);
       color: var(--texto-apagado);
       font-size: 1.15rem;
       margin-bottom: 0.4rem;

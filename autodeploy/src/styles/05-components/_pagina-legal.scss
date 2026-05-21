@@ -1,7 +1,7 @@
 @use "../01-tools/mixins" as *;
 
 .pagina-legal {
-  min-height: calc(100vh - 3.5rem);
+  min-height: calc(100vh - var(--altura-cabecera));
   padding: var(--spacing-size-6xl) var(--spacing-size-3xl);
 
   @include movil {

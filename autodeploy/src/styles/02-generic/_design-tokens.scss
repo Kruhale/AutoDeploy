@@ -49,10 +49,29 @@
 
   /* === TRANSPARENCIAS === */
   --amarillo-transparente-008: hsla(47, 86%, 56%, 0.08);
+  --amarillo-transparente-015: hsla(47, 86%, 56%, 0.15);
+  --amarillo-transparente-022: hsla(47, 86%, 56%, 0.22);
   --amarillo-transparente-030: hsla(47, 86%, 56%, 0.3);
   --cyan-transparente-008: hsla(191, 72%, 44%, 0.08);
+  --cyan-transparente-010: hsla(191, 72%, 44%, 0.1);
+  --cyan-transparente-015: hsla(191, 72%, 44%, 0.15);
+  --rojo-transparente-003: hsla(0, 79.17%, 60.59%, 0.03);
+  --rojo-transparente-006: hsla(0, 79.17%, 60.59%, 0.06);
+  --rojo-transparente-008: hsla(0, 79.17%, 60.59%, 0.08);
+  --rojo-transparente-010: hsla(0, 79.17%, 60.59%, 0.1);
+  --rojo-transparente-015: hsla(0, 79.17%, 60.59%, 0.15);
+  --rojo-transparente-050: hsla(0, 79.17%, 60.59%, 0.5);
+  --verde-transparente-010: hsla(142.09, 70.56%, 45.29%, 0.1);
+  --verde-transparente-015: hsla(142.09, 70.56%, 45.29%, 0.15);
   --negro-transparente-020: hsla(0, 0%, 0%, 0.2);
   --negro-transparente-040: hsla(0, 0%, 0%, 0.4);
+  --negro-transparente-070: hsla(0, 0%, 0%, 0.7);
+
+  /* === SUPERFICIES (texto-claro con alpha para fondos sutiles) === */
+  --superficie-suave: hsla(40, 33.33%, 91.37%, 0.025);
+  --superficie-normal: hsla(40, 33.33%, 91.37%, 0.05);
+  --superficie-elevada: hsla(40, 33.33%, 91.37%, 0.08);
+  --superficie-hover: hsla(40, 33.33%, 91.37%, 0.12);
 
   /* === TIPOGRAFÍA === */
   --font-primary: 'Outfit', sans-serif;
@@ -117,6 +136,10 @@
   --shadow-hover-amarillo: 0 0.5rem 1.25rem hsla(47, 86%, 56%, 0.06);
   --shadow-hover-cyan: 0 0.5rem 1.25rem hsla(191, 72%, 44%, 0.06);
 
+  /* === GRADIENTES === */
+  --gradient-glow-amarillo: linear-gradient(180deg, var(--amarillo-transparente-008), transparent);
+  --gradient-acento-amarillo-naranja: linear-gradient(90deg, var(--amarillo-normal), var(--naranja-normal));
+
   /* === TRANSICIONES === */
   --duration-fast: 150ms;
   --duration-base: 200ms;
@@ -131,6 +154,8 @@
 
   /* === LAYOUT === */
   --sidebar-ancho: 16.25rem;
+  --altura-cabecera: 3.5rem;
+  --altura-cabecera-con-margen: 5rem;
 
   /* === FONDO CABECERA (con opacidad para blur) === */
   --fondo-cabecera: hsla(30, 5.56%, 10%, 0.9);
@@ -157,6 +182,11 @@
 
   --borde-normal: hsla(30, 10%, 12%, 0.12);
   --borde-suave: hsla(30, 10%, 12%, 0.07);
+
+  --superficie-suave: hsla(30, 10%, 12%, 0.025);
+  --superficie-normal: hsla(30, 10%, 12%, 0.05);
+  --superficie-elevada: hsla(30, 10%, 12%, 0.08);
+  --superficie-hover: hsla(30, 10%, 12%, 0.12);
 
   --fondo-cabecera: hsla(40, 18%, 96%, 0.92);
 

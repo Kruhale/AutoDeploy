@@ -73,6 +73,10 @@
     transform: translateY(-2px);
   }
 
+  &:active {
+    transform: translateY(-1px);
+  }
+
   &:focus-within {
     outline: 2px solid var(--amarillo-normal);
     outline-offset: 2px;

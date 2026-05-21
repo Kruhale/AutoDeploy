@@ -88,7 +88,7 @@ Maven Surefire: Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
 
 ## Pruebas de accesibilidad
 
-Pendiente y planificado para sprint final (B5 del plan DIW):
+El refactor DIW (PRs #220 a #248) ya aplicó los mecanismos WCAG 2.1 AA (skip link, `aria-current="page"`, `aria-label` distintivo, `prefers-reduced-motion`, contrastes ajustados, jerarquía semántica). Lo que queda pendiente son las **capturas de auditoría** que documentan el resultado:
 
 - **Lighthouse** (Chrome DevTools) sobre 3 páginas (landing, login, dashboard).
 - **WAVE** (extensión Chrome) para listar errores de contraste y semántica.
@@ -96,7 +96,7 @@ Pendiente y planificado para sprint final (B5 del plan DIW):
 - **VoiceOver** (macOS) — navegación completa con teclado y lectura.
 - **Cross-browser**: Chrome, Firefox, Safari.
 
-Capturas y resultados se guardan en `docs/accesibilidad/capturas/` y se documentan en `docs/accesibilidad/README.md`.
+Las capturas se guardarán en `docs/accesibilidad/capturas/` y los resultados ya están documentados en `docs/accesibilidad/README.md` (8 secciones de Rublicas11).
 
 ## Pruebas manuales realizadas durante el desarrollo
 

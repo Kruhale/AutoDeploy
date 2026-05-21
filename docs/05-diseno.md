@@ -128,10 +128,10 @@ flowchart LR
 
 Servicios Docker (`docker-compose.prod.yml`):
 
-- `frontend` — nginx + estáticos Angular. Único puerto expuesto al host (8082).
+- `frontend` — nginx + estáticos Angular. Único puerto HTTP expuesto al host (8082).
 - `backend` — Spring Boot. Sólo accesible por la red Docker `red-interna`.
 - `mongodb` — MongoDB 8. Idem, sólo red interna.
-- `sandbox-ssh` (opcional, dev) — Contenedor `linuxserver/openssh-server` para probar el panel sin un VPS real.
+- `sandbox-ssh` — Contenedor `linuxserver/openssh-server` que expone el puerto 2222 al host. Sirve como VPS demo para probar el panel sin necesidad de un servidor real, pero forma parte del despliegue de producción (es la "demo box" pública del SaaS).
 
 ## Diseño de la API
 
@@ -169,5 +169,5 @@ curl -X POST https://autodeploy.kruhale.com/api/login \
 
 WebSockets:
 - `/ws/terminal` — Sesión SSH interactiva (xterm.js ↔ MINA SSHD).
-- `/ws/metricas` — Streaming de CPU/RAM/disco/red cada segundo.
+- `/ws/metricas` — Streaming de CPU/RAM/disco/red cada 30 segundos.
 - `/ws/notificaciones/{usuarioId}` — Notificaciones push (toast, badge contador).

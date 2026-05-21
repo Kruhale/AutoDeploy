@@ -1,52 +1,50 @@
 @use "../01-tools/mixins" as *;
+@use "../01-tools/funciones" as *;
 
 .seccion-llamada-accion {
-  padding: 2rem 0 4rem;
+  padding: token-espacio(3xl) 0 token-espacio(6xl);
 
   &__contenedor {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 3rem;
-    padding: 3rem;
-    background: var(--fondo-tarjeta);
-    border: 1px solid var(--borde-normal);
-    border-radius: var(--radius-l);
+    @include flex-entre;
+    gap: token-espacio(5xl);
+    padding: token-espacio(5xl);
+    background: token-color(fondo-tarjeta);
+    border: 1px solid token-color(borde-normal);
+    border-radius: token-radio(l);
 
     @include movil {
       flex-direction: column;
       align-items: flex-start;
-      gap: 2rem;
-      padding: 2rem;
+      gap: token-espacio(3xl);
+      padding: token-espacio(3xl);
     }
   }
 
   &__texto {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    @include flex-columna;
+    gap: token-espacio(m);
     flex: 1;
   }
 
   &__titulo {
     font-family: var(--font-secondary);
-    font-size: 1.75rem;
+    font-size: fluido(1.5rem, 2rem);
     font-weight: var(--font-weight-bold);
     letter-spacing: -0.75px;
-    color: var(--texto-claro);
-    line-height: 1.15;
+    color: token-color(texto-claro);
+    line-height: var(--line-height-tight);
   }
 
   &__descripcion {
-    font-size: 0.9375rem;
-    line-height: 1.6;
-    color: var(--texto-medio);
+    font-size: var(--font-size-md);
+    line-height: var(--line-height-relaxed);
+    color: token-color(texto-medio);
     max-width: 28rem;
   }
 
   &__botones {
     display: flex;
-    gap: 1rem;
+    gap: token-espacio(l);
     flex-shrink: 0;
   }
 
@@ -54,24 +52,18 @@
     &--primario {
       display: flex;
       align-items: center;
-      padding: 0.875rem 2rem;
-      background-color: var(--amarillo-normal);
-      color: var(--fondo-oscuro);
-      font-size: 0.875rem;
+      padding: token-espacio(ml) token-espacio(3xl);
+      background-color: token-color(amarillo-normal);
+      color: token-color(fondo-oscuro);
+      font-size: var(--font-size-md);
       font-weight: var(--font-weight-bold);
-      border-radius: var(--radius-l);
-      transition: background-color var(--duration-base) ease, transform var(--duration-fast) ease;
+      border-radius: token-radio(l);
+      @include transicion(background-color, transform);
 
-      &:hover {
-        background-color: var(--amarillo-normal-hover);
-      }
-
-      &:active {
-        transform: scale(0.98);
-      }
-
+      &:hover  { background-color: token-color(amarillo-normal-hover); }
+      &:active { transform: scale(0.98); }
       &:focus-visible {
-        outline: 2px solid var(--amarillo-normal);
+        outline: 2px solid token-color(amarillo-normal);
         outline-offset: 2px;
       }
     }
@@ -79,21 +71,18 @@
     &--secundario {
       display: flex;
       align-items: center;
-      padding: 0.875rem 2rem;
+      padding: token-espacio(ml) token-espacio(3xl);
       background: transparent;
-      border: 1px solid var(--borde-normal);
-      border-radius: var(--radius-l);
-      color: var(--texto-claro);
-      font-size: 0.875rem;
+      border: 1px solid token-color(borde-normal);
+      border-radius: token-radio(l);
+      color: token-color(texto-claro);
+      font-size: var(--font-size-md);
       font-weight: var(--font-weight-bold);
-      transition: border-color var(--duration-base) ease, background-color var(--duration-base) ease;
+      @include transicion(border-color, background-color);
 
-      &:hover {
-        border-color: rgba(240, 236, 226, 0.25);
-      }
-
+      &:hover { border-color: rgba(240, 236, 226, 0.25); }
       &:focus-visible {
-        outline: 2px solid var(--amarillo-normal);
+        outline: 2px solid token-color(amarillo-normal);
         outline-offset: 2px;
       }
     }

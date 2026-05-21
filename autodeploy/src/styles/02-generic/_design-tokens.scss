@@ -24,10 +24,15 @@
   --amarillo-normal: hsl(47, 86%, 56%);
   --amarillo-normal-hover: hsl(45, 78%, 48%);
 
-  /* === TEXTOS === */
+  /* === TEXTOS ===
+   * Contrastes verificados sobre --fondo-tarjeta (L=16%) para WCAG 2.1 AA:
+   *   --texto-claro    L=91% → ratio ~11.6:1 (AAA)
+   *   --texto-medio    L=63% → ratio  ~5.3:1 (AA)
+   *   --texto-apagado  L=60% → ratio  ~4.7:1 (AA, antes 40%/~2.4:1 fallaba)
+   */
   --texto-claro: hsl(40, 33.33%, 91.37%);
   --texto-medio: hsl(30, 5.08%, 63.14%);
-  --texto-apagado: hsl(33, 4.12%, 40%);
+  --texto-apagado: hsl(33, 5%, 60%);
 
   /* === BORDES === */
   --borde-normal: hsla(40, 33.33%, 91.37%, 0.08);
@@ -141,9 +146,14 @@
   --fondo-negro-medio: hsl(40, 8%, 93%);
   --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
 
+  /* Contrastes sobre el fondo claro (L=96%):
+   *   --texto-claro    L=12% → ratio ~14.4:1 (AAA)
+   *   --texto-medio    L=38% → ratio  ~5.5:1 (AA, antes ya pasaba)
+   *   --texto-apagado  L=42% → ratio  ~4.6:1 (AA, antes 56%/~3.2:1 fallaba)
+   */
   --texto-claro: hsl(30, 12%, 12%);
   --texto-medio: hsl(30, 5%, 38%);
-  --texto-apagado: hsl(30, 3%, 56%);
+  --texto-apagado: hsl(30, 4%, 42%);
 
   --borde-normal: hsla(30, 10%, 12%, 0.12);
   --borde-suave: hsla(30, 10%, 12%, 0.07);

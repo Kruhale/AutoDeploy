@@ -4,75 +4,73 @@
   gap: 3rem;
   padding: 3rem 0;
   max-width: 48rem;
-}
 
-.workflow__cabecera {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
+  &__cabecera {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
 
-.workflow__titulo {
-  font-family: var(--font-secondary);
-  font-size: 2rem;
-  font-weight: var(--font-weight-bold);
-  letter-spacing: -0.75px;
-  color: var(--texto-claro);
-}
+  &__titulo {
+    font-family: var(--font-secondary);
+    font-size: 2rem;
+    font-weight: var(--font-weight-bold);
+    letter-spacing: -0.75px;
+    color: var(--texto-claro);
+  }
 
-.workflow__descripcion {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--texto-medio);
-}
+  &__descripcion {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--texto-medio);
+  }
 
-.workflow__pasos {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
+  &__pasos {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
 
-.workflow__paso {
-  display: flex;
-  align-items: flex-start;
-  gap: 2rem;
-  padding: 2rem 0;
-  border-top: 1px solid var(--borde-normal);
-}
+  &__paso {
+    display: flex;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 2rem 0;
+    border-top: 1px solid var(--borde-normal);
 
-.workflow__paso__numero {
-  font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--amarillo-normal);
-  padding-top: 0.125rem;
-  flex-shrink: 0;
-  letter-spacing: 1px;
-}
+    &__numero {
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      font-weight: var(--font-weight-bold);
+      color: var(--amarillo-normal);
+      padding-top: 0.125rem;
+      flex-shrink: 0;
+      letter-spacing: 1px;
+    }
 
-.workflow__paso__contenido {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+    &__contenido {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
 
-.workflow__paso__titulo {
-  font-family: var(--font-secondary);
-  font-size: 1.125rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--texto-claro);
-  line-height: 1.3;
-}
+    &__titulo {
+      font-family: var(--font-secondary);
+      font-size: 1.125rem;
+      font-weight: var(--font-weight-bold);
+      color: var(--texto-claro);
+      line-height: 1.3;
+    }
 
-.workflow__paso__descripcion {
-  font-size: 0.9375rem;
-  line-height: 1.6;
-  color: var(--texto-medio);
-  max-width: 36rem;
-}
+    &__descripcion {
+      font-size: 0.9375rem;
+      line-height: 1.6;
+      color: var(--texto-medio);
+      max-width: 36rem;
+    }
 
-@media (max-width: 768px) {
-  .workflow__paso {
-    gap: 1.25rem;
+    @media (max-width: 768px) {
+      gap: 1.25rem;
+    }
   }
 }

@@ -15,62 +15,74 @@
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   z-index: var(--z-toast);
-}
 
-.banner-cookies__texto {
-  font-size: var(--font-size-md);
-  color: var(--texto-medio);
-  line-height: var(--line-height-normal);
-}
+  &__texto {
+    font-size: var(--font-size-md);
+    color: var(--texto-medio);
+    line-height: var(--line-height-normal);
+  }
 
-.banner-cookies__enlace {
-  color: var(--amarillo-normal);
-  font-weight: var(--font-weight-medium);
-  transition: opacity var(--duration-base) ease;
-}
+  &__enlace {
+    color: var(--amarillo-normal);
+    font-weight: var(--font-weight-medium);
+    transition: opacity var(--duration-base) ease;
 
-.banner-cookies__enlace:hover {
-  opacity: 0.8;
-}
+    &:hover,
+    &:focus-visible {
+      opacity: 0.85;
+      outline: none;
+    }
 
-.banner-cookies__acciones {
-  display: flex;
-  gap: var(--spacing-size-m);
-  flex-shrink: 0;
-}
+    &:focus-visible {
+      text-decoration: underline;
+      text-underline-offset: 0.25rem;
+    }
+  }
 
-.banner-cookies__boton {
-  padding: 0.4375rem var(--spacing-size-xl);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  border-radius: var(--radius-m);
-  cursor: pointer;
-  transition: background-color var(--duration-base) ease, transform var(--duration-fast) ease;
-  border: none;
-}
+  &__acciones {
+    display: flex;
+    gap: var(--spacing-size-m);
+    flex-shrink: 0;
+  }
 
-.banner-cookies__boton:active {
-  transform: scale(0.98);
-}
+  &__boton {
+    padding: 0.4375rem var(--spacing-size-xl);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-semibold);
+    border-radius: var(--radius-m);
+    cursor: pointer;
+    transition: background-color var(--duration-base) ease, transform var(--duration-fast) ease;
+    border: none;
 
-.banner-cookies__boton--primario {
-  background-color: var(--amarillo-normal);
-  color: var(--fondo-oscuro);
-}
+    &:active {
+      transform: scale(0.98);
+    }
 
-.banner-cookies__boton--primario:hover {
-  background-color: var(--amarillo-normal-hover);
-}
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
 
-.banner-cookies__boton--secundario {
-  background-color: transparent;
-  color: var(--texto-medio);
-  border: 1px solid var(--borde-normal);
-}
+    &--primario {
+      background-color: var(--amarillo-normal);
+      color: var(--fondo-oscuro);
 
-.banner-cookies__boton--secundario:hover {
-  color: var(--texto-claro);
-  border-color: var(--borde-normal);
+      &:hover {
+        background-color: var(--amarillo-normal-hover);
+      }
+    }
+
+    &--secundario {
+      background-color: transparent;
+      color: var(--texto-medio);
+      border: 1px solid var(--borde-normal);
+
+      &:hover {
+        color: var(--texto-claro);
+        border-color: var(--borde-normal);
+      }
+    }
+  }
 }
 
 @media (max-width: 576px) {

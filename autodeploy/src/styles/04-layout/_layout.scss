@@ -21,8 +21,16 @@
   display: none;
 }
 
+// El backdrop es un <button type="button"> (semánticamente: control que
+// cierra el menú al pulsar fuera). Hay que resetear los estilos por
+// defecto del botón para que actúe como una capa transparente.
 .disposicion-app__backdrop {
   display: none;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  cursor: pointer;
+  appearance: none;
 }
 
 @media (max-width: 768px) {

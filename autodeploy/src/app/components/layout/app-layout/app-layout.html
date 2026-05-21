@@ -1,21 +1,23 @@
-<section class="disposicion-app">
-  <header class="disposicion-app__cabecera-movil">
+<section class="disposicion-app" [attr.aria-label]="'comun.ariaDisposicionApp' | translate">
+  <a class="u-saltar-contenido" href="#contenido-principal">{{ "comun.saltarContenido" | translate }}</a>
+
+  <header class="disposicion-app__cabecera-movil" [attr.aria-label]="'comun.ariaCabeceraMovil' | translate">
     <button class="disposicion-app__hamburguesa" (click)="alternarSidebar()" [attr.aria-label]="'comun.menu' | translate">
-      <i class="fa-solid fa-bars"></i>
+      <i class="fa-solid fa-bars" aria-hidden="true"></i>
     </button>
     <a class="disposicion-app__logo-movil" routerLink="/">
-      <img class="disposicion-app__logo-movil__imagen" src="logo.png" alt="">
-      <span class="disposicion-app__logo-movil__texto">Auto<span class="disposicion-app__logo-movil__texto--acento">Deploy</span></span>
+      <img class="disposicion-app__logo-movil__imagen" src="logo.png" alt="AutoDeploy">
+      <span class="disposicion-app__logo-movil__texto" aria-hidden="true">Auto<span class="disposicion-app__logo-movil__texto--acento">Deploy</span></span>
     </a>
     <app-campana-notificaciones></app-campana-notificaciones>
   </header>
 
-  <section class="disposicion-app__backdrop" [class.disposicion-app__backdrop--visible]="sidebarAbierta()" (click)="cerrarSidebar()"></section>
+  <button type="button" class="disposicion-app__backdrop" [class.disposicion-app__backdrop--visible]="sidebarAbierta()" (click)="cerrarSidebar()" [attr.aria-label]="'comun.cerrarMenu' | translate" tabindex="-1"></button>
 
   <app-sidebar [abierta]="sidebarAbierta()"></app-sidebar>
 
-  <section class="disposicion-app__contenido">
-    <main class="disposicion-app__principal">
+  <section class="disposicion-app__contenido" [attr.aria-label]="'comun.ariaContenidoApp' | translate">
+    <main id="contenido-principal" tabindex="-1" class="disposicion-app__principal">
       <router-outlet></router-outlet>
     </main>
     <app-barra-pie-app></app-barra-pie-app>

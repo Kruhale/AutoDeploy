@@ -1,42 +1,45 @@
-<aside class="barra-lateral" [class.barra-lateral--abierta]="abierta()" [class.barra-lateral--colapsada]="colapsada()">
+<aside class="barra-lateral" [class.barra-lateral--abierta]="abierta()" [class.barra-lateral--colapsada]="colapsada()" [attr.aria-label]="'sidebar.ariaPrincipal' | translate">
   <a class="barra-lateral__logo" routerLink="/">
-    <img class="barra-lateral__logo__imagen" src="logo.png" alt="">
-    <span class="barra-lateral__logo__texto">Auto<span class="barra-lateral__logo__texto--acento">Deploy</span></span>
+    <img class="barra-lateral__logo__imagen" src="logo.png" alt="AutoDeploy">
+    <span class="barra-lateral__logo__texto" aria-hidden="true">Auto<span class="barra-lateral__logo__texto--acento">Deploy</span></span>
     <span class="barra-lateral__logo__version" aria-hidden="true">v2.41</span>
   </a>
 
-  <nav class="barra-lateral__navegacion">
-    <section class="barra-lateral__seccion" data-indice="01">
+  <nav class="barra-lateral__navegacion" [attr.aria-label]="'sidebar.ariaNavegacion' | translate">
+    <section class="barra-lateral__seccion" data-indice="01" aria-labelledby="barra-lateral-titulo-1">
       <header class="barra-lateral__seccion__cabecera">
         <span class="barra-lateral__seccion__numero" aria-hidden="true">01</span>
-        <span class="barra-lateral__seccion__titulo">{{ "sidebar.secciones.principal" | translate }}</span>
+        <span class="barra-lateral__seccion__titulo" id="barra-lateral-titulo-1">{{ "sidebar.secciones.principal" | translate }}</span>
       </header>
       <ul class="barra-lateral__lista">
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/dashboard" routerLinkActive="barra-lateral__enlace--activo"
-            [routerLinkActiveOptions]="{ exact: true }">
-            <i class="fa-solid fa-table-columns barra-lateral__enlace__icono"></i>
+            [routerLinkActiveOptions]="{ exact: true }" #rla1="routerLinkActive" [attr.aria-current]="rla1.isActive ? 'page' : null">
+            <i class="fa-solid fa-table-columns barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.dashboard" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/onboarding" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-plug barra-lateral__enlace__icono"></i>
+          <a class="barra-lateral__enlace" routerLink="/app/onboarding" routerLinkActive="barra-lateral__enlace--activo"
+            #rla2="routerLinkActive" [attr.aria-current]="rla2.isActive ? 'page' : null">
+            <i class="fa-solid fa-plug barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.conectarServidor" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/logs" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-chart-line barra-lateral__enlace__icono"></i>
+          <a class="barra-lateral__enlace" routerLink="/app/logs" routerLinkActive="barra-lateral__enlace--activo"
+            #rla3="routerLinkActive" [attr.aria-current]="rla3.isActive ? 'page' : null">
+            <i class="fa-solid fa-chart-line barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.actividad" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/billing" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-credit-card barra-lateral__enlace__icono"></i>
+          <a class="barra-lateral__enlace" routerLink="/app/billing" routerLinkActive="barra-lateral__enlace--activo"
+            #rla4="routerLinkActive" [attr.aria-current]="rla4.isActive ? 'page' : null">
+            <i class="fa-solid fa-credit-card barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.billing" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
@@ -44,22 +47,24 @@
       </ul>
     </section>
 
-    <section class="barra-lateral__seccion" data-indice="02">
+    <section class="barra-lateral__seccion" data-indice="02" aria-labelledby="barra-lateral-titulo-2">
       <header class="barra-lateral__seccion__cabecera">
         <span class="barra-lateral__seccion__numero" aria-hidden="true">02</span>
-        <span class="barra-lateral__seccion__titulo">{{ "sidebar.secciones.servidor" | translate }}</span>
+        <span class="barra-lateral__seccion__titulo" id="barra-lateral-titulo-2">{{ "sidebar.secciones.servidor" | translate }}</span>
       </header>
       <ul class="barra-lateral__lista">
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/terminal" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-terminal barra-lateral__enlace__icono"></i>
+          <a class="barra-lateral__enlace" routerLink="/app/terminal" routerLinkActive="barra-lateral__enlace--activo"
+            #rla5="routerLinkActive" [attr.aria-current]="rla5.isActive ? 'page' : null">
+            <i class="fa-solid fa-terminal barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.terminal" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/asistente-ia" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-robot barra-lateral__enlace__icono"></i>
+          <a class="barra-lateral__enlace" routerLink="/app/asistente-ia" routerLinkActive="barra-lateral__enlace--activo"
+            #rla6="routerLinkActive" [attr.aria-current]="rla6.isActive ? 'page' : null">
+            <i class="fa-solid fa-robot barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.asistenteIa" | translate }}</span>
             @if (planService.planActual() !== 'pro' && planService.planActual() !== 'business') {
               <span class="barra-lateral__chip-pro">{{ "sidebar.chipPro" | translate }}</span>
@@ -69,29 +74,33 @@
         </li>
         <li>
           <a class="barra-lateral__enlace" routerLink="/app/nuevo-despliegue"
-            routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-cubes barra-lateral__enlace__icono"></i>
+            routerLinkActive="barra-lateral__enlace--activo"
+            #rla7="routerLinkActive" [attr.aria-current]="rla7.isActive ? 'page' : null">
+            <i class="fa-solid fa-cubes barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.aplicaciones" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/networking" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-globe barra-lateral__enlace__icono"></i>
+          <a class="barra-lateral__enlace" routerLink="/app/networking" routerLinkActive="barra-lateral__enlace--activo"
+            #rla8="routerLinkActive" [attr.aria-current]="rla8.isActive ? 'page' : null">
+            <i class="fa-solid fa-globe barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.networking" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/firewall" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-shield-halved barra-lateral__enlace__icono"></i>
+          <a class="barra-lateral__enlace" routerLink="/app/firewall" routerLinkActive="barra-lateral__enlace--activo"
+            #rla9="routerLinkActive" [attr.aria-current]="rla9.isActive ? 'page' : null">
+            <i class="fa-solid fa-shield-halved barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.firewall" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
         </li>
         <li>
-          <a class="barra-lateral__enlace" routerLink="/app/backups" routerLinkActive="barra-lateral__enlace--activo">
-            <i class="fa-solid fa-hard-drive barra-lateral__enlace__icono"></i>
+          <a class="barra-lateral__enlace" routerLink="/app/backups" routerLinkActive="barra-lateral__enlace--activo"
+            #rla10="routerLinkActive" [attr.aria-current]="rla10.isActive ? 'page' : null">
+            <i class="fa-solid fa-hard-drive barra-lateral__enlace__icono" aria-hidden="true"></i>
             <span class="barra-lateral__enlace__texto">{{ "sidebar.nav.backups" | translate }}</span>
             <span class="barra-lateral__enlace__indicador" aria-hidden="true"></span>
           </a>
@@ -101,8 +110,8 @@
   </nav>
 
   <footer class="barra-lateral__inferior">
-    <button class="barra-lateral__colapsar" (click)="alternarColapso()">
-      <i class="barra-lateral__colapsar__icono" [class]="colapsada() ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'"></i>
+    <button class="barra-lateral__colapsar" (click)="alternarColapso()" [attr.aria-label]="'sidebar.ariaColapsar' | translate">
+      <i class="barra-lateral__colapsar__icono" [class]="colapsada() ? 'fa-solid fa-angles-right' : 'fa-solid fa-angles-left'" aria-hidden="true"></i>
       @if (!colapsada()) {
         <span class="barra-lateral__colapsar__texto">{{ "sidebar.colapsar" | translate }}</span>
       }
@@ -111,7 +120,7 @@
       <span class="barra-lateral__usuario__avatar" aria-hidden="true">
         <span class="barra-lateral__usuario__avatar__estado" aria-hidden="true"></span>
       </span>
-      <section class="barra-lateral__usuario__info">
+      <section class="barra-lateral__usuario__info" [attr.aria-label]="'sidebar.ariaInfoUsuario' | translate">
         <span class="barra-lateral__usuario__nombre">{{ usuarioService.nombre() || ("sidebar.fallbackCuenta" | translate) }}</span>
         <span class="barra-lateral__usuario__plan">{{ planService.planActual() }}</span>
       </section>

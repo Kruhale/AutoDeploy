@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, signal } from "@angular/core";
+import { Component, OnInit, OnDestroy, signal, HostListener, ElementRef, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
 import { NotificacionService, Notificacion } from "../../../services/notificacion.service";
@@ -14,6 +14,8 @@ import { Subscription } from "rxjs";
 })
 export class CampanaNotificaciones implements OnInit, OnDestroy {
 
+	private readonly elementoRaiz = inject(ElementRef);
+
 	campanAbierta = signal(false);
 	private suscripcion: Subscription | null = null;
 
@@ -21,6 +23,17 @@ export class CampanaNotificaciones implements OnInit, OnDestroy {
 		public notificacionService: NotificacionService,
 		private usuarioService: UsuarioService
 	) {}
+
+	@HostListener("document:click", ["$event"])
+	alClickFueraDelPanel(evento: MouseEvent): void {
+		if (!this.campanAbierta()) {
+			return;
+		}
+		const elementoClicado = evento.target as Node;
+		if (!this.elementoRaiz.nativeElement.contains(elementoClicado)) {
+			this.cerrarCampana();
+		}
+	}
 
 	ngOnInit(): void {
 		const usuarioIdActual = this.usuarioService.usuarioId();

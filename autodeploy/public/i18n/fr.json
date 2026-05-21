@@ -101,7 +101,10 @@
       "temaOscuro": "Activer le mode sombre",
       "notificaciones": "Notifications",
       "menu": "Ouvrir le menu",
-      "cerrarMenu": "Fermer le menu"
+      "cerrarMenu": "Fermer le menu",
+      "acciones": "Actions de l'en-tête",
+      "zonaNotificaciones": "Zone des notifications",
+      "panelMovilPortal": "Menu mobile"
     },
     "dropdown": {
       "titulo": "Notifications",
@@ -1008,7 +1011,7 @@
     "ctaPrincipal": "Ajouter une règle",
     "ctaSecundario": "Ouvrir ou bloquer un port",
     "selectorServidor": "Serveur de destination",
-    "presetsEtiqueta": "Préréglages · en un clic",
+    "presetsEtiqueta": "Configurez en un clic",
     "presetSsh": "SSH",
     "presetHttp": "HTTP",
     "presetHttps": "HTTPS",

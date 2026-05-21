@@ -101,7 +101,10 @@
       "temaOscuro": "Activar modo oscuro",
       "notificaciones": "Notificaciones",
       "menu": "Abrir menú",
-      "cerrarMenu": "Cerrar menú"
+      "cerrarMenu": "Cerrar menú",
+      "acciones": "Acciones de la cabecera",
+      "zonaNotificaciones": "Zona de notificaciones",
+      "panelMovilPortal": "Menú móvil"
     },
     "dropdown": {
       "titulo": "Notificaciones",
@@ -1008,7 +1011,7 @@
     "ctaPrincipal": "Añadir regla",
     "ctaSecundario": "Abrir o bloquear un puerto",
     "selectorServidor": "Servidor de destino",
-    "presetsEtiqueta": "Presets · un clic",
+    "presetsEtiqueta": "Configura en un click",
     "presetSsh": "SSH",
     "presetHttp": "HTTP",
     "presetHttps": "HTTPS",

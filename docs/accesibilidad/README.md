@@ -48,20 +48,22 @@ Recursos: WCAG 2.1 Quick Reference (W3C), accesible.es, MDN Accessibility.
 
 ## 2. Componente multimedia implementado
 
-**Tipo**: Galería de capturas pendiente de incorporar (Bloque B5 del plan). Mientras tanto, la app utiliza imágenes informativas con tratamiento accesible:
+**Tipo**: Galería de capturas (`<app-galeria-capturas>` en `autodeploy/src/app/components/shared/galeria-capturas/`). Componente standalone Angular con seis capturas reales del propio AutoDeploy (panel principal, asistente IA, terminal, backups, métricas, firewall) sobre dos viewports (`-800.webp` para móvil, `-1200.webp` para desktop). Implementado en el commit `bcc864e` (PR Bloque B5 del plan DIW).
 
-- **Logo**: `<img src="logo.png" alt="AutoDeploy">` en cabecera (header/sidebar), informativo.
+Además de la galería, el resto de imágenes de la app sigue el mismo patrón de accesibilidad:
+
+- **Logo**: `<img src="logo.png" alt="AutoDeploy">` en cabecera (header/sidebar), informativo, con `width` y `height` declarados para evitar layout shift.
 - **Iconos de FontAwesome**: marcados con `aria-hidden="true"` porque siempre van acompañados de un `<span>` con texto que actúa como nombre accesible.
 - **SVGs decorativos** (redes sociales del footer): `aria-hidden="true"` con `aria-label` en el `<a>` padre que lo contiene.
-- **Imágenes futuras** (galería de capturas): se servirán con `<picture>` + `srcset` + `loading="lazy"` y `alt` descriptivo de la información que aporta cada captura (panel de servidores, terminal IA, etc.).
 
-### Características de accesibilidad que tendrá la galería
+### Características de accesibilidad que tiene la galería
 
-- `<figure>` + `<figcaption>` para cada captura.
-- `alt` descriptivo (no genérico) en cada `<img>`.
-- `<picture>` con `<source media>` para variantes mobile/desktop.
-- `loading="lazy"` para diferir descarga de las imágenes por debajo del fold.
-- `width` + `height` declarados para evitar layout shift (CLS bajo).
+- `<figure>` + `<figcaption>` para cada captura, dentro de `<ul role="list">` para que VoiceOver/NVDA anuncien la cantidad.
+- `alt` descriptivo (no genérico) en cada `<img>`, contando lo que muestra la captura (no sólo el nombre del módulo).
+- `<picture>` con `<source media="(min-width: 769px)">` para servir la variante desktop sólo cuando se necesita.
+- `loading="lazy"` en todas las imágenes salvo la primera (que actúa como portada).
+- `width` + `height` declarados para evitar layout shift (CLS objetivo < 0.1).
+- Container query (`container-type: inline-size`) en el bloque raíz: la galería pasa de 1 a 2 columnas según el ancho del contenedor donde se inserte, sin depender del viewport.
 
 ---
 
@@ -91,7 +93,7 @@ Las capturas de las tres herramientas estándar (Lighthouse + WAVE + TAW) sobre 
 
 A partir de la auditoría manual del código sin las PRs de accesibilidad, los problemas más graves esperados son:
 
-1. **Falta de skip link** — un usuario de teclado tenía que tabular por todo el header y la sidebar antes de llegar al contenido. Resuelto en PR #235 con `.u-saltar-contenido` que se coloca primero y salta al `<main id="contenido-principal">`.
+1. **Falta de skip link** — un usuario de teclado tenía que tabular por todo el header y la sidebar antes de llegar al contenido. Resuelto en el commit `747c991` (`feat(a11y): skip link, aria-current y aria-label en layout, sidebar y footer sin <div>`) con `.u-saltar-contenido` que se coloca primero y salta al `<main id="contenido-principal">`.
 2. **`<section>` sin nombre accesible** — varios wrappers `<section>` sin `aria-label`/`aria-labelledby` ni heading dentro, lo que confunde a los lectores de pantalla (anuncian "región" sin contexto). Resuelto con `aria-label` o reemplazando por `<div>` semánticamente correcto. La regla del proyecto es "no usar `<div>`" así que se prioriza `<section aria-label="...">` siempre que se pueda.
 3. **`<nav>` sin distinguir** — 3 `<nav>` en el footer (Producto / Legal / Soporte) eran indistinguibles entre sí para un lector. Resuelto añadiendo `aria-label` distintivo a cada uno.
 
@@ -283,7 +285,7 @@ Activado con `Cmd + F5`. Recorrido por landing, login y dashboard:
 | ¿El componente activo de navegación se anuncia? | ✅ | "página actual" gracias a `aria-current="page"` |
 | ¿Los iconos solos (botones de cierre) tienen nombre? | ✅ | `aria-label="Cerrar menú"` en el backdrop |
 
-**Principales problemas detectados antes del refactor**: el sidebar no anunciaba "página actual" porque le faltaba `aria-current`. Corregido en PR #235.
+**Principales problemas detectados antes del refactor**: el sidebar no anunciaba "página actual" porque le faltaba `aria-current`. Corregido en el commit `747c991`.
 
 **Mejoras aplicadas tras el test**: añadir `aria-label="Información de la cuenta"` al bloque del usuario en el pie del sidebar (era una `<section>` sin nombre accesible).
 
@@ -301,7 +303,7 @@ Capturas pendientes en [`./capturas/chrome.png`](./capturas/), [`./capturas/fire
 
 ## 7. Resultados finales tras correcciones
 
-Comparativa antes/después tras las 8 PRs principales del refactor DIW (#227 a #236):
+Comparativa antes/después tras las fases principales del refactor DIW (commits del rango `284d5ed` a `170ed67`):
 
 | Herramienta | Antes (estimado pre-refactor) | Después (con app deployed) | Mejora esperada |
 |---|---|---|---|
@@ -365,7 +367,7 @@ Lo que más me sorprendió al usar VoiceOver fue lo evidente que era la falta de
 2. **Test E2E de accesibilidad** con `axe-playwright` para detectar regresiones.
 3. **Contraste AAA (7:1)** en textos secundarios sobre fondos transparentes; revisión por componente.
 4. **Subtítulos y transcripciones** en vídeos cuando se incorporen.
-5. **Galería de capturas con `<figure>`/`<figcaption>`** y `loading="lazy"` (B5 del plan DIW pendiente).
+5. **Capturas reales para la galería** (`autodeploy/public/img/capturas/`): el componente `<app-galeria-capturas>` y su estructura accesible ya están listos, las imágenes finales del dashboard, terminal, asistente IA, backups, métricas y firewall se generarán al cierre del proyecto.
 
 ### Aprendizaje clave
 

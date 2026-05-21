@@ -21,7 +21,7 @@ Crear `.env` en la raíz del repo:
 AUTODEPLOY_JWT_SECRET=cadena_256_bits_min
 AUTODEPLOY_CIFRADO_CLAVE=clave_AES_para_credenciales_SSH
 OPENROUTER_API_KEY=opcional_para_asistente_ia
-OPENROUTER_MODEL=openai/gpt-4o-mini
+OPENROUTER_MODEL=google/gemini-2.5-pro
 HOST_PORT=8082
 ```
 
@@ -63,6 +63,11 @@ Swagger UI: `http://localhost:8082/swagger-ui.html` (vía proxy nginx).
 
 ## Producción real
 
-El despliegue real vive en `autodeploy.kruhale.com`. Pipeline en `.github/workflows/ci-cd.yml`: build → tests → push imagen a GHCR → SSH al VPS con `appleboy/ssh-action` y `docker compose pull && up -d`. nginx-host del VPS termina TLS con Let's Encrypt y proxifica al contenedor.
+El despliegue real vive en `autodeploy.kruhale.com`. Pipeline dividido en dos workflows de GitHub Actions:
+
+- `.github/workflows/ci.yml` — build + tests (backend con MongoDB efímero, frontend con Karma, lint Docker con hadolint). Se ejecuta en cualquier rama.
+- `.github/workflows/cd.yml` — build de imágenes Docker, push a GHCR y SSH al VPS con `appleboy/ssh-action` para hacer `docker compose pull && up -d`. Smoke test al final y rollback automático si falla.
+
+nginx-host del VPS termina TLS con Let's Encrypt (auto-renovación por `certbot.timer`) y proxifica desde `https://autodeploy.kruhale.com` al puerto interno `8082` que publica el contenedor frontend.
 
 Más detalles y troubleshooting en [`DEPLOY.md`](./DEPLOY.md).

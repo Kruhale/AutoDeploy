@@ -23,7 +23,7 @@ Panel SaaS de gestión y despliegue automático para servidores VPS. Permite con
 | Comunicación tiempo real | WebSocket (Spring) + xterm.js |
 | SSH/SFTP a VPS | Apache MINA SSHD 2.12.1 |
 | DNS lookups | dnsjava 3.6.2 |
-| IA | OpenRouter API (modelo por defecto: openai/gpt-4o-mini) |
+| IA | OpenRouter API (modelo por defecto: `google/gemini-2.5-pro`) |
 | Documentación API | springdoc-openapi (Swagger UI) |
 | Tests | Karma + Jasmine (unit), Playwright (E2E) |
 | CI/CD | GitHub Actions + GitHub Container Registry |
@@ -73,7 +73,7 @@ cp .env.example .env
 docker compose -f docker-compose.prod.yml up -d --build
 ```
 
-Espera ~30 s a que los tres servicios estén `(healthy)`:
+Espera ~30 s a que los cuatro servicios (`mongodb`, `backend`, `sandbox-ssh`, `frontend`) estén `(healthy)`:
 
 ```bash
 docker compose -f docker-compose.prod.yml ps
@@ -104,7 +104,7 @@ curl -s https://autodeploy.kruhale.com/api/estado | jq # estadoGeneral: UP, 6 se
 | `AUTODEPLOY_JWT_SECRET` | Sí | Clave HMAC para firmar JWTs (mín. 256 bits Base64) |
 | `AUTODEPLOY_CIFRADO_CLAVE` | Sí | Clave AES-256 para cifrar credenciales SSH en MongoDB |
 | `OPENROUTER_API_KEY` | No | API key del asistente IA (https://openrouter.ai/keys) |
-| `OPENROUTER_MODEL` | No | Slug del modelo. Default: `openai/gpt-4o-mini` |
+| `OPENROUTER_MODEL` | No | Slug del modelo. Default: `google/gemini-2.5-pro` |
 | `IMAGE_TAG` | No | Tag Docker a desplegar. Default: `latest` |
 
 Generación de secretos:

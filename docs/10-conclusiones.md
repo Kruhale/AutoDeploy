@@ -31,7 +31,7 @@ Funcionalidades que quedaron en el roadmap futuro:
 
 1. **ITCSS + BEM funciona si se respeta la cascada**. La primera vez (en Cofira) puse Custom Properties en Settings y empecé a luchar contra la propia metodología. Mover los tokens a `02-generic/_design-tokens.scss` resolvió todo y desbloqueó la lectura del README de styles para terceros.
 
-2. **`@function` y `@include` no son adorno**. Definirlos sin usarlos (como en Cofira) es peor que no tenerlos: confunde al lector. En AutoDeploy los 25 mixins y 11 funciones tienen al menos un uso real, documentado en el README.
+2. **`@function` y `@include` no son adorno**. Definirlos sin usarlos (como en Cofira) es peor que no tenerlos: confunde al lector. En AutoDeploy los 31 mixins y 11 funciones tienen al menos un uso real, documentado en el README.
 
 3. **Container queries cambian el diseño responsive**. Una vez probadas, los componentes reutilizables como `tarjeta-servidor` se vuelven mucho más simples: ya no hay que pensar en "qué viewport tengo", sino "qué ancho tengo".
 
@@ -51,7 +51,7 @@ Funcionalidades que quedaron en el roadmap futuro:
 
 ### De proceso
 
-10. **PRs pequeños y temáticos > PR gigante**. En esta entrega cada bloque del plan DIW es una PR independiente (#227 a #239). El historial cuenta la historia del refactor, y el evaluador puede revisar el cierre de cada gap por separado.
+10. **PRs pequeños y temáticos > PR gigante**. En esta entrega cada bloque del plan DIW es una PR independiente (rango aproximado #220 a #249, una por gap cerrado). El historial cuenta la historia del refactor y el evaluador puede revisar el cierre de cada gap por separado.
 
 11. **No usar `Co-Authored-By` me obligó a revisar cada commit**. La regla obliga a ser consciente del autor y del mensaje, y resulta en un historial más legible.
 

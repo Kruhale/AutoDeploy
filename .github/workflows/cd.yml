@@ -145,8 +145,13 @@ jobs:
             echo "==> 6) Recrear contenedores"
             $COMPOSE up -d --remove-orphans
 
-            echo "==> 6 bis) Restart sandbox-ssh (la imagen externa no se renueva con pull, conviene reciclarla cada deploy)"
-            $COMPOSE restart sandbox-ssh || true
+            echo "==> 6 bis) Recrear sandbox-ssh desde cero (hard reset por si la imagen externa quedo colgada)"
+            $COMPOSE stop sandbox-ssh || true
+            $COMPOSE rm -f sandbox-ssh || true
+            docker volume rm autodeploy_sandbox-config 2>/dev/null || true
+            $COMPOSE up -d sandbox-ssh || true
+            echo "==> Esperando 15s para que sshd regenere host keys y arranque"
+            sleep 15
 
             echo "==> 7) Esperando que los 3 servicios con healthcheck reporten (healthy), timeout 120s"
             DEADLINE=$((SECONDS + 120))

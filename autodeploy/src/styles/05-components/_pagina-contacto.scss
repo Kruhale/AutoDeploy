@@ -1,4 +1,5 @@
 @use "../00-settings/css-variables" as *;
+@use "../01-tools/mixins" as *;
 
 .pagina-contacto {
   display: grid;
@@ -18,7 +19,7 @@
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-xl);
 
-    @media (max-width: $breakpoint-md) {
+    @include movil {
       padding: var(--spacing-size-2xl);
     }
   }
@@ -134,7 +135,7 @@
     border-radius: var(--radius-xl);
     height: fit-content;
 
-    @media (max-width: $breakpoint-md) {
+    @include movil {
       padding: var(--spacing-size-2xl);
     }
   }

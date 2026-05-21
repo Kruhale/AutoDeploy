@@ -1,3 +1,5 @@
+@use "../01-tools/mixins" as *;
+
 .gestion-servidor {
   display: flex;
   flex-direction: column;
@@ -15,7 +17,7 @@
     letter-spacing: 0.04em;
     color: var(--texto-medio);
 
-    @media (max-width: 768px) {
+    @include movil {
       flex-wrap: wrap;
     }
   }
@@ -41,7 +43,7 @@
     align-items: flex-start;
     justify-content: space-between;
 
-    @media (max-width: 768px) {
+    @include movil {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--spacing-size-l);
@@ -105,7 +107,7 @@
     align-items: center;
     justify-content: space-between;
 
-    @media (max-width: 768px) {
+    @include movil {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--spacing-size-l);
@@ -135,7 +137,7 @@
       border-color: var(--amarillo-normal);
     }
 
-    @media (max-width: 768px) {
+    @include movil {
       min-width: unset;
       width: 100%;
     }
@@ -201,7 +203,7 @@
     display: flex;
     gap: var(--spacing-size-l);
 
-    @media (max-width: 768px) {
+    @include movil {
       flex-direction: column;
     }
 
@@ -262,7 +264,7 @@
       outline-offset: 2px;
     }
 
-    @media (max-width: 768px) {
+    @include movil {
       flex-direction: column;
       align-items: flex-start;
       gap: var(--spacing-size-l);
@@ -368,7 +370,7 @@
     display: flex;
     gap: var(--spacing-size-l);
 
-    @media (max-width: 768px) {
+    @include movil {
       flex-direction: column;
     }
   }
@@ -491,7 +493,7 @@
     padding: var(--spacing-size-2xl);
     border-top: 1px solid var(--borde-normal);
 
-    @media (max-width: 768px) {
+    @include movil {
       flex-wrap: wrap;
       gap: var(--spacing-size-l);
     }

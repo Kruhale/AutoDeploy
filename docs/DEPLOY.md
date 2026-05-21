@@ -72,7 +72,7 @@ Debes ver los servicios en estado `running` y `(healthy)`. Solo el **frontend** 
 NAME                   IMAGE                                            STATUS                   PORTS
 autodeploy-mongodb     mongo:8                                          Up 30s (healthy)
 autodeploy-backend     ghcr.io/kruhale/autodeploy-backend:latest        Up 25s (healthy)
-autodeploy-sandbox     linuxserver/openssh-server:latest                Up 20s                   0.0.0.0:2222->2222/tcp
+autodeploy-sandbox     linuxserver/openssh-server:latest                Up 20s                   0.0.0.0:2223->2222/tcp
 autodeploy-frontend    ghcr.io/kruhale/autodeploy-frontend:latest       Up 10s (healthy)         0.0.0.0:8082->80/tcp
 ```
 

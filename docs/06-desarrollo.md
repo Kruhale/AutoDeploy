@@ -34,7 +34,21 @@ El proyecto se ha desarrollado en **5 sprints** de 2 semanas (de marzo a mayo 20
 **Problema**: La carpeta del proyecto vive en iCloud Drive. Al guardar el repositorio en `~/Documents/Obsidian Vault/...`, iCloud crea duplicados con sufijo ` 2` en `.git/index` y `.git/refs/heads/main`. Eso rompe `git fetch` con "bad object".
 **Solución**: Borrar manualmente los archivos duplicados antes de empezar a trabajar (verificable con `find .git -name "*\ 2*"`).
 
-### 6. Co-Authored-By en commits
+### 6. Autorización con roles sobre JWT
+
+**Problema**: la primera versión del backend exponía endpoints administrativos (listar usuarios, eliminar cuentas) sin distinguir entre usuario normal y administrador. El JWT sólo identificaba al usuario, pero no portaba su rol; el filtro de seguridad otorgaba siempre `ROLE_USUARIO`.
+
+**Solución**:
+
+1. Campo `rol` en el modelo `Usuario` (constantes `ROL_USUARIO` y `ROL_ADMIN`, default `USUARIO`).
+2. `JwtUtil.generarToken(id, email, rol)` añade el claim `rol`. Se mantiene la firma antigua de 2 argumentos para no romper código legado.
+3. `JwtAuthenticationFilter` lee el claim y crea `SimpleGrantedAuthority("ROLE_" + rol)`.
+4. `SecurityConfig` activa `@EnableMethodSecurity` para procesar `@PreAuthorize`.
+5. Endpoints `/api/usuarios/admin/**` con `@PreAuthorize("hasRole('ADMIN')")`.
+
+Esto cumple la rúbrica DWES "API REST nivel Excelente" que exige *"sistema de autenticación y autorización con roles"*.
+
+### 7. Co-Authored-By en commits
 **Problema**: Algunas herramientas (Claude, plantillas de PR de GitHub) añaden por defecto un trailer `Co-Authored-By: Claude...`. La regla del proyecto exige sólo `Kruhale` como autor.
 **Solución**: Documentado en `CLAUDE.md` y comprobado manualmente tras cada `git commit` con `git log --format='%an %ae'`. PRs que hayan añadido el trailer accidentalmente se rehacen con `git commit --amend` ANTES de pushear.
 

@@ -44,9 +44,9 @@ El `nginx-host` ya está corriendo en el VPS gestionando otros dominios (lo típ
 | `frontend` (nginx) | `ghcr.io/kruhale/autodeploy-frontend` (build local de Angular 20 + nginx alpine) | 80 | **8082** (configurable con `HOST_PORT`) | `red-interna` | `nginx-logs` |
 | `backend` (Spring Boot) | `ghcr.io/kruhale/autodeploy-backend` (Eclipse Temurin 21 JRE) | 8080 | — *(solo accesible vía nginx-contenedor)* | `red-interna` | `backend-logs` |
 | `mongodb` | `mongo:8` oficial | 27017 | — *(solo accesible vía red interna)* | `red-interna` | `mongodb-datos` |
-| `sandbox-ssh` | `linuxserver/openssh-server` | 2222 | **2222** | `red-interna` | `sandbox-ssh-config` |
+| `sandbox-ssh` | `linuxserver/openssh-server` | 2222 | **2223** *(el `2222` del host lo ocupa el `sshd` del propio VPS, movido del 22 por seguridad)* | `red-interna` | `sandbox-ssh-config` |
 
-El **frontend** publica el puerto HTTP `8082` al host (sin TLS — el TLS lo termina el `nginx-host` del VPS). El **sandbox-ssh** publica el puerto `2222` al host como "demo box" pública del SaaS: una caja Linux de demo que el usuario puede conectar al panel sin necesidad de tener un VPS real. Backend y MongoDB son inaccesibles desde fuera por diseño.
+El **frontend** publica el puerto HTTP `8082` al host (sin TLS — el TLS lo termina el `nginx-host` del VPS). El **sandbox-ssh** publica el puerto `2223→2222` (host:contenedor) como "demo box" interna del SaaS: una caja Linux de demo a la que el backend conecta por la red Docker para que el asistente IA pueda probar comandos sin necesidad de un VPS real. Backend y MongoDB son inaccesibles desde fuera por diseño.
 
 **Cadena completa** desde fuera:
 
@@ -193,7 +193,8 @@ Para borrar también los volúmenes: `docker compose -f docker-compose.prod.yml 
                             │      │  mongodb :27017                 │    │
                             │      │                                 │    │
                             │      │  sandbox-ssh :2222              │    │
-   Cliente SSH ── :2222 ───►│──────┼─►(demo box pública del SaaS)    │    │
+   Cliente SSH ── :2223 ───►│──────┼─►(demo box pública del SaaS,    │    │
+                            │      │   host:2223 → contenedor:2222)  │    │
                             │      └─────────────────────────────────┘    │
                             └─────────────────────────────────────────────┘
 ```

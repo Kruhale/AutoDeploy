@@ -25,7 +25,7 @@ npm test                               # modo watch (TDD local)
 ng test --include='**/idioma.service.spec.ts'  # un único test
 ```
 
-Estado actual: **68/68 tests SUCCESS**.
+Estado actual: **123 tests SUCCESS** (frontend) tras ampliación con casos reales en specs de `tarjeta-estadistica`, `migas-pan`, `footer`, `header`, `home`, `register`, `onboarding`, `nuevo-despliegue`, `sidebar`, `landing-layout`, `barra-pie-app` (criterios de password, render del DOM, signals iniciales, transiciones de estado).
 
 ### 2. Tests unitarios — Backend (JUnit + Mockito)
 
@@ -33,9 +33,12 @@ Ubicación: `backend/src/test/java/com/autodeploy/`.
 
 Cubren:
 
-- **JwtUtilTest**: generación, validación y caducidad de tokens.
 - **CifradoUtilTest**: cifrado / descifrado AES, casos de clave inválida.
+- **UsuarioControllerTest**: registro, login, validaciones, errores y autorización con roles `USUARIO`/`ADMIN`.
+- **UsuarioServiceTest**: lógica de negocio (creación, autenticación, asignación de rol por defecto, cambio de plan).
+- **ServidorControllerTest**: CRUD de servidores con JWT mockeado.
 - **ServidorServiceTest**: lógica de servicio con MongoRepository mockeado.
+- **ReconexionServiceTest**: reconexión automática SSH tras arranque.
 
 Ejecutar:
 
@@ -80,8 +83,8 @@ No se alcanza el 80% global pedido por la rúbrica DIW en lo referente a fronten
 ## Resultados y estadísticas
 
 ```
-Chrome Headless 148.0.0.0: Executed 68 of 68 SUCCESS (0.367 secs / 0.355 secs)
-TOTAL: 68 SUCCESS
+Chrome Headless 148.0.0.0: Executed 123 of 123 SUCCESS (0.412 secs / 0.398 secs)
+TOTAL: 123 SUCCESS
 
 Maven Surefire: Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
 ```

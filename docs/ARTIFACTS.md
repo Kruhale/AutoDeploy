@@ -20,7 +20,7 @@ Inventario de **todos** los ficheros y artefactos involucrados en el despliegue,
 |-----------|-----------|-----------|---------------|------------|------------|
 | **Orquestación** | | | | | |
 | `docker-compose.yml` | raíz | Compose solo de MongoDB (desarrollo local) | ✅ | ❌ | n/a |
-| `docker-compose.prod.yml` | raíz | Compose completo (mongodb + backend + frontend) | ✅ | ❌ | n/a |
+| `docker-compose.prod.yml` | raíz | Compose completo (mongodb + backend + sandbox-ssh + frontend) | ✅ | ❌ | n/a |
 | `.env` | raíz | Valores reales de las variables de entorno | ❌ (gitignore) | Manual | Sí |
 | `.env.example` | raíz | Plantilla pública sin secretos | ✅ | ❌ | n/a |
 | **Construcción** | | | | | |

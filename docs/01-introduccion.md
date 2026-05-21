@@ -21,7 +21,7 @@ El proyecto se desarrolla como **Proyecto Final Intermodular** del 2º curso del
 |---|---|
 | Aplicación funcional end-to-end (registro, login, conectar servidor por SSH real, desplegar app, ver métricas en vivo) | ✅ |
 | API REST documentada con OpenAPI/Swagger | ✅ (`docs/API.md`) |
-| Tests unitarios en frontend (Karma+Jasmine) | ✅ 68/68 |
+| Tests unitarios en frontend (Karma+Jasmine) | ✅ 123/123 |
 | Despliegue público con HTTPS | ✅ https://autodeploy.kruhale.com |
 | Documentación de la rúbrica de 4 módulos | En curso (este documento) |
 | Prototipo Figma con guía de estilo y biblioteca de componentes | ✅ |

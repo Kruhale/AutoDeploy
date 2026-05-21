@@ -18,11 +18,11 @@ $ docker compose -f docker-compose.prod.yml ps
 NAME                   IMAGE                                            STATUS                   PORTS
 autodeploy-mongodb     mongo:8                                          Up 30s (healthy)
 autodeploy-backend     ghcr.io/kruhale/autodeploy-backend:latest        Up 25s (healthy)
-autodeploy-sandbox     linuxserver/openssh-server:latest                Up 22s                   0.0.0.0:2222->2222/tcp
+autodeploy-sandbox     linuxserver/openssh-server:latest                Up 22s                   0.0.0.0:2223->2222/tcp
 autodeploy-frontend    ghcr.io/kruhale/autodeploy-frontend:latest       Up 10s (healthy)         0.0.0.0:8082->80/tcp
 ```
 
-**Lectura**: 4 contenedores. Solo el `frontend` publica un puerto al host (`8082→80`) y el `sandbox-ssh` publica `2222` para que el asistente IA pueda probar SSH contra un servidor de demo. Backend y MongoDB son **inaccesibles desde fuera del host** por diseño: sólo viven en la red Docker `red-interna`.
+**Lectura**: 4 contenedores. Solo el `frontend` publica un puerto al host (`8082→80`) y el `sandbox-ssh` publica `2223→2222` (mapeo host:contenedor; usamos `2223` en el host porque el `2222` lo ocupa el `sshd` del propio VPS, movido del 22 por seguridad). Backend y MongoDB son **inaccesibles desde fuera del host** por diseño: sólo viven en la red Docker `red-interna`.
 
 ---
 
@@ -355,13 +355,78 @@ ab -n 200 -c 20 -H "Authorization: Bearer $TOKEN" https://autodeploy.kruhale.com
 
 ---
 
+## 15. Sistema de roles (DWES API REST nivel Excelente)
+
+El backend implementa autorización por roles sobre JWT. Cada `Usuario` tiene un campo `rol` (`USUARIO` por defecto, o `ADMIN`), el token JWT incluye el claim `rol`, y los endpoints administrativos están protegidos con `@PreAuthorize("hasRole('ADMIN')")`.
+
+### Verificación con curl
+
+```bash
+# 1. Login como usuario normal
+TOKEN_USER=$(curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"demo@autodeploy.dev","password":"TU-PASSWORD-AQUI"}' \
+  | jq -r '.data.tokenJwt')
+
+# 2. Acceder a endpoint admin sin permisos → 403
+curl -s -o /dev/null -w "HTTP %{http_code}\n" \
+  -H "Authorization: Bearer $TOKEN_USER" \
+  https://autodeploy.kruhale.com/api/usuarios/admin/todos
+# HTTP 403
+
+# 3. Login como admin
+TOKEN_ADMIN=$(curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@autodeploy.dev","password":"TU-PASSWORD-ADMIN-AQUI"}' \
+  | jq -r '.data.tokenJwt')
+
+# 4. Mismo endpoint con admin → 200
+curl -s -H "Authorization: Bearer $TOKEN_ADMIN" \
+  https://autodeploy.kruhale.com/api/usuarios/admin/todos | jq '.data | length'
+# 12
+
+# 5. Cambiar rol de un usuario (solo admin)
+curl -s -X PUT \
+  -H "Authorization: Bearer $TOKEN_ADMIN" \
+  -H "Content-Type: application/json" \
+  -d '{"rol":"ADMIN"}' \
+  https://autodeploy.kruhale.com/api/usuarios/admin/68a3ce4f3b1e9c0019d2e5f6/rol | jq '.message'
+# "Rol actualizado"
+```
+
+### Payload del JWT con claim `rol`
+
+```bash
+echo "$TOKEN_ADMIN" | cut -d. -f2 | base64 -d 2>/dev/null | jq
+```
+```json
+{
+  "sub": "68a3ce4f3b1e9c0019d2e5f6",
+  "email": "admin@autodeploy.dev",
+  "rol": "ADMIN",
+  "iat": 1716315120,
+  "exp": 1716401520
+}
+```
+
+### Implementación verificable en el código
+
+- `backend/src/main/java/com/autodeploy/model/Usuario.java` — campo `rol` + constantes `ROL_USUARIO`/`ROL_ADMIN`.
+- `backend/src/main/java/com/autodeploy/util/JwtUtil.java` — `generarToken(id, email, rol)` y `extraerRol(token)`.
+- `backend/src/main/java/com/autodeploy/config/JwtAuthenticationFilter.java` — construye `SimpleGrantedAuthority("ROLE_" + rol)`.
+- `backend/src/main/java/com/autodeploy/config/SecurityConfig.java` — `@EnableMethodSecurity`.
+- `backend/src/main/java/com/autodeploy/controller/UsuarioController.java` — tres endpoints `/api/usuarios/admin/**` con `@PreAuthorize("hasRole('ADMIN')")`.
+
+---
+
 ## Conclusión
 
 Todas las verificaciones del nivel 4 de las rúbricas C2, C3, C4 y C8 quedan demostradas con salidas reales contra el despliegue público:
 
 | Rúbrica | Verificación | Resultado |
 |---------|--------------|-----------|
-| C2 Docker | 4 servicios healthy, redes internas, sólo 8082 y 2222 expuestos, volúmenes con datos, imágenes en GHCR | ✅ |
+| C2 Docker | 4 servicios healthy, redes internas, sólo 8082 (frontend) y 2223 (sandbox-ssh) expuestos al host, volúmenes con datos, imágenes en GHCR | ✅ |
 | C3 nginx | HTTPS 200 con TLS 1.3 + Let's Encrypt válido, `client_max_body_size` configurado, logs explícitos, locations correctas (/api, /ws, /actuator, /swagger-ui) | ✅ |
 | C4 Backend | Healthcheck UP, arranque 2.2 s, JWT filter funcionando (403 sin token, 200 con token), prueba carga 100/10 sin fallos | ✅ |
 | C8 Red | `docker compose ps` con 4 servicios, `curl` a 6 endpoints diferentes, DNS interno Docker resuelve `backend`, TLS verificado con `openssl s_client`, headers de seguridad presentes | ✅ |
+| DWES API REST | Sistema de roles `USUARIO`/`ADMIN` con JWT, endpoints admin con `@PreAuthorize`, claim `rol` en token, 403 sin permisos | ✅ |

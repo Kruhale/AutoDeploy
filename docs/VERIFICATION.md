@@ -9,7 +9,7 @@ Las salidas reales recogidas en un despliegue concreto están en [`EVIDENCIA.md`
 | Puerto | Quién escucha | Quién publica | Quién consume |
 |--------|---------------|---------------|---------------|
 | `8082`/tcp (`HOST_PORT`) | nginx contenedor (frontend) | host | `nginx-host` del VPS o, en local, navegador directo |
-| `2222`/tcp | sshd (sandbox-ssh) | host | Usuarios que quieran probar el asistente IA con un servidor de demo |
+| `2223`/tcp → contenedor `2222`/tcp | sshd (sandbox-ssh) | host | Backend (vía DNS Docker `sandbox-ssh:2222`) y usuarios externos que quieran probar el asistente IA. El `2222` del host lo ocupa el `sshd` del propio VPS |
 | `8080`/tcp | Spring Boot (backend) | red Docker interna | solo nginx contenedor |
 | `27017`/tcp | MongoDB | red Docker interna | solo backend |
 
@@ -39,11 +39,12 @@ En local sin `nginx-host` por delante, sustituir `https://autodeploy.kruhale.com
 docker compose -f docker-compose.prod.yml ps
 ```
 
-Debe mostrar 3 servicios `Up (healthy)`:
+Debe mostrar 4 contenedores: tres con healthcheck (`Up (healthy)`) y el sandbox-ssh sin healthcheck definido (`Up`):
 
 - `autodeploy-mongodb` — `(healthy)` cuando el ping a Mongo responde
 - `autodeploy-backend` — `(healthy)` cuando `/actuator/health` responde 200
 - `autodeploy-frontend` — `(healthy)` cuando `http://127.0.0.1/` responde (chequeado dentro del contenedor por el `HEALTHCHECK` del Dockerfile)
+- `autodeploy-sandbox` — `Up` (la imagen `linuxserver/openssh-server` no expone healthcheck; el deploy lo recicla con `docker compose restart sandbox-ssh` en cada deploy)
 
 ### 2. Frontend en producción (TLS)
 

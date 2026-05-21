@@ -225,7 +225,7 @@ Cada página Angular sigue este patrón:
 
 ### Excepción documentada
 
-`pages/cuenta/cuenta.scss` mantiene sus 1654 líneas en local porque usa `:host` (scoping nativo de Angular). Mover esa página a global obligaría a reescribir la raíz y se ha decidido aplazar para no romper visualmente. Es la única excepción al patrón.
+`pages/cuenta/cuenta.scss` mantiene sus ~1800 líneas en local porque usa `:host` (scoping nativo de Angular). Mover esa página a global obligaría a reescribir la raíz y se ha decidido aplazar para no romper visualmente. Es la única excepción al patrón.
 
 ## Cómo añadir una página nueva
 

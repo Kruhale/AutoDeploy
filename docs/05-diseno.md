@@ -131,7 +131,7 @@ Servicios Docker (`docker-compose.prod.yml`):
 - `frontend` — nginx + estáticos Angular. Único puerto HTTP expuesto al host (8082).
 - `backend` — Spring Boot. Sólo accesible por la red Docker `red-interna`.
 - `mongodb` — MongoDB 8. Idem, sólo red interna.
-- `sandbox-ssh` — Contenedor `linuxserver/openssh-server` que expone el puerto 2222 al host. Sirve como VPS demo para probar el panel sin necesidad de un servidor real, pero forma parte del despliegue de producción (es la "demo box" pública del SaaS).
+- `sandbox-ssh` — Contenedor `linuxserver/openssh-server` que publica el puerto del contenedor `2222` en el host como `2223` (el `2222` del host lo ocupa el `sshd` del propio VPS). El backend conecta a él por la red Docker `red-interna` usando el hostname `sandbox-ssh:2222`. Sirve como VPS demo para que el asistente IA pueda probar comandos sin necesidad de un servidor real.
 
 ## Diseño de la API
 

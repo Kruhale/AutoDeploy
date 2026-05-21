@@ -49,3 +49,7 @@ Thumbs.db
 
 # Entorno local de pruebas SSH (no producto)
 test-vps/
+
+# Reports generados por Lighthouse (regenerar localmente con `lighthouse`)
+docs/assets/capturas/accesibilidad/*.report.html
+docs/assets/capturas/accesibilidad/*.report.json

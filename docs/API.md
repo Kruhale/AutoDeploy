@@ -345,7 +345,7 @@ curl -s -X PUT https://autodeploy.kruhale.com/api/asistente-ia/configuracion/$US
   -H "Content-Type: application/json" \
   -d '{
     "apiKey": "<tu-clave-openrouter>",
-    "modeloPreferido": "openai/gpt-4o-mini",
+    "modeloPreferido": "google/gemini-2.5-pro",
     "comandosAutoAprobados": ["df -h", "free -m", "uptime"]
   }'
 ```
@@ -379,6 +379,58 @@ Ejemplo de conexión desde JavaScript:
 const ws = new WebSocket(`wss://${location.host}/ws/metricas?servidorId=${id}`);
 ws.onmessage = (e) => console.log(JSON.parse(e.data));
 ```
+
+## Endpoints administrativos (rol ADMIN)
+
+Los endpoints bajo `/api/usuarios/admin/**` están protegidos con `@PreAuthorize("hasRole('ADMIN')")`. Un JWT cuyo claim `rol` no sea `ADMIN` recibe **HTTP 403**.
+
+#### `GET /api/usuarios/admin/todos`
+
+Lista todos los usuarios registrados. Solo accesible por administradores.
+
+```bash
+curl -s -H "Authorization: Bearer $TOKEN_ADMIN" \
+  https://autodeploy.kruhale.com/api/usuarios/admin/todos | jq
+```
+
+```json
+{
+  "success": true,
+  "message": "OK",
+  "data": [
+    { "id": "6a0a...", "email": "demo@test.com", "rol": "USUARIO", "plan": "free" },
+    { "id": "6a0b...", "email": "admin@autodeploy.dev", "rol": "ADMIN", "plan": "business" }
+  ]
+}
+```
+
+#### `PUT /api/usuarios/admin/{id}/rol`
+
+Cambia el rol de un usuario. Body: `{ "rol": "ADMIN" }` o `{ "rol": "USUARIO" }`.
+
+```bash
+curl -s -X PUT \
+  -H "Authorization: Bearer $TOKEN_ADMIN" \
+  -H "Content-Type: application/json" \
+  -d '{"rol":"ADMIN"}' \
+  https://autodeploy.kruhale.com/api/usuarios/admin/6a0a.../rol | jq
+```
+
+**Errores:** 400 si el rol no es `USUARIO` o `ADMIN`. 403 si el solicitante no es ADMIN. 404 si el usuario no existe.
+
+#### `DELETE /api/usuarios/admin/{id}`
+
+Borra un usuario por ID (acción administrativa).
+
+```bash
+curl -s -X DELETE \
+  -H "Authorization: Bearer $TOKEN_ADMIN" \
+  -o /dev/null -w "HTTP %{http_code}\n" \
+  https://autodeploy.kruhale.com/api/usuarios/admin/6a0a...
+# HTTP 204
+```
+
+---
 
 ## Health & métricas (sin JWT)
 

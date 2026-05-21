@@ -170,7 +170,7 @@ Razonamiento: el proyecto es individual, el equipo es de una persona, y se busca
 
 | Elemento | Uso en AutoDeploy |
 |---|---|
-| `<header>` | Cabecera del sitio (`<app-header>`) y de la app autenticada (`disposicion-app__cabecera-movil`). Pie de la barra lateral (`barra-lateral__inferior`). |
+| `<header>` | Cabecera del sitio (`<app-header>` en la landing pública) y de la app autenticada: `disposicion-app__cabecera-movil` (móvil con hamburguesa + logo + campana) y `disposicion-app__cabecera-desktop` (desktop con toggle de tema + campana de notificaciones + icono de cuenta). Pie de la barra lateral (`barra-lateral__inferior`). |
 | `<nav>` | 5+ instancias, todas con `aria-label` distintivo: principal (sidebar), header, footer producto, footer legal, footer soporte, redes sociales, breadcrumbs. |
 | `<main>` | Único por ruta, con `id="contenido-principal"` y `tabindex="-1"` para que el skip link salte ahí. |
 | `<article>` | En notificaciones, posts del dropdown. |
@@ -347,7 +347,7 @@ Beneficio: la tarjeta vive en sidebar (~280px), grid dashboard (~340px), panel d
 
 | Zona | Móvil (<768px) | Tablet (768-992px) | Desktop (>992px) |
 |---|---|---|---|
-| Header app | Cabecera móvil con hamburguesa | Desaparece la cabecera móvil, aparece el sidebar | Sidebar fijo |
+| Header app | `cabecera-movil` con hamburguesa + logo + campana | Aparece el sidebar; la cabecera móvil desaparece | Sidebar fijo + `cabecera-desktop` con toggle de tema + campana + icono cuenta |
 | Sidebar | `fixed` con `transform: translateX(-100%)` y backdrop modal | `sticky` lateral | `sticky` lateral, opcionalmente colapsable |
 | Hero (seccion-bienvenida) | Una columna | Una columna | Dos columnas |
 | Dashboard tarjetas | 1 columna | 2 columnas | 3+ columnas con container queries |
@@ -487,7 +487,7 @@ Pendiente de poblar `docs/design/capturas/` con tomas en 3 páginas representati
 - Reverse proxy nginx (contenedor + host).
 - Imagen Docker publicada en GHCR.
 - 5 idiomas (es / en / fr / de / it) con ngx-translate.
-- 68/68 tests Karma+Jasmine en frontend.
+- 123/123 tests Karma+Jasmine en frontend.
 
 ### 7.2 Despliegue
 

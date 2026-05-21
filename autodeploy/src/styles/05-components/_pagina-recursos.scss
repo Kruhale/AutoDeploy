@@ -1,4 +1,4 @@
-@use "../00-settings/css-variables" as *;
+@use "../01-tools/mixins" as *;
 
 .pagina-recursos {
   background-color: var(--fondo-oscuro);
@@ -10,7 +10,7 @@
   max-width: 72rem;
   margin: 0 auto;
 
-  @media (max-width: $breakpoint-md) {
+  @include movil {
     padding: var(--spacing-size-4xl) var(--spacing-size-l);
   }
 
@@ -22,7 +22,7 @@
     padding-bottom: var(--spacing-size-3xl);
     border-bottom: 1px solid var(--borde-normal);
 
-    @media (max-width: $breakpoint-md) {
+    @include movil {
       grid-template-columns: 1fr;
       align-items: flex-start;
     }
@@ -40,7 +40,7 @@
       gap: 0.25rem;
       text-align: right;
 
-      @media (max-width: $breakpoint-md) {
+      @include movil {
         align-items: flex-start;
         text-align: left;
       }
@@ -103,7 +103,7 @@
     grid-template-columns: repeat(2, 1fr);
     gap: var(--spacing-size-2xl);
 
-    @media (max-width: $breakpoint-md) {
+    @include movil {
       grid-template-columns: 1fr;
     }
   }
@@ -130,7 +130,7 @@
       outline-offset: 2px;
     }
 
-    @media (max-width: $breakpoint-md) {
+    @include movil {
       padding: var(--spacing-size-2xl);
     }
 
@@ -201,7 +201,7 @@
     color: var(--texto-claro);
     flex-wrap: wrap;
 
-    @media (max-width: $breakpoint-md) {
+    @include movil {
       gap: var(--spacing-size-s);
     }
 
@@ -226,7 +226,7 @@
       font-size: var(--font-size-md);
       margin-left: auto;
 
-      @media (max-width: $breakpoint-md) {
+      @include movil {
         margin-left: 0;
         width: 100%;
       }

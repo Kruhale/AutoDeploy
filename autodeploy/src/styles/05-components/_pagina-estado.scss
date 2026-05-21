@@ -1,4 +1,4 @@
-@use "../00-settings/css-variables" as *;
+@use "../01-tools/mixins" as *;
 
 .pagina-estado {
   &__banner {
@@ -85,7 +85,7 @@
       background-color: rgba(240, 236, 226, 0.03);
     }
 
-    @media (max-width: $breakpoint-md) {
+    @include movil {
       padding: var(--spacing-size-m) var(--spacing-size-l);
       gap: var(--spacing-size-m);
     }
@@ -124,7 +124,7 @@
       font-weight: var(--font-weight-semibold);
       color: var(--texto-claro);
 
-      @media (max-width: $breakpoint-md) {
+      @include movil {
         font-size: var(--font-size-md);
       }
     }

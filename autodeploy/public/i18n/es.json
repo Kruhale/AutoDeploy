@@ -17,6 +17,11 @@
     "buscar": "Buscar",
     "guion": "—",
     "menu": "Menú",
+    "saltarContenido": "Saltar al contenido",
+    "cerrarMenu": "Cerrar menú",
+    "ariaDisposicionApp": "Aplicación AutoDeploy",
+    "ariaCabeceraMovil": "Cabecera móvil",
+    "ariaContenidoApp": "Contenido principal de la aplicación",
     "sinDatos": "Sin datos todavía",
     "guardando": "Guardando…",
     "guardado": "Guardado",
@@ -74,7 +79,12 @@
       "contacto": "Contacto",
       "comunidad": "Comunidad"
     },
-    "copyright": "© 2026 AutoDeployService · Infraestructura cloud empresarial"
+    "copyright": "© 2026 AutoDeployService · Infraestructura cloud empresarial",
+    "ariaContenido": "Información y enlaces del pie de página",
+    "ariaMarca": "Sobre AutoDeployService",
+    "ariaInferior": "Copyright y ajustes generales",
+    "ariaAjustes": "Idioma y redes sociales",
+    "ariaRedes": "Redes sociales"
   },
   "barraPie": {
     "estado": "Todos los sistemas operativos",
@@ -135,7 +145,11 @@
     },
     "chipPro": "Pro",
     "colapsar": "Colapsar",
-    "fallbackCuenta": "Mi cuenta"
+    "fallbackCuenta": "Mi cuenta",
+    "ariaPrincipal": "Barra lateral de la aplicación",
+    "ariaNavegacion": "Navegación principal",
+    "ariaColapsar": "Colapsar o expandir la barra lateral",
+    "ariaInfoUsuario": "Información de la cuenta"
   },
   "bannerCookies": {
     "texto": "Usamos cookies propias para mejorar tu experiencia. Consulta nuestra",
@@ -713,7 +727,7 @@
       "authMethodContrasena": "Contraseña",
       "clavePlaceholder": "Introduce la contraseña del servidor",
       "claveSsh": "Clave SSH privada",
-      "claveSshPlaceholder": "-----BEGIN OPENSSH PRIVATE KEY-----\n…\n-----END OPENSSH PRIVATE KEY-----",
+      "claveSshPlaceholder": "Pega aquí tu clave privada (formato OpenSSH, líneas BEGIN/END incluidas)",
       "claveSshPista": "Pega el contenido completo de tu clave privada, incluyendo las líneas BEGIN y END."
     },
     "ayuda": {

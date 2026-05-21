@@ -17,6 +17,11 @@
     "buscar": "Cerca",
     "guion": "—",
     "menu": "Menu",
+    "saltarContenido": "Vai al contenuto",
+    "cerrarMenu": "Chiudi menu",
+    "ariaDisposicionApp": "Applicazione AutoDeploy",
+    "ariaCabeceraMovil": "Intestazione mobile",
+    "ariaContenidoApp": "Contenuto principale dell'applicazione",
     "sinDatos": "Nessun dato ancora",
     "guardando": "Salvataggio…",
     "guardado": "Salvato",
@@ -74,7 +79,12 @@
       "contacto": "Contatti",
       "comunidad": "Community"
     },
-    "copyright": "© 2026 AutoDeployService · Infrastruttura cloud aziendale"
+    "copyright": "© 2026 AutoDeployService · Infrastruttura cloud aziendale",
+    "ariaContenido": "Informazioni e link del piè di pagina",
+    "ariaMarca": "Su AutoDeployService",
+    "ariaInferior": "Copyright e impostazioni generali",
+    "ariaAjustes": "Lingua e social network",
+    "ariaRedes": "Social network"
   },
   "barraPie": {
     "estado": "Tutti i sistemi operativi",
@@ -135,7 +145,11 @@
     },
     "chipPro": "Pro",
     "colapsar": "Comprimi",
-    "fallbackCuenta": "Il mio account"
+    "fallbackCuenta": "Il mio account",
+    "ariaPrincipal": "Barra laterale dell'applicazione",
+    "ariaNavegacion": "Navigazione principale",
+    "ariaColapsar": "Comprimi o espandi la barra laterale",
+    "ariaInfoUsuario": "Informazioni dell'account"
   },
   "bannerCookies": {
     "texto": "Utilizziamo cookie propri per migliorare la tua esperienza. Consulta la nostra",
@@ -713,7 +727,7 @@
       "authMethodContrasena": "Password",
       "clavePlaceholder": "Inserisci la password del server",
       "claveSsh": "Chiave SSH privata",
-      "claveSshPlaceholder": "-----BEGIN OPENSSH PRIVATE KEY-----\n…\n-----END OPENSSH PRIVATE KEY-----",
+      "claveSshPlaceholder": "Incolla qui la tua chiave privata (formato OpenSSH, righe BEGIN/END incluse)",
       "claveSshPista": "Incolla l'intero contenuto della tua chiave privata, incluse le righe BEGIN e END."
     },
     "ayuda": {

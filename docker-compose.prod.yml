@@ -42,8 +42,10 @@ services:
   # Contenedor sandbox para probar la conexión SSH del asistente IA sin tocar
   # un VPS externo real. Sin sudo, claves SSH solamente, reseteable con
   # `docker compose restart sandbox-ssh`. El SSH del contenedor escucha en 2222
-  # y se publica en el puerto 2222 del host, así desde la app se configura como
-  # un servidor más: host = autodeploy.kruhale.com, puerto = 2222, usuario = demo.
+  # pero el puerto 2222 del HOST ya lo usa el sshd del propio VPS (movido del
+  # 22 por seguridad), asi que mapeamos al 2223 del host. Dentro de la red
+  # `red-interna` el backend conecta directamente a `sandbox-ssh:2222` por DNS
+  # de Docker, sin pasar por el host.
   sandbox-ssh:
     image: linuxserver/openssh-server:latest
     container_name: autodeploy-sandbox
@@ -58,7 +60,7 @@ services:
     volumes:
       - sandbox-config:/config
     ports:
-      - "2222:2222"
+      - "2223:2222"
     networks:
       - red-interna
     restart: unless-stopped

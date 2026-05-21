@@ -10,13 +10,7 @@ Panel SaaS de gestión y despliegue automático para servidores VPS. Permite con
 ![MongoDB](https://img.shields.io/badge/MongoDB-8-green?logo=mongodb)
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-## Capturas
-
-<!-- Las capturas se generan al desplegar (ver docs/EVIDENCIA.md) -->
-- Dashboard con métricas en vivo: `docs/img/dashboard.png`
-- Asistente IA ejecutando un comando: `docs/img/asistente-ia.png`
-- Swagger UI: `docs/img/swagger.png`
-- Workflow CI/CD en verde: `docs/img/workflow-verde.png`
+**Producción**: https://autodeploy.kruhale.com (TLS Let's Encrypt, healthcheck UP).
 
 ## Stack tecnológico
 
@@ -86,21 +80,21 @@ docker compose -f docker-compose.prod.yml ps
 ```
 
 Abre `http://localhost:8082/` en el navegador (en local sin nginx-host por delante).
-En producción con dominio + nginx-host: `https://tu-dominio.es/` con cert válido Let's Encrypt.
+En producción con dominio + nginx-host: `https://autodeploy.kruhale.com/` con cert Let's Encrypt válido.
 
 ### Verificación rápida (local sin nginx-host)
 
 ```bash
-curl -I http://localhost:8082/                  # 200 (Angular SPA)
-curl -s http://localhost:8082/api/estado | jq   # {"success":true,...}
-curl -s http://localhost:8082/actuator/health   # {"status":"UP"}
+curl -I http://localhost:8082/                  # HTTP/1.1 200
+curl -s http://localhost:8082/api/estado | jq   # {"success":true,"data":{"estadoGeneral":"UP",...}}
+curl -s http://localhost:8082/actuator/health   # {"status":"UP","groups":["liveness","readiness"]}
 ```
 
-### Verificación rápida (en VPS con nginx-host + Let's Encrypt)
+### Verificación rápida (producción real)
 
 ```bash
-curl -I https://tu-dominio.es/            # 200, HTTP/2, cert válido
-curl -s https://tu-dominio.es/api/estado  # {"success":true,...}
+curl -I https://autodeploy.kruhale.com/                # HTTP/2 200, server: nginx
+curl -s https://autodeploy.kruhale.com/api/estado | jq # estadoGeneral: UP, 6 servicios operativos
 ```
 
 ## Variables de entorno
@@ -130,9 +124,10 @@ openssl rand -base64 32   # AUTODEPLOY_CIFRADO_CLAVE
 | Verificación de red post-despliegue | [`docs/VERIFICATION.md`](docs/VERIFICATION.md) |
 | Artefactos y ficheros del proyecto | [`docs/ARTIFACTS.md`](docs/ARTIFACTS.md) |
 | Evidencias reales (salidas, capturas) | [`docs/EVIDENCIA.md`](docs/EVIDENCIA.md) |
-| Swagger UI interactivo | `https://<host>/swagger-ui.html` |
-| OpenAPI JSON | `https://<host>/v3/api-docs` |
-| Rúbricas de evaluación | [`Rublicas.md`](Rublicas.md) |
+| Documentación DIW (7 secciones) | [`docs/design/DOCUMENTACION.md`](docs/design/DOCUMENTACION.md) |
+| Análisis de accesibilidad (8 secciones) | [`docs/accesibilidad/README.md`](docs/accesibilidad/README.md) |
+| Swagger UI interactivo | `https://autodeploy.kruhale.com/swagger-ui.html` |
+| OpenAPI JSON | `https://autodeploy.kruhale.com/v3/api-docs` |
 
 ## Desarrollo local
 
@@ -200,7 +195,7 @@ AutoDeploy/
 | 413 al subir ZIP | Subir `client_max_body_size` en `autodeploy/nginx.conf` |
 | 403 en endpoints `/api/*` | Hacer login; el JWT puede haber expirado |
 | Asistente IA no responde | Configurar API key OpenRouter en `/app/asistente-ia/ajustes` (cada usuario la suya) |
-| "Tu conexión no es privada" en navegador | Cert autofirmado: aceptar excepción o sustituir por uno real |
+| Cert no válido en `http://localhost:8082` | Es esperado: el contenedor sirve sólo HTTP; el TLS lo termina el nginx-host del VPS (Let's Encrypt centralizado) |
 
 Más detalles en [`docs/DEPLOY.md`](docs/DEPLOY.md#troubleshooting).
 

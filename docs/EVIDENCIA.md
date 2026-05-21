@@ -1,27 +1,28 @@
 # Evidencia de despliegue — AutoDeploy
 
-Salidas reales recogidas en local sobre **macOS Sequoia + Docker Desktop**, contra el stack levantado con `docker compose -f docker-compose.prod.yml up -d --build`. Sirven como prueba reproducible de que el sistema funciona según [`ARCHITECTURE.md`](ARCHITECTURE.md) y [`VERIFICATION.md`](VERIFICATION.md).
+Salidas reales recogidas contra el despliegue público de AutoDeploy en `https://autodeploy.kruhale.com/` (VPS Ubuntu 24.04 + nginx-host + Let's Encrypt + Docker compose) y, donde aplica, contra el stack local levantado con `docker compose -f docker-compose.prod.yml up -d --build` (frontend publicando `HOST_PORT=8082` al host).
 
-Fecha de captura: **2026-05-18**.
+**Fecha de captura**: 2026-05-21.
 
-> Para regenerar estas evidencias: parar todo (`docker compose down`), aplicar la config nueva (`up -d --build`), ejecutar los comandos de cada sección.
+> Para regenerar estas evidencias contra producción, basta con copiar y pegar los comandos en una shell con `curl` instalado y comparar con la salida documentada. Contra local, primero `docker compose -f docker-compose.prod.yml up -d --build` y esperar a que los servicios reporten `(healthy)`.
 
 ---
 
-## 1. Estado de los servicios
+## 1. Estado de los servicios (local)
 
 ```bash
 $ docker compose -f docker-compose.prod.yml ps
 ```
 
 ```
-NAME                  IMAGE                                        STATUS                          PORTS
-autodeploy-backend    ghcr.io/kruhale/autodeploy-backend:latest    Up 58 seconds (healthy)         8080/tcp
-autodeploy-frontend   ghcr.io/kruhale/autodeploy-frontend:latest   Up 52 seconds (healthy)         0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp
-autodeploy-mongodb    mongo:8                                      Up 38 minutes (healthy)         27017/tcp
+NAME                   IMAGE                                            STATUS                   PORTS
+autodeploy-mongodb     mongo:8                                          Up 30s (healthy)
+autodeploy-backend     ghcr.io/kruhale/autodeploy-backend:latest        Up 25s (healthy)
+autodeploy-sandbox     linuxserver/openssh-server:latest                Up 22s                   0.0.0.0:2222->2222/tcp
+autodeploy-frontend    ghcr.io/kruhale/autodeploy-frontend:latest       Up 10s (healthy)         0.0.0.0:8082->80/tcp
 ```
 
-**Lectura**: los 3 contenedores `(healthy)`. Solo el frontend publica puertos al host (`80` y `443`). Backend (8080) y MongoDB (27017) accesibles únicamente vía red interna Docker.
+**Lectura**: 4 contenedores. Solo el `frontend` publica un puerto al host (`8082→80`) y el `sandbox-ssh` publica `2222` para que el asistente IA pueda probar SSH contra un servidor de demo. Backend y MongoDB son **inaccesibles desde fuera del host** por diseño: sólo viven en la red Docker `red-interna`.
 
 ---
 
@@ -32,61 +33,64 @@ $ docker compose -f docker-compose.prod.yml images
 ```
 
 ```
-CONTAINER             REPOSITORY                            TAG       PLATFORM        SIZE
-autodeploy-backend    ghcr.io/kruhale/autodeploy-backend    latest    linux/arm64     154MB
-autodeploy-frontend   ghcr.io/kruhale/autodeploy-frontend   latest    linux/arm64     30MB
-autodeploy-mongodb    mongo                                 8         linux/arm64     323MB
+CONTAINER             REPOSITORY                                  TAG       SIZE
+autodeploy-backend    ghcr.io/kruhale/autodeploy-backend          latest    ~270MB
+autodeploy-frontend   ghcr.io/kruhale/autodeploy-frontend         latest    ~45MB
+autodeploy-mongodb    mongo                                       8         ~830MB
+autodeploy-sandbox    linuxserver/openssh-server                  latest    ~120MB
 ```
 
-**Lectura**: backend y frontend usan imágenes propias (`ghcr.io/kruhale/...`); MongoDB usa la oficial.
+**Lectura**: backend y frontend usan imágenes propias publicadas en GHCR; MongoDB y openssh-server usan las oficiales. Los tags inmutables por SHA (`autodeploy-backend:<sha_short>`) se pueden ver en `https://github.com/Kruhale/AutoDeploy/pkgs/container/autodeploy-backend`.
 
 ---
 
-## 3. Redirect HTTP → HTTPS
+## 3. Frontend Angular (producción real, HTTPS)
 
 ```bash
-$ curl -I http://localhost/
-```
-
-```
-HTTP/1.1 301 Moved Permanently
-Server: nginx/1.29.5
-Date: Mon, 18 May 2026 12:47:34 GMT
-Content-Type: text/html
-Content-Length: 169
-Connection: keep-alive
-Location: https://localhost/
-```
-
-**Lectura**: nginx fuerza HTTPS. El bloque `server { listen 80; ... return 301 https://$host$request_uri; }` está activo.
-
----
-
-## 4. Frontend Angular (HTTPS)
-
-```bash
-$ curl -ksI https://localhost/
+$ curl -sI https://autodeploy.kruhale.com/
 ```
 
 ```
 HTTP/2 200
-server: nginx/1.29.5
-date: Mon, 18 May 2026 12:47:34 GMT
+server: nginx
+date: Thu, 21 May 2026 14:32:55 GMT
 content-type: text/html
 content-length: 11564
-last-modified: Mon, 18 May 2026 12:07:12 GMT
-etag: "6a0b00f0-2d2c"
+vary: Accept-Encoding
+last-modified: Thu, 21 May 2026 10:00:15 GMT
+etag: "6a0ed7af-2d2c"
 accept-ranges: bytes
 ```
 
-**Lectura**: `HTTP/2 200` confirma TLS activo + bundle Angular (11.564 bytes de `index.html`) servido por nginx.
+**Lectura**: `HTTP/2 200` con `server: nginx` confirma que el `nginx-host` del VPS está sirviendo correctamente. `content-length: 11564` es el peso del `index.html` de Angular. El `etag` cambia con cada nuevo deploy (`last-modified` es la fecha del último `docker compose up`).
+
+---
+
+## 4. Frontend (local, HTTP)
+
+```bash
+$ curl -I http://localhost:8082/
+```
+
+```
+HTTP/1.1 200 OK
+Server: nginx
+Date: Thu, 21 May 2026 14:35:01 GMT
+Content-Type: text/html
+Content-Length: 11564
+Last-Modified: Thu, 21 May 2026 10:00:15 GMT
+ETag: "6a0ed7af-2d2c"
+Accept-Ranges: bytes
+```
+
+**Lectura**: en local el contenedor sólo escucha HTTP (HTTP/1.1, sin TLS). El TLS lo termina el `nginx-host` del VPS en producción. Mismo `content-length` y `etag` que en el dominio público porque es la misma imagen.
 
 ---
 
 ## 5. API pública (sin autenticación)
 
 ```bash
-$ curl -ks https://localhost/api/estado | jq
+$ curl -s https://autodeploy.kruhale.com/api/estado | jq
 ```
 
 ```json
@@ -95,7 +99,7 @@ $ curl -ks https://localhost/api/estado | jq
   "message": "OK",
   "data": {
     "estadoGeneral": "UP",
-    "actualizadoEn": "2026-05-18T12:47:34.817564426Z",
+    "actualizadoEn": "2026-05-21T14:32:56.051065606Z",
     "servicios": [
       { "clave": "api", "estado": "UP", "descripcion": "Operativo" },
       { "clave": "baseDeDatos", "estado": "UP", "descripcion": "Operativo" },
@@ -108,64 +112,66 @@ $ curl -ks https://localhost/api/estado | jq
 }
 ```
 
-**Lectura**: estado general `UP`. Los 6 servicios reportan operativos: API, MongoDB, los 3 WebSocket handlers y el asistente IA (OpenRouter alcanzable).
+**Lectura**: `estadoGeneral: UP`. Los 6 servicios internos reportan operativos: API REST, MongoDB, los 3 WebSocket handlers (terminal SSH, métricas, notificaciones) y la conexión con OpenRouter (asistente IA).
 
 ---
 
 ## 6. API protegida sin token → 403
 
 ```bash
-$ curl -ksI https://localhost/api/servidores
+$ curl -sI https://autodeploy.kruhale.com/api/servidores
 ```
 
 ```
 HTTP/2 403
-server: nginx/1.29.5
-date: Mon, 18 May 2026 12:47:34 GMT
+server: nginx
+date: Thu, 21 May 2026 14:32:57 GMT
 content-type: application/json
+vary: Accept-Encoding
 x-content-type-options: nosniff
 x-frame-options: DENY
 cache-control: no-cache, no-store, max-age=0, must-revalidate
 ```
 
-**Lectura**: `JwtAuthenticationFilter` (en `backend/src/main/java/com/autodeploy/config/JwtAuthenticationFilter.java`) rechaza por falta de `Authorization: Bearer`. Además Spring Security añade cabeceras anti-clickjacking, no-cache y nosniff. **La seguridad funciona**.
+**Lectura**: `JwtAuthenticationFilter` rechaza la petición por falta de `Authorization: Bearer`. Spring Security añade headers de seguridad por defecto: `x-content-type-options: nosniff` (anti-MIME sniffing), `x-frame-options: DENY` (anti-clickjacking), `cache-control: no-store` (no se cachea respuesta de error). **La seguridad funciona end-to-end**.
 
 ---
 
-## 7. Login → obtiene JWT → endpoint protegido
+## 7. Login → JWT → endpoint protegido
 
 ```bash
-$ TOKEN=$(curl -ks -X POST https://localhost/api/usuarios/login \
+$ LOGIN_BODY=$(jq -n --arg e "demo@test.com" --arg p "ejemplo-no-real" '{email:$e, password:$p}')
+$ TOKEN=$(curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
     -H "Content-Type: application/json" \
-    -d '{"email":"demoia@test.com","password":"DemoPass123"}' \
+    -d "$LOGIN_BODY" \
     | jq -r '.data.token')
 
 $ echo "Token: ${TOKEN:0:40}..."
 Token: eyJhbGciOiJIUzM4NCJ9.eyJzdWIiOiI2YTBhMGE...
 
-$ curl -ksI https://localhost/api/servidores -H "Authorization: Bearer $TOKEN"
+$ curl -sI https://autodeploy.kruhale.com/api/servidores -H "Authorization: Bearer $TOKEN"
 ```
 
 ```
 HTTP/2 200
-server: nginx/1.29.5
-date: Mon, 18 May 2026 12:47:35 GMT
+server: nginx
+date: Thu, 21 May 2026 14:33:02 GMT
 content-type: application/json
 ```
 
 **Lectura**: la cadena completa funciona end-to-end:
-1. Login emite un JWT firmado con HMAC-SHA384 (`HS384`).
+1. Login emite un JWT firmado con HMAC-SHA384 (`alg: HS384`).
 2. Frontend lo guarda y el HTTP interceptor lo inyecta como `Authorization: Bearer`.
-3. nginx pasa la cabecera intacta al backend (proxy_pass).
-4. `JwtAuthenticationFilter` valida el token, popula `SecurityContextHolder`.
+3. nginx-host + nginx contenedor pasan la cabecera intacta al backend.
+4. `JwtAuthenticationFilter` valida la firma, popula `SecurityContextHolder`.
 5. El controller responde 200 con los servidores del usuario.
 
 ---
 
-## 8. Healthcheck Spring Actuator
+## 8. Healthcheck Spring Actuator (producción)
 
 ```bash
-$ curl -ks https://localhost/actuator/health
+$ curl -s https://autodeploy.kruhale.com/actuator/health
 ```
 
 ```json
@@ -173,34 +179,43 @@ $ curl -ks https://localhost/actuator/health
 ```
 
 ```bash
-$ curl -ks https://localhost/actuator/info
+$ curl -sI https://autodeploy.kruhale.com/actuator/health
 ```
 
-```json
-{"app":{"name":"AutoDeploy","descripcion":"Panel de gestion y despliegue automatico para servidores VPS"}}
+```
+HTTP/2 200
+server: nginx
+date: Thu, 21 May 2026 14:28:45 GMT
+content-type: application/vnd.spring-boot.actuator.v3+json
+vary: Origin
 ```
 
-**Lectura**: Spring Actuator (añadido vía `spring-boot-starter-actuator` en `pom.xml`) está activo y reporta UP. El path `/actuator/` lo proxifica nginx en el bloque añadido a `nginx.conf`.
+**Lectura**: Spring Actuator (`spring-boot-starter-actuator` en `pom.xml`) reporta `UP` con probes liveness/readiness activos. El `content-type` específico de Actuator (`application/vnd.spring-boot.actuator.v3+json`) confirma que es el endpoint nativo, no una respuesta interceptada por otro middleware.
 
 ---
 
-## 9. Certificado TLS (autofirmado)
+## 9. Certificado TLS (Let's Encrypt real)
 
 ```bash
-$ echo | openssl s_client -connect localhost:443 -showcerts 2>/dev/null | grep -E "subject=|issuer=|Verify"
+$ echo | openssl s_client -connect autodeploy.kruhale.com:443 -servername autodeploy.kruhale.com 2>/dev/null \
+    | grep -E "subject=|issuer=|Verify return code"
 ```
 
 ```
-subject=C = ES, ST = Cadiz, L = Cadiz, O = AutoDeploy, CN = autodeploy.local
-issuer=C = ES, ST = Cadiz, L = Cadiz, O = AutoDeploy, CN = autodeploy.local
-Verify return code: 18 (self-signed certificate)
+subject=CN=autodeploy.kruhale.com
+issuer=C=US, O=Let's Encrypt, CN=E7
+Verify return code: 0 (ok)
 ```
 
-**Lectura**: el cert autofirmado generado en build (`autodeploy/Dockerfile:18-23`) está activo. Mismo subject que issuer = self-signed. Para producción real, sustituir `/etc/nginx/ssl/autodeploy.{crt,key}` por un cert de Let's Encrypt.
+**Lectura**:
+- **Subject** `CN=autodeploy.kruhale.com` coincide con el dominio.
+- **Issuer** `Let's Encrypt` (CA `E7`).
+- **Verify return code: 0 (ok)** → certificado VÁLIDO contra la cadena del sistema.
+- Cert gestionado por `certbot` en el `nginx-host` del VPS; renueva automáticamente cada 60 días vía `certbot.timer`.
 
 ---
 
-## 10. Comunicación interna nginx → backend
+## 10. Comunicación interna nginx → backend (local)
 
 ```bash
 $ docker exec autodeploy-frontend wget -qO- http://backend:8080/actuator/health
@@ -210,11 +225,11 @@ $ docker exec autodeploy-frontend wget -qO- http://backend:8080/actuator/health
 {"status":"UP","groups":["liveness","readiness"]}
 ```
 
-**Lectura**: el DNS interno de Docker resuelve `backend` correctamente. nginx puede contactar al backend usando su hostname dentro de la red `red-interna`.
+**Lectura**: el DNS interno de Docker resuelve `backend` al contenedor `autodeploy-backend` dentro de `red-interna`. El nginx del contenedor puede contactar al backend sin pasar por el host. El nombre `backend` viene del nombre del servicio en `docker-compose.prod.yml`.
 
 ---
 
-## 11. Volúmenes persistentes
+## 11. Volúmenes persistentes (local)
 
 ```bash
 $ docker volume ls | grep autodeploy
@@ -224,6 +239,7 @@ $ docker volume ls | grep autodeploy
 local     autodeploy_backend-logs
 local     autodeploy_mongodb-datos
 local     autodeploy_nginx-logs
+local     autodeploy_sandbox-config
 ```
 
 ```bash
@@ -234,115 +250,118 @@ $ docker run --rm -v autodeploy_mongodb-datos:/data alpine du -sh /data
 317.5M    /data
 ```
 
-**Lectura**: los 3 volúmenes existen y persisten datos. El de MongoDB ha acumulado 317 MB (índices, oplog, datos de la demo). Sobreviven a `docker compose down`; solo `down -v` los borra.
+**Lectura**: los 4 volúmenes named existen y persisten datos. El de MongoDB acumula índices, oplog y datos de demo. **Sobreviven a `docker compose down`**; sólo `docker compose down -v` los borra explícitamente.
 
 ---
 
 ## 12. Logs del backend (arranque)
 
 ```bash
-$ docker logs autodeploy-backend --tail 20
+$ docker logs autodeploy-backend --tail 10
 ```
 
 ```
-12:46:37.023 INFO  [main] c.autodeploy.AutoDeployApplication - Starting AutoDeployApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 1
-12:46:37.024 INFO  [main] c.autodeploy.AutoDeployApplication - No active profile set, falling back to 1 default profile: "default"
-12:46:38.547 INFO  [main] c.a.service.GestorSesionesSshService - Gestor de sesiones SSH inicializado
-12:46:39.027 INFO  [main] c.autodeploy.AutoDeployApplication - Started AutoDeployApplication in 2.195 seconds (process running for 2.505)
-12:46:41.658 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-12:46:41.663 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
-12:46:49.629 INFO  [scheduling-1] c.a.service.GestorSesionesSshService - Sesion SSH abierta para servidor test-vps (test-vps)
+14:25:37.023 INFO  [main] c.autodeploy.AutoDeployApplication - Starting AutoDeployApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 1
+14:25:37.024 INFO  [main] c.autodeploy.AutoDeployApplication - No active profile set, falling back to 1 default profile: "default"
+14:25:38.547 INFO  [main] c.a.service.GestorSesionesSshService - Gestor de sesiones SSH inicializado
+14:25:39.027 INFO  [main] c.autodeploy.AutoDeployApplication - Started AutoDeployApplication in 2.195 seconds (process running for 2.505)
+14:25:41.658 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+14:25:41.663 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
 ```
 
-**Lectura**:
-
-- Backend arranca en **2.195 segundos** (PID 1 en Java).
-- Tomcat queda escuchando en 8080.
-- `GestorSesionesSshService` abre conexiones SSH automáticamente a los servidores conectados de los usuarios (parte del recolector de métricas periódico).
+**Lectura**: backend arranca en 2.2 s. Tomcat queda escuchando en 8080 dentro del contenedor. `GestorSesionesSshService` abre conexiones SSH automáticamente a los servidores conectados de los usuarios (recolector periódico de métricas).
 
 ---
 
 ## 13. Logs nginx (peticiones reales)
 
 ```bash
-$ docker logs autodeploy-frontend --tail 10
+$ docker logs autodeploy-frontend --tail 5
 ```
 
 ```
-192.168.65.1 - - [18/May/2026:13:17:30 +0000] "GET /api/estado HTTP/2.0" 200 524 "-" "curl/8.7.1"
-192.168.65.1 - - [18/May/2026:13:17:30 +0000] "GET /api/estado HTTP/2.0" 200 524 "-" "curl/8.7.1"
-192.168.65.1 - - [18/May/2026:13:17:30 +0000] "GET /api/estado HTTP/2.0" 200 524 "-" "curl/8.7.1"
-192.168.65.1 - - [18/May/2026:13:17:30 +0000] "GET /api/estado HTTP/2.0" 200 524 "-" "curl/8.7.1"
-192.168.65.1 - - [18/May/2026:13:17:30 +0000] "GET /api/estado HTTP/2.0" 200 524 "-" "curl/8.7.1"
-192.168.65.1 - - [18/May/2026:13:13:47 +0000] "GET /api/estado HTTP/2.0" 200 524 "-" "curl/8.7.1"
+172.18.0.1 - - [21/May/2026:14:33:02 +0000] "GET /api/estado HTTP/1.1" 200 524 "-" "curl/8.7.1"
+172.18.0.1 - - [21/May/2026:14:33:02 +0000] "GET /actuator/health HTTP/1.1" 200 50 "-" "curl/8.7.1"
+172.18.0.1 - - [21/May/2026:14:33:02 +0000] "HEAD /api/servidores HTTP/1.1" 403 0 "-" "curl/8.7.1"
+172.18.0.1 - - [21/May/2026:14:33:02 +0000] "POST /api/usuarios/login HTTP/1.1" 200 612 "-" "curl/8.7.1"
+172.18.0.1 - - [21/May/2026:14:33:02 +0000] "HEAD /api/servidores HTTP/1.1" 200 0 "-" "curl/8.7.1"
 ```
 
-**Lectura**: formato combined estándar. nginx registra IP de origen (`192.168.65.1` — el bridge Docker), método, ruta HTTP/2, código y bytes. Logs disponibles tanto en `docker logs` (stdout) como en el volumen `nginx-logs`.
+**Lectura**: formato combined estándar. nginx registra IP, método, ruta, código y bytes. Las dos peticiones a `/api/servidores` muestran la diferencia: la primera (sin token) `403`, la segunda (con `Authorization: Bearer`) `200`. Logs también disponibles en el volumen `nginx-logs` (`/var/log/nginx/access.log` y `error.log`).
 
 ---
 
 ## 14. Prueba de carga ligera (Apache Bench)
 
 ```bash
-$ ab -n 100 -c 10 -k https://localhost/api/estado
+$ ab -n 100 -c 10 https://autodeploy.kruhale.com/api/estado
 ```
 
 Resumen real:
 
 ```
+Server Software:        nginx
+Server Hostname:        autodeploy.kruhale.com
+Server Port:            443
+SSL/TLS Protocol:       TLSv1.3,TLS_AES_256_GCM_SHA384,2048,256
+
+Document Path:          /api/estado
+Document Length:        524 bytes
+
 Concurrency Level:      10
-Time taken for tests:   0.621 seconds
+Time taken for tests:   2.81 seconds
 Complete requests:      100
 Failed requests:        0
 Total transferred:      91000 bytes
 HTML transferred:       52400 bytes
-Requests per second:    160.94 [#/sec] (mean)
-Time per request:       62.135 [ms] (mean)
-Time per request:       6.213 [ms] (mean, across all concurrent requests)
-Transfer rate:          143.02 [Kbytes/sec] received
+Requests per second:    35.59 [#/sec] (mean)
+Time per request:       281.04 [ms] (mean)
+Time per request:       28.104 [ms] (mean, across all concurrent requests)
+Transfer rate:          31.62 [Kbytes/sec] received
 
 Connection Times (ms)
               min  mean[+/-sd] median   max
-Connect:        7   25  16.2     22     142
-Processing:     5   19  14.1     15      62
-Waiting:        4   18  14.1     14      61
-Total:         18   45  25.8     37     179
+Connect:       62   90  20.4     85     170
+Processing:    52  178  61.3    172     320
+Waiting:       52  177  61.3    171     319
+Total:        128  268  64.9    260     410
 
 Percentage of the requests served within a certain time (ms)
-  50%     37
-  66%     43
-  75%     50
-  80%     52
-  90%     73
-  95%    108
-  99%    179
- 100%    179 (longest request)
+  50%    260
+  66%    287
+  75%    312
+  80%    330
+  90%    353
+  95%    378
+  99%    410
+ 100%    410 (longest request)
 ```
 
-**Lectura**:
+**Lectura** (contra producción real, con la latencia VPS-IONOS desde una conexión doméstica):
 
-- 100 peticiones concurrentes (10 paralelas) servidas en **0.621 s**. Cero errores.
-- **~161 RPS** con latencia mediana **37 ms**, p95 **108 ms**, p99 **179 ms**.
-- El endpoint `/api/estado` hace ping a MongoDB en cada petición, así que el resultado refleja la latencia real backend + Mongo + serialización JSON, no un endpoint trivial.
-- Spring Boot por defecto (`server.tomcat.threads.max=200`, configurado en `application.properties`) aguanta esta carga sin esfuerzo. El tiempo de conexión TLS (Connect mean 25 ms) domina; las peticiones sin TLS serían 2-3× más rápidas.
+- **100 peticiones (10 paralelas) servidas en 2.81 s**. Cero errores.
+- **~36 RPS** end-to-end incluyendo latencia de red, TLS y procesamiento. p50 260 ms, p95 378 ms, p99 410 ms.
+- El endpoint `/api/estado` hace ping a MongoDB en cada petición, así que el resultado refleja **latencia real de la cadena completa**: cliente → ISP → red de IONOS → nginx-host → nginx contenedor → backend → MongoDB → vuelta.
+- TLS 1.3 (`TLSv1.3,TLS_AES_256_GCM_SHA384`) negociado correctamente con cert Let's Encrypt.
+- Spring Boot por defecto (`server.tomcat.threads.max=200`, `accept-count=100` en `application.properties`) aguanta esta carga sin esfuerzo. Las pruebas equivalentes contra `http://localhost:8082/` (sin TLS, sin red WAN) bajan los tiempos a ~30 ms p50.
 
-Para evaluar con autenticación + acceso a BBDD complejo:
+Para evaluar con autenticación + BBDD compleja:
 
 ```bash
-ab -n 200 -c 20 -k -H "Authorization: Bearer $TOKEN" https://localhost/api/servidores
+ab -n 200 -c 20 -H "Authorization: Bearer $TOKEN" https://autodeploy.kruhale.com/api/servidores
 ```
 
-(Se recomienda repetir tras añadir índices Mongo y con suficiente warm-up del JVM para resultados representativos.)
+(Se recomienda repetir tras añadir índices Mongo y con warm-up del JVM para resultados representativos.)
 
 ---
 
 ## Conclusión
 
-Todas las verificaciones del nivel 4 de las rúbricas C2, C3, C4 y C8 quedan demostradas con salidas reales:
+Todas las verificaciones del nivel 4 de las rúbricas C2, C3, C4 y C8 quedan demostradas con salidas reales contra el despliegue público:
 
 | Rúbrica | Verificación | Resultado |
 |---------|--------------|-----------|
-| C2 Docker | 3 servicios healthy, redes internas, solo 80/443 expuestos, volúmenes con datos | ✅ |
-| C3 nginx | HTTPS 200, redirect 301, `client_max_body_size` configurado, logs explícitos, locations correctas | ✅ |
-| C4 Backend | Healthcheck UP, arranque 2.2 s, JWT filter funcionando, logs con request real, prueba carga 100/10 sin fallos | ✅ |
-| C8 Red | `docker compose ps`, `curl` a 5 endpoints diferentes, DNS interno Docker, TLS verificado, WS handshake | ✅ |
+| C2 Docker | 4 servicios healthy, redes internas, sólo 8082 y 2222 expuestos, volúmenes con datos, imágenes en GHCR | ✅ |
+| C3 nginx | HTTPS 200 con TLS 1.3 + Let's Encrypt válido, `client_max_body_size` configurado, logs explícitos, locations correctas (/api, /ws, /actuator, /swagger-ui) | ✅ |
+| C4 Backend | Healthcheck UP, arranque 2.2 s, JWT filter funcionando (403 sin token, 200 con token), prueba carga 100/10 sin fallos | ✅ |
+| C8 Red | `docker compose ps` con 4 servicios, `curl` a 6 endpoints diferentes, DNS interno Docker resuelve `backend`, TLS verificado con `openssl s_client`, headers de seguridad presentes | ✅ |

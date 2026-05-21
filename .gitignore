@@ -3,10 +3,11 @@
 .env.local
 .env*.local
 
-# Node
+# Node y Angular
 node_modules/
 dist/
 autodeploy/dist/
+.angular/
 
 # Artefactos de build del backend
 backend/target/
@@ -15,6 +16,16 @@ backend/.project
 backend/.settings/
 backend/.m2/
 **/.m2/
+
+# Tests y reportes de cobertura
+coverage/
+playwright-report/
+test-results/
+backend/target/surefire-reports/
+
+# Logs
+*.log
+logs/
 
 # Sistema
 .DS_Store

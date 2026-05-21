@@ -4,8 +4,19 @@
 //   .tarjeta-servidor--variante     · modificadores
 // Estados :hover y :focus-within definidos al final del bloque, usando las
 // variables --*-hover / --shadow-* del design-tokens.
+//
+// Container queries:
+// Se declara container-type para que el ancho del propio bloque condicione
+// la disposición de los elementos internos. Así la misma tarjeta se ve
+// distinta en una sidebar estrecha (~280px) que en un grid amplio (~360px)
+// o en un panel detalle (>600px) sin depender de breakpoints del viewport.
+
+@use "../01-tools/mixins" as *;
 
 .tarjeta-servidor {
+  container-type: inline-size;
+  container-name: tarjeta-servidor;
+
   display: flex;
   flex-direction: column;
   gap: var(--spacing-size-m);
@@ -154,5 +165,23 @@
   &:focus-within {
     outline: 2px solid var(--amarillo-normal);
     outline-offset: 2px;
+  }
+
+  // En contenedores muy estrechos (sidebar plegado, columna lateral
+  // <28rem), la IP es información secundaria y se oculta para dejar
+  // espacio al nombre y al indicador.
+  @include contenedor-pequeno {
+    &__ip { display: none; }
+    &__metricas { gap: var(--spacing-size-xs); }
+  }
+
+  // En contenedores anchos (panel detalle, modal expandido) las dos
+  // métricas pasan a fila para aprovechar el espacio.
+  @include contenedor-grande {
+    &__metricas {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--spacing-size-l);
+    }
   }
 }

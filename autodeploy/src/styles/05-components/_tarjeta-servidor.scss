@@ -146,6 +146,11 @@
     border-color: var(--amarillo-normal-hover);
   }
 
+  &:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
+  }
+
   &:focus-within {
     outline: 2px solid var(--amarillo-normal);
     outline-offset: 2px;

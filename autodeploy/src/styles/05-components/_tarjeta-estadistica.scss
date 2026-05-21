@@ -76,11 +76,17 @@
     &--cyan        { color: var(--verde-normal); }
   }
 
-  // Estado interactivo: hover ligero, foco visible para accesibilidad.
+  // Estado interactivo: hover ligero, foco visible para accesibilidad,
+  // active para feedback táctil al pulsar.
   &:hover {
     transform: translateY(-0.125rem);
     box-shadow: var(--shadow-hover-amarillo);
     border-color: var(--amarillo-normal-hover);
+  }
+
+  &:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-sm);
   }
 
   &:focus-within {

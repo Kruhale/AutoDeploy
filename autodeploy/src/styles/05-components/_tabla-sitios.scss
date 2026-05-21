@@ -65,6 +65,10 @@
       background-color: rgba(240, 236, 226, 0.03);
     }
 
+    &:active {
+      background-color: rgba(240, 236, 226, 0.06);
+    }
+
     &:focus-within {
       background-color: rgba(240, 236, 226, 0.05);
       outline: 2px solid var(--amarillo-normal);

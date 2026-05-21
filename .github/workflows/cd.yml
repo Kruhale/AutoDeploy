@@ -1,11 +1,13 @@
 name: CD
 
-# Solo dispara cuando el workflow CI ha terminado correctamente sobre main,
+# Dispara cuando el workflow CI termina correctamente sobre CUALQUIER rama,
 # o cuando se lanza manualmente desde la pestaña Actions.
+# Riesgo asumido: cualquier push a cualquier rama puede desplegar a producción
+# si el CI pasa (incluyendo trabajo WIP). El gate sigue siendo que CI esté en verde.
 on:
   workflow_run:
     workflows: ["CI"]
-    branches: ["main"]
+    branches: ["**"]
     types: [completed]
   workflow_dispatch:
 

@@ -1,7 +1,6 @@
 @use "../01-tools/mixins" as *;
 
 .pagina-recursos {
-  background-color: var(--fondo-oscuro);
   min-height: calc(100vh - 3.5rem);
   padding: var(--spacing-size-6xl) var(--spacing-size-3xl);
   display: flex;

@@ -76,8 +76,8 @@ src/styles/
 │   ├── _css-variables.scss  ← $breakpoint-sm/md/lg/xl/2xl
 │   └── _variables.scss      ← @use 'css-variables' as *;
 ├── 01-tools/
-│   ├── _mixins.scss         ← 25 mixins
-│   ├── _funciones.scss      ← 11 funciones (NUEVO)
+│   ├── _mixins.scss         ← 31 mixins
+│   ├── _funciones.scss      ← 11 funciones
 │   └── _animaciones.scss    ← keyframes + .animar/.revelar/.spinner
 ├── 02-generic/
 │   ├── _reset.scss          ← reset + transición de tema
@@ -130,7 +130,7 @@ Los tokens viven en `02-generic/_design-tokens.scss` como Custom Properties bajo
 
 ### 1.5 Mixins y funciones
 
-`01-tools/_mixins.scss` define **25 mixins** organizados por categorías. Los más usados:
+`01-tools/_mixins.scss` define **31 mixins** organizados por categorías. Los más usados:
 
 - **Responsive viewport**: `@include movil`, `tablet`, `escritorio`, `entre($a, $b)`.
 - **Container queries**: `@include contenedor-pequeno/mediano/grande`.
@@ -177,7 +177,7 @@ Razonamiento: el proyecto es individual, el equipo es de una persona, y se busca
 | `<section>` | Agrupaciones temáticas con heading o `aria-label`/`aria-labelledby`. Si no hay heading, se cambia a `<div>` o se añade etiqueta accesible. |
 | `<aside>` | Sidebar de la app autenticada y elementos secundarios. |
 | `<footer>` | Pie de página global, pie del sidebar (info de usuario). |
-| `<figure>` + `<figcaption>` | Galería de capturas accesible (cuando se implemente B5). |
+| `<figure>` + `<figcaption>` | Galería de capturas accesible (componente `galeria-capturas` en `components/shared/galeria-capturas/`). |
 | `<hr>` | Separadores decorativos con `aria-hidden="true"`. |
 | `<button>` | Cualquier elemento clickable que no navega (incluido el backdrop modal con `tabindex="-1"`). |
 | `<a>` | Enlaces de navegación. |
@@ -245,7 +245,7 @@ Detalles:
 | `.interruptor` (switch) | `--activo` | — | `:focus-visible`, `:disabled` | `03-elements/_forms.scss` |
 | `.tarjeta-servidor` | `--destacada` | container queries (peq/medio/grande) | `:hover`, `:active`, `:focus-within` | `05-components/_tarjeta-servidor.scss` |
 | `.tarjeta-stat` | acento `--primario/teal/cyan/exito/advertencia` | container queries (peq/grande) | `:hover`, `:active`, `:focus-within` | `05-components/_tarjeta-estadistica.scss` |
-| `.tarjeta-plan` | `--destacado` | — | `:hover`, `:active`, `:focus-within` | `05-components/_seccion-precios.scss` |
+| `.tarjeta-plan` | `--destacado` | container queries (peq/grande) | `:hover`, `:active`, `:focus-within` | `05-components/_seccion-precios.scss` |
 | `.barra-lateral` | `--abierta`, `--colapsada` | — | `:hover`, `:focus-visible`, `[aria-current="page"]` | `05-components/_barra-lateral.scss` |
 | `.tabla-sitios` | `__fila` interactiva | — | `:hover`, `:active`, `:focus-within` | `05-components/_tabla-sitios.scss` |
 | `.spinner` | `--grande`, `--cyan`, `--verde` | — | animación `giro-spinner` 0.8s linear | `01-tools/_animaciones.scss` |
@@ -286,7 +286,7 @@ Reglas mantenidas en todos los partials de `05-components/`:
 
 ### 3.3 Style Guide
 
-Pendiente la creación de la página `/style-guide` (Rublicas10 FASE 3). El sitemap del proyecto en Figma incluye la ruta y el componente Angular se generará con `ng generate component pages/style-guide`. Mostrará todos los componentes con sus variantes y estados para servir de documentación visual + testing rápido.
+La página `/style-guide` está implementada en `autodeploy/src/app/pages/style-guide/` (commit `ad00511`, PR de Rublicas10 FASE 3). Es accesible públicamente en `https://autodeploy.kruhale.com/style-guide` y muestra todos los componentes con sus variantes y estados (tipografía, paleta, espaciado, botones, formularios, tarjetas, navegación, feedback, animaciones). Sirve a la vez como documentación visual y como testing rápido: cualquier cambio en un token o componente se ve en esa página al instante.
 
 ---
 
@@ -327,7 +327,7 @@ Ejemplo (`_barra-lateral.scss`):
 
 ### 4.3 Container queries
 
-Implementadas en dos componentes para que el mismo bloque se adapte al ancho del contenedor padre, no del viewport:
+Implementadas en cuatro componentes para que el mismo bloque se adapte al ancho del contenedor padre, no del viewport: `_tarjeta-servidor.scss`, `_tarjeta-estadistica.scss`, `_seccion-precios.scss` (tarjeta-plan) y `_galeria-capturas.scss`.
 
 ```scss
 .tarjeta-servidor {
@@ -341,7 +341,7 @@ Implementadas en dos componentes para que el mismo bloque se adapte al ancho del
 }
 ```
 
-Beneficio: la tarjeta vive en sidebar (~280px), grid dashboard (~340px), panel detalle (>600px) y reacciona al espacio que tiene disponible sin que el viewport cambie.
+Beneficio: la tarjeta vive en sidebar (~280px), grid dashboard (~340px), panel detalle (>600px) y reacciona al espacio que tiene disponible sin que el viewport cambie. La galería de capturas usa la misma técnica para pasar de 1 a 2-3 columnas según el contenedor donde se inserte (página de bienvenida, sección dentro de un panel, etc.).
 
 ### 4.4 Adaptaciones principales (mobile / tablet / desktop)
 
@@ -398,7 +398,7 @@ Tabla pendiente de poblar con datos reales conforme se incorporen las capturas a
 
 #### `<picture>` con `srcset` y `sizes`
 
-Patrón previsto para la galería de capturas (B5 del plan DIW):
+Patrón aplicado en el componente `galeria-capturas` (`autodeploy/src/app/components/shared/galeria-capturas/`):
 
 ```html
 <picture>
@@ -500,9 +500,8 @@ Pendiente de poblar `docs/design/capturas/` con tomas en 3 páginas representati
 
 | Área | Problema / Pendiente |
 |---|---|
-| Style Guide | Ruta `/style-guide` aún no implementada (creará todos los componentes con variantes y estados en una página). |
-| Imágenes | Generar variantes mobile/desktop de las capturas y aplicar `<picture>` + `srcset` en el sitio público. |
-| Multimedia | Crear la galería accesible (`figure` + `figcaption` + `loading="lazy"`) con capturas reales del propio AutoDeploy. |
-| WCAG | Auditoría completa con Lighthouse + WAVE + TAW y capturas antes/después en `docs/accesibilidad/`. |
+| WCAG | Capturas finales de Lighthouse / WAVE / TAW antes/después en `docs/accesibilidad/capturas/` (los mecanismos WCAG ya están aplicados; falta sólo la documentación visual del audit). |
+| Galería de capturas | El componente `galeria-capturas` está listo pero las imágenes reales (dashboard, asistente IA, terminal, backups, métricas, firewall) se generarán y se subirán a `autodeploy/public/img/capturas/` al final del sprint. |
+| Logo | `logo.png` se mantiene por compatibilidad con favicons y manifest; migración a SVG planificada para una iteración futura. |
 | Cuenta | `pages/cuenta/cuenta.scss` mantiene estilos `:host` por necesidades específicas; mover a global en una iteración futura. |
 | Performance | El bundle inicial supera 500 kB por 90 kB (warning de Angular CLI). Futuro: lazy-load del módulo de billing/admin. |

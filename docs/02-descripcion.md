@@ -29,7 +29,7 @@ Nada del software de gestión vive en el VPS del usuario: AutoDeploy se conecta 
 - Multiplexable: varias terminales abiertas simultáneamente.
 
 ### 4. Asistente IA
-- Caja de chat con un modelo LLM externo (configurable: por defecto `openai/gpt-4o-mini` vía OpenRouter).
+- Caja de chat con un modelo LLM externo (configurable: por defecto `google/gemini-2.5-pro` vía OpenRouter).
 - El asistente puede sugerir comandos y, con confirmación del usuario, ejecutarlos por SSH.
 
 ### 5. Despliegues
@@ -51,7 +51,7 @@ Nada del software de gestión vive en el VPS del usuario: AutoDeploy se conecta 
 - Generación de configs nginx para redirecciones a subdominios.
 
 ### 9. Métricas en streaming
-- WebSocket `/ws/metricas` que envía CPU, RAM, disco, red cada segundo.
+- WebSocket `/ws/metricas` que difunde CPU, RAM, disco y red cada 30 segundos (`@Scheduled(fixedDelay = 30000)` en `MonitorMetricasService`).
 - El backend ejecuta `top`/`free`/`df` por SSH y parsea la salida.
 
 ### 10. Cuenta + Billing

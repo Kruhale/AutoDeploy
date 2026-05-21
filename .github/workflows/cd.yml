@@ -153,14 +153,16 @@ jobs:
             echo "==> Esperando 25s para que sshd regenere host keys y arranque"
             sleep 25
 
-            echo "==> Diagnostico sandbox: verificar PUBLIC_KEY y logs"
-            grep -c "^SANDBOX_PUBLIC_KEY=" .env || echo "    SANDBOX_PUBLIC_KEY NO esta definida en .env"
-            echo "    Longitud SANDBOX_PUBLIC_KEY:"
-            grep "^SANDBOX_PUBLIC_KEY=" .env | sed "s/^SANDBOX_PUBLIC_KEY=//" | wc -c || true
-            echo "    Logs sandbox (ultimas 30 lineas):"
-            $COMPOSE logs --tail 30 sandbox-ssh 2>&1 | head -40 || true
-            echo "    Test TCP local 2222:"
-            docker exec autodeploy-sandbox sh -c "ss -ltn 2>/dev/null || netstat -ltn 2>/dev/null" | head -5 || echo "    No se pudo inspeccionar puertos"
+            echo "==> Diagnostico sandbox completo"
+            echo "    PUBLIC_KEY presente: $(grep -c '^SANDBOX_PUBLIC_KEY=' .env || echo 0)"
+            echo "    docker port sandbox:"
+            docker port autodeploy-sandbox || true
+            echo "    Quien escucha en 2222 del HOST (ss):"
+            ss -ltnp 2>&1 | grep -E ":2222\b" | head -3 || echo "    nada"
+            echo "    Conexion local HOST -> sandbox 2222 (banner):"
+            timeout 6 bash -c "exec 3<>/dev/tcp/127.0.0.1/2222; head -1 <&3" 2>&1 | head -3 || echo "    no banner"
+            echo "    Conexion local HOST -> sandbox 2222 (curl https? probablemente no funcionara pero da info):"
+            timeout 5 nc -zv 127.0.0.1 2222 2>&1 | head -3 || true
 
             echo "==> 7) Esperando que los 3 servicios con healthcheck reporten (healthy), timeout 120s"
             DEADLINE=$((SECONDS + 120))

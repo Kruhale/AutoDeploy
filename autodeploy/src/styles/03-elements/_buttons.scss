@@ -1,84 +1,82 @@
-.boton--primario {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+@use "../01-tools/mixins" as *;
+
+// Propiedades comunes a todas las variantes de botón. Se extiende con
+// %placeholder para no generar selectores extra en el CSS final.
+%boton-base {
+  @include flex-centro;
   gap: 0.5rem;
   padding: 0.625rem 1.5rem;
-  background-color: var(--amarillo-normal);
-  color: var(--fondo-oscuro);
   font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-  border: none;
   border-radius: var(--radius-l);
   cursor: pointer;
-  transition: background-color var(--duration-base) ease, transform var(--duration-fast) ease;
+  @include transicion(background-color, border-color, color, transform);
 }
 
-.boton--primario:hover {
-  background-color: var(--amarillo-normal-hover);
-}
+.boton {
+  &--primario {
+    @extend %boton-base;
+    background-color: var(--amarillo-normal);
+    color: var(--fondo-oscuro);
+    font-weight: var(--font-weight-bold);
+    border: none;
 
-.boton--primario:active {
-  transform: scale(0.98);
-}
+    &:hover     { background-color: var(--amarillo-normal-hover); }
+    &:active    { transform: scale(0.98); }
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+    &:disabled  { @include disabled; }
+  }
 
-.boton--secundario {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.5rem;
-  background: rgba(240, 236, 226, 0.03);
-  color: var(--texto-claro);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-l);
-  cursor: pointer;
-  transition: border-color var(--duration-base) ease;
-}
+  &--secundario {
+    @extend %boton-base;
+    background: rgba(240, 236, 226, 0.03);
+    color: var(--texto-claro);
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid var(--borde-normal);
 
-.boton--secundario:hover {
-  border-color: rgba(240, 236, 226, 0.2);
-}
+    &:hover     { border-color: rgba(240, 236, 226, 0.2); }
+    &:active    { transform: scale(0.98); }
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+    &:disabled  { @include disabled; }
+  }
 
-.boton--ghost {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.5rem;
-  background: transparent;
-  color: var(--texto-medio);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-l);
-  cursor: pointer;
-  transition: color var(--duration-base) ease, border-color var(--duration-base) ease;
-}
+  &--ghost {
+    @extend %boton-base;
+    background: transparent;
+    color: var(--texto-medio);
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid var(--borde-normal);
 
-.boton--ghost:hover {
-  color: var(--texto-claro);
-  border-color: rgba(240, 236, 226, 0.2);
-}
+    &:hover {
+      color: var(--texto-claro);
+      border-color: rgba(240, 236, 226, 0.2);
+    }
+    &:active    { transform: scale(0.98); }
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+    &:disabled  { @include disabled; }
+  }
 
-.boton--peligro {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.5rem;
-  background: rgba(239, 68, 68, 0.08);
-  color: var(--rojo-normal);
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-semibold);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  border-radius: var(--radius-l);
-  cursor: pointer;
-  transition: background-color var(--duration-base) ease;
-}
+  &--peligro {
+    @extend %boton-base;
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--rojo-normal);
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid rgba(239, 68, 68, 0.15);
 
-.boton--peligro:hover {
-  background: rgba(239, 68, 68, 0.15);
+    &:hover     { background: rgba(239, 68, 68, 0.15); }
+    &:active    { transform: scale(0.98); }
+    &:focus-visible {
+      outline: 2px solid var(--rojo-normal);
+      outline-offset: 2px;
+    }
+    &:disabled  { @include disabled; }
+  }
 }

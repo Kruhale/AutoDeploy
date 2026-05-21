@@ -101,7 +101,10 @@
       "temaOscuro": "Switch to dark mode",
       "notificaciones": "Notifications",
       "menu": "Open menu",
-      "cerrarMenu": "Close menu"
+      "cerrarMenu": "Close menu",
+      "acciones": "Header actions",
+      "zonaNotificaciones": "Notifications area",
+      "panelMovilPortal": "Mobile menu"
     },
     "dropdown": {
       "titulo": "Notifications",
@@ -1008,7 +1011,7 @@
     "ctaPrincipal": "Add rule",
     "ctaSecundario": "Open or block a port",
     "selectorServidor": "Target server",
-    "presetsEtiqueta": "Presets · one click",
+    "presetsEtiqueta": "Set up in one click",
     "presetSsh": "SSH",
     "presetHttp": "HTTP",
     "presetHttps": "HTTPS",

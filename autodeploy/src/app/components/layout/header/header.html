@@ -12,7 +12,7 @@
     </ul>
   </nav>
 
-  <section class="cabecera__acciones">
+  <menu class="cabecera__acciones" [attr.aria-label]="'header.aria.acciones' | translate">
     <button type="button" class="cabecera__tema" (click)="themeService.alternarTema()" [attr.aria-label]="themeService.temaActual() === 'oscuro' ? ('header.aria.temaClaro' | translate) : ('header.aria.temaOscuro' | translate)">
       @if (themeService.temaActual() === 'oscuro') {
         <i class="fa-solid fa-sun"></i>
@@ -22,7 +22,7 @@
     </button>
 
     @if (authService.estaLogueado()) {
-      <section class="cabecera__notificaciones">
+      <section class="cabecera__notificaciones" [attr.aria-label]="'header.aria.zonaNotificaciones' | translate">
         <button type="button" class="cabecera__campana" (click)="alternarNotificaciones()" [attr.aria-label]="'header.aria.notificaciones' | translate">
           <i class="fa-solid fa-bell"></i>
           @if (contadorSinLeer() > 0) {
@@ -82,11 +82,11 @@
         <span class="cabecera__hamburguesa__punto" aria-hidden="true"></span>
       }
     </button>
-  </section>
+  </menu>
 </header>
 
 @if (menuMovilAbierto()) {
-  <section class="cabecera__panel-movil-portal">
+  <aside class="cabecera__panel-movil-portal" [attr.aria-label]="'header.aria.panelMovilPortal' | translate">
     <section class="cabecera__panel-movil" role="dialog" aria-modal="true" aria-labelledby="titulo-panel-movil">
       <header class="cabecera__panel-movil__cabecera">
         <span class="cabecera__panel-movil__titulo" id="titulo-panel-movil">{{ "header.panelMovil.titulo" | translate }}</span>
@@ -102,9 +102,9 @@
       </nav>
 
       @if (authService.estaLogueado() && listaNotificaciones().length > 0) {
-        <section class="cabecera__panel-movil__notificaciones">
+        <section class="cabecera__panel-movil__notificaciones" aria-labelledby="panel-movil-notif-titulo">
           <header class="cabecera__panel-movil__notif-cabecera">
-            <span class="cabecera__panel-movil__notif-titulo">{{ "header.dropdown.titulo" | translate }}</span>
+            <span class="cabecera__panel-movil__notif-titulo" id="panel-movil-notif-titulo">{{ "header.dropdown.titulo" | translate }}</span>
             @if (contadorSinLeer() > 0) {
               <button class="cabecera__panel-movil__notif-marcar" (click)="marcarTodasComoLeidas()">
                 {{ "header.dropdown.marcarTodas" | translate }}
@@ -122,7 +122,7 @@
         </section>
       }
 
-      <section class="cabecera__panel-movil__pie">
+      <footer class="cabecera__panel-movil__pie">
         @if (authService.estaLogueado()) {
           <a class="cabecera__panel-movil__cta-secundaria" routerLink="/app/cuenta" (click)="cerrarMenuMovil()">
             <i class="fa-solid fa-user"></i>
@@ -137,8 +137,8 @@
         <a class="cabecera__panel-movil__cta-primaria" routerLink="/app" (click)="cerrarMenuMovil()">
           {{ "header.botonApp" | translate }}
         </a>
-      </section>
+      </footer>
     </section>
-    <button class="cabecera__panel-movil__velo" (click)="cerrarMenuMovil()" aria-hidden="true" tabindex="-1"></button>
-  </section>
+    <button class="cabecera__panel-movil__velo" (click)="cerrarMenuMovil()" [attr.aria-label]="'comun.cerrarMenu' | translate" tabindex="-1"></button>
+  </aside>
 }

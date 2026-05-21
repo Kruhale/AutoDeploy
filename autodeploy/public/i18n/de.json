@@ -101,7 +101,10 @@
       "temaOscuro": "Dunklen Modus aktivieren",
       "notificaciones": "Benachrichtigungen",
       "menu": "Menü öffnen",
-      "cerrarMenu": "Menü schließen"
+      "cerrarMenu": "Menü schließen",
+      "acciones": "Header-Aktionen",
+      "zonaNotificaciones": "Benachrichtigungsbereich",
+      "panelMovilPortal": "Mobiles Menü"
     },
     "dropdown": {
       "titulo": "Benachrichtigungen",
@@ -1008,7 +1011,7 @@
     "ctaPrincipal": "Regel hinzufügen",
     "ctaSecundario": "Port öffnen oder blockieren",
     "selectorServidor": "Zielserver",
-    "presetsEtiqueta": "Voreinstellungen · mit einem Klick",
+    "presetsEtiqueta": "Mit einem Klick einrichten",
     "presetSsh": "SSH",
     "presetHttp": "HTTP",
     "presetHttps": "HTTPS",

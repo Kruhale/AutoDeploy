@@ -66,34 +66,51 @@ El primer arranque tarda 2-4 min (build de imágenes). Después tarda 15-20 s.
 docker compose -f docker-compose.prod.yml ps
 ```
 
-Debes ver los 3 servicios en estado `running` y `(healthy)`:
+Debes ver los servicios en estado `running` y `(healthy)`. Solo el **frontend** publica un puerto al host (`HOST_PORT`, por defecto `8082`); backend, mongodb y sandbox-ssh quedan únicamente accesibles dentro de la red interna de Docker:
 
 ```
-NAME                   IMAGE                    STATUS                   PORTS
-autodeploy-mongodb     mongo:8                  Up 30s (healthy)
-autodeploy-backend     ghcr.io/.../backend      Up 25s (healthy)
-autodeploy-frontend    ghcr.io/.../frontend     Up 10s (healthy)         0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp
+NAME                   IMAGE                                            STATUS                   PORTS
+autodeploy-mongodb     mongo:8                                          Up 30s (healthy)
+autodeploy-backend     ghcr.io/kruhale/autodeploy-backend:latest        Up 25s (healthy)
+autodeploy-sandbox     linuxserver/openssh-server:latest                Up 20s                   0.0.0.0:2222->2222/tcp
+autodeploy-frontend    ghcr.io/kruhale/autodeploy-frontend:latest       Up 10s (healthy)         0.0.0.0:8082->80/tcp
 ```
 
 Si alguno se queda en `(unhealthy)` o `starting`, mira la sección **Troubleshooting**.
 
-### 5. Verificar acceso
+> **Nota sobre TLS**: el contenedor del frontend sirve sólo HTTP en el puerto `8082`. El TLS lo termina el `nginx-host` del VPS (Let's Encrypt centralizado) cuando se despliega en producción detrás de un dominio. En desarrollo local no hay HTTPS: se accede directamente por `http://localhost:8082/`.
+
+### 5. Verificar acceso (local sin nginx-host por delante)
 
 ```bash
-# Redirect HTTP→HTTPS
-curl -I http://localhost/
-# Esperado: HTTP/1.1 301 Moved Permanently · Location: https://localhost/
+# Frontend Angular (SPA servida por nginx contenedor)
+curl -I http://localhost:8082/
+# Esperado: HTTP/1.1 200 OK, server: nginx, content-type: text/html
 
-# Frontend Angular
-curl -ksI https://localhost/
-# Esperado: HTTP/2 200
+# Backend público (vía reverse proxy nginx → backend:8080)
+curl -s http://localhost:8082/api/estado | jq
+# Esperado: {"success":true,"data":{"estadoGeneral":"UP",...}}
 
-# Backend público
-curl -ks https://localhost/api/estado | jq
-# Esperado: {"success":true,"data":{"baseDeDatos":"OK",...}}
+# Spring Actuator healthcheck
+curl -s http://localhost:8082/actuator/health
+# Esperado: {"status":"UP","groups":["liveness","readiness"]}
+
+# Endpoint protegido sin JWT → 403 (confirma que el filter funciona)
+curl -sI http://localhost:8082/api/servidores
+# Esperado: HTTP/1.1 403 Forbidden
 ```
 
-Abre el navegador en `https://localhost/`. La primera vez verás el aviso del cert autofirmado: avanzar (en Chrome: "Configuración avanzada" → "Acceder a localhost").
+Abre el navegador en `http://localhost:8082/`.
+
+### 5 bis. Verificar acceso (producción real)
+
+Una vez detrás de `nginx-host` + Let's Encrypt en un VPS público:
+
+```bash
+curl -I https://autodeploy.kruhale.com/                  # HTTP/2 200
+curl -s https://autodeploy.kruhale.com/api/estado | jq   # estadoGeneral: UP
+curl -s https://autodeploy.kruhale.com/actuator/health   # {"status":"UP",...}
+```
 
 ## Despliegue al VPS compartido (con nginx-host)
 
@@ -212,15 +229,7 @@ El workflow `cd.yml`:
 
 El nginx-host del VPS **no se toca** en cada despliegue: solo se reconfigura cuando cambian rutas o el dominio.
 
-## Despliegue al VPS (en VPS dedicado, sin nginx-host)
-
-Si el VPS solo aloja AutoDeploy y no tiene nginx propio, se puede usar el contenedor para hacer TLS termination. Para ello:
-
-1. Cambiar `docker-compose.prod.yml` para publicar `80:80` y `443:443`.
-2. Generar cert (autofirmado o Let's Encrypt con DNS challenge).
-3. Restaurar el bloque `listen 443 ssl` en `autodeploy/nginx.conf`.
-
-Ver el commit anterior al rediseño para esta variante.
+## Despliegue automatizado con GitHub Actions
 
 ### Opción A — automático con GitHub Actions
 
@@ -301,17 +310,17 @@ docker compose -f docker-compose.prod.yml ps
 docker compose -f docker-compose.prod.yml logs --tail 50 --timestamps
 
 # 3. Healthcheck explícito del backend
-curl -ksf https://<dominio>/actuator/health | jq
-# Esperado: {"status":"UP","components":{"mongo":{"status":"UP"},...}}
+curl -sf https://autodeploy.kruhale.com/actuator/health | jq
+# Esperado: {"status":"UP","groups":["liveness","readiness"]}
 
 # 4. Métricas Prometheus (opcional)
-curl -ks https://<dominio>/actuator/prometheus | head -20
+curl -s https://autodeploy.kruhale.com/actuator/prometheus | head -20
 
 # 5. Login real (sustituye EMAIL y PWD por credenciales válidas)
-EMAIL="demo@test.com"; PWD="ejemplo-no-real"
-curl -ks -X POST https://<dominio>/api/usuarios/login \
+LOGIN_BODY=$(jq -n --arg e "demo@test.com" --arg p "ejemplo-no-real" '{email:$e, password:$p}')
+curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
   -H "Content-Type: application/json" \
-  -d "{\"email\":\"$EMAIL\",\"password\":\"$PWD\"}" | jq
+  -d "$LOGIN_BODY" | jq
 ```
 
 ## Troubleshooting
@@ -332,11 +341,15 @@ docker compose -f docker-compose.prod.yml logs backend --tail 50
 
 Si ves `IllegalArgumentException: The signing key's size is X bits which is less than the 256 bits`, el JWT secret es muy corto. Regenéralo con `openssl rand -base64 48`.
 
-### El navegador muestra "Tu conexión no es privada"
+### En local entro por http://localhost:8082 sin HTTPS
 
-Es esperado: el certificado es autofirmado. En Chrome haz click en "Configuración avanzada" → "Acceder a localhost". En Firefox, "Acepto el riesgo y continuo".
+Es por diseño: el contenedor del frontend escucha sólo en HTTP/80 (mapeado a `HOST_PORT=8082` en el host). El TLS lo termina el `nginx-host` del VPS en producción con Let's Encrypt centralizado, no el contenedor.
 
-Para evitarlo en producción, sustituye los archivos `/etc/nginx/ssl/autodeploy.crt` y `.key` por un certificado de Let's Encrypt o de tu autoridad certificadora.
+Si quieres HTTPS en local para pruebas, opciones:
+
+- Levantar un nginx propio en el host con un cert autofirmado y `proxy_pass http://localhost:8082`.
+- Usar `mkcert` para generar un cert válido en `localhost` y un nginx host.
+- Para auditorías Lighthouse/WAVE/TAW: hacerlas directamente contra `https://autodeploy.kruhale.com` (cert Let's Encrypt válido, mismo código).
 
 ### `403 Forbidden` en cualquier endpoint protegido
 

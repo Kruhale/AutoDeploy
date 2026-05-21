@@ -61,48 +61,51 @@ Inventario de **todos** los ficheros y artefactos involucrados en el despliegue,
 | `docs/VERIFICATION.md` | `docs/` | Pruebas de red y verificación post-deploy | ✅ | ❌ | n/a |
 | `docs/ARTIFACTS.md` | `docs/` | (este archivo) | ✅ | ❌ | n/a |
 | `docs/EVIDENCIA.md` | `docs/` | Salidas reales de pruebas locales/VPS | ✅ | ❌ | n/a |
-| `docs/img/*.png` | `docs/img/` | Capturas: dashboard, swagger, workflow verde | ✅ | ❌ | n/a |
-| `Rublicas.md` | raíz | Rúbricas de evaluación (referencia) | ✅ | ❌ | n/a |
+| `docs/design/DOCUMENTACION.md` | `docs/design/` | 7 secciones técnicas DIW (Rublicas10) | ✅ | ❌ | n/a |
+| `docs/accesibilidad/README.md` | `docs/accesibilidad/` | 8 secciones de accesibilidad WCAG | ✅ | ❌ | n/a |
 | Swagger UI / OpenAPI JSON | `/swagger-ui.html`, `/v3/api-docs` | Generado en runtime por springdoc-openapi | (en runtime) | ✅ | mientras viva el backend |
 
 ## Política de `.gitignore`
 
-Lo que **nunca** se sube:
+Lo que **nunca** se sube (extracto del `.gitignore` real del repo):
 
 ```
 # Secretos
 .env
 .env.local
-.env.*.local
+.env*.local
 .env.production.local
 .env.test.local
 
-# Artefactos Java
-target/
-*.class
-.idea/
-*.iml
-
-# Artefactos Node / Angular
+# Node y Angular
 node_modules/
 dist/
+autodeploy/dist/
 .angular/
-*.log
 
-# Volúmenes Docker (nunca aparecen, pero por si acaso)
-data/
-mongodb-datos/
+# Artefactos de build del backend
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.m2/
+**/.m2/
 
-# IDE
-.vscode/
-.DS_Store
-
-# Tests
+# Tests y reportes de cobertura
 coverage/
 playwright-report/
 test-results/
+backend/target/surefire-reports/
 
-# Entorno de pruebas SSH (no es producto)
+# Logs
+*.log
+logs/
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Entorno local de pruebas SSH (no producto)
 test-vps/
 ```
 

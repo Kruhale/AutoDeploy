@@ -64,10 +64,15 @@ Si llamas a un endpoint protegido sin token, recibes `403 Forbidden`.
 
 Crea un usuario nuevo con plan `free`.
 
+> Construye el body con jq para no escribir credenciales literales en el shell history.
+
 ```bash
-curl -ks -X POST https://localhost/api/usuarios/registro \
+# placeholder no commiteable: usa tu propia contrasena
+BODY=$(jq -n --arg n Demo --arg e demo@test.com --arg p TU_CONTRASENA \
+  '{nombre:$n, email:$e, password:$p}')
+curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/registro \
   -H "Content-Type: application/json" \
-  -d '{"nombre":"Demo","email":"demo@test.com","password":"Demo1234!"}'
+  -d "$BODY"
 ```
 
 **Response 201:**
@@ -95,9 +100,11 @@ curl -ks -X POST https://localhost/api/usuarios/registro \
 Devuelve el JWT.
 
 ```bash
-curl -ks -X POST https://localhost/api/usuarios/login \
+# placeholder: sustituye TU_CONTRASENA por la real
+BODY=$(jq -n --arg e demo@test.com --arg p TU_CONTRASENA '{email:$e, password:$p}')
+curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"demo@test.com","password":"Demo1234!"}'
+  -d "$BODY"
 ```
 
 **Response 200:**
@@ -126,7 +133,7 @@ curl -ks -X POST https://localhost/api/usuarios/login \
 Para usar en /estado del frontend y por monitorización externa.
 
 ```bash
-curl -ks https://localhost/api/estado | jq
+curl -s https://autodeploy.kruhale.com/api/estado | jq
 ```
 
 **Response 200:**
@@ -160,7 +167,7 @@ Lista los servidores del usuario logueado.
 
 ```bash
 TOKEN="eyJhbGciOi..."
-curl -ks https://localhost/api/servidores -H "Authorization: Bearer $TOKEN" | jq
+curl -s https://autodeploy.kruhale.com/api/servidores -H "Authorization: Bearer $TOKEN" | jq
 ```
 
 **Response 200:**
@@ -189,17 +196,15 @@ curl -ks https://localhost/api/servidores -H "Authorization: Bearer $TOKEN" | jq
 Registra un servidor nuevo. La contraseña/clave privada se cifra con AES-256 antes de guardarse.
 
 ```bash
-curl -ks -X POST https://localhost/api/servidores \
+# placeholder: cambia TU_CONTRASENA_SSH por la real del servidor remoto
+BODY=$(jq -n \
+  --arg n prod-api --arg ip 1.2.3.4 --arg u root --arg pw TU_CONTRASENA_SSH \
+  '{nombre:$n, direccionIp:$ip, puertoSsh:22, usuarioSsh:$u,
+    metodoAutenticacion:"password", password:$pw}')
+curl -s -X POST https://autodeploy.kruhale.com/api/servidores \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
-  -d '{
-    "nombre": "prod-api",
-    "direccionIp": "1.2.3.4",
-    "puertoSsh": 22,
-    "usuarioSsh": "root",
-    "metodoAutenticacion": "password",
-    "password": "secret123"
-  }'
+  -d "$BODY"
 ```
 
 **Response 201:** El servidor creado con la contraseña ya cifrada en `passwordCifrada`.
@@ -219,7 +224,7 @@ Ejecuta `sudo reboot` por SSH.
 Despliegue por git clone/pull en el VPS.
 
 ```bash
-curl -ks -X POST https://localhost/api/deploy/git \
+curl -s -X POST https://autodeploy.kruhale.com/api/deploy/git \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -238,7 +243,7 @@ curl -ks -X POST https://localhost/api/deploy/git \
 Sube un ZIP y lo despliega por SFTP.
 
 ```bash
-curl -ks -X POST https://localhost/api/deploy/zip \
+curl -s -X POST https://autodeploy.kruhale.com/api/deploy/zip \
   -H "Authorization: Bearer $TOKEN" \
   -F "servidorId=6a09f4f59356a752b064885a" \
   -F "directorio=/var/www/miapp" \
@@ -260,7 +265,7 @@ Si todo OK, dispara `git pull` en el servidor.
 
 ```bash
 # Simulación manual (lo que GitHub haría)
-curl -ks -X POST https://localhost/api/webhooks/git/abc123def456 \
+curl -s -X POST https://autodeploy.kruhale.com/api/webhooks/git/abc123def456 \
   -H "Content-Type: application/json" \
   -H "X-GitHub-Event: push" \
   -d '{"ref":"refs/heads/main","commits":[]}'
@@ -273,7 +278,7 @@ curl -ks -X POST https://localhost/api/webhooks/git/abc123def456 \
 Envía mensaje al modelo IA. Si propone un comando, viene marcado para confirmar.
 
 ```bash
-curl -ks -X POST https://localhost/api/asistente-ia/mensaje \
+curl -s -X POST https://autodeploy.kruhale.com/api/asistente-ia/mensaje \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
@@ -312,7 +317,7 @@ curl -ks -X POST https://localhost/api/asistente-ia/mensaje \
 Confirma y ejecuta el comando propuesto.
 
 ```bash
-curl -ks -X POST https://localhost/api/asistente-ia/ejecutar \
+curl -s -X POST https://autodeploy.kruhale.com/api/asistente-ia/ejecutar \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{"servidorId":"...","comando":"df -h"}'
@@ -335,11 +340,11 @@ curl -ks -X POST https://localhost/api/asistente-ia/ejecutar \
 Guarda la API key de OpenRouter (cifrada con AES en MongoDB) y el modelo preferido.
 
 ```bash
-curl -ks -X PUT https://localhost/api/asistente-ia/configuracion/$USER_ID \
+curl -s -X PUT https://autodeploy.kruhale.com/api/asistente-ia/configuracion/$USER_ID \
   -H "Authorization: Bearer $TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "apiKey": "sk-or-v1-xxxxxxxxxxxxxx",
+    "apiKey": "<tu-clave-openrouter>",
     "modeloPreferido": "openai/gpt-4o-mini",
     "comandosAutoAprobados": ["df -h", "free -m", "uptime"]
   }'
@@ -378,16 +383,16 @@ ws.onmessage = (e) => console.log(JSON.parse(e.data));
 ## Health & métricas (sin JWT)
 
 ```bash
-curl -ks https://localhost/actuator/health | jq
+curl -s https://autodeploy.kruhale.com/actuator/health | jq
 # {"status":"UP","components":{"mongo":{"status":"UP"},...}}
 
-curl -ks https://localhost/actuator/info | jq
+curl -s https://autodeploy.kruhale.com/actuator/info | jq
 # {"app":{"name":"AutoDeploy","descripcion":"Panel de gestion..."}}
 
-curl -ks https://localhost/actuator/metrics | jq
+curl -s https://autodeploy.kruhale.com/actuator/metrics | jq
 # Lista de métricas disponibles
 
-curl -ks https://localhost/actuator/prometheus | head -20
+curl -s https://autodeploy.kruhale.com/actuator/prometheus | head -20
 # Exposición Prometheus para scraping
 ```
 

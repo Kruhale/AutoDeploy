@@ -1,0 +1,322 @@
+<article class="pagina-style-guide">
+  <header class="pagina-style-guide__cabecera">
+    <p class="pagina-style-guide__superior">Documentación visual</p>
+    <h1 class="pagina-style-guide__titulo">Style Guide de AutoDeploy</h1>
+    <p class="pagina-style-guide__intro">
+      Todos los componentes del sistema con sus variantes y estados. Sirve como referencia para el equipo y como
+      testing rápido del sistema de diseño.
+    </p>
+  </header>
+
+  <nav class="pagina-style-guide__indice" aria-label="Índice de secciones del style guide">
+    <ol class="pagina-style-guide__indice-lista">
+      <li><a href="#tipografia">Tipografía</a></li>
+      <li><a href="#colores">Colores</a></li>
+      <li><a href="#espaciado">Espaciado</a></li>
+      <li><a href="#botones">Botones</a></li>
+      <li><a href="#formularios">Formularios</a></li>
+      <li><a href="#tarjetas">Tarjetas</a></li>
+      <li><a href="#feedback">Feedback</a></li>
+      <li><a href="#animaciones">Animaciones</a></li>
+    </ol>
+  </nav>
+
+  <section class="pagina-style-guide__seccion" id="tipografia" aria-labelledby="titulo-tipografia">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">01</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-tipografia">Tipografía</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        Familia <strong>Outfit</strong> (cuerpo) y <strong>JetBrains Mono</strong> (snippets). Escala definida por
+        las custom properties <code>--font-size-*</code> y peso por <code>--font-weight-*</code>.
+      </p>
+    </header>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="tipografia-escala">
+      <h3 class="pagina-style-guide__bloque__titulo" id="tipografia-escala">Escala completa</h3>
+      <ul class="pagina-style-guide__lista-tipografia" role="list">
+        <li><span style="font-size: var(--font-size-5xl); font-weight: var(--font-weight-bold);">5xl · Hero principal</span><code>3.5rem</code></li>
+        <li><span style="font-size: var(--font-size-4xl); font-weight: var(--font-weight-bold);">4xl · Hero secundario</span><code>2.5rem</code></li>
+        <li><span style="font-size: var(--font-size-3xl); font-weight: var(--font-weight-bold);">3xl · Título de página</span><code>2rem</code></li>
+        <li><span style="font-size: var(--font-size-2xl); font-weight: var(--font-weight-semibold);">2xl · H2 destacado</span><code>1.75rem</code></li>
+        <li><span style="font-size: var(--font-size-xl); font-weight: var(--font-weight-semibold);">xl · Subtítulo</span><code>1.5rem</code></li>
+        <li><span style="font-size: var(--font-size-lg); font-weight: var(--font-weight-semibold);">lg · Lead</span><code>1.25rem</code></li>
+        <li><span style="font-size: var(--font-size-base);">base · Cuerpo</span><code>1rem</code></li>
+        <li><span style="font-size: var(--font-size-md);">md · Botones, inputs</span><code>0.875rem</code></li>
+        <li><span style="font-size: var(--font-size-sm);">sm · Metadatos</span><code>0.6875rem</code></li>
+        <li><span style="font-size: var(--font-size-xs);">xs · Tags y badges</span><code>0.625rem</code></li>
+      </ul>
+    </section>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="tipografia-pesos">
+      <h3 class="pagina-style-guide__bloque__titulo" id="tipografia-pesos">Pesos disponibles</h3>
+      <ul class="pagina-style-guide__lista-pesos" role="list">
+        <li style="font-weight: var(--font-weight-normal);">400 · Normal</li>
+        <li style="font-weight: var(--font-weight-medium);">500 · Medium</li>
+        <li style="font-weight: var(--font-weight-semibold);">600 · Semibold</li>
+        <li style="font-weight: var(--font-weight-bold);">700 · Bold</li>
+        <li style="font-weight: var(--font-weight-extrabold);">800 · Extrabold</li>
+        <li style="font-weight: var(--font-weight-black);">900 · Black</li>
+      </ul>
+    </section>
+  </section>
+
+  <section class="pagina-style-guide__seccion" id="colores" aria-labelledby="titulo-colores">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">02</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-colores">Colores</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        Tokens HSL definidos en <code>02-generic/_design-tokens.scss</code>. Los semánticos no cambian con el tema.
+      </p>
+    </header>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="colores-fondos">
+      <h3 class="pagina-style-guide__bloque__titulo" id="colores-fondos">Fondos</h3>
+      <ul class="pagina-style-guide__lista-color" role="list">
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--fondo-normal);"></span><code>--fondo-normal</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--fondo-oscuro);"></span><code>--fondo-oscuro</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--fondo-tarjeta);"></span><code>--fondo-tarjeta</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--fondo-negro);"></span><code>--fondo-negro</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--fondo-cta-claro);"></span><code>--fondo-cta-claro</code></li>
+      </ul>
+    </section>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="colores-acento">
+      <h3 class="pagina-style-guide__bloque__titulo" id="colores-acento">Acento</h3>
+      <ul class="pagina-style-guide__lista-color" role="list">
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--amarillo-normal);"></span><code>--amarillo-normal</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--amarillo-normal-hover);"></span><code>--amarillo-normal-hover</code></li>
+      </ul>
+    </section>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="colores-textos">
+      <h3 class="pagina-style-guide__bloque__titulo" id="colores-textos">Textos</h3>
+      <ul class="pagina-style-guide__lista-color" role="list">
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--texto-claro);"></span><code>--texto-claro</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--texto-medio);"></span><code>--texto-medio</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--texto-apagado);"></span><code>--texto-apagado</code></li>
+      </ul>
+    </section>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="colores-estado">
+      <h3 class="pagina-style-guide__bloque__titulo" id="colores-estado">Estado</h3>
+      <ul class="pagina-style-guide__lista-color" role="list">
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--verde-normal);"></span><code>--verde-normal</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--rojo-normal);"></span><code>--rojo-normal</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--rojo-critico);"></span><code>--rojo-critico</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--naranja-normal);"></span><code>--naranja-normal</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--azul-normal);"></span><code>--azul-normal</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--cyan-normal);"></span><code>--cyan-normal</code></li>
+        <li><span class="pagina-style-guide__muestra" style="background-color: var(--teal-normal);"></span><code>--teal-normal</code></li>
+      </ul>
+    </section>
+  </section>
+
+  <section class="pagina-style-guide__seccion" id="espaciado" aria-labelledby="titulo-espaciado">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">03</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-espaciado">Espaciado</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        15 niveles definidos en múltiplos de 4 y 8 px. Sirven para gap, padding, margin y posición.
+      </p>
+    </header>
+
+    <ul class="pagina-style-guide__lista-espaciado" role="list">
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-xxs);"></span><code>--spacing-size-xxs (0.25rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-xs);"></span><code>--spacing-size-xs (0.375rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-s);"></span><code>--spacing-size-s (0.5rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-m);"></span><code>--spacing-size-m (0.75rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-l);"></span><code>--spacing-size-l (1rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-xl);"></span><code>--spacing-size-xl (1.25rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-2xl);"></span><code>--spacing-size-2xl (1.5rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-3xl);"></span><code>--spacing-size-3xl (2rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-4xl);"></span><code>--spacing-size-4xl (2.5rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-5xl);"></span><code>--spacing-size-5xl (3rem)</code></li>
+      <li><span class="pagina-style-guide__muestra-espaciado" style="width: var(--spacing-size-6xl);"></span><code>--spacing-size-6xl (4rem)</code></li>
+    </ul>
+  </section>
+
+  <section class="pagina-style-guide__seccion" id="botones" aria-labelledby="titulo-botones">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">04</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-botones">Botones</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        4 variantes con todos los estados (<code>:hover</code>, <code>:active</code>, <code>:focus-visible</code>,
+        <code>:disabled</code>). Tabula sobre la página para ver el outline del foco.
+      </p>
+    </header>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="botones-variantes">
+      <h3 class="pagina-style-guide__bloque__titulo" id="botones-variantes">Variantes</h3>
+      <section class="pagina-style-guide__galeria">
+        <button type="button" class="boton boton--primario">Acción principal</button>
+        <button type="button" class="boton boton--secundario">Acción secundaria</button>
+        <button type="button" class="boton boton--ghost">Acción terciaria</button>
+        <button type="button" class="boton boton--peligro">Acción destructiva</button>
+      </section>
+    </section>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="botones-disabled">
+      <h3 class="pagina-style-guide__bloque__titulo" id="botones-disabled">Estado disabled</h3>
+      <section class="pagina-style-guide__galeria">
+        <button type="button" class="boton boton--primario" disabled>Primario disabled</button>
+        <button type="button" class="boton boton--secundario" disabled>Secundario disabled</button>
+        <button type="button" class="boton boton--ghost" disabled>Ghost disabled</button>
+        <button type="button" class="boton boton--peligro" disabled>Peligro disabled</button>
+      </section>
+    </section>
+  </section>
+
+  <section class="pagina-style-guide__seccion" id="formularios" aria-labelledby="titulo-formularios">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">05</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-formularios">Formularios</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        Inputs con label asociado, <code>:focus-visible</code> y <code>:invalid:not(:focus)</code> para feedback
+        inmediato. Toggle e interruptor con sus estados.
+      </p>
+    </header>
+
+    <form class="pagina-style-guide__formulario" (ngSubmit)="$event.preventDefault()">
+      <fieldset class="pagina-style-guide__fieldset">
+        <legend class="pagina-style-guide__legend">Datos de ejemplo</legend>
+
+        <article class="campo">
+          <label class="campo__etiqueta" for="sg-email">Correo electrónico</label>
+          <input class="campo__input" id="sg-email" name="email" type="email" required placeholder="tu@correo.com">
+          <p class="campo__pista">Te enviaremos un código de verificación.</p>
+        </article>
+
+        <article class="campo">
+          <label class="campo__etiqueta" for="sg-textarea">Notas</label>
+          <textarea class="campo__textarea" id="sg-textarea" name="notas" placeholder="Escribe aquí..."></textarea>
+        </article>
+
+        <article class="campo">
+          <label class="campo__etiqueta" for="sg-select">Plan</label>
+          <select class="campo__select" id="sg-select" name="plan">
+            <option value="free">Gratis</option>
+            <option value="pro">Pro</option>
+            <option value="business">Business</option>
+          </select>
+        </article>
+
+        <article class="campo">
+          <label class="campo__etiqueta" for="sg-disabled">Campo deshabilitado</label>
+          <input class="campo__input" id="sg-disabled" name="disabled" type="text" disabled value="No editable">
+        </article>
+      </fieldset>
+
+      <section class="pagina-style-guide__bloque" aria-labelledby="form-toggle">
+        <h3 class="pagina-style-guide__bloque__titulo" id="form-toggle">Toggle (segmented control)</h3>
+        <section class="toggle" role="group" aria-label="Frecuencia de backups">
+          <button type="button" class="toggle__opcion toggle__opcion--activa">Diario</button>
+          <button type="button" class="toggle__opcion">Semanal</button>
+          <button type="button" class="toggle__opcion">Mensual</button>
+        </section>
+      </section>
+
+      <section class="pagina-style-guide__bloque" aria-labelledby="form-interruptor">
+        <h3 class="pagina-style-guide__bloque__titulo" id="form-interruptor">Interruptor (switch)</h3>
+        <section class="pagina-style-guide__galeria">
+          <button type="button" class="interruptor" aria-pressed="false" aria-label="Interruptor desactivado">
+            <span class="interruptor__circulo"></span>
+          </button>
+          <button type="button" class="interruptor interruptor--activo" aria-pressed="true" aria-label="Interruptor activado">
+            <span class="interruptor__circulo interruptor__circulo--activo"></span>
+          </button>
+        </section>
+      </section>
+    </form>
+  </section>
+
+  <section class="pagina-style-guide__seccion" id="tarjetas" aria-labelledby="titulo-tarjetas">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">06</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-tarjetas">Tarjetas</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        Las tarjetas usan <code>container-type: inline-size</code>: arrastra el borde del navegador para verlas
+        adaptarse al ancho del contenedor sin que el viewport cambie.
+      </p>
+    </header>
+
+    <section class="pagina-style-guide__galeria-tarjetas">
+      @for (servidor of servidoresDemo; track servidor.nombre) {
+        <article class="tarjeta-servidor">
+          <header class="tarjeta-servidor__cabecera">
+            <span class="tarjeta-servidor__indicador" [class.tarjeta-servidor__indicador--verde]="servidor.estado === 'verde'" [class.tarjeta-servidor__indicador--naranja]="servidor.estado === 'naranja'" [class.tarjeta-servidor__indicador--rojo]="servidor.estado === 'rojo'" aria-hidden="true"></span>
+            <span class="tarjeta-servidor__nombre">{{ servidor.nombre }}</span>
+            <span class="tarjeta-servidor__ip">{{ servidor.ip }}</span>
+          </header>
+          <section class="tarjeta-servidor__metricas" aria-label="Métricas del servidor">
+            <section class="tarjeta-servidor__metrica">
+              <span class="tarjeta-servidor__metrica__etiqueta">CPU</span>
+              <span class="tarjeta-servidor__metrica__valor">{{ servidor.cpu }}%</span>
+            </section>
+            <section class="tarjeta-servidor__metrica">
+              <span class="tarjeta-servidor__metrica__etiqueta">RAM</span>
+              <span class="tarjeta-servidor__metrica__valor">{{ servidor.ram }}%</span>
+            </section>
+            <section class="tarjeta-servidor__metrica">
+              <span class="tarjeta-servidor__metrica__etiqueta">Disco</span>
+              <span class="tarjeta-servidor__metrica__valor">{{ servidor.disco }}%</span>
+            </section>
+          </section>
+          <footer class="tarjeta-servidor__pie">
+            <a class="tarjeta-servidor__enlace" href="javascript:void(0)">Ver detalles</a>
+          </footer>
+        </article>
+      }
+    </section>
+  </section>
+
+  <section class="pagina-style-guide__seccion" id="feedback" aria-labelledby="titulo-feedback">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">07</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-feedback">Feedback</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        Spinner de carga (3 variantes de tamaño y color), animaciones de aparición rápida y entrada con stagger.
+      </p>
+    </header>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="feedback-spinner">
+      <h3 class="pagina-style-guide__bloque__titulo" id="feedback-spinner">Spinner</h3>
+      <section class="pagina-style-guide__galeria">
+        <span class="spinner" aria-label="Cargando"></span>
+        <span class="spinner spinner--grande" aria-label="Cargando (grande)"></span>
+        <span class="spinner spinner--cyan" aria-label="Cargando (cyan)"></span>
+        <span class="spinner spinner--verde" aria-label="Cargando (verde)"></span>
+      </section>
+    </section>
+  </section>
+
+  <section class="pagina-style-guide__seccion" id="animaciones" aria-labelledby="titulo-animaciones">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">08</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-animaciones">Animaciones</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        Todas usan sólo <code>transform</code> y <code>opacity</code> con timing function
+        <code>cubic-bezier(0.16, 1, 0.3, 1)</code>. Se desactivan globalmente si el usuario tiene activado
+        <code>prefers-reduced-motion: reduce</code>.
+      </p>
+    </header>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="anim-aparecer">
+      <h3 class="pagina-style-guide__bloque__titulo" id="anim-aparecer">.aparecer</h3>
+      <article class="pagina-style-guide__demo-animacion aparecer">
+        Fade desde abajo (0.32s)
+      </article>
+    </section>
+
+    <section class="pagina-style-guide__bloque" aria-labelledby="anim-stagger">
+      <h3 class="pagina-style-guide__bloque__titulo" id="anim-stagger">.animar-hijos &gt; *</h3>
+      <ul class="pagina-style-guide__demo-stagger animar-hijos" role="list">
+        <li>Hijo 1</li>
+        <li>Hijo 2</li>
+        <li>Hijo 3</li>
+        <li>Hijo 4</li>
+        <li>Hijo 5</li>
+        <li>Hijo 6</li>
+      </ul>
+    </section>
+  </section>
+</article>

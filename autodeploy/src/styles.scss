@@ -7,8 +7,9 @@
 @use "styles/00-settings/css-variables";
 @use "styles/00-settings/variables";
 
-// 01 · Tools — mixins, helpers y animaciones reutilizables.
+// 01 · Tools — mixins, funciones y animaciones reutilizables.
 @use "styles/01-tools/mixins";
+@use "styles/01-tools/funciones";
 @use "styles/01-tools/animaciones";
 
 // 02 · Generic — reset + design tokens (Custom Properties CSS).

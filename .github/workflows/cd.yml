@@ -145,7 +145,10 @@ jobs:
             echo "==> 6) Recrear contenedores"
             $COMPOSE up -d --remove-orphans
 
-            echo "==> 7) Esperando que los 3 servicios reporten (healthy), timeout 120s"
+            echo "==> 6 bis) Restart sandbox-ssh (la imagen externa no se renueva con pull, conviene reciclarla cada deploy)"
+            $COMPOSE restart sandbox-ssh || true
+
+            echo "==> 7) Esperando que los 3 servicios con healthcheck reporten (healthy), timeout 120s"
             DEADLINE=$((SECONDS + 120))
             HEALTHY=0
             while [ $SECONDS -lt $DEADLINE ]; do

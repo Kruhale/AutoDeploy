@@ -11,6 +11,9 @@ import java.util.List;
 @Document(collection = "usuario")
 public class Usuario {
 
+    public static final String ROL_USUARIO = "USUARIO";
+    public static final String ROL_ADMIN = "ADMIN";
+
     @Id
     private String id;
     private String nombre;
@@ -19,6 +22,7 @@ public class Usuario {
     private String passwordHash;
     private LocalDateTime fechaCreacion;
     private String plan;
+    private String rol;
     private String idioma;
     private LocalDateTime fechaInicioSuscripcion;
     private LocalDateTime fechaFinSuscripcion;
@@ -28,6 +32,7 @@ public class Usuario {
     public Usuario() {
         this.fechaCreacion = LocalDateTime.now();
         this.plan = "free";
+        this.rol = ROL_USUARIO;
         this.idioma = "es";
         this.clavesSsh = new ArrayList<>();
         this.preferenciasNotificacion = new PreferenciasNotificacion();
@@ -39,6 +44,7 @@ public class Usuario {
         this.passwordHash = passwordHash;
         this.fechaCreacion = LocalDateTime.now();
         this.plan = "free";
+        this.rol = ROL_USUARIO;
         this.idioma = "es";
         this.clavesSsh = new ArrayList<>();
         this.preferenciasNotificacion = new PreferenciasNotificacion();
@@ -72,6 +78,9 @@ public class Usuario {
 
     public String getPlan() { return plan; }
     public void setPlan(String plan) { this.plan = plan; }
+
+    public String getRol() { return rol != null ? rol : ROL_USUARIO; }
+    public void setRol(String rol) { this.rol = rol; }
 
     public LocalDateTime getFechaInicioSuscripcion() { return fechaInicioSuscripcion; }
     public void setFechaInicioSuscripcion(LocalDateTime fechaInicioSuscripcion) { this.fechaInicioSuscripcion = fechaInicioSuscripcion; }

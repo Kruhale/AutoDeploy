@@ -59,7 +59,7 @@ public class UsuarioService {
             throw new BadRequestException("Email o password incorrectos");
         }
 
-        String tokenJwt = jwtUtil.generarToken(usuario.getId(), usuario.getEmail());
+        String tokenJwt = jwtUtil.generarToken(usuario.getId(), usuario.getEmail(), usuario.getRol());
         return construirLoginResponse(usuario, tokenJwt);
     }
 
@@ -80,6 +80,19 @@ public class UsuarioService {
         usuario.setPlan(plan);
         usuario.setFechaInicioSuscripcion(LocalDateTime.now());
         usuario.setFechaFinSuscripcion(null);
+        return usuarioRepository.save(usuario);
+    }
+
+    public java.util.List<Usuario> listarTodos() {
+        return usuarioRepository.findAll();
+    }
+
+    public Usuario actualizarRol(String id, String nuevoRol) {
+        if (!Usuario.ROL_USUARIO.equals(nuevoRol) && !Usuario.ROL_ADMIN.equals(nuevoRol)) {
+            throw new BadRequestException("Rol inválido. Use USUARIO o ADMIN");
+        }
+        Usuario usuario = obtenerPorId(id);
+        usuario.setRol(nuevoRol);
         return usuarioRepository.save(usuario);
     }
 

@@ -14,6 +14,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -118,6 +119,33 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
+        usuarioService.eliminar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @Operation(summary = "Listar todos los usuarios (solo ADMIN)")
+    @GetMapping("/admin/todos")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<List<Usuario>>> listarTodos() {
+        List<Usuario> usuarios = usuarioService.listarTodos();
+        return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuarios));
+    }
+
+    @Operation(summary = "Cambiar rol de un usuario (solo ADMIN)")
+    @PutMapping("/admin/{id}/rol")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ApiResponse<Usuario>> actualizarRol(
+            @PathVariable String id,
+            @RequestBody Map<String, String> datos) {
+        String nuevoRol = datos.getOrDefault("rol", "USUARIO");
+        Usuario usuario = usuarioService.actualizarRol(id, nuevoRol);
+        return ResponseEntity.ok(new ApiResponse<>(true, "Rol actualizado", usuario));
+    }
+
+    @Operation(summary = "Eliminar un usuario por ID (solo ADMIN)")
+    @DeleteMapping("/admin/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> eliminarComoAdmin(@PathVariable String id) {
         usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
     }

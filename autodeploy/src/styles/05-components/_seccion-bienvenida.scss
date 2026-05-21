@@ -1,3 +1,5 @@
+@use "../01-tools/funciones" as *;
+
 .seccion-bienvenida {
   display: grid;
   grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
@@ -51,19 +53,19 @@
   // ───── Título y descripción (editorial tipo magazine) ─────
   &__titulo {
     font-family: var(--font-secondary);
-    font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+    // Tipografía fluida generada por la función fluido(): escala entre
+    // 2.5rem y 4.5rem según el viewport (30rem→80rem). El clamp() final
+    // sustituye al pareja `clamp()` manual + @media de 960px que había
+    // antes.
+    font-size: fluido(2.5rem, 4.5rem);
     font-weight: var(--font-weight-bold);
     line-height: 0.95;
     letter-spacing: -0.045em;
     color: var(--texto-claro);
-
-    @media (max-width: 960px) {
-      font-size: 2.5rem;
-    }
   }
 
   &__descripcion {
-    font-size: 1.05rem;
+    font-size: fluido(0.95rem, 1.125rem);
     line-height: 1.65;
     color: var(--texto-medio);
     max-width: 32rem;

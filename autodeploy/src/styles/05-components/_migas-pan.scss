@@ -4,22 +4,29 @@
   gap: 0.5rem;
   font-size: var(--font-size-sm);
   color: var(--texto-apagado);
-}
 
-.migas-pan__enlace {
-  color: var(--texto-apagado);
-  transition: color var(--duration-base) ease;
-}
+  &__enlace {
+    color: var(--texto-apagado);
+    transition: color var(--duration-base) ease;
 
-.migas-pan__enlace:hover {
-  color: var(--texto-claro);
-}
+    &:hover,
+    &:focus-visible {
+      color: var(--texto-claro);
+      outline: none;
+    }
 
-.migas-pan__separador {
-  color: var(--texto-apagado);
-}
+    &:focus-visible {
+      text-decoration: underline;
+      text-underline-offset: 0.25rem;
+    }
+  }
 
-.migas-pan__actual {
-  color: var(--texto-claro);
-  font-weight: var(--font-weight-semibold);
+  &__separador {
+    color: var(--texto-apagado);
+  }
+
+  &__actual {
+    color: var(--texto-claro);
+    font-weight: var(--font-weight-semibold);
+  }
 }

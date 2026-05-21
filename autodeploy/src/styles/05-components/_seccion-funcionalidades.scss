@@ -1,58 +1,52 @@
 @use "../01-tools/mixins" as *;
+@use "../01-tools/funciones" as *;
 
 .seccion-funcionalidades {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  padding: 3rem 0;
+  @include flex-columna;
+  gap: token-espacio(5xl);
+  padding: token-espacio(5xl) 0;
   border-top: 1px solid var(--borde-normal);
 
   &__cabecera {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    @include flex-columna;
+    gap: token-espacio(m);
   }
 
   &__titulo {
     font-family: var(--font-secondary);
-    font-size: 2rem;
+    font-size: fluido(1.75rem, 2.25rem);
     font-weight: var(--font-weight-bold);
     letter-spacing: -0.75px;
-    color: var(--texto-claro);
-    line-height: 1.1;
+    color: token-color(texto-claro);
+    line-height: var(--line-height-tight);
   }
 
   &__descripcion {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--texto-medio);
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: token-color(texto-medio);
     max-width: 38rem;
   }
 
   &__contenido {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
+    @include flex-columna;
+    gap: token-espacio(xl);
   }
 
   &__fila {
     display: flex;
-    gap: 1.25rem;
+    gap: token-espacio(xl);
 
-    .seccion-funcionalidades__item {
-      flex: 1;
-    }
+    .seccion-funcionalidades__item { flex: 1; }
 
-    @include movil {
-      flex-direction: column;
-    }
+    @include movil { flex-direction: column; }
   }
 
   &__item {
-    padding: 2rem;
-    border: 1px solid var(--borde-normal);
-    border-radius: var(--radius-l);
-    transition: border-color var(--duration-base) ease, transform var(--duration-base) ease;
+    padding: token-espacio(3xl);
+    border: 1px solid token-color(borde-normal);
+    border-radius: token-radio(l);
+    @include transicion(border-color, transform);
 
     &:hover {
       border-color: rgba(240, 236, 226, 0.15);
@@ -60,57 +54,53 @@
     }
 
     &:focus-within {
-      outline: 2px solid var(--amarillo-normal);
+      outline: 2px solid token-color(amarillo-normal);
       outline-offset: 2px;
     }
 
     &--destacado {
       display: flex;
       align-items: flex-start;
-      gap: 2rem;
+      gap: token-espacio(3xl);
 
-      .seccion-funcionalidades__item__icono {
-        margin-bottom: 0;
-      }
+      .seccion-funcionalidades__item__icono { margin-bottom: 0; }
 
       @include movil {
         flex-direction: column;
-        gap: 1rem;
+        gap: token-espacio(l);
       }
     }
 
     &__icono {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      @include flex-centro;
       width: 2.75rem;
       height: 2.75rem;
-      margin-bottom: 1.25rem;
-      background-color: var(--fondo-tarjeta);
-      border: 1px solid var(--borde-normal);
-      border-radius: var(--radius-m);
-      color: var(--amarillo-normal);
-      font-size: 1rem;
+      margin-bottom: token-espacio(xl);
+      background-color: token-color(fondo-tarjeta);
+      border: 1px solid token-color(borde-normal);
+      border-radius: token-radio(m);
+      color: token-color(amarillo-normal);
+      font-size: var(--font-size-base);
       flex-shrink: 0;
 
-      &--cyan     { color: var(--cyan-normal); }
-      &--amarillo { color: var(--amarillo-normal); }
-      &--teal     { color: var(--teal-normal); }
+      &--cyan     { color: token-color(cyan-normal); }
+      &--amarillo { color: token-color(amarillo-normal); }
+      &--teal     { color: token-color(teal-normal); }
     }
 
     &__titulo {
       font-family: var(--font-secondary);
-      font-size: 1rem;
+      font-size: var(--font-size-base);
       font-weight: var(--font-weight-bold);
-      color: var(--texto-claro);
-      margin-bottom: 0.5rem;
-      line-height: 1.3;
+      color: token-color(texto-claro);
+      margin-bottom: token-espacio(s);
+      line-height: var(--line-height-tight);
     }
 
     &__descripcion {
-      font-size: 0.875rem;
-      line-height: 1.65;
-      color: var(--texto-medio);
+      font-size: var(--font-size-md);
+      line-height: var(--line-height-relaxed);
+      color: token-color(texto-medio);
     }
   }
 }

@@ -13,6 +13,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  // Transición global suave al alternar tema (clase .tema-claro en <html>).
+  // El @include movimiento-reducido del partial _animaciones.scss anula
+  // esto cuando el usuario tiene prefers-reduced-motion: reduce.
+  transition: background-color var(--duration-base) ease, color var(--duration-base) ease;
 }
 
 ul {

@@ -58,6 +58,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/comunidad/comunidad').then((modulo) => modulo.Comunidad),
       },
+      {
+        path: 'style-guide',
+        loadComponent: () =>
+          import('./pages/style-guide/style-guide').then((modulo) => modulo.StyleGuide),
+      },
     ],
   },
   {

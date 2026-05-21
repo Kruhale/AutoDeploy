@@ -183,7 +183,13 @@
       outline-offset: -2px;
     }
 
-    &--activo {
+    // El estado "página activa" se aplica tanto por la clase BEM
+    // --activo (puesta por routerLinkActive de Angular) como por el
+    // atributo aria-current="page", que es el que leen los lectores
+    // de pantalla. Ambos selectores se mantienen para que la regla
+    // funcione aunque sólo se use uno de los dos enfoques.
+    &--activo,
+    &[aria-current="page"] {
       color: var(--amarillo-normal);
       background: linear-gradient(90deg, hsla(47, 86%, 56%, 0.08), transparent 70%);
 

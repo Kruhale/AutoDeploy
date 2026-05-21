@@ -2,6 +2,8 @@
 // Las animaciones específicas de un componente viven con su componente
 // (p.ej. .seccion-bienvenida__terminal__linea está en _seccion-bienvenida.scss).
 
+@use "./mixins" as *;
+
 // Keyframes globales -----------------------------------------------------
 
 @keyframes entrar-abajo {
@@ -33,6 +35,15 @@
 @keyframes latido {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.25); }
+}
+
+@keyframes giro-spinner {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fade-arriba {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 // Animaciones de carga (page load, sin scroll) ---------------------------
@@ -80,3 +91,64 @@
 .animar-hijos > *:nth-child(4) { animation-delay: 240ms; }
 .animar-hijos > *:nth-child(5) { animation-delay: 320ms; }
 .animar-hijos > *:nth-child(6) { animation-delay: 400ms; }
+
+// Spinner global de carga ------------------------------------------------
+//
+// Se renderiza con un solo div: el borde superior cyan/amarillo gira sobre
+// un círculo grisáceo. Las animaciones se quedan en transform/opacity para
+// que el navegador las componga en GPU.
+
+.spinner {
+  display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--borde-normal);
+  border-top-color: var(--amarillo-normal);
+  border-radius: var(--radius-full);
+  animation: giro-spinner 0.8s linear infinite;
+  vertical-align: middle;
+
+  &--grande { width: 2rem; height: 2rem; border-width: 3px; }
+  &--cyan   { border-top-color: var(--cyan-normal); }
+  &--verde  { border-top-color: var(--verde-normal); }
+}
+
+// Micro-interacción "fade desde abajo" para feedback puntual (toasts,
+// confirmaciones, item recién añadido). Más breve que .animar--subir.
+.aparecer {
+  animation: fade-arriba 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+// Accesibilidad: respetar la preferencia del sistema operativo de
+// reducir movimiento. Si el usuario ha activado "Reduce motion" en
+// macOS/Windows/Android/iOS, las animaciones de entrada y de scroll
+// reveal se desactivan completamente (queda solo el estado final
+// visible) y las transiciones bajan a una duración irrisoria.
+//
+// El uso de !important es legítimo aquí porque la preferencia del
+// usuario es la última palabra: gana sobre cualquier regla específica
+// que un componente pudiera redefinir.
+@include movimiento-reducido {
+  .animar,
+  .animar-hijos > *,
+  .revelar,
+  .aparecer {
+    animation: none !important;
+    transition: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .spinner {
+    animation-duration: 1.5s !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

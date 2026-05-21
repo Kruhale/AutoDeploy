@@ -67,6 +67,10 @@
 @use "styles/06-utilities/visibilidad";
 @use "styles/06-utilities/texto";
 @use "styles/06-utilities/espaciados";
+@use "styles/06-utilities/flex";
+@use "styles/06-utilities/display";
+@use "styles/06-utilities/z-index";
+@use "styles/06-utilities/saltar-contenido";
 
 // Vendor CSS (xterm) — al final para que el reset no lo machaque.
 @import "@xterm/xterm/css/xterm.css";

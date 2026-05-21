@@ -362,10 +362,12 @@ El backend implementa autorización por roles sobre JWT. Cada `Usuario` tiene un
 ### Verificación con curl
 
 ```bash
-# 1. Login como usuario normal
+# 1. Login como usuario normal (sustituye TU_CONTRASENA por la real - placeholder)
+BODY_USER=$(jq -n --arg e demo@autodeploy.dev --arg p TU_CONTRASENA \
+  '{email:$e, password:$p}')
 TOKEN_USER=$(curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"demo@autodeploy.dev","password":"TU-PASSWORD-AQUI"}' \
+  -d "$BODY_USER" \
   | jq -r '.data.tokenJwt')
 
 # 2. Acceder a endpoint admin sin permisos → 403
@@ -374,10 +376,12 @@ curl -s -o /dev/null -w "HTTP %{http_code}\n" \
   https://autodeploy.kruhale.com/api/usuarios/admin/todos
 # HTTP 403
 
-# 3. Login como admin
+# 3. Login como admin (sustituye TU_CONTRASENA por la real - placeholder)
+BODY_ADMIN=$(jq -n --arg e admin@autodeploy.dev --arg p TU_CONTRASENA \
+  '{email:$e, password:$p}')
 TOKEN_ADMIN=$(curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@autodeploy.dev","password":"TU-PASSWORD-ADMIN-AQUI"}' \
+  -d "$BODY_ADMIN" \
   | jq -r '.data.tokenJwt')
 
 # 4. Mismo endpoint con admin → 200

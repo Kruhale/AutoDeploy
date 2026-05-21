@@ -101,7 +101,10 @@
       "temaOscuro": "Attiva modalità scura",
       "notificaciones": "Notifiche",
       "menu": "Apri menu",
-      "cerrarMenu": "Chiudi menu"
+      "cerrarMenu": "Chiudi menu",
+      "acciones": "Azioni dell'intestazione",
+      "zonaNotificaciones": "Area notifiche",
+      "panelMovilPortal": "Menu mobile"
     },
     "dropdown": {
       "titulo": "Notifiche",
@@ -1008,7 +1011,7 @@
     "ctaPrincipal": "Aggiungi regola",
     "ctaSecundario": "Apri o blocca una porta",
     "selectorServidor": "Server di destinazione",
-    "presetsEtiqueta": "Preset · un clic",
+    "presetsEtiqueta": "Configura in un click",
     "presetSsh": "SSH",
     "presetHttp": "HTTP",
     "presetHttps": "HTTPS",

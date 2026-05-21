@@ -17,6 +17,11 @@
     "buscar": "Rechercher",
     "guion": "—",
     "menu": "Menu",
+    "saltarContenido": "Aller au contenu",
+    "cerrarMenu": "Fermer le menu",
+    "ariaDisposicionApp": "Application AutoDeploy",
+    "ariaCabeceraMovil": "En-tête mobile",
+    "ariaContenidoApp": "Contenu principal de l'application",
     "sinDatos": "Aucune donnée pour le moment",
     "guardando": "Enregistrement…",
     "guardado": "Enregistré",
@@ -74,7 +79,12 @@
       "contacto": "Contact",
       "comunidad": "Communauté"
     },
-    "copyright": "© 2026 AutoDeployService · Infrastructure cloud d'entreprise"
+    "copyright": "© 2026 AutoDeployService · Infrastructure cloud d'entreprise",
+    "ariaContenido": "Informations et liens du pied de page",
+    "ariaMarca": "À propos d'AutoDeployService",
+    "ariaInferior": "Copyright et réglages généraux",
+    "ariaAjustes": "Langue et réseaux sociaux",
+    "ariaRedes": "Réseaux sociaux"
   },
   "barraPie": {
     "estado": "Tous les systèmes opérationnels",
@@ -135,7 +145,11 @@
     },
     "chipPro": "Pro",
     "colapsar": "Réduire",
-    "fallbackCuenta": "Mon compte"
+    "fallbackCuenta": "Mon compte",
+    "ariaPrincipal": "Barre latérale de l'application",
+    "ariaNavegacion": "Navigation principale",
+    "ariaColapsar": "Réduire ou agrandir la barre latérale",
+    "ariaInfoUsuario": "Informations du compte"
   },
   "bannerCookies": {
     "texto": "Nous utilisons des cookies propriétaires pour améliorer votre expérience. Consultez notre",
@@ -713,7 +727,7 @@
       "authMethodContrasena": "Mot de passe",
       "clavePlaceholder": "Saisissez le mot de passe du serveur",
       "claveSsh": "Clé SSH privée",
-      "claveSshPlaceholder": "-----BEGIN OPENSSH PRIVATE KEY-----\n…\n-----END OPENSSH PRIVATE KEY-----",
+      "claveSshPlaceholder": "Collez ici votre clé privée (format OpenSSH, lignes BEGIN/END incluses)",
       "claveSshPista": "Collez le contenu complet de votre clé privée, y compris les lignes BEGIN et END."
     },
     "ayuda": {

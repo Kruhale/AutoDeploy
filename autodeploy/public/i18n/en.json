@@ -17,6 +17,11 @@
     "buscar": "Search",
     "guion": "—",
     "menu": "Menu",
+    "saltarContenido": "Skip to content",
+    "cerrarMenu": "Close menu",
+    "ariaDisposicionApp": "AutoDeploy application",
+    "ariaCabeceraMovil": "Mobile header",
+    "ariaContenidoApp": "Main application content",
     "sinDatos": "No data yet",
     "guardando": "Saving…",
     "guardado": "Saved",
@@ -74,7 +79,12 @@
       "contacto": "Contact",
       "comunidad": "Community"
     },
-    "copyright": "© 2026 AutoDeployService · Enterprise cloud infrastructure"
+    "copyright": "© 2026 AutoDeployService · Enterprise cloud infrastructure",
+    "ariaContenido": "Footer information and links",
+    "ariaMarca": "About AutoDeployService",
+    "ariaInferior": "Copyright and general settings",
+    "ariaAjustes": "Language and social networks",
+    "ariaRedes": "Social networks"
   },
   "barraPie": {
     "estado": "All systems operational",
@@ -135,7 +145,11 @@
     },
     "chipPro": "Pro",
     "colapsar": "Collapse",
-    "fallbackCuenta": "My account"
+    "fallbackCuenta": "My account",
+    "ariaPrincipal": "Application sidebar",
+    "ariaNavegacion": "Main navigation",
+    "ariaColapsar": "Collapse or expand sidebar",
+    "ariaInfoUsuario": "Account information"
   },
   "bannerCookies": {
     "texto": "We use first-party cookies to improve your experience. Read our",
@@ -713,7 +727,7 @@
       "authMethodContrasena": "Password",
       "clavePlaceholder": "Enter the server password",
       "claveSsh": "SSH private key",
-      "claveSshPlaceholder": "-----BEGIN OPENSSH PRIVATE KEY-----\n…\n-----END OPENSSH PRIVATE KEY-----",
+      "claveSshPlaceholder": "Paste your private key here (OpenSSH format, BEGIN/END lines included)",
       "claveSshPista": "Paste the full contents of your private key, including the BEGIN and END lines."
     },
     "ayuda": {

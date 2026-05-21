@@ -310,6 +310,41 @@
       "boton": "Inizia gratis ora"
     }
   },
+  "manifiestoPrecios": {
+    "titulo": "Manifesto dei prezzi",
+    "fecha": "Ultimo aggiornamento: maggio 2026",
+    "seccion1": {
+      "titulo": "1. Perché abbiamo dei prezzi",
+      "parrafo": "AutoDeploy paga i propri server, domini, certificati e ore di manutenzione. Far pagare è l'unico modo onesto per mantenere il progetto vivo senza pubblicità né vendita di dati. Ogni euro va in infrastruttura, supporto e sviluppo."
+    },
+    "seccion2": {
+      "titulo": "2. I tre piani",
+      "intro": "Definiamo tre livelli chiari per pagare solo ciò che usi:",
+      "freeEtiqueta": "Free · 0 €/mese",
+      "freeDescripcion": "ideale per sviluppatori che esplorano la piattaforma. 1 server connesso, 5 deployment al mese, supporto della community. Senza carta di credito.",
+      "proEtiqueta": "Pro · 9 €/mese",
+      "proDescripcion": "per piccoli team già in produzione. Fino a 5 server, deployment illimitati, assistente IA, supporto prioritario e 3 domini personalizzati.",
+      "businessEtiqueta": "Business · 29 €/mese",
+      "businessDescripcion": "per scalare senza limiti. Server illimitati, gestione team, domini personalizzati illimitati, supporto dedicato e SLA documentato."
+    },
+    "seccion3": {
+      "titulo": "3. Cosa non facciamo",
+      "parrafo": "Non vendiamo i tuoi dati. Niente pubblicità. Non addebitiamo funzioni di sicurezza di base come TLS o cifratura (è nostro dovere, non un extra). Niente contratti lunghi: puoi annullare quando vuoi e mantenere l'accesso fino alla fine del periodo fatturato."
+    },
+    "seccion4": {
+      "titulo": "4. Come cambiano i prezzi",
+      "parrafo": "Se aumentiamo il prezzo di un piano, ti avvisiamo via email con almeno 30 giorni di anticipo e manteniamo il prezzo attuale del tuo abbonamento durante tale periodo. Se abbassiamo il prezzo, il nuovo prezzo si applica automaticamente al ciclo di fatturazione successivo."
+    },
+    "seccion5": {
+      "titulo": "5. Rimborsi",
+      "parrafo": "Se entro i primi 14 giorni ritieni che il piano non faccia per te, scrivi a soporte@autodeploy.dev e ti rimborsiamo il 100 % senza domande. Trascorsi i 14 giorni i pagamenti non sono rimborsabili, ma puoi sempre passare a un piano inferiore o annullare."
+    },
+    "seccion6": {
+      "titulo": "6. Confronto completo",
+      "parrafo": "Trovi la tabella con tutte le funzionalità e i prezzi aggiornati nella sezione prezzi della home.",
+      "enlace": "Vedi tabella dei piani"
+    }
+  },
   "avisoLegal": {
     "titulo": "Note Legali",
     "fecha": "Ultimo aggiornamento: aprile 2026",
@@ -829,6 +864,14 @@
     "seccion06": {
       "titulo": "Lingua",
       "descripcion": "Scegli la lingua dell'interfaccia. La preferenza viene salvata nel tuo account e applicata all'istante."
+    },
+    "seccion07tema": {
+      "titulo": "Tema",
+      "descripcion": "Passa tra modalità scura e chiara. La scelta viene salvata nel browser e applicata all'istante.",
+      "oscuro": "Modalità scura",
+      "oscuroDetalle": "Riposante per gli occhi · ideale di notte",
+      "claro": "Modalità chiara",
+      "claroDetalle": "Più leggibile · ideale di giorno"
     },
     "seccion07": {
       "titulo": "Uscita",

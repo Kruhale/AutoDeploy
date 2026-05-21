@@ -310,6 +310,41 @@
       "boton": "Jetzt kostenlos starten"
     }
   },
+  "manifiestoPrecios": {
+    "titulo": "Preis-Manifest",
+    "fecha": "Letzte Aktualisierung: Mai 2026",
+    "seccion1": {
+      "titulo": "1. Warum wir Geld verlangen",
+      "parrafo": "AutoDeploy bezahlt seine eigenen Server, Domains, Zertifikate und Wartungsarbeiten. Zahlungen sind der einzige ehrliche Weg, das Projekt ohne Werbung oder Datenverkauf am Leben zu halten. Jeder Euro fließt in Infrastruktur, Support und Entwicklung."
+    },
+    "seccion2": {
+      "titulo": "2. Die drei Pläne",
+      "intro": "Wir definieren drei klare Stufen, damit Sie nur für das zahlen, was Sie nutzen:",
+      "freeEtiqueta": "Free · 0 €/Monat",
+      "freeDescripcion": "ideal für Entwickler, die die Plattform erkunden. 1 verbundener Server, 5 Deployments pro Monat, Community-Support. Keine Kreditkarte erforderlich.",
+      "proEtiqueta": "Pro · 9 €/Monat",
+      "proDescripcion": "für kleine Teams in Produktion. Bis zu 5 Server, unbegrenzte Deployments, KI-Assistent, vorrangiger Support und 3 eigene Domains.",
+      "businessEtiqueta": "Business · 29 €/Monat",
+      "businessDescripcion": "zum Skalieren ohne Grenzen. Unbegrenzte Server, Teamverwaltung, unbegrenzte eigene Domains, dedizierter Support und dokumentiertes SLA."
+    },
+    "seccion3": {
+      "titulo": "3. Was wir nicht tun",
+      "parrafo": "Wir verkaufen Ihre Daten nicht. Keine Werbung. Wir berechnen keine grundlegenden Sicherheitsfunktionen wie TLS oder Verschlüsselung (das ist unsere Pflicht, kein Premium-Feature). Keine langen Verträge: Sie können jederzeit kündigen und behalten den Zugriff bis zum Ende des Abrechnungszeitraums."
+    },
+    "seccion4": {
+      "titulo": "4. Wie sich Preise ändern",
+      "parrafo": "Wenn wir den Preis erhöhen, informieren wir Sie mindestens 30 Tage im Voraus per E-Mail und respektieren den aktuellen Preis Ihres Abonnements während dieser Zeit. Preissenkungen gelten ab Ihrem nächsten Abrechnungszyklus automatisch."
+    },
+    "seccion5": {
+      "titulo": "5. Rückerstattungen",
+      "parrafo": "Wenn Sie innerhalb der ersten 14 Tage feststellen, dass der Plan nicht passt, schreiben Sie an soporte@autodeploy.dev und wir erstatten 100 % ohne Fragen. Nach 14 Tagen sind Zahlungen nicht erstattungsfähig, aber Sie können jederzeit downgraden oder kündigen."
+    },
+    "seccion6": {
+      "titulo": "6. Vollständiger Vergleich",
+      "parrafo": "Die Tabelle mit allen Funktionen und aktuellen Preisen finden Sie im Preisbereich der Startseite.",
+      "enlace": "Preistabelle ansehen"
+    }
+  },
   "avisoLegal": {
     "titulo": "Impressum",
     "fecha": "Letzte Aktualisierung: April 2026",
@@ -829,6 +864,14 @@
     "seccion06": {
       "titulo": "Sprache",
       "descripcion": "Wählen Sie die Sprache der Oberfläche. Die Einstellung wird in Ihrem Konto gespeichert und sofort angewendet."
+    },
+    "seccion07tema": {
+      "titulo": "Erscheinungsbild",
+      "descripcion": "Wechseln Sie zwischen dunklem und hellem Modus. Ihre Auswahl wird im Browser gespeichert und sofort angewendet.",
+      "oscuro": "Dunkler Modus",
+      "oscuroDetalle": "Augenschonend · ideal nachts",
+      "claro": "Heller Modus",
+      "claroDetalle": "Lesbarer · ideal tagsüber"
     },
     "seccion07": {
       "titulo": "Abmelden",

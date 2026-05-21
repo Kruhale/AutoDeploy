@@ -310,6 +310,41 @@
       "boton": "Start free now"
     }
   },
+  "manifiestoPrecios": {
+    "titulo": "Pricing manifesto",
+    "fecha": "Last updated: May 2026",
+    "seccion1": {
+      "titulo": "1. Why we charge",
+      "parrafo": "AutoDeploy is a service that pays for its own servers, domains, certificates and maintenance. Charging is the only honest way to keep the project alive without ads or selling data. Every euro goes into infrastructure, support and development."
+    },
+    "seccion2": {
+      "titulo": "2. The three plans",
+      "intro": "We define three clear tiers so you only pay for what you use:",
+      "freeEtiqueta": "Free · €0/month",
+      "freeDescripcion": "ideal for developers exploring the platform. 1 connected server, 5 deployments per month, community support. No credit card required.",
+      "proEtiqueta": "Pro · €9/month",
+      "proDescripcion": "for small teams already in production. Up to 5 servers, unlimited deployments, AI assistant, priority support and 3 custom domains.",
+      "businessEtiqueta": "Business · €29/month",
+      "businessDescripcion": "to scale without limits. Unlimited servers, team management, unlimited custom domains, dedicated support and a documented SLA."
+    },
+    "seccion3": {
+      "titulo": "3. What we don't do",
+      "parrafo": "We don't sell your data. We don't show ads. We don't charge for basic security like TLS or credential encryption (that's our duty, not a premium feature). We don't lock you into long contracts: you can cancel anytime and keep access until the end of your billing period."
+    },
+    "seccion4": {
+      "titulo": "4. How prices change",
+      "parrafo": "If we raise a plan's price, we email you at least 30 days in advance and honour the current price for your subscription during that period. If we lower the price, the new price applies automatically on your next billing cycle."
+    },
+    "seccion5": {
+      "titulo": "5. Refunds",
+      "parrafo": "If within the first 14 days you decide the plan isn't a fit, email support@autodeploy.dev and we refund 100% with no questions asked. After 14 days payments are non-refundable, but you can downgrade or cancel anytime."
+    },
+    "seccion6": {
+      "titulo": "6. Full comparison",
+      "parrafo": "You can find the table with all features and current prices in the pricing section of the home page.",
+      "enlace": "See pricing table"
+    }
+  },
   "avisoLegal": {
     "titulo": "Legal Notice",
     "fecha": "Last updated: April 2026",
@@ -829,6 +864,14 @@
     "seccion06": {
       "titulo": "Language",
       "descripcion": "Choose the interface language. Your preference is saved to your account and applied instantly."
+    },
+    "seccion07tema": {
+      "titulo": "Theme",
+      "descripcion": "Switch between dark and light mode. Your choice is saved in your browser and applied instantly.",
+      "oscuro": "Dark mode",
+      "oscuroDetalle": "Easy on the eyes · ideal at night",
+      "claro": "Light mode",
+      "claroDetalle": "More legible · ideal during the day"
     },
     "seccion07": {
       "titulo": "Sign out",

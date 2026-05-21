@@ -310,6 +310,41 @@
       "boton": "Commencer gratuitement maintenant"
     }
   },
+  "manifiestoPrecios": {
+    "titulo": "Manifeste des prix",
+    "fecha": "Dernière mise à jour : mai 2026",
+    "seccion1": {
+      "titulo": "1. Pourquoi nous facturons",
+      "parrafo": "AutoDeploy paie ses propres serveurs, domaines, certificats et heures de maintenance. Facturer est le seul moyen honnête de maintenir le projet vivant sans publicité ni vente de données. Chaque euro va à l'infrastructure, au support et au développement."
+    },
+    "seccion2": {
+      "titulo": "2. Les trois forfaits",
+      "intro": "Trois niveaux clairs pour ne payer que ce que vous utilisez :",
+      "freeEtiqueta": "Free · 0 €/mois",
+      "freeDescripcion": "idéal pour les développeurs qui explorent la plateforme. 1 serveur connecté, 5 déploiements par mois, support communautaire. Sans carte bancaire.",
+      "proEtiqueta": "Pro · 9 €/mois",
+      "proDescripcion": "pour les petites équipes déjà en production. Jusqu'à 5 serveurs, déploiements illimités, assistant IA, support prioritaire et 3 domaines personnalisés.",
+      "businessEtiqueta": "Business · 29 €/mois",
+      "businessDescripcion": "pour évoluer sans limites. Serveurs illimités, gestion d'équipes, domaines personnalisés illimités, support dédié et SLA documenté."
+    },
+    "seccion3": {
+      "titulo": "3. Ce que nous ne faisons pas",
+      "parrafo": "Nous ne vendons pas vos données. Pas de publicité. Nous ne facturons pas la sécurité de base comme TLS ou le chiffrement (c'est notre devoir, pas une fonctionnalité premium). Pas de contrats longs : vous pouvez annuler à tout moment et conserver l'accès jusqu'à la fin de la période facturée."
+    },
+    "seccion4": {
+      "titulo": "4. Comment changent les prix",
+      "parrafo": "Si nous augmentons le prix d'un forfait, nous vous prévenons par e-mail au moins 30 jours à l'avance et respectons le prix actuel de votre abonnement durant cette période. Si nous baissons le prix, il s'applique automatiquement à votre prochain cycle de facturation."
+    },
+    "seccion5": {
+      "titulo": "5. Remboursements",
+      "parrafo": "Si dans les 14 premiers jours vous estimez que le forfait ne vous convient pas, écrivez à soporte@autodeploy.dev et nous remboursons 100 % sans questions. Passé ce délai, les paiements ne sont pas remboursables, mais vous pouvez rétrograder ou annuler à tout moment."
+    },
+    "seccion6": {
+      "titulo": "6. Comparatif complet",
+      "parrafo": "Vous trouverez le tableau avec toutes les fonctionnalités et les prix à jour dans la section tarifs de la page d'accueil.",
+      "enlace": "Voir le tableau des forfaits"
+    }
+  },
   "avisoLegal": {
     "titulo": "Mentions légales",
     "fecha": "Dernière mise à jour : avril 2026",
@@ -829,6 +864,14 @@
     "seccion06": {
       "titulo": "Langue",
       "descripcion": "Choisissez la langue de l'interface. La préférence est enregistrée dans votre compte et appliquée instantanément."
+    },
+    "seccion07tema": {
+      "titulo": "Thème",
+      "descripcion": "Basculez entre les modes sombre et clair. Votre choix est enregistré dans votre navigateur et appliqué instantanément.",
+      "oscuro": "Mode sombre",
+      "oscuroDetalle": "Reposant pour les yeux · idéal la nuit",
+      "claro": "Mode clair",
+      "claroDetalle": "Plus lisible · idéal en journée"
     },
     "seccion07": {
       "titulo": "Déconnexion",

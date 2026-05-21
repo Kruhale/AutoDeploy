@@ -6,6 +6,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../services/auth.service";
 import { PlanService, PLANES, PlanId, Plan } from "../../services/plan.service";
 import { UsuarioService } from "../../services/usuario.service";
+import { ThemeService } from "../../services/theme.service";
 import { SelectorIdioma } from "../../components/shared/selector-idioma/selector-idioma";
 
 interface FilaResumen {
@@ -80,6 +81,7 @@ export class Cuenta {
     readonly authService: AuthService,
     readonly planService: PlanService,
     readonly usuarioService: UsuarioService,
+    readonly themeService: ThemeService,
     private router: Router,
     private elemento: ElementRef<HTMLElement>,
     private translate: TranslateService
@@ -243,6 +245,11 @@ export class Cuenta {
         componente.mensajeGuardado.set("");
       }, 2400);
     }
+  }
+
+  activarTema(tema: "oscuro" | "claro"): void {
+    if (this.themeService.temaActual() === tema) return;
+    this.themeService.alternarTema();
   }
 
   iniciarSalida(): void {

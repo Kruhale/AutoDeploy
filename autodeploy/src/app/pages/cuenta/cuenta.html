@@ -234,7 +234,7 @@
       }
     </section>
 
-    <a class="cuenta__enlace-comparar" routerLink="/" fragment="pricing">
+    <a class="cuenta__enlace-comparar" routerLink="/manifiesto-precios">
       <span class="cuenta__enlace-comparar__borde-izq" aria-hidden="true"></span>
       <span>{{ "cuenta.compararPricing" | translate }}</span>
       <span class="cuenta__enlace-comparar__flecha" aria-hidden="true">→</span>
@@ -403,9 +403,75 @@
     </section>
   </section>
 
+  <section class="cuenta__bloque">
+    <header class="cuenta__cabecera-seccion">
+      <span class="cuenta__cabecera-seccion__indice">07</span>
+      <section class="cuenta__cabecera-seccion__texto">
+        <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion07tema.titulo" | translate }}</h2>
+        <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion07tema.descripcion" | translate }}</p>
+      </section>
+    </header>
+
+    <div class="cuenta__tema" role="radiogroup" [attr.aria-label]="'cuenta.seccion07tema.titulo' | translate">
+      <button
+        type="button"
+        class="cuenta__tema__opcion"
+        [class.cuenta__tema__opcion--activa]="themeService.temaActual() === 'oscuro'"
+        role="radio"
+        [attr.aria-checked]="themeService.temaActual() === 'oscuro'"
+        (click)="activarTema('oscuro')">
+        <span class="cuenta__tema__opcion__preview cuenta__tema__opcion__preview--oscuro" aria-hidden="true">
+          <span class="cuenta__tema__opcion__barra cuenta__tema__opcion__barra--larga"></span>
+          <span class="cuenta__tema__opcion__barra cuenta__tema__opcion__barra--media"></span>
+          <span class="cuenta__tema__opcion__barra cuenta__tema__opcion__barra--corta"></span>
+          <span class="cuenta__tema__opcion__circulo" aria-hidden="true"></span>
+        </span>
+        <span class="cuenta__tema__opcion__pie">
+          <span class="cuenta__tema__opcion__icono" aria-hidden="true">
+            <i class="fa-solid fa-moon"></i>
+          </span>
+          <span class="cuenta__tema__opcion__texto">
+            <span class="cuenta__tema__opcion__etiqueta">{{ "cuenta.seccion07tema.oscuro" | translate }}</span>
+            <span class="cuenta__tema__opcion__detalle">{{ "cuenta.seccion07tema.oscuroDetalle" | translate }}</span>
+          </span>
+          <span class="cuenta__tema__opcion__check" aria-hidden="true">
+            <i class="fa-solid fa-check"></i>
+          </span>
+        </span>
+      </button>
+
+      <button
+        type="button"
+        class="cuenta__tema__opcion"
+        [class.cuenta__tema__opcion--activa]="themeService.temaActual() === 'claro'"
+        role="radio"
+        [attr.aria-checked]="themeService.temaActual() === 'claro'"
+        (click)="activarTema('claro')">
+        <span class="cuenta__tema__opcion__preview cuenta__tema__opcion__preview--claro" aria-hidden="true">
+          <span class="cuenta__tema__opcion__barra cuenta__tema__opcion__barra--larga"></span>
+          <span class="cuenta__tema__opcion__barra cuenta__tema__opcion__barra--media"></span>
+          <span class="cuenta__tema__opcion__barra cuenta__tema__opcion__barra--corta"></span>
+          <span class="cuenta__tema__opcion__circulo" aria-hidden="true"></span>
+        </span>
+        <span class="cuenta__tema__opcion__pie">
+          <span class="cuenta__tema__opcion__icono" aria-hidden="true">
+            <i class="fa-solid fa-sun"></i>
+          </span>
+          <span class="cuenta__tema__opcion__texto">
+            <span class="cuenta__tema__opcion__etiqueta">{{ "cuenta.seccion07tema.claro" | translate }}</span>
+            <span class="cuenta__tema__opcion__detalle">{{ "cuenta.seccion07tema.claroDetalle" | translate }}</span>
+          </span>
+          <span class="cuenta__tema__opcion__check" aria-hidden="true">
+            <i class="fa-solid fa-check"></i>
+          </span>
+        </span>
+      </button>
+    </div>
+  </section>
+
   <section class="cuenta__bloque cuenta__bloque--exit">
     <header class="cuenta__cabecera-seccion cuenta__cabecera-seccion--peligro">
-      <span class="cuenta__cabecera-seccion__indice">07</span>
+      <span class="cuenta__cabecera-seccion__indice">08</span>
       <section class="cuenta__cabecera-seccion__texto">
         <h2 class="cuenta__cabecera-seccion__titulo">{{ "cuenta.seccion07.titulo" | translate }}</h2>
         <p class="cuenta__cabecera-seccion__descripcion">{{ "cuenta.seccion07.descripcion" | translate }}</p>

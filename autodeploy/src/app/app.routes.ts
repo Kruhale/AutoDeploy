@@ -20,6 +20,13 @@ export const routes: Routes = [
           import('./pages/aviso-legal/aviso-legal').then((modulo) => modulo.AvisoLegal),
       },
       {
+        path: 'manifiesto-precios',
+        loadComponent: () =>
+          import('./pages/manifiesto-precios/manifiesto-precios').then(
+            (modulo) => modulo.ManifiestoPrecios,
+          ),
+      },
+      {
         path: 'politica-privacidad',
         loadComponent: () =>
           import('./pages/politica-privacidad/politica-privacidad').then(

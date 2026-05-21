@@ -21,7 +21,7 @@ No hace falta Java, Node ni Maven en la máquina: todo se construye dentro de lo
 | `AUTODEPLOY_JWT_SECRET` | Sí | Clave HMAC para firmar tokens JWT (mín. 256 bits) | `openssl rand -base64 48` |
 | `AUTODEPLOY_CIFRADO_CLAVE` | Sí | Clave AES-256 para cifrar credenciales SSH en MongoDB | `openssl rand -base64 32` |
 | `OPENROUTER_API_KEY` | No | API key del asistente IA (https://openrouter.ai/keys) | Crear cuenta en OpenRouter |
-| `OPENROUTER_MODEL` | No | Modelo IA por defecto. Default `openai/gpt-4o-mini` | Slug de https://openrouter.ai/models |
+| `OPENROUTER_MODEL` | No | Modelo IA por defecto. Default `google/gemini-2.5-pro` | Slug de https://openrouter.ai/models |
 | `IMAGE_TAG` | No | Tag de imagen Docker a desplegar. Default `latest` | Cualquier SHA o tag de GHCR |
 
 Las variables se leen de un archivo `.env` en la raíz del proyecto. Hay un `.env.example` con los valores por defecto.
@@ -49,7 +49,7 @@ Ejemplo de `.env` válido para desarrollo:
 AUTODEPLOY_JWT_SECRET=8K7QzVMpL+EvW9rH4tYbF3aXcN6dP1iR2sU0jK5mLxA=
 AUTODEPLOY_CIFRADO_CLAVE=YXV0b2RlcGxveS1zZWNyZXQta2V5LTMyYg==
 OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxxxxxx
-OPENROUTER_MODEL=openai/gpt-4o-mini
+OPENROUTER_MODEL=google/gemini-2.5-pro
 ```
 
 ### 3. Levantar el stack

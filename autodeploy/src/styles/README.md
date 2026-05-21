@@ -132,7 +132,7 @@ El proyecto **combina varios enfoques** intencionadamente para mostrar dominio d
 2. **`@media` directo con Sass var** (excepción justificada): cuando el bloque está a nivel raíz (no anidado bajo un selector, p.ej. `_banner-cookies.scss`) o usa un breakpoint específico distinto al del sistema (`960px`, `720px`, `60rem`, `56.25rem`, `36rem`).
 3. **Tipografía fluida con `fluido()`** (`01-tools/_funciones.scss`): genera un `clamp()` que escala entre dos viewports sin necesidad de breakpoints. Se usa en hero (`_seccion-bienvenida.scss`) y títulos principales.
 4. **`clamp()` manual** (puntual): cuando el valor es muy específico y no se reutiliza, mantener `clamp(...)` directo es más claro que envolverlo en `fluido()`.
-5. **Container queries con `@container`**: en `_tarjeta-servidor.scss` y `_tarjeta-estadistica.scss`. El componente se adapta al ancho del contenedor (sidebar, grid, panel detalle, modal), no del viewport. Requiere `container-type: inline-size; container-name: ...;` en el bloque raíz.
+5. **Container queries con `@container`**: en `_tarjeta-servidor.scss`, `_tarjeta-estadistica.scss`, `_seccion-precios.scss` (tarjeta-plan) y `_galeria-capturas.scss`. El componente se adapta al ancho del contenedor (sidebar, grid, panel detalle, modal), no del viewport. Requiere `container-type: inline-size; container-name: ...;` en el bloque raíz.
 6. **Imágenes responsive con `<picture>`/`srcset`/`sizes`/`loading="lazy"`**: en las imágenes informativas con varias variantes y en above-the-fold con `width`/`height` declarados para evitar layout shift.
 
 ## Accesibilidad: checklist WCAG aplicado

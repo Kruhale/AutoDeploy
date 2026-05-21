@@ -4,9 +4,9 @@
 
 ## Prototipo Figma
 
-Enlace al archivo: pendiente (compartir desde Figma → "Get link" → permisos View).
+El enlace público al archivo se incluirá en la defensa del proyecto (compartir desde Figma → "Get link" → permisos View). Localmente el prototipo se mantiene en `figma.com` bajo la cuenta del autor.
 
-El archivo contiene cuatro páginas:
+El archivo contiene seis páginas:
 
 1. **Moodboard** — Dirección estética con palabras clave (oscuro, profesional, cálido, técnico) y referencias visuales (Linear, Stripe, Coolify).
 2. **Guía de estilo** — Paleta de color completa con escalas, escala tipográfica (H1–Caption con Outfit), librería de iconos (FontAwesome 6 documentada), sistema de espaciado (`4/8/12/16/24/32/48/64`).
@@ -69,7 +69,7 @@ Tipografía fluida: hero de bienvenida usa `font-size: fluido(2.5rem, 4.5rem)` (
 
 ## Wireframes
 
-Carpeta `docs/design/wireframes/` (pendiente de poblar). Diseñados en Figma (página "Wireframes"):
+Diseñados en la página "Wireframes" del prototipo Figma (no se exportan a carpeta local: viven en el propio archivo de diseño):
 
 - Pantalla de inicio / landing
 - Login y registro

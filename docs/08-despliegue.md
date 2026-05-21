@@ -17,33 +17,60 @@
 
 ## Configuración CI/CD
 
-`.github/workflows/ci-cd.yml`:
+El pipeline está dividido en dos workflows en `.github/workflows/`:
 
+### `ci.yml` — Build + tests
 ```yaml
 on:
-  push: { branches: [main, recuperacion/**, feat/**] }
+  push:
   pull_request:
 
 jobs:
-  ci:
+  backend-test:       # mvn test con MongoDB efímero (servicio mongo:8)
     steps:
-      - npm ci && npm run build  # frontend
-      - ./mvnw package -DskipTests
-      - ng test --watch=false    # 68/68
-      - ./mvnw test              # JUnit
+      - ./mvnw -B verify
 
-  cd:
-    needs: ci
-    if: github.ref == 'refs/heads/main'
+  frontend-test:      # Karma + Jasmine sobre Chrome Headless
     steps:
-      - docker build -t ghcr.io/kruhale/autodeploy:latest .
-      - docker push ghcr.io/kruhale/autodeploy:latest
-      - appleboy/ssh-action: ssh root@vps "cd /opt/autodeploy && docker compose pull && docker compose up -d"
+      - npm ci
+      - npm run build
+      - ng test --watch=false --browsers=ChromeHeadlessCI
+
+  lint-docker:        # hadolint sobre los dos Dockerfiles
+    steps:
+      - hadolint backend/Dockerfile
+      - hadolint autodeploy/Dockerfile
+```
+
+### `cd.yml` — Build + push + deploy
+```yaml
+on:
+  push:               # cualquier rama (commit 438ccfc lo abrió a feature branches)
+  workflow_dispatch:  # ejecución manual con tag de imagen específico
+
+jobs:
+  build-and-push:
+    steps:
+      - docker build -t ghcr.io/kruhale/autodeploy-backend:$SHA backend/
+      - docker build -t ghcr.io/kruhale/autodeploy-frontend:$SHA autodeploy/
+      - docker push ...
+
+  deploy-vps:
+    needs: build-and-push
+    steps:
+      - appleboy/ssh-action@v1
+        with:
+          script: |
+            cd /opt/autodeploy
+            export IMAGE_TAG=$SHA
+            docker compose -f docker-compose.prod.yml pull
+            docker compose -f docker-compose.prod.yml up -d --no-build
+            # Smoke test: healthcheck + curl al frontend; rollback si falla.
 ```
 
 Triggers:
-- **CI** en todo push (PR incluido).
-- **CD** sólo en push a `main` tras CI verde.
+- **CI** en todo push y todo PR.
+- **CD** en cualquier rama tras CI verde (cambio aplicado en el commit `438ccfc` para permitir deploy de ramas de feature). Smoke test al final con rollback automático en caso de fallo.
 
 Secrets necesarios en GitHub:
 
@@ -106,7 +133,7 @@ El pipeline CD lo automatiza tras cada merge a `main`.
 | `AUTODEPLOY_CIFRADO_CLAVE` | clave AES 32 chars | Cifrar credenciales SSH antes de persistir |
 | `SPRING_DATA_MONGODB_URI` | `mongodb://mongodb:27017/autodeploy` | URI Mongo (red interna Docker) |
 | `OPENROUTER_API_KEY` | sk-or-v1-... | Asistente IA |
-| `OPENROUTER_MODEL` | `openai/gpt-4o-mini` | Modelo por defecto |
+| `OPENROUTER_MODEL` | `google/gemini-2.5-pro` | Modelo por defecto |
 | `HOST_PORT` | `8082` | Puerto del host expuesto |
 
 `.env.example` contiene todos los valores con explicación.

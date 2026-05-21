@@ -150,8 +150,17 @@ jobs:
             $COMPOSE rm -f sandbox-ssh || true
             docker volume rm autodeploy_sandbox-config 2>/dev/null || true
             $COMPOSE up -d sandbox-ssh || true
-            echo "==> Esperando 15s para que sshd regenere host keys y arranque"
-            sleep 15
+            echo "==> Esperando 25s para que sshd regenere host keys y arranque"
+            sleep 25
+
+            echo "==> Diagnostico sandbox: verificar PUBLIC_KEY y logs"
+            grep -c "^SANDBOX_PUBLIC_KEY=" .env || echo "    SANDBOX_PUBLIC_KEY NO esta definida en .env"
+            echo "    Longitud SANDBOX_PUBLIC_KEY:"
+            grep "^SANDBOX_PUBLIC_KEY=" .env | sed "s/^SANDBOX_PUBLIC_KEY=//" | wc -c || true
+            echo "    Logs sandbox (ultimas 30 lineas):"
+            $COMPOSE logs --tail 30 sandbox-ssh 2>&1 | head -40 || true
+            echo "    Test TCP local 2222:"
+            docker exec autodeploy-sandbox sh -c "ss -ltn 2>/dev/null || netstat -ltn 2>/dev/null" | head -5 || echo "    No se pudo inspeccionar puertos"
 
             echo "==> 7) Esperando que los 3 servicios con healthcheck reporten (healthy), timeout 120s"
             DEADLINE=$((SECONDS + 120))

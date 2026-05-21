@@ -17,6 +17,7 @@
       <li><a href="#formularios">Formularios</a></li>
       <li><a href="#tarjetas">Tarjetas</a></li>
       <li><a href="#feedback">Feedback</a></li>
+      <li><a href="#multimedia">Multimedia</a></li>
       <li><a href="#animaciones">Animaciones</a></li>
     </ol>
   </nav>
@@ -289,9 +290,23 @@
     </section>
   </section>
 
-  <section class="pagina-style-guide__seccion" id="animaciones" aria-labelledby="titulo-animaciones">
+  <section class="pagina-style-guide__seccion" id="multimedia" aria-labelledby="titulo-multimedia">
     <header class="pagina-style-guide__seccion__cabecera">
       <p class="pagina-style-guide__seccion__numero" aria-hidden="true">08</p>
+      <h2 class="pagina-style-guide__seccion__titulo" id="titulo-multimedia">Multimedia accesible</h2>
+      <p class="pagina-style-guide__seccion__descripcion">
+        Componente <code>&lt;app-galeria-capturas&gt;</code> con <code>&lt;figure&gt;</code> + <code>&lt;figcaption&gt;</code> +
+        <code>&lt;picture&gt;</code>/<code>srcset</code> + <code>loading="lazy"</code>. Recibe las capturas como
+        Input; abajo aparece en estado vacío porque las capturas reales se incorporarán al final del refactor.
+      </p>
+    </header>
+
+    <app-galeria-capturas [capturas]="capturasDemo" ariaTitulo="Capturas del producto (demo)"></app-galeria-capturas>
+  </section>
+
+  <section class="pagina-style-guide__seccion" id="animaciones" aria-labelledby="titulo-animaciones">
+    <header class="pagina-style-guide__seccion__cabecera">
+      <p class="pagina-style-guide__seccion__numero" aria-hidden="true">09</p>
       <h2 class="pagina-style-guide__seccion__titulo" id="titulo-animaciones">Animaciones</h2>
       <p class="pagina-style-guide__seccion__descripcion">
         Todas usan sólo <code>transform</code> y <code>opacity</code> con timing function

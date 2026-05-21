@@ -1,0 +1,292 @@
+@use "../01-tools/mixins" as *;
+@use "../01-tools/funciones" as *;
+
+.pagina-style-guide {
+  @include contenedor(64rem);
+  padding-block: var(--spacing-size-6xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-7xl);
+
+  &__cabecera {
+    @include flex-columna;
+    gap: var(--spacing-size-l);
+    padding-bottom: var(--spacing-size-3xl);
+    border-bottom: 1px solid var(--borde-normal);
+  }
+
+  &__superior {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--texto-apagado);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  &__titulo {
+    font-family: var(--font-secondary);
+    font-size: fluido(2rem, 3rem);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: var(--texto-claro);
+    letter-spacing: -0.03em;
+  }
+
+  &__intro {
+    max-width: 42rem;
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--texto-medio);
+  }
+
+  // Índice flotante ---------------------------------------------------------
+  &__indice {
+    position: sticky;
+    top: var(--spacing-size-2xl);
+    align-self: flex-start;
+    padding: var(--spacing-size-l) var(--spacing-size-2xl);
+    background: var(--fondo-tarjeta);
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-l);
+    z-index: 1;
+  }
+
+  &__indice-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-size-m) var(--spacing-size-2xl);
+    list-style: decimal-leading-zero inside;
+    color: var(--texto-medio);
+    counter-reset: indice;
+
+    a {
+      color: var(--texto-medio);
+      @include transicion(color);
+
+      &:hover { color: var(--texto-claro); }
+      &:focus-visible {
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: 2px;
+        border-radius: var(--radius-xs);
+      }
+    }
+  }
+
+  // Bloques de sección ------------------------------------------------------
+  &__seccion {
+    @include flex-columna;
+    gap: var(--spacing-size-3xl);
+
+    &__cabecera {
+      @include flex-columna;
+      gap: var(--spacing-size-s);
+      padding-bottom: var(--spacing-size-2xl);
+      border-bottom: 1px solid var(--borde-suave);
+    }
+
+    &__numero {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+      color: var(--amarillo-normal);
+      letter-spacing: 0.2em;
+    }
+
+    &__titulo {
+      font-family: var(--font-secondary);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--texto-claro);
+      line-height: var(--line-height-tight);
+    }
+
+    &__descripcion {
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-relaxed);
+      color: var(--texto-medio);
+      max-width: 44rem;
+    }
+  }
+
+  &__bloque {
+    @include flex-columna;
+    gap: var(--spacing-size-l);
+    padding: var(--spacing-size-2xl);
+    background: var(--fondo-tarjeta);
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-l);
+
+    &__titulo {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--texto-claro);
+    }
+  }
+
+  // Listas y galerías comunes ----------------------------------------------
+  &__galeria {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-size-l);
+    align-items: center;
+  }
+
+  &__lista-tipografia {
+    list-style: none;
+    @include flex-columna;
+    gap: var(--spacing-size-l);
+
+    li {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-size-2xl);
+      padding-bottom: var(--spacing-size-m);
+      border-bottom: 1px dashed var(--borde-suave);
+
+      code {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-xs);
+        color: var(--texto-apagado);
+      }
+    }
+  }
+
+  &__lista-pesos {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--spacing-size-l);
+
+    li {
+      padding: var(--spacing-size-m) var(--spacing-size-l);
+      background: rgba(240, 236, 226, 0.03);
+      border-radius: var(--radius-m);
+      color: var(--texto-claro);
+    }
+  }
+
+  &__lista-color {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--spacing-size-l);
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-size-m);
+      padding: var(--spacing-size-m);
+      background: rgba(240, 236, 226, 0.02);
+      border: 1px solid var(--borde-suave);
+      border-radius: var(--radius-m);
+
+      code {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-xs);
+        color: var(--texto-medio);
+      }
+    }
+  }
+
+  &__muestra {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-m);
+    border: 1px solid var(--borde-normal);
+    flex-shrink: 0;
+  }
+
+  // Espaciado --------------------------------------------------------------
+  &__lista-espaciado {
+    list-style: none;
+    @include flex-columna;
+    gap: var(--spacing-size-m);
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-size-l);
+      padding: var(--spacing-size-s) var(--spacing-size-l);
+      background: rgba(240, 236, 226, 0.02);
+      border-radius: var(--radius-m);
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+      color: var(--texto-medio);
+    }
+  }
+
+  &__muestra-espaciado {
+    height: 0.5rem;
+    background-color: var(--amarillo-normal);
+    border-radius: var(--radius-xs);
+    flex-shrink: 0;
+  }
+
+  // Formularios -----------------------------------------------------------
+  &__formulario {
+    @include flex-columna;
+    gap: var(--spacing-size-3xl);
+    padding: var(--spacing-size-3xl);
+    background: var(--fondo-tarjeta);
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-l);
+  }
+
+  &__fieldset {
+    border: 0;
+    padding: 0;
+    @include flex-columna;
+    gap: var(--spacing-size-l);
+  }
+
+  &__legend {
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+    color: var(--texto-claro);
+    margin-bottom: var(--spacing-size-m);
+  }
+
+  // Galería de tarjetas (container queries en vivo) -----------------------
+  &__galeria-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--spacing-size-2xl);
+  }
+
+  // Demo animaciones ------------------------------------------------------
+  &__demo-animacion {
+    padding: var(--spacing-size-l) var(--spacing-size-2xl);
+    background: rgba(245, 214, 35, 0.08);
+    border: 1px solid var(--amarillo-normal-hover);
+    border-radius: var(--radius-m);
+    color: var(--texto-claro);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__demo-stagger {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: var(--spacing-size-m);
+
+    li {
+      padding: var(--spacing-size-m) var(--spacing-size-l);
+      background: var(--fondo-tarjeta);
+      border: 1px solid var(--borde-normal);
+      border-radius: var(--radius-m);
+      text-align: center;
+      color: var(--texto-claro);
+    }
+  }
+
+  @include movil {
+    padding-block: var(--spacing-size-4xl);
+    gap: var(--spacing-size-5xl);
+
+    &__indice { position: static; }
+  }
+}

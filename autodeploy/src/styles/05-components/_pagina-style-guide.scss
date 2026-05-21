@@ -290,3 +290,190 @@
     &__indice { position: static; }
   }
 }
+
+// Modificadores de tipografía (cada token, su clase). Se usan para evitar
+// inline styles dentro de las muestras del style guide.
+.pagina-style-guide__muestra-tipo--5xl {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-style-guide__muestra-tipo--4xl {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-style-guide__muestra-tipo--3xl {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-style-guide__muestra-tipo--2xl {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-style-guide__muestra-tipo--xl {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-style-guide__muestra-tipo--lg {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-style-guide__muestra-tipo--base {
+  font-size: var(--font-size-base);
+}
+
+.pagina-style-guide__muestra-tipo--md {
+  font-size: var(--font-size-md);
+}
+
+.pagina-style-guide__muestra-tipo--sm {
+  font-size: var(--font-size-sm);
+}
+
+.pagina-style-guide__muestra-tipo--xs {
+  font-size: var(--font-size-xs);
+}
+
+// Modificadores de peso de fuente
+.pagina-style-guide__muestra-peso--400 {
+  font-weight: var(--font-weight-normal);
+}
+
+.pagina-style-guide__muestra-peso--500 {
+  font-weight: var(--font-weight-medium);
+}
+
+.pagina-style-guide__muestra-peso--600 {
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-style-guide__muestra-peso--700 {
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-style-guide__muestra-peso--800 {
+  font-weight: var(--font-weight-extrabold);
+}
+
+.pagina-style-guide__muestra-peso--900 {
+  font-weight: var(--font-weight-black);
+}
+
+// Modificadores de muestra de color de fondo (swatch)
+.pagina-style-guide__muestra--fondo-normal {
+  background-color: var(--fondo-normal);
+}
+
+.pagina-style-guide__muestra--fondo-oscuro {
+  background-color: var(--fondo-oscuro);
+}
+
+.pagina-style-guide__muestra--fondo-tarjeta {
+  background-color: var(--fondo-tarjeta);
+}
+
+.pagina-style-guide__muestra--fondo-negro {
+  background-color: var(--fondo-negro);
+}
+
+.pagina-style-guide__muestra--fondo-cta-claro {
+  background-color: var(--fondo-cta-claro);
+}
+
+.pagina-style-guide__muestra--amarillo-normal {
+  background-color: var(--amarillo-normal);
+}
+
+.pagina-style-guide__muestra--amarillo-normal-hover {
+  background-color: var(--amarillo-normal-hover);
+}
+
+.pagina-style-guide__muestra--texto-claro {
+  background-color: var(--texto-claro);
+}
+
+.pagina-style-guide__muestra--texto-medio {
+  background-color: var(--texto-medio);
+}
+
+.pagina-style-guide__muestra--texto-apagado {
+  background-color: var(--texto-apagado);
+}
+
+.pagina-style-guide__muestra--verde-normal {
+  background-color: var(--verde-normal);
+}
+
+.pagina-style-guide__muestra--rojo-normal {
+  background-color: var(--rojo-normal);
+}
+
+.pagina-style-guide__muestra--rojo-critico {
+  background-color: var(--rojo-critico);
+}
+
+.pagina-style-guide__muestra--naranja-normal {
+  background-color: var(--naranja-normal);
+}
+
+.pagina-style-guide__muestra--azul-normal {
+  background-color: var(--azul-normal);
+}
+
+.pagina-style-guide__muestra--cyan-normal {
+  background-color: var(--cyan-normal);
+}
+
+.pagina-style-guide__muestra--teal-normal {
+  background-color: var(--teal-normal);
+}
+
+// Modificadores de muestra de espaciado (ancho)
+.pagina-style-guide__muestra-espaciado--xxs {
+  width: var(--spacing-size-xxs);
+}
+
+.pagina-style-guide__muestra-espaciado--xs {
+  width: var(--spacing-size-xs);
+}
+
+.pagina-style-guide__muestra-espaciado--s {
+  width: var(--spacing-size-s);
+}
+
+.pagina-style-guide__muestra-espaciado--m {
+  width: var(--spacing-size-m);
+}
+
+.pagina-style-guide__muestra-espaciado--l {
+  width: var(--spacing-size-l);
+}
+
+.pagina-style-guide__muestra-espaciado--xl {
+  width: var(--spacing-size-xl);
+}
+
+.pagina-style-guide__muestra-espaciado--2xl {
+  width: var(--spacing-size-2xl);
+}
+
+.pagina-style-guide__muestra-espaciado--3xl {
+  width: var(--spacing-size-3xl);
+}
+
+.pagina-style-guide__muestra-espaciado--4xl {
+  width: var(--spacing-size-4xl);
+}
+
+.pagina-style-guide__muestra-espaciado--5xl {
+  width: var(--spacing-size-5xl);
+}
+
+.pagina-style-guide__muestra-espaciado--6xl {
+  width: var(--spacing-size-6xl);
+}

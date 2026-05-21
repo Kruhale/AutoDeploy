@@ -1,18 +1,18 @@
-<div class="contenedor-toasts">
-	<div *ngFor="let toast of toastsMostrados"
+<aside class="contenedor-toasts">
+	<article *ngFor="let toast of toastsMostrados"
 		 class="toast"
 		 [ngClass]="obtenerClasePorTipo(toast.notificacion.tipo)">
-		<div class="toast__icono">
+		<span class="toast__icono">
 			<i class="fa-solid" [ngClass]="'fa-' + obtenerIconoPorTipo(toast.notificacion.tipo)"></i>
-		</div>
+		</span>
 
-		<div class="toast__contenido">
-			<h4 class="toast__titulo">{{ toast.notificacion.titulo }}</h4>
+		<section class="toast__contenido">
+			<h2 class="toast__titulo">{{ toast.notificacion.titulo }}</h2>
 			<p class="toast__descripcion">{{ toast.notificacion.descripcion }}</p>
-		</div>
+		</section>
 
 		<button class="toast__cerrar" (click)="cerrarToast(toast.id)" [attr.aria-label]="'toastNotificaciones.ariaCerrar' | translate">
 			<i class="fa-solid fa-xmark"></i>
 		</button>
-	</div>
-</div>
+	</article>
+</aside>

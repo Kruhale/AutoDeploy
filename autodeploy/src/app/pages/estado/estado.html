@@ -41,7 +41,7 @@
         <article class="pagina-estado__servicio">
           <span class="pagina-estado__servicio__indicador" [class]="'pagina-estado__servicio__indicador--' + servicio.estado.toLowerCase()"></span>
           <section class="pagina-estado__servicio__info">
-            <h3 class="pagina-estado__servicio__nombre">{{ "estado.servicios." + servicio.clave | translate }}</h3>
+            <h2 class="pagina-estado__servicio__nombre">{{ "estado.servicios." + servicio.clave | translate }}</h2>
             <p class="pagina-estado__servicio__descripcion">{{ "estado.servicios." + servicio.clave + "Descripcion" | translate }}</p>
           </section>
           <span class="pagina-estado__servicio__etiqueta" [class]="'pagina-estado__servicio__etiqueta--' + servicio.estado.toLowerCase()">

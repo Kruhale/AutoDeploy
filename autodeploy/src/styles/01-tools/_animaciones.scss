@@ -59,6 +59,15 @@
 .animar--derecha { animation-name: entrar-derecha; }
 .animar--escala  { animation-name: entrar-escala; }
 
+// Modificadores de retraso. Evitan inline styles en el HTML para
+// componer animaciones escalonadas: .animar.animar--subir.animar--retraso-200
+.animar--retraso-0   { --retraso: 0ms;   }
+.animar--retraso-100 { --retraso: 100ms; }
+.animar--retraso-150 { --retraso: 150ms; }
+.animar--retraso-200 { --retraso: 200ms; }
+.animar--retraso-300 { --retraso: 300ms; }
+.animar--retraso-400 { --retraso: 400ms; }
+
 // Scroll reveal (IntersectionObserver directive) -------------------------
 
 .revelar {

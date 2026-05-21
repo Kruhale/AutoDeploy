@@ -115,6 +115,10 @@
       outline-offset: 3px;
     }
 
+    &--separado {
+      margin-top: var(--spacing-size-m);
+    }
+
     &__icono {
       display: inline-flex;
       align-items: center;

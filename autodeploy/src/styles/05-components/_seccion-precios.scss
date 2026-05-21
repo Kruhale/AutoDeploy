@@ -1,54 +1,57 @@
 .seccion-precios {
   padding: 6rem 0 5rem;
+
+  &__cabecera {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: 42rem;
+    margin-bottom: 3.5rem;
+
+    &::before {
+      content: "03 · TIERS";
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.22em;
+      color: var(--texto-apagado);
+      text-transform: uppercase;
+      padding: 0.15rem 0.55rem;
+      border: 1px solid var(--borde-normal);
+      border-radius: var(--radius-full);
+      align-self: flex-start;
+      margin-bottom: 0.5rem;
+    }
+  }
+
+  &__titulo {
+    font-family: var(--font-secondary);
+    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+    font-weight: var(--font-weight-bold);
+    color: var(--texto-claro);
+    letter-spacing: -0.045em;
+    line-height: 0.98;
+  }
+
+  &__descripcion {
+    font-size: 1.05rem;
+    color: var(--texto-medio);
+    letter-spacing: -0.005em;
+  }
+
+  &__cuadricula {
+    display: grid;
+    grid-template-columns: 1fr 1.18fr 1fr;
+    gap: 1.25rem;
+    align-items: stretch;
+
+    @media (max-width: 960px) {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
 }
 
-.seccion-precios__cabecera {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  max-width: 42rem;
-  margin-bottom: 3.5rem;
-}
-
-.seccion-precios__cabecera::before {
-  content: "03 · TIERS";
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.22em;
-  color: var(--texto-apagado);
-  text-transform: uppercase;
-  padding: 0.15rem 0.55rem;
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-full);
-  align-self: flex-start;
-  margin-bottom: 0.5rem;
-}
-
-.seccion-precios__titulo {
-  font-family: var(--font-secondary);
-  font-size: clamp(2.25rem, 4.5vw, 3.5rem);
-  font-weight: var(--font-weight-bold);
-  color: var(--texto-claro);
-  letter-spacing: -0.045em;
-  line-height: 0.98;
-}
-
-.seccion-precios__descripcion {
-  font-size: 1.05rem;
-  color: var(--texto-medio);
-  letter-spacing: -0.005em;
-}
-
-.seccion-precios__cuadricula {
-  display: grid;
-  grid-template-columns: 1fr 1.18fr 1fr;
-  gap: 1.25rem;
-  align-items: stretch;
-}
-
-/* =====================================================
-   TARJETA PLAN — editorial card con price gigante
-   ===================================================== */
+// Tarjeta de plan (editorial con price gigante) ---------------------------
 
 .tarjeta-plan {
   position: relative;
@@ -59,199 +62,188 @@
   background-color: hsla(40, 33.33%, 91.37%, 0.015);
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-2xl);
-  transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-}
+  transition:
+    border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+    background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+    transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
-.tarjeta-plan:hover {
-  border-color: hsla(40, 33.33%, 91.37%, 0.18);
-  background-color: hsla(40, 33.33%, 91.37%, 0.03);
-  transform: translateY(-2px);
-}
-
-.tarjeta-plan--destacado {
-  border-color: hsla(47, 86%, 56%, 0.36);
-  background: linear-gradient(180deg, hsla(47, 86%, 56%, 0.05), transparent 65%);
-  padding-top: 2.5rem;
-}
-
-.tarjeta-plan--destacado:hover {
-  border-color: var(--amarillo-normal);
-  background: linear-gradient(180deg, hsla(47, 86%, 56%, 0.08), transparent 65%);
-}
-
-.tarjeta-plan__badge {
-  position: absolute;
-  top: -0.7rem;
-  left: 1.85rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  background-color: var(--amarillo-normal);
-  color: var(--fondo-oscuro);
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
-  letter-spacing: 0.22em;
-  padding: 0.3rem 0.7rem;
-  border-radius: var(--radius-full);
-  white-space: nowrap;
-  box-shadow: 0 0.4rem 1rem hsla(47, 86%, 56%, 0.25);
-}
-
-.tarjeta-plan__badge::before {
-  content: "";
-  width: 0.35rem;
-  height: 0.35rem;
-  border-radius: 50%;
-  background-color: var(--fondo-oscuro);
-  animation: bienvenida-respirar 2s ease-in-out infinite;
-}
-
-.tarjeta-plan__cabecera {
-  display: flex;
-  flex-direction: column;
-  gap: 0.65rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--borde-suave);
-}
-
-.tarjeta-plan__nombre {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--texto-apagado);
-  text-transform: uppercase;
-  letter-spacing: 0.28em;
-}
-
-.tarjeta-plan__precio {
-  display: flex;
-  align-items: baseline;
-  gap: 0.2rem;
-  margin-top: 0.2rem;
-}
-
-.tarjeta-plan__precio__numero {
-  font-family: var(--font-secondary);
-  font-size: clamp(2.75rem, 5vw, 3.75rem);
-  font-weight: var(--font-weight-semibold);
-  color: var(--texto-claro);
-  line-height: 1;
-  letter-spacing: -0.045em;
-  font-variant-numeric: tabular-nums;
-}
-
-.tarjeta-plan--destacado .tarjeta-plan__precio__numero {
-  color: var(--amarillo-normal);
-}
-
-.tarjeta-plan__precio__periodo {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  color: var(--texto-apagado);
-  letter-spacing: 0.04em;
-}
-
-.tarjeta-plan__descripcion {
-  font-size: 0.875rem;
-  color: var(--texto-medio);
-  line-height: 1.55;
-  letter-spacing: -0.005em;
-  margin-top: 0.4rem;
-}
-
-/* =====================================================
-   LISTA FEATURES — dividers sutiles, no bullets
-   ===================================================== */
-
-.tarjeta-plan__lista {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.tarjeta-plan__item {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-  padding: 0.65rem 0;
-  font-size: 0.875rem;
-  color: var(--texto-claro);
-  letter-spacing: -0.005em;
-  border-bottom: 1px solid var(--borde-suave);
-}
-
-.tarjeta-plan__item:last-child {
-  border-bottom: none;
-}
-
-.tarjeta-plan__item--inactivo {
-  color: var(--texto-apagado);
-  text-decoration: line-through;
-  text-decoration-thickness: 1px;
-  text-decoration-color: var(--borde-normal);
-}
-
-.tarjeta-plan__item__check {
-  color: var(--amarillo-normal);
-  font-size: 0.65rem;
-  width: 1rem;
-  height: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid hsla(47, 86%, 56%, 0.4);
-  border-radius: 50%;
-  background-color: hsla(47, 86%, 56%, 0.08);
-  flex-shrink: 0;
-}
-
-.tarjeta-plan__item__xmark {
-  color: var(--texto-apagado);
-  font-size: 0.65rem;
-  width: 1rem;
-  height: 1rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid var(--borde-normal);
-  border-radius: 50%;
-  flex-shrink: 0;
-  opacity: 0.6;
-}
-
-/* =====================================================
-   BOTÓN
-   ===================================================== */
-
-.tarjeta-plan__boton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  margin-top: auto;
-  font-family: var(--font-secondary);
-  letter-spacing: -0.005em;
-}
-
-.tarjeta-plan__boton--actual {
-  cursor: not-allowed;
-  opacity: 0.55;
-  pointer-events: none;
-}
-
-/* =====================================================
-   RESPONSIVE
-   ===================================================== */
-
-@media (max-width: 960px) {
-  .seccion-precios__cuadricula {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+  &:hover {
+    border-color: hsla(40, 33.33%, 91.37%, 0.18);
+    background-color: hsla(40, 33.33%, 91.37%, 0.03);
+    transform: translateY(-2px);
   }
 
-  .tarjeta-plan--destacado {
+  &:focus-within {
+    outline: 2px solid var(--amarillo-normal);
+    outline-offset: 2px;
+  }
+
+  &--destacado {
+    border-color: hsla(47, 86%, 56%, 0.36);
+    background: linear-gradient(180deg, hsla(47, 86%, 56%, 0.05), transparent 65%);
     padding-top: 2.5rem;
+
+    &:hover {
+      border-color: var(--amarillo-normal);
+      background: linear-gradient(180deg, hsla(47, 86%, 56%, 0.08), transparent 65%);
+    }
+
+    .tarjeta-plan__precio__numero {
+      color: var(--amarillo-normal);
+    }
+
+    @media (max-width: 960px) {
+      padding-top: 2.5rem;
+    }
+  }
+
+  &__badge {
+    position: absolute;
+    top: -0.7rem;
+    left: 1.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background-color: var(--amarillo-normal);
+    color: var(--fondo-oscuro);
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: var(--font-weight-bold);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    padding: 0.3rem 0.7rem;
+    border-radius: var(--radius-full);
+    white-space: nowrap;
+    box-shadow: 0 0.4rem 1rem hsla(47, 86%, 56%, 0.25);
+
+    &::before {
+      content: "";
+      width: 0.35rem;
+      height: 0.35rem;
+      border-radius: 50%;
+      background-color: var(--fondo-oscuro);
+      animation: bienvenida-respirar 2s ease-in-out infinite;
+    }
+  }
+
+  &__cabecera {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--borde-suave);
+  }
+
+  &__nombre {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: var(--font-weight-bold);
+    color: var(--texto-apagado);
+    text-transform: uppercase;
+    letter-spacing: 0.28em;
+  }
+
+  &__precio {
+    display: flex;
+    align-items: baseline;
+    gap: 0.2rem;
+    margin-top: 0.2rem;
+
+    &__numero {
+      font-family: var(--font-secondary);
+      font-size: clamp(2.75rem, 5vw, 3.75rem);
+      font-weight: var(--font-weight-semibold);
+      color: var(--texto-claro);
+      line-height: 1;
+      letter-spacing: -0.045em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    &__periodo {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--texto-apagado);
+      letter-spacing: 0.04em;
+    }
+  }
+
+  &__descripcion {
+    font-size: 0.875rem;
+    color: var(--texto-medio);
+    line-height: 1.55;
+    letter-spacing: -0.005em;
+    margin-top: 0.4rem;
+  }
+
+  &__lista {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.65rem 0;
+    font-size: 0.875rem;
+    color: var(--texto-claro);
+    letter-spacing: -0.005em;
+    border-bottom: 1px solid var(--borde-suave);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &--inactivo {
+      color: var(--texto-apagado);
+      text-decoration: line-through;
+      text-decoration-thickness: 1px;
+      text-decoration-color: var(--borde-normal);
+    }
+
+    &__check {
+      color: var(--amarillo-normal);
+      font-size: 0.65rem;
+      width: 1rem;
+      height: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid hsla(47, 86%, 56%, 0.4);
+      border-radius: 50%;
+      background-color: hsla(47, 86%, 56%, 0.08);
+      flex-shrink: 0;
+    }
+
+    &__xmark {
+      color: var(--texto-apagado);
+      font-size: 0.65rem;
+      width: 1rem;
+      height: 1rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--borde-normal);
+      border-radius: 50%;
+      flex-shrink: 0;
+      opacity: 0.6;
+    }
+  }
+
+  &__boton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: auto;
+    font-family: var(--font-secondary);
+    letter-spacing: -0.005em;
+
+    &--actual {
+      cursor: not-allowed;
+      opacity: 0.55;
+      pointer-events: none;
+    }
   }
 }

@@ -5,29 +5,29 @@
   padding: var(--spacing-size-m) var(--spacing-size-3xl);
   border-top: 1px solid var(--borde-normal);
   background-color: var(--fondo-normal);
-}
 
-.barra-pie-app__copyright {
-  font-size: var(--font-size-xs);
-  color: var(--texto-apagado);
-}
+  &__copyright {
+    font-size: var(--font-size-xs);
+    color: var(--texto-apagado);
+  }
 
-.barra-pie-app__estado {
-  display: flex;
-  align-items: center;
-  gap: 0.375rem;
-  font-size: var(--font-size-xs);
-  color: var(--texto-apagado);
-}
+  &__estado {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: var(--font-size-xs);
+    color: var(--texto-apagado);
 
-.barra-pie-app__estado__punto {
-  width: 0.375rem;
-  height: 0.375rem;
-  border-radius: 50%;
-  background-color: var(--verde-normal);
-}
+    &__punto {
+      width: 0.375rem;
+      height: 0.375rem;
+      border-radius: 50%;
+      background-color: var(--verde-normal);
+    }
+  }
 
-.barra-pie-app__version {
-  font-size: var(--font-size-xs);
-  color: var(--texto-apagado);
+  &__version {
+    font-size: var(--font-size-xs);
+    color: var(--texto-apagado);
+  }
 }

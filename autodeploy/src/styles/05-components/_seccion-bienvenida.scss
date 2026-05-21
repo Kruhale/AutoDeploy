@@ -4,299 +4,278 @@
   align-items: center;
   gap: 5rem;
   padding: 4rem 0 5rem;
-}
 
-.seccion-bienvenida__contenido {
-  display: flex;
-  flex-direction: column;
-  gap: 1.75rem;
-}
-
-/* =====================================================
-   ETIQUETA — sello editorial con punto pulsante
-   ===================================================== */
-
-.seccion-bienvenida__etiqueta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.4rem 0.9rem 0.4rem 0.65rem;
-  background-color: transparent;
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-full);
-  width: fit-content;
-}
-
-.seccion-bienvenida__etiqueta__punto {
-  width: 0.4rem;
-  height: 0.4rem;
-  background-color: var(--amarillo-normal);
-  border-radius: 50%;
-  flex-shrink: 0;
-  animation: bienvenida-respirar 2.4s ease-in-out infinite;
-}
-
-.seccion-bienvenida__etiqueta__texto {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--texto-medio);
-  white-space: nowrap;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
-/* =====================================================
-   TÍTULO — editorial tipo magazine
-   ===================================================== */
-
-.seccion-bienvenida__titulo {
-  font-family: var(--font-secondary);
-  font-size: clamp(2.75rem, 5.5vw, 4.5rem);
-  font-weight: var(--font-weight-bold);
-  line-height: 0.95;
-  letter-spacing: -0.045em;
-  color: var(--texto-claro);
-}
-
-.seccion-bienvenida__descripcion {
-  font-size: 1.05rem;
-  line-height: 1.65;
-  color: var(--texto-medio);
-  max-width: 32rem;
-  letter-spacing: -0.005em;
-}
-
-/* =====================================================
-   BOTONES — pill con flecha animada
-   ===================================================== */
-
-.seccion-bienvenida__botones {
-  display: flex;
-  gap: 0.85rem;
-  flex-wrap: wrap;
-  margin-top: 0.5rem;
-}
-
-.seccion-bienvenida__boton--primario {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.65rem;
-  padding: 0.9rem 1.5rem 0.9rem 1.75rem;
-  background-color: var(--amarillo-normal);
-  color: var(--fondo-oscuro);
-  font-family: var(--font-secondary);
-  font-size: 0.95rem;
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: -0.01em;
-  border-radius: var(--radius-full);
-  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.seccion-bienvenida__boton--primario:hover {
-  background-color: var(--amarillo-normal-hover);
-  transform: translateY(-1px);
-  gap: 0.95rem;
-  box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
-}
-
-.seccion-bienvenida__boton--primario:active {
-  transform: scale(0.98);
-}
-
-.seccion-bienvenida__boton--secundario {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.9rem 1.5rem;
-  background: transparent;
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-full);
-  color: var(--texto-claro);
-  font-family: var(--font-secondary);
-  font-size: 0.95rem;
-  font-weight: var(--font-weight-medium);
-  letter-spacing: -0.01em;
-  transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.seccion-bienvenida__boton--secundario:hover {
-  border-color: hsla(40, 33.33%, 91.37%, 0.26);
-  background-color: rgba(240, 236, 226, 0.03);
-  transform: translateY(-1px);
-}
-
-.seccion-bienvenida__boton--secundario:active {
-  transform: scale(0.98);
-}
-
-/* =====================================================
-   TECNOLOGÍAS — fila monocromática con hover sutil
-   ===================================================== */
-
-.seccion-bienvenida__tecnologias {
-  display: flex;
-  gap: 1.4rem;
-  padding-top: 1rem;
-  margin-top: 0.5rem;
-  border-top: 1px dashed var(--borde-suave);
-}
-
-.seccion-bienvenida__tecnologia {
-  font-size: 1.2rem;
-  color: var(--texto-apagado);
-  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.seccion-bienvenida__tecnologia:hover {
-  color: var(--amarillo-normal);
-  transform: translateY(-2px);
-}
-
-/* =====================================================
-   TERMINAL — pieza centrada con sombra tintada
-   ===================================================== */
-
-.seccion-bienvenida__terminal {
-  position: relative;
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-2xl);
-  overflow: hidden;
-  background-color: var(--fondo-negro);
-  box-shadow: 0 1.25rem 3rem hsla(0, 0%, 0%, 0.35), inset 0 1px 0 hsla(0, 0%, 100%, 0.04);
-}
-
-.seccion-bienvenida__terminal::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(80% 60% at 50% 0%, hsla(47, 86%, 56%, 0.04), transparent 70%);
-  pointer-events: none;
-}
-
-.seccion-bienvenida__terminal__barra {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.85rem 1.1rem;
-  background: rgba(240, 236, 226, 0.025);
-  border-bottom: 1px solid var(--borde-suave);
-}
-
-.seccion-bienvenida__terminal__punto {
-  width: 0.625rem;
-  height: 0.625rem;
-  border-radius: 50%;
-}
-
-.seccion-bienvenida__terminal__punto--rojo {
-  background-color: rgba(217, 64, 53, 0.7);
-}
-
-.seccion-bienvenida__terminal__punto--naranja {
-  background-color: rgba(224, 123, 32, 0.65);
-}
-
-.seccion-bienvenida__terminal__punto--verde {
-  background-color: rgba(61, 155, 106, 0.65);
-}
-
-.seccion-bienvenida__terminal__titulo {
-  font-family: var(--font-mono);
-  font-size: 0.65rem;
-  letter-spacing: 0.12em;
-  color: var(--texto-apagado);
-  margin-left: 0.8rem;
-}
-
-.seccion-bienvenida__terminal__cuerpo {
-  padding: 1.35rem 1.4rem 1.65rem;
-  position: relative;
-  z-index: 1;
-}
-
-.seccion-bienvenida__terminal__linea {
-  font-family: var(--font-mono);
-  font-size: 0.825rem;
-  line-height: 1.85;
-  color: var(--texto-medio);
-}
-
-.seccion-bienvenida__terminal__linea--resultado {
-  color: var(--texto-apagado);
-}
-
-.seccion-bienvenida__terminal__linea--vacia {
-  height: 0.5rem;
-}
-
-.seccion-bienvenida__terminal__prompt {
-  color: var(--amarillo-normal);
-  margin-right: 0.65rem;
-  font-weight: var(--font-weight-semibold);
-}
-
-.seccion-bienvenida__terminal__comando {
-  color: var(--texto-claro);
-}
-
-.seccion-bienvenida__terminal__exito {
-  color: var(--verde-normal);
-  font-weight: var(--font-weight-semibold);
-}
-
-.seccion-bienvenida__terminal__url-resultado {
-  color: var(--amarillo-normal);
-  font-weight: var(--font-weight-semibold);
-}
-
-/* =====================================================
-   ANIMACIONES locales
-   ===================================================== */
-
-@keyframes bienvenida-respirar {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.5; transform: scale(0.78); }
-}
-
-/* =====================================================
-   RESPONSIVE
-   ===================================================== */
-
-@media (max-width: 960px) {
-  .seccion-bienvenida {
+  @media (max-width: 960px) {
     grid-template-columns: minmax(0, 1fr);
     gap: 2.75rem;
     padding: 2.5rem 0 3rem;
   }
 
-  .seccion-bienvenida__titulo {
-    font-size: 2.5rem;
+  &__contenido {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
   }
 
-  .seccion-bienvenida__terminal {
-    width: 100%;
+  // ───── Etiqueta (sello editorial con punto pulsante) ─────
+  &__etiqueta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 0.9rem 0.4rem 0.65rem;
+    background-color: transparent;
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-full);
+    width: fit-content;
+
+    &__punto {
+      width: 0.4rem;
+      height: 0.4rem;
+      background-color: var(--amarillo-normal);
+      border-radius: 50%;
+      flex-shrink: 0;
+      animation: latido 2.5s ease-in-out infinite;
+    }
+
+    &__texto {
+      font-family: var(--font-mono);
+      font-size: 0.625rem;
+      font-weight: var(--font-weight-bold);
+      color: var(--texto-medio);
+      white-space: nowrap;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+    }
+  }
+
+  // ───── Título y descripción (editorial tipo magazine) ─────
+  &__titulo {
+    font-family: var(--font-secondary);
+    font-size: clamp(2.75rem, 5.5vw, 4.5rem);
+    font-weight: var(--font-weight-bold);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    color: var(--texto-claro);
+
+    @media (max-width: 960px) {
+      font-size: 2.5rem;
+    }
+  }
+
+  &__descripcion {
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: var(--texto-medio);
+    max-width: 32rem;
+    letter-spacing: -0.005em;
+  }
+
+  // ───── Botones (pill con flecha animada) ─────
+  &__botones {
+    display: flex;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+
+  &__boton {
+    &--primario {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.9rem 1.5rem 0.9rem 1.75rem;
+      background-color: var(--amarillo-normal);
+      color: var(--fondo-oscuro);
+      font-family: var(--font-secondary);
+      font-size: 0.95rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: -0.01em;
+      border-radius: var(--radius-full);
+      transition:
+        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+
+      &:hover {
+        background-color: var(--amarillo-normal-hover);
+        transform: translateY(-1px);
+        gap: 0.95rem;
+        box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: 3px;
+      }
+    }
+
+    &--secundario {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 1.5rem;
+      background: transparent;
+      border: 1px solid var(--borde-normal);
+      border-radius: var(--radius-full);
+      color: var(--texto-claro);
+      font-family: var(--font-secondary);
+      font-size: 0.95rem;
+      font-weight: var(--font-weight-medium);
+      letter-spacing: -0.01em;
+      transition:
+        border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+
+      &:hover {
+        border-color: hsla(40, 33.33%, 91.37%, 0.26);
+        background-color: rgba(240, 236, 226, 0.03);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: scale(0.98);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: 3px;
+      }
+    }
+  }
+
+  // ───── Tecnologías (fila monocromática con hover sutil) ─────
+  &__tecnologias {
+    display: flex;
+    gap: 1.4rem;
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    border-top: 1px dashed var(--borde-suave);
+  }
+
+  &__tecnologia {
+    font-size: 1.2rem;
+    color: var(--texto-apagado);
+    transition:
+      color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--amarillo-normal);
+      transform: translateY(-2px);
+      outline: none;
+    }
+  }
+
+  // ───── Terminal (pieza centrada con sombra tintada) ─────
+  &__terminal {
+    position: relative;
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-2xl);
+    overflow: hidden;
+    background-color: var(--fondo-negro);
+    box-shadow:
+      0 1.25rem 3rem hsla(0, 0%, 0%, 0.35),
+      inset 0 1px 0 hsla(0, 0%, 100%, 0.04);
+
+    @media (max-width: 960px) {
+      width: 100%;
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(80% 60% at 50% 0%, hsla(47, 86%, 56%, 0.04), transparent 70%);
+      pointer-events: none;
+    }
+
+    &__barra {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.85rem 1.1rem;
+      background: rgba(240, 236, 226, 0.025);
+      border-bottom: 1px solid var(--borde-suave);
+    }
+
+    &__punto {
+      width: 0.625rem;
+      height: 0.625rem;
+      border-radius: 50%;
+
+      &--rojo    { background-color: rgba(217, 64, 53, 0.7); }
+      &--naranja { background-color: rgba(224, 123, 32, 0.65); }
+      &--verde   { background-color: rgba(61, 155, 106, 0.65); }
+    }
+
+    &__titulo {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--texto-apagado);
+      margin-left: 0.8rem;
+    }
+
+    &__cuerpo {
+      padding: 1.35rem 1.4rem 1.65rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    &__linea {
+      font-family: var(--font-mono);
+      font-size: 0.825rem;
+      line-height: 1.85;
+      color: var(--texto-medio);
+      opacity: 0;
+      animation: entrar-abajo 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+
+      &--resultado { color: var(--texto-apagado); }
+      &--vacia     { height: 0.5rem; }
+
+      &:nth-child(1)  { animation-delay: 0.35s; }
+      &:nth-child(2)  { animation-delay: 0.75s; }
+      &:nth-child(3)  { animation-delay: 1.05s; }
+      &:nth-child(4)  { animation-delay: 1.15s; }
+      &:nth-child(5)  { animation-delay: 1.50s; }
+      &:nth-child(6)  { animation-delay: 1.85s; }
+      &:nth-child(7)  { animation-delay: 2.15s; }
+      &:nth-child(8)  { animation-delay: 2.45s; }
+      &:nth-child(9)  { animation-delay: 2.55s; }
+      &:nth-child(10) { animation-delay: 2.85s; }
+    }
+
+    &__prompt {
+      color: var(--amarillo-normal);
+      margin-right: 0.65rem;
+      font-weight: var(--font-weight-semibold);
+    }
+
+    &__comando {
+      color: var(--texto-claro);
+    }
+
+    &__exito {
+      color: var(--verde-normal);
+      font-weight: var(--font-weight-semibold);
+    }
+
+    &__url-resultado {
+      color: var(--amarillo-normal);
+      font-weight: var(--font-weight-semibold);
+    }
   }
 }
 
-// Animaciones específicas del componente ---------------------------------
-
-.seccion-bienvenida__terminal__linea {
-  opacity: 0;
-  animation: entrar-abajo 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.seccion-bienvenida__terminal__linea:nth-child(1)  { animation-delay: 0.35s; }
-.seccion-bienvenida__terminal__linea:nth-child(2)  { animation-delay: 0.75s; }
-.seccion-bienvenida__terminal__linea:nth-child(3)  { animation-delay: 1.05s; }
-.seccion-bienvenida__terminal__linea:nth-child(4)  { animation-delay: 1.15s; }
-.seccion-bienvenida__terminal__linea:nth-child(5)  { animation-delay: 1.50s; }
-.seccion-bienvenida__terminal__linea:nth-child(6)  { animation-delay: 1.85s; }
-.seccion-bienvenida__terminal__linea:nth-child(7)  { animation-delay: 2.15s; }
-.seccion-bienvenida__terminal__linea:nth-child(8)  { animation-delay: 2.45s; }
-.seccion-bienvenida__terminal__linea:nth-child(9)  { animation-delay: 2.55s; }
-.seccion-bienvenida__terminal__linea:nth-child(10) { animation-delay: 2.85s; }
-
-.seccion-bienvenida__etiqueta__punto {
-  animation: latido 2.5s ease-in-out infinite;
+// Keyframe local — el resto de animaciones vive en 01-tools/_animaciones.scss
+@keyframes bienvenida-respirar {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.5; transform: scale(0.78); }
 }

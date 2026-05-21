@@ -1,60 +1,77 @@
+// Tools: mixins reutilizables.
+//
+// Los mixins van aquí cuando encapsulan código que se repite en varios
+// componentes o cuando aceptan parámetros (@content, argumentos).
+// Para devolver un valor, usar @function en `_funciones.scss`.
+//
+// Categorías:
+//   1. Responsive (breakpoints viewport)
+//   2. Container queries (breakpoints contenedor)
+//   3. Preferencias del usuario (hover, motion, contraste, esquema)
+//   4. Layout (flex, grid, contenedor centrado)
+//   5. Tipografía y texto (truncar)
+//   6. Posicionamiento (centrado-absoluto)
+//   7. Accesibilidad (foco visible, visualmente oculto, disabled)
+//   8. Componentes base (tarjeta, tarjeta interactiva)
+//   9. Efectos (transición, glass, enlace subrayado)
+
 @use "../00-settings/css-variables" as *;
 
-@mixin movil-pequeno {
-  @media (max-width: $breakpoint-sm) {
-    @content;
-  }
-}
+// ── 1. Responsive (viewport) ─────────────────────────────────────────────
 
-@mixin movil {
-  @media (max-width: $breakpoint-md) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (max-width: $breakpoint-lg) {
-    @content;
-  }
-}
-
-@mixin escritorio {
-  @media (min-width: $breakpoint-lg) {
-    @content;
-  }
-}
-
-@mixin escritorio-grande {
-  @media (min-width: $breakpoint-xl) {
-    @content;
-  }
-}
-
+@mixin movil-pequeno     { @media (max-width: $breakpoint-sm) { @content; } }
+@mixin movil             { @media (max-width: $breakpoint-md) { @content; } }
+@mixin tablet            { @media (max-width: $breakpoint-lg) { @content; } }
+@mixin escritorio        { @media (min-width: $breakpoint-lg) { @content; } }
+@mixin escritorio-grande { @media (min-width: $breakpoint-xl) { @content; } }
 @mixin entre($desde, $hasta) {
-  @media (min-width: $desde) and (max-width: $hasta) {
-    @content;
-  }
+  @media (min-width: $desde) and (max-width: $hasta) { @content; }
 }
 
-@mixin solo-tactil {
-  @media (hover: none) and (pointer: coarse) {
-    @content;
-  }
+// ── 2. Container queries (ancho del contenedor padre) ────────────────────
+//
+// Para usarlos, el padre debe tener container-type: inline-size y un
+// container-name (opcional). Sirven cuando un componente reutilizable
+// (tarjeta, lista) tiene que adaptarse según el ancho del contenedor en
+// el que se inserta, no según el viewport.
+
+@mixin contenedor-pequeno { @container (max-width: 28rem) { @content; } }
+@mixin contenedor-mediano { @container (min-width: 28rem) and (max-width: 48rem) { @content; } }
+@mixin contenedor-grande  { @container (min-width: 48rem) { @content; } }
+
+// ── 3. Preferencias del usuario ──────────────────────────────────────────
+
+@mixin solo-tactil        { @media (hover: none) and (pointer: coarse) { @content; } }
+@mixin solo-puntero-fino  { @media (hover: hover) and (pointer: fine)  { @content; } }
+@mixin movimiento-reducido { @media (prefers-reduced-motion: reduce)   { @content; } }
+@mixin contraste-alto     { @media (prefers-contrast: more)            { @content; } }
+@mixin esquema-claro      { @media (prefers-color-scheme: light)       { @content; } }
+@mixin esquema-oscuro     { @media (prefers-color-scheme: dark)        { @content; } }
+
+// ── 4. Layout ────────────────────────────────────────────────────────────
+
+@mixin flex-centro     { display: flex; align-items: center; justify-content: center; }
+@mixin flex-entre      { display: flex; align-items: center; justify-content: space-between; }
+@mixin flex-columna    { display: flex; flex-direction: column; }
+@mixin flex-envoltura  { display: flex; flex-wrap: wrap; }
+
+// Grid responsivo sin media queries: la cuadrícula reflowa por sí sola
+// gracias a auto-fit + minmax. $min es el ancho mínimo de cada columna.
+@mixin grid-auto($min: 16rem, $hueco: var(--spacing-size-2xl)) {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax($min, 1fr));
+  gap: $hueco;
 }
 
-@mixin movimiento-reducido {
-  @media (prefers-reduced-motion: reduce) {
-    @content;
-  }
+// Contenedor centrado con ancho máximo y padding interior.
+@mixin contenedor($ancho: 75rem) {
+  width: 100%;
+  max-width: $ancho;
+  margin-inline: auto;
+  padding-inline: var(--spacing-size-2xl);
 }
 
-@mixin foco-visible {
-  &:focus-visible {
-    outline: 2px solid var(--amarillo-normal);
-    outline-offset: 2px;
-    @content;
-  }
-}
+// ── 5. Tipografía y texto ────────────────────────────────────────────────
 
 @mixin truncar($lineas: 1) {
   display: -webkit-box;
@@ -64,6 +81,8 @@
   text-overflow: ellipsis;
 }
 
+// ── 6. Posicionamiento ───────────────────────────────────────────────────
+
 @mixin centrado-absoluto {
   position: absolute;
   top: 50%;
@@ -71,9 +90,106 @@
   transform: translate(-50%, -50%);
 }
 
+// ── 7. Accesibilidad ─────────────────────────────────────────────────────
+
+@mixin foco-visible {
+  &:focus-visible {
+    outline: 2px solid var(--amarillo-normal);
+    outline-offset: 2px;
+    @content;
+  }
+}
+
+// Oculta visualmente pero deja accesible para lectores de pantalla.
+// Patrón "sr-only". Útil para etiquetas que dan contexto sin ruido visual.
+@mixin visualmente-oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+// Estado deshabilitado coherente para botones, inputs y enlaces.
+@mixin disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+// ── 8. Componentes base ──────────────────────────────────────────────────
+
 @mixin tarjeta-base {
   background-color: var(--fondo-tarjeta);
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-l);
   padding: var(--spacing-size-2xl);
+}
+
+// Tarjeta interactiva: combina tarjeta-base con transición, hover y foco
+// teclado. Se usa donde la tarjeta es clickable (enlace o botón completo).
+@mixin tarjeta-interactiva {
+  @include tarjeta-base;
+  @include transicion(transform, box-shadow, border-color);
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-0.125rem);
+    box-shadow: var(--shadow-hover-amarillo);
+    border-color: var(--amarillo-normal-hover);
+  }
+  &:focus-within {
+    outline: 2px solid var(--amarillo-normal);
+    outline-offset: 2px;
+  }
+}
+
+// ── 9. Efectos ───────────────────────────────────────────────────────────
+
+// Genera una transition con el timing function estándar del proyecto.
+// Acepta varias propiedades y las une con coma.
+@mixin transicion($propiedades...) {
+  $resultado: ();
+  @each $prop in $propiedades {
+    $resultado: append(
+      $resultado,
+      #{$prop} var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+      $separator: comma
+    );
+  }
+  transition: $resultado;
+}
+
+// Fondo translucido con desenfoque (cabeceras, modales).
+@mixin glass($fondo: var(--fondo-cabecera)) {
+  background-color: $fondo;
+  backdrop-filter: blur(0.625rem);
+  -webkit-backdrop-filter: blur(0.625rem);
+}
+
+// Enlace con subrayado animado desde la derecha al hacer hover/foco.
+@mixin enlace-subrayado {
+  position: relative;
+  text-decoration: none;
+
+  &::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 -2px 0;
+    height: 2px;
+    background-color: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    @include transicion(transform);
+  }
+
+  &:hover::after,
+  &:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
 }

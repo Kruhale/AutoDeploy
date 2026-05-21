@@ -17,6 +17,22 @@
   <app-sidebar [abierta]="sidebarAbierta()"></app-sidebar>
 
   <section class="disposicion-app__contenido" [attr.aria-label]="'comun.ariaContenidoApp' | translate">
+    <header class="disposicion-app__cabecera-desktop" [attr.aria-label]="'comun.ariaCabeceraApp' | translate">
+      <menu class="disposicion-app__acciones" [attr.aria-label]="'header.aria.acciones' | translate">
+        <button type="button" class="disposicion-app__tema" (click)="themeService.alternarTema()" [attr.aria-label]="themeService.temaActual() === 'oscuro' ? ('header.aria.temaClaro' | translate) : ('header.aria.temaOscuro' | translate)">
+          @if (themeService.temaActual() === 'oscuro') {
+            <i class="fa-solid fa-sun" aria-hidden="true"></i>
+          } @else {
+            <i class="fa-solid fa-moon" aria-hidden="true"></i>
+          }
+        </button>
+        <app-campana-notificaciones></app-campana-notificaciones>
+        <a class="disposicion-app__cuenta" routerLink="/app/cuenta" [attr.aria-label]="'header.cuenta' | translate">
+          <i class="fa-solid fa-user" aria-hidden="true"></i>
+        </a>
+      </menu>
+    </header>
+
     <main id="contenido-principal" tabindex="-1" class="disposicion-app__principal">
       <router-outlet></router-outlet>
     </main>

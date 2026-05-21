@@ -21,6 +21,54 @@
   display: none;
 }
 
+.disposicion-app__cabecera-desktop {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: var(--spacing-size-l) var(--spacing-size-3xl);
+  background-color: var(--fondo-normal);
+  border-bottom: 1px solid var(--borde-suave);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+}
+
+.disposicion-app__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-m);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.disposicion-app__tema,
+.disposicion-app__cuenta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: var(--radius-m);
+  border: 1px solid var(--borde-normal);
+  background-color: transparent;
+  color: var(--texto-medio);
+  font-size: 0.95rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: color var(--duration-base) ease, border-color var(--duration-base) ease, background-color var(--duration-base) ease;
+
+  &:hover {
+    color: var(--texto-claro);
+    border-color: var(--amarillo-normal);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--amarillo-normal);
+    outline-offset: 2px;
+  }
+}
+
 // El backdrop es un <button type="button"> (semánticamente: control que
 // cierra el menú al pulsar fuera). Hay que resetear los estilos por
 // defecto del botón para que actúe como una capa transparente.
@@ -36,6 +84,10 @@
 @media (max-width: 768px) {
   .disposicion-app {
     flex-direction: column;
+  }
+
+  .disposicion-app__cabecera-desktop {
+    display: none;
   }
 
   .disposicion-app__cabecera-movil {

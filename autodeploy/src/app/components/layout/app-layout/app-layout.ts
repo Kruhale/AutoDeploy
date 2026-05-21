@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, signal, inject } from "@angular/core";
 import { NavigationEnd, Router, RouterLink, RouterOutlet } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import { filter } from "rxjs/operators";
@@ -6,6 +6,7 @@ import { Sidebar } from "../sidebar/sidebar.component";
 import { BarraPieApp } from "../barra-pie-app/barra-pie-app";
 import { CampanaNotificaciones } from "../../shared/campana-notificaciones/campana-notificaciones";
 import { ToastNotificaciones } from "../../shared/toast-notificaciones/toast-notificaciones";
+import { ThemeService } from "../../../services/theme.service";
 
 @Component({
   selector: "app-app-layout",
@@ -14,6 +15,8 @@ import { ToastNotificaciones } from "../../shared/toast-notificaciones/toast-not
   styleUrl: "./app-layout.scss"
 })
 export class AppLayout {
+
+  readonly themeService = inject(ThemeService);
 
   sidebarAbierta = signal(false);
 

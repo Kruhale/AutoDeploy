@@ -21,6 +21,7 @@
     "cerrarMenu": "Close menu",
     "ariaDisposicionApp": "AutoDeploy application",
     "ariaCabeceraMovil": "Mobile header",
+    "ariaCabeceraApp": "Application header",
     "ariaContenidoApp": "Main application content",
     "sinDatos": "No data yet",
     "guardando": "Saving…",

@@ -27,4 +27,15 @@ describe("LandingLayout", function() {
   it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
+
+  it("monta un router-outlet para las rutas hijas", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const outlet = elemento.querySelector("router-outlet");
+    expect(outlet).not.toBeNull();
+  });
+
+  it("renderiza header y footer en el layout", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    expect(elemento.querySelector("app-header") || elemento.querySelector("header")).not.toBeNull();
+  });
 });

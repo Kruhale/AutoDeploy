@@ -27,4 +27,16 @@ describe("Header", function() {
   it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
+
+  it("renderiza un elemento header en el DOM", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const header = elemento.querySelector("header");
+    expect(header).not.toBeNull();
+  });
+
+  it("incluye al menos un enlace o botón", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const interactivos = elemento.querySelectorAll("a, button");
+    expect(interactivos.length).toBeGreaterThan(0);
+  });
 });

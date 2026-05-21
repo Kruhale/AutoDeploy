@@ -27,4 +27,20 @@ describe("Footer", function() {
   it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
+
+  it("renderiza un elemento footer en el DOM", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const footer = elemento.querySelector("footer");
+    expect(footer).not.toBeNull();
+  });
+
+  it("incluye enlaces de navegación", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const enlaces = elemento.querySelectorAll("a");
+    expect(enlaces.length).toBeGreaterThan(0);
+  });
+
+  it("usa el selector app-footer", function() {
+    expect(fixture.nativeElement.tagName.toLowerCase()).toBe("app-footer");
+  });
 });

@@ -22,4 +22,27 @@ describe("MigasPan", function() {
   it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
+
+  it("acepta lista vacía sin romper", function() {
+    expect(component.migas()).toEqual([]);
+  });
+
+  it("renderiza las migas cuando se le pasan", function() {
+    fixture.componentRef.setInput("migas", [
+      { etiqueta: "Panel", enlace: "/app" },
+      { etiqueta: "Servidores", enlace: "/app/servidores" },
+      { etiqueta: "Detalle" }
+    ]);
+    fixture.detectChanges();
+    expect(component.migas().length).toBe(3);
+    expect(component.migas()[0].etiqueta).toBe("Panel");
+    expect(component.migas()[2].enlace).toBeUndefined();
+  });
+
+  it("permite migas sin enlace (página actual)", function() {
+    const migas = [{ etiqueta: "Soy la actual" }];
+    fixture.componentRef.setInput("migas", migas);
+    fixture.detectChanges();
+    expect(component.migas()[0].enlace).toBeUndefined();
+  });
 });

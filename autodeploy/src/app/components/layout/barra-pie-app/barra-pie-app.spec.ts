@@ -27,4 +27,13 @@ describe("BarraPieApp", function() {
   it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
+
+  it("renderiza contenido en el DOM", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    expect(elemento.children.length).toBeGreaterThan(0);
+  });
+
+  it("usa el selector app-barra-pie-app", function() {
+    expect(fixture.nativeElement.tagName.toLowerCase()).toBe("app-barra-pie-app");
+  });
 });

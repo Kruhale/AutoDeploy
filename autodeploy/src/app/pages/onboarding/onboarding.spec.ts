@@ -27,4 +27,30 @@ describe("Onboarding", function() {
   it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
+
+  it("usa 'key' como método de autenticación por defecto", function() {
+    expect(component.metodoAutenticacion()).toBe("key");
+  });
+
+  it("inicializa puerto SSH a 22 y usuario a root", function() {
+    expect(component.puertoSsh()).toBe("22");
+    expect(component.usuarioSsh()).toBe("root");
+  });
+
+  it("inicia con estado de conexión 'waiting'", function() {
+    expect(component.estadoConexion()).toBe("waiting");
+    expect(component.conectando()).toBeFalse();
+  });
+
+  it("inicia con campos de servidor vacíos", function() {
+    expect(component.nombreServidor()).toBe("");
+    expect(component.direccionIp()).toBe("");
+    expect(component.passwordServidor()).toBe("");
+    expect(component.claveSshPrivada()).toBe("");
+  });
+
+  it("permite cambiar a método 'password'", function() {
+    component.metodoAutenticacion.set("password");
+    expect(component.metodoAutenticacion()).toBe("password");
+  });
 });

@@ -27,4 +27,16 @@ describe("Sidebar", function() {
   it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
+
+  it("renderiza una etiqueta nav o aside como contenedor", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const contenedor = elemento.querySelector("nav, aside");
+    expect(contenedor).not.toBeNull();
+  });
+
+  it("incluye al menos un enlace de navegación", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const enlaces = elemento.querySelectorAll("a");
+    expect(enlaces.length).toBeGreaterThan(0);
+  });
 });

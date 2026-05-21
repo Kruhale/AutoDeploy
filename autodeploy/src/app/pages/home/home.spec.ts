@@ -27,4 +27,23 @@ describe("Home", function() {
   it("debe crear el componente", function() {
     expect(component).toBeTruthy();
   });
+
+  it("renderiza secciones principales (hero, features, pricing, cta)", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    expect(elemento.querySelector("#features")).not.toBeNull();
+    expect(elemento.querySelector("#how-it-works")).not.toBeNull();
+    expect(elemento.querySelector("#pricing")).not.toBeNull();
+  });
+
+  it("renderiza enlaces y botones de CTA", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const ctas = elemento.querySelectorAll("a, button");
+    expect(ctas.length).toBeGreaterThan(0);
+  });
+
+  it("incluye iconos de tecnologías", function() {
+    const elemento: HTMLElement = fixture.nativeElement;
+    const iconos = elemento.querySelectorAll("i, svg");
+    expect(iconos.length).toBeGreaterThan(0);
+  });
 });

@@ -1,4 +1,4 @@
-import { Component, signal, computed, Signal, HostListener } from "@angular/core";
+import { Component, signal, computed, inject, Signal, HostListener } from "@angular/core";
 import { RouterLink } from "@angular/router";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../../services/auth.service";
@@ -37,11 +37,11 @@ export class Header {
   listaNotificaciones: Signal<Notificacion[]>;
   contadorSinLeer: Signal<number>;
 
-  constructor(
-    public authService: AuthService,
-    public themeService: ThemeService,
-    private translate: TranslateService,
-  ) {
+  readonly authService = inject(AuthService);
+  readonly themeService = inject(ThemeService);
+  private translate = inject(TranslateService);
+
+  constructor() {
     const componente = this;
 
     this.listaNotificaciones = computed(function() {

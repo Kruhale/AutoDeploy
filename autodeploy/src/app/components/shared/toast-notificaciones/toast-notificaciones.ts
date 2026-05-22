@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnInit, OnDestroy, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
 import { NotificacionService, Notificacion } from "../../../services/notificacion.service";
@@ -21,7 +21,7 @@ export class ToastNotificaciones implements OnInit, OnDestroy {
 	toastsMostrados: ToastInterno[] = [];
 	private suscripcion: Subscription | null = null;
 
-	constructor(private notificacionService: NotificacionService) {}
+	private notificacionService = inject(NotificacionService);
 
 	ngOnInit(): void {
 		const componenteActual = this;

@@ -56,7 +56,7 @@
   font-size: 0.95rem;
   text-decoration: none;
   cursor: pointer;
-  transition: color var(--duration-base) ease, border-color var(--duration-base) ease, background-color var(--duration-base) ease;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
   &:hover {
     color: var(--texto-claro);
@@ -115,7 +115,7 @@
     color: var(--texto-medio);
     cursor: pointer;
     font-size: 1rem;
-    transition: color var(--duration-base) ease;
+    transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   .disposicion-app__hamburguesa:hover {

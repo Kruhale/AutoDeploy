@@ -75,7 +75,7 @@
     padding: var(--spacing-size-l) var(--spacing-size-2xl);
     background-color: var(--fondo-tarjeta);
     border-bottom: 1px solid var(--borde-suave);
-    transition: background-color var(--duration-base) ease;
+    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:last-child {
       border-bottom: none;

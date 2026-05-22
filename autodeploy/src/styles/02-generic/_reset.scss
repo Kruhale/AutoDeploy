@@ -16,7 +16,7 @@ body {
   // Transición global suave al alternar tema (clase .tema-claro en <html>).
   // El @include movimiento-reducido del partial _animaciones.scss anula
   // esto cuando el usuario tiene prefers-reduced-motion: reduce.
-  transition: background-color var(--duration-base) ease, color var(--duration-base) ease;
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 ul {

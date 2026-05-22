@@ -60,7 +60,7 @@
     color: var(--texto-apagado);
     font-size: var(--font-size-sm);
     min-width: 12rem;
-    transition: border-color var(--duration-base) ease;
+    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:focus-within {
       border-color: var(--amarillo-normal);
@@ -132,7 +132,7 @@
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
     cursor: pointer;
-    transition: color var(--duration-base) ease, background-color var(--duration-base) ease;
+    transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       color: var(--texto-claro);

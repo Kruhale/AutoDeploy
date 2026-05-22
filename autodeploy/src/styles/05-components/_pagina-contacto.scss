@@ -63,7 +63,7 @@
     color: var(--texto-claro);
     font-family: var(--font-primary);
     font-size: var(--font-size-base);
-    transition: border-color var(--duration-base) ease, background-color var(--duration-base) ease;
+    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       border-color: rgba(240, 236, 226, 0.2);
@@ -183,7 +183,7 @@
       font-size: var(--font-size-base);
       font-weight: var(--font-weight-medium);
       color: var(--texto-claro);
-      transition: color var(--duration-base) ease;
+      transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
     }
   }
 }

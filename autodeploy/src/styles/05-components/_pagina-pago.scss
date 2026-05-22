@@ -30,7 +30,7 @@
     gap: var(--spacing-size-s);
     color: var(--texto-apagado);
     font-size: var(--font-size-sm);
-    transition: color var(--duration-base) ease;
+    transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       color: var(--texto-claro);
@@ -200,7 +200,7 @@
     border: 1px solid var(--borde-normal);
     pointer-events: none;
     opacity: 0;
-    transition: opacity var(--duration-base) ease;
+    transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
   }
 
   // ───── Seguridad ─────
@@ -303,7 +303,7 @@
   justify-content: space-between;
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  transition: background var(--duration-slow) ease;
+  transition: background var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
 
   &::before {
     content: "";
@@ -491,7 +491,7 @@
     color: var(--texto-claro);
     font-size: var(--font-size-md);
     font-family: var(--font-primary);
-    transition: border-color var(--duration-base) ease, box-shadow var(--duration-base) ease;
+    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
     outline: none;
 
     &:focus {
@@ -521,7 +521,7 @@
     cursor: pointer;
     padding: 0;
     font-size: var(--font-size-md);
-    transition: color var(--duration-base) ease;
+    transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       color: var(--texto-claro);

@@ -74,7 +74,7 @@
     gap: var(--spacing-size-l);
     padding: var(--spacing-size-m) var(--spacing-size-2xl);
     border-bottom: 1px solid var(--borde-suave);
-    transition: background-color var(--duration-base) ease;
+    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       background-color: rgba(240, 236, 226, 0.03);

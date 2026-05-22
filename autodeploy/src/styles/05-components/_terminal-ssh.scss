@@ -30,7 +30,7 @@
     &--rojo {
       background-color: rgba(217, 64, 53, 0.7);
       cursor: pointer;
-      transition: background-color var(--duration-fast) ease;
+      transition: background-color var(--duration-fast) cubic-bezier(0.16, 1, 0.3, 1);
 
       &:hover,
       &:focus-visible {
@@ -103,7 +103,7 @@
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-semibold);
       color: var(--texto-apagado);
-      transition: color var(--duration-base) ease;
+      transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
       &:hover,
       &:focus-visible {

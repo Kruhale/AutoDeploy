@@ -65,7 +65,7 @@
     align-items: center;
     padding: var(--spacing-size-l) 0;
     border-bottom: 1px solid var(--borde-suave);
-    transition: padding-left var(--duration-base) ease;
+    transition: padding-left var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
 
     &:hover {
@@ -106,7 +106,7 @@
       font-size: var(--font-size-base);
       font-weight: var(--font-weight-semibold);
       color: var(--texto-claro);
-      transition: color var(--duration-base) ease;
+      transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     &__texto {

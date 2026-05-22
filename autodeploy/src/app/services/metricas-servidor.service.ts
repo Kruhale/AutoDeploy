@@ -58,8 +58,8 @@ export class MetricasServidorService {
       try {
         const metricaRecibida = JSON.parse(evento.data) as MetricaServidor;
         servicio.actualizarMetricaEnMapa(metricaRecibida);
-      } catch (errorParse) {
-        console.warn("Error parseando metrica desde WebSocket:", errorParse);
+      } catch {
+        // Mensaje malformado del WS: lo ignoramos para no romper el stream de metricas.
       }
     });
 

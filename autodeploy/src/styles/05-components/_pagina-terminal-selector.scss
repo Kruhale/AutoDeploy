@@ -48,9 +48,9 @@
       color: var(--texto-medio);
       font-size: 0.85rem;
       transition:
-        background-color var(--duration-base) ease,
-        border-color var(--duration-base) ease,
-        color var(--duration-base) ease;
+        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     &__info {

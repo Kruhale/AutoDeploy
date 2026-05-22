@@ -44,8 +44,8 @@ export class NotificacionService {
 			servicio.agregarNotificacionLocal(notificacionRecibida);
 		};
 
-		this.webSocketPrincipal.onerror = function manejarErrorNotificacion(error) {
-			console.error("Error en WebSocket de notificaciones:", error);
+		this.webSocketPrincipal.onerror = function manejarErrorNotificacion() {
+			// El navegador ya intentara reconectar cuando la conexion vuelva; no hay accion adicional.
 		};
 	}
 

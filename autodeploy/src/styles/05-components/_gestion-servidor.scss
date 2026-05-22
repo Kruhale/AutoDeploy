@@ -131,7 +131,7 @@
     color: var(--texto-apagado);
     font-size: var(--font-size-sm);
     min-width: 12rem;
-    transition: border-color var(--duration-base) ease;
+    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:focus-within {
       border-color: var(--amarillo-normal);
@@ -252,7 +252,7 @@
     background: rgba(240, 236, 226, 0.02);
     border: 1px solid var(--borde-suave);
     border-radius: var(--radius-l);
-    transition: border-color var(--duration-base) ease, background-color var(--duration-base) ease;
+    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       border-color: rgba(240, 236, 226, 0.12);
@@ -341,7 +341,7 @@
       font-size: var(--font-size-base);
       color: var(--texto-apagado);
       cursor: pointer;
-      transition: color var(--duration-base) ease;
+      transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
       &:hover {
         color: var(--texto-claro);
@@ -385,7 +385,7 @@
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-l);
     cursor: pointer;
-    transition: border-color var(--duration-base) ease, transform var(--duration-base) ease;
+    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       border-color: rgba(240, 236, 226, 0.15);
@@ -575,7 +575,7 @@
     padding: var(--spacing-size-l) var(--spacing-size-2xl);
     border-top: 1px solid var(--borde-suave);
     background: rgba(240, 236, 226, 0.02);
-    transition: background-color var(--duration-base) ease;
+    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       background: rgba(240, 236, 226, 0.05);

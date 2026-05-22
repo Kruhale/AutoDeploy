@@ -53,7 +53,7 @@
   &__enlace {
     color: var(--amarillo-normal);
     font-weight: var(--font-weight-medium);
-    transition: opacity var(--duration-base) ease;
+    transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover,
     &:focus-visible {

@@ -104,7 +104,7 @@ app-cuenta {
   );
   pointer-events: none;
   z-index: 0;
-  transition: opacity var(--duration-base) ease;
+  transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cuenta__hero__grano {
@@ -707,7 +707,7 @@ app-cuenta {
   height: 1px;
   background-color: currentColor;
   opacity: 0.4;
-  transition: opacity var(--duration-base) ease, transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cuenta__boton-guardar:hover:not(:disabled) .cuenta__boton-guardar__contenido::before {
@@ -1371,9 +1371,9 @@ app-cuenta {
     text-align: left;
     color: inherit;
     transition:
-      border-color var(--duration-base) ease,
-      transform var(--duration-fast) ease,
-      box-shadow var(--duration-base) ease;
+      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+      transform var(--duration-fast) cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       border-color: var(--amarillo-transparente-030);
@@ -1483,9 +1483,9 @@ app-cuenta {
       color: var(--texto-medio);
       font-size: var(--font-size-md);
       transition:
-        background-color var(--duration-base) ease,
-        color var(--duration-base) ease,
-        border-color var(--duration-base) ease;
+        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+        border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     &__texto {
@@ -1522,7 +1522,7 @@ app-cuenta {
       opacity: 0;
       transform: scale(0.6);
       transition:
-        opacity var(--duration-base) ease,
+        opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
         transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
     }
   }

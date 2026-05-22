@@ -7,7 +7,7 @@
 
   &__enlace {
     color: var(--texto-apagado);
-    transition: color var(--duration-base) ease;
+    transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover,
     &:focus-visible {

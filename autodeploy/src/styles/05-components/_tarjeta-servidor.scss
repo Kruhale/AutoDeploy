@@ -26,9 +26,9 @@
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-l);
   transition:
-    transform var(--duration-base) ease,
-    box-shadow var(--duration-base) ease,
-    border-color var(--duration-base) ease;
+    transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+    border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
   &__cabecera {
     display: flex;
@@ -136,7 +136,7 @@
     font-size: var(--font-size-sm);
     font-weight: var(--font-weight-semibold);
     color: var(--amarillo-normal);
-    transition: opacity var(--duration-base) ease;
+    transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover,
     &:focus-visible {

@@ -15,6 +15,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -22,11 +23,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
-// Saltamos la cadena de filtros (JwtAuthenticationFilter) para testear el
-// controlador sin tener que generar JWTs reales. Si en un futuro se quiere
-// cubrir la integración con seguridad, hacerlo con @WithMockUser o un test
-// específico dedicado.
-@AutoConfigureMockMvc(addFilters = false)
+// Cargamos la cadena de filtros para que @PreAuthorize tenga un Authentication
+// real (mockeamos un usuario con .with(user(...)) en cada peticion). Asi
+// validamos tambien el ownership efectivo del controlador.
+@AutoConfigureMockMvc
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 class ServidorControllerTest {
@@ -42,6 +42,7 @@ class ServidorControllerTest {
 
     private static final String URL_SERVIDORES = "/api/servidores";
     private static final String URL_SERVIDOR = "/api/servidores/";
+    private static final String USUARIO_TEST = "usuario-test-1";
 
     @BeforeEach
     void limpiarBaseDeDatos() {
@@ -65,6 +66,7 @@ class ServidorControllerTest {
         String cuerpoPeticion = objectMapper.writeValueAsString(peticion);
 
         ResultActions resultado = mockMvc.perform(post(URL_SERVIDORES)
+                .with(user(USUARIO_TEST).roles("USUARIO"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(cuerpoPeticion));
 
@@ -79,6 +81,7 @@ class ServidorControllerTest {
         String cuerpoPeticion = objectMapper.writeValueAsString(peticion);
 
         mockMvc.perform(post(URL_SERVIDORES)
+                        .with(user(USUARIO_TEST).roles("USUARIO"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(cuerpoPeticion))
                 .andExpect(status().isCreated())
@@ -92,46 +95,71 @@ class ServidorControllerTest {
         String cuerpoPeticion = "{\"nombre\":\"Servidor sin IP\"}";
 
         mockMvc.perform(post(URL_SERVIDORES)
+                        .with(user(USUARIO_TEST).roles("USUARIO"))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(cuerpoPeticion))
                 .andExpect(status().isUnprocessableEntity());
     }
 
     @Test
-    @DisplayName("listar: devuelve 200 con la lista de servidores")
+    @DisplayName("listar: devuelve 200 con la lista de servidores del usuario autenticado")
     void listar_deberiaDevolver200ConListaDeServidores() throws Exception {
         registrarServidorYObtenerId();
 
-        mockMvc.perform(get(URL_SERVIDORES))
+        mockMvc.perform(get(URL_SERVIDORES)
+                        .with(user(USUARIO_TEST).roles("USUARIO")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data").isArray())
                 .andExpect(jsonPath("$.data[0].nombre").value("Servidor de prueba"));
     }
 
     @Test
-    @DisplayName("obtener: devuelve 200 con los datos del servidor cuando el id existe")
-    void obtener_deberiaDevolver200ConDatosDelServidor_cuandoIdExiste() throws Exception {
+    @DisplayName("obtener: devuelve 200 con los datos del servidor cuando el id existe y es del usuario")
+    void obtener_deberiaDevolver200ConDatosDelServidor_cuandoIdExisteYEsDelUsuario() throws Exception {
         String idServidor = registrarServidorYObtenerId();
 
-        mockMvc.perform(get(URL_SERVIDOR + idServidor))
+        mockMvc.perform(get(URL_SERVIDOR + idServidor)
+                        .with(user(USUARIO_TEST).roles("USUARIO")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(idServidor))
                 .andExpect(jsonPath("$.data.nombre").value("Servidor de prueba"));
     }
 
     @Test
-    @DisplayName("obtener: devuelve 404 cuando el id no existe")
-    void obtener_deberiaDevolver404_cuandoIdNoExiste() throws Exception {
-        mockMvc.perform(get(URL_SERVIDOR + "id-que-no-existe"))
-                .andExpect(status().isNotFound());
+    @DisplayName("obtener: devuelve 403 cuando el servidor pertenece a otro usuario")
+    void obtener_deberiaDevolver403_cuandoServidorEsDeOtroUsuario() throws Exception {
+        String idServidor = registrarServidorYObtenerId();
+
+        mockMvc.perform(get(URL_SERVIDOR + idServidor)
+                        .with(user("otro-usuario").roles("USUARIO")))
+                .andExpect(status().isForbidden());
     }
 
     @Test
-    @DisplayName("eliminar: devuelve 204 cuando el servidor existe")
-    void eliminar_deberiaDevolver204_cuandoServidorExiste() throws Exception {
+    @DisplayName("obtener: devuelve 403 cuando el id no existe (el ownership check no concede acceso)")
+    void obtener_deberiaDevolver403_cuandoIdNoExiste() throws Exception {
+        mockMvc.perform(get(URL_SERVIDOR + "id-que-no-existe")
+                        .with(user(USUARIO_TEST).roles("USUARIO")))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @DisplayName("eliminar: devuelve 204 cuando el servidor existe y es del usuario")
+    void eliminar_deberiaDevolver204_cuandoServidorExisteYEsDelUsuario() throws Exception {
         String idServidor = registrarServidorYObtenerId();
 
-        mockMvc.perform(delete(URL_SERVIDOR + idServidor))
+        mockMvc.perform(delete(URL_SERVIDOR + idServidor)
+                        .with(user(USUARIO_TEST).roles("USUARIO")))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    @DisplayName("eliminar: devuelve 403 cuando el servidor es de otro usuario")
+    void eliminar_deberiaDevolver403_cuandoServidorEsDeOtroUsuario() throws Exception {
+        String idServidor = registrarServidorYObtenerId();
+
+        mockMvc.perform(delete(URL_SERVIDOR + idServidor)
+                        .with(user("otro-usuario").roles("USUARIO")))
+                .andExpect(status().isForbidden());
     }
 }

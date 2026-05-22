@@ -7,6 +7,8 @@ import com.autodeploy.service.DespliegueService;
 import com.autodeploy.service.GitDeployService;
 import com.autodeploy.service.ServidorService;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 import java.util.Optional;
 
+@Tag(name = "Webhooks", description = "Endpoints para que GitHub/GitLab disparen auto-deploys cuando llega un push. Publico (autenticado por tokenWebhook generado por AutoDeploy al crear el despliegue Git).")
 @RestController
 @RequestMapping("/api/webhooks")
 public class WebhookController {
@@ -32,6 +35,7 @@ public class WebhookController {
         this.gitDeployService = gitDeployService;
     }
 
+    @Operation(summary = "Recibir evento push de Git", description = "Endpoint llamado por GitHub/GitLab al hacer push. Solo dispara deploy si el evento es push, el token pertenece a un despliegue conocido y la rama coincide con la configurada. El payload se espera en formato JSON estandar de GitHub/GitLab.")
     @PostMapping("/git/{tokenWebhook}")
     public ResponseEntity<ApiResponse<Map<String, String>>> recibirEventoGit(
             @PathVariable String tokenWebhook,

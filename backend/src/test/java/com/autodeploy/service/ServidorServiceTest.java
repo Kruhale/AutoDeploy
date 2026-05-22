@@ -64,7 +64,7 @@ class ServidorServiceTest {
 
         when(servidorRepository.save(any(Servidor.class))).thenReturn(servidorExistente);
 
-        Servidor resultado = servidorService.registrar(peticion);
+        Servidor resultado = servidorService.registrar(peticion, "usuario-test-1");
 
         assertThat(resultado).isNotNull();
         assertThat(resultado.getNombre()).isEqualTo("Servidor de produccion");
@@ -90,7 +90,7 @@ class ServidorServiceTest {
 
         when(servidorRepository.save(any(Servidor.class))).thenReturn(servidorConClave);
 
-        Servidor resultado = servidorService.registrar(peticion);
+        Servidor resultado = servidorService.registrar(peticion, "usuario-test-1");
 
         assertThat(resultado).isNotNull();
         assertThat(resultado.getMetodoAutenticacion()).isEqualTo("key");

@@ -11,6 +11,8 @@ public class Servidor {
 
     @Id
     private String id;
+    // FK al Usuario propietario. Sirve para que cada usuario solo vea/modifique sus VPS
+    private String usuarioId;
     private String nombre;
     private String direccionIp;
     private int puertoSsh;
@@ -48,6 +50,9 @@ public class Servidor {
 
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
+
+    public String getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(String usuarioId) { this.usuarioId = usuarioId; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }

@@ -58,8 +58,9 @@ public class UsuarioController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Obtener perfil del usuario por id")
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<LoginResponse>> obtener(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
         LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
@@ -68,8 +69,9 @@ public class UsuarioController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Actualizar nombre y email del perfil propio")
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<LoginResponse>> actualizar(
             @PathVariable String id,
             @RequestBody Map<String, String> datos) {
@@ -83,8 +85,9 @@ public class UsuarioController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Cambiar el plan de suscripcion (free, pro, business)")
     @PutMapping("/{id}/plan")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<LoginResponse>> actualizarPlan(
             @PathVariable String id,
             @RequestBody Map<String, String> datos) {
@@ -97,8 +100,9 @@ public class UsuarioController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Cancelar la suscripcion del usuario", description = "Marca fechaFinSuscripcion a un mes despues de la fecha de inicio. El acceso se mantiene hasta esa fecha.")
     @PutMapping("/{id}/cancelar-suscripcion")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<LoginResponse>> cancelarSuscripcion(@PathVariable String id) {
         Usuario usuario = usuarioService.cancelarSuscripcion(id);
         LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
@@ -109,7 +113,7 @@ public class UsuarioController {
 
     @Operation(summary = "Actualizar idioma preferido del usuario")
     @PutMapping("/{id}/idioma")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<LoginResponse>> actualizarIdioma(
             @PathVariable String id,
             @RequestBody Map<String, String> datos) {
@@ -122,8 +126,9 @@ public class UsuarioController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Eliminar la cuenta propia (irreversible)")
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
         usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
@@ -158,15 +163,17 @@ public class UsuarioController {
 
     public record NuevaClaveRequest(String nombre, String claveCompleta) {}
 
+    @Operation(summary = "Listar las claves SSH guardadas en el perfil del usuario")
     @GetMapping("/{id}/claves-ssh")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<List<ClaveSshUsuario>>> listarClavesSsh(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuario.getClavesSsh()));
     }
 
+    @Operation(summary = "Anyadir una clave SSH publica al perfil del usuario")
     @PostMapping("/{id}/claves-ssh")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<ClaveSshUsuario>> agregarClaveSsh(
             @PathVariable String id,
             @RequestBody NuevaClaveRequest peticion) {
@@ -174,22 +181,25 @@ public class UsuarioController {
         return ResponseEntity.ok(new ApiResponse<>(true, "Clave SSH añadida", nuevaClave));
     }
 
+    @Operation(summary = "Borrar una clave SSH del perfil del usuario")
     @DeleteMapping("/{idUsuario}/claves-ssh/{idClave}")
-    @PreAuthorize("hasRole('ADMIN') or #idUsuario == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #idUsuario == authentication.name")
     public ResponseEntity<Void> eliminarClaveSsh(@PathVariable String idUsuario, @PathVariable String idClave) {
         usuarioService.eliminarClaveSsh(idUsuario, idClave);
         return ResponseEntity.noContent().build();
     }
 
+    @Operation(summary = "Consultar las preferencias de notificacion del usuario")
     @GetMapping("/{id}/notificaciones")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<PreferenciasNotificacion>> obtenerNotificaciones(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuario.getPreferenciasNotificacion()));
     }
 
+    @Operation(summary = "Actualizar preferencias de notificacion (email, alertas criticas, eventos despliegue)")
     @PutMapping("/{id}/notificaciones")
-    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
     public ResponseEntity<ApiResponse<PreferenciasNotificacion>> actualizarNotificaciones(
             @PathVariable String id,
             @RequestBody PreferenciasNotificacion preferencias) {

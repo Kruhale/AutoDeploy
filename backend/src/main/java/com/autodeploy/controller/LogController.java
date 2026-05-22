@@ -4,7 +4,10 @@ import com.autodeploy.dto.ApiResponse;
 import com.autodeploy.model.Servidor;
 import com.autodeploy.service.LogService;
 import com.autodeploy.service.ServidorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Logs", description = "Lectura de logs de los servidores del usuario")
 @RestController
 @RequestMapping("/api/logs")
+@PreAuthorize("isAuthenticated()")
 public class LogController {
 
     private final LogService logService;
@@ -25,7 +30,9 @@ public class LogController {
         this.servidorService = servidorService;
     }
 
+    @Operation(summary = "Ultimas lineas de un log del servidor")
     @GetMapping("/{servidorId}")
+    @PreAuthorize("hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)")
     public ResponseEntity<ApiResponse<List<String>>> obtenerLogs(
             @PathVariable String servidorId,
             @RequestParam(defaultValue = "/var/log/syslog") String archivo,
@@ -38,7 +45,9 @@ public class LogController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Buscar texto en un log del servidor")
     @GetMapping("/{servidorId}/buscar")
+    @PreAuthorize("hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)")
     public ResponseEntity<ApiResponse<List<String>>> buscarEnLogs(
             @PathVariable String servidorId,
             @RequestParam(defaultValue = "/var/log/syslog") String archivo,

@@ -4,7 +4,10 @@ import com.autodeploy.dto.ApiResponse;
 import com.autodeploy.dto.ConfigurarNginxRequest;
 import com.autodeploy.model.Servidor;
 import com.autodeploy.service.NginxService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,8 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Tag(name = "Nginx", description = "Instalacion y configuracion de nginx en el servidor")
 @RestController
 @RequestMapping("/api/nginx")
+@PreAuthorize("isAuthenticated() and (hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication))")
 public class NginxController {
 
     private final NginxService nginxService;
@@ -25,6 +30,7 @@ public class NginxController {
         this.nginxService = nginxService;
     }
 
+    @Operation(summary = "Instalar nginx en el servidor")
     @PostMapping("/{servidorId}/instalar")
     public ResponseEntity<ApiResponse<String>> instalar(@PathVariable String servidorId) {
         Servidor servidor = nginxService.obtenerServidorOLanzarError(servidorId);
@@ -34,6 +40,7 @@ public class NginxController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Configurar virtual host en nginx")
     @PostMapping("/{servidorId}/configurar")
     public ResponseEntity<ApiResponse<String>> configurar(
             @PathVariable String servidorId,
@@ -47,6 +54,7 @@ public class NginxController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Listar virtual hosts configurados en nginx")
     @GetMapping("/{servidorId}/hosts")
     public ResponseEntity<ApiResponse<List<String>>> listarHosts(@PathVariable String servidorId) {
         Servidor servidor = nginxService.obtenerServidorOLanzarError(servidorId);
@@ -56,6 +64,7 @@ public class NginxController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Eliminar virtual host de nginx")
     @DeleteMapping("/{servidorId}/hosts/{dominio}")
     public ResponseEntity<ApiResponse<String>> eliminarHost(
             @PathVariable String servidorId,

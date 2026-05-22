@@ -3,6 +3,8 @@ package com.autodeploy.service;
 import com.autodeploy.exception.ResourceNotFoundException;
 import com.autodeploy.model.Despliegue;
 import com.autodeploy.repository.DespliegueRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -55,9 +57,17 @@ public class DespliegueService {
         return listaDeDesplieguesRecientes;
     }
 
+    public Page<Despliegue> obtenerHistorialPaginado(Pageable pageable) {
+        return despliegueRepository.findAllByOrderByFechaInicioDesc(pageable);
+    }
+
     public List<Despliegue> obtenerPorServidor(String servidorId) {
         List<Despliegue> listaDeDesplieguesDelServidor = despliegueRepository.findByServidorIdOrderByFechaInicioDesc(servidorId);
         return listaDeDesplieguesDelServidor;
+    }
+
+    public Page<Despliegue> obtenerPorServidorPaginado(String servidorId, Pageable pageable) {
+        return despliegueRepository.findByServidorIdOrderByFechaInicioDesc(servidorId, pageable);
     }
 
     public Despliegue obtenerPorId(String id) {

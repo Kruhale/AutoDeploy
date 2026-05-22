@@ -1,6 +1,8 @@
 package com.autodeploy.controller;
 
 import com.autodeploy.dto.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.bson.Document;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.time.Instant;
 import java.util.List;
 
+@Tag(name = "Estado", description = "Estado de salud global de los servicios de AutoDeploy. Endpoint publico, no requiere autenticacion.")
 @RestController
 @RequestMapping("/api/estado")
 public class EstadoController {
@@ -21,6 +24,7 @@ public class EstadoController {
         this.mongoTemplate = mongoTemplate;
     }
 
+    @Operation(summary = "Estado del sistema", description = "Devuelve el estado UP/DEGRADED/DOWN de cada servicio: API, base de datos, WebSocket terminal, WebSocket metricas, WebSocket notificaciones y asistente IA. Usado por el frontend para el indicador de salud y por el smoke test del CD.")
     @GetMapping
     public ResponseEntity<ApiResponse<EstadoSistema>> obtenerEstadoSistema() {
         boolean baseDeDatosViva = comprobarBaseDeDatos();

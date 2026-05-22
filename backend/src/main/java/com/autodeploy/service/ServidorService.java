@@ -8,6 +8,8 @@ import com.autodeploy.util.CifradoUtil;
 import org.apache.sshd.client.SshClient;
 import org.apache.sshd.client.session.ClientSession;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,8 +27,9 @@ public class ServidorService {
         this.servidorRepository = servidorRepository;
     }
 
-    public Servidor registrar(ConexionSshRequest peticion) {
+    public Servidor registrar(ConexionSshRequest peticion, String usuarioId) {
         Servidor nuevoServidor = new Servidor();
+        nuevoServidor.setUsuarioId(usuarioId);
         nuevoServidor.setNombre(peticion.nombre());
         nuevoServidor.setDireccionIp(peticion.direccionIp());
         nuevoServidor.setPuertoSsh(peticion.puertoSsh());
@@ -54,10 +57,23 @@ public class ServidorService {
         return listaDeServidores;
     }
 
+    public List<Servidor> listarPorUsuario(String usuarioId) {
+        return servidorRepository.findByUsuarioId(usuarioId);
+    }
+
+    public Page<Servidor> listarPorUsuarioPaginado(String usuarioId, Pageable pageable) {
+        return servidorRepository.findByUsuarioId(usuarioId, pageable);
+    }
+
     public Servidor obtenerPorId(String id) {
         Servidor servidor = servidorRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Servidor no encontrado"));
         return servidor;
+    }
+
+    public Servidor obtenerDelUsuario(String id, String usuarioId) {
+        return servidorRepository.findByIdAndUsuarioId(id, usuarioId)
+                .orElseThrow(() -> new ResourceNotFoundException("Servidor no encontrado"));
     }
 
     public void eliminar(String id) {

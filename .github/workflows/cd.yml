@@ -1,13 +1,12 @@
 name: CD
 
-# Dispara cuando el workflow CI termina correctamente sobre CUALQUIER rama,
-# o cuando se lanza manualmente desde la pestaña Actions.
-# Riesgo asumido: cualquier push a cualquier rama puede desplegar a producción
-# si el CI pasa (incluyendo trabajo WIP). El gate sigue siendo que CI esté en verde.
+# Dispara cuando el workflow CI termina correctamente SOLO sobre main,
+# o cuando se lanza manualmente desde la pestaña Actions (tambien restringido a main).
+# Las ramas feature/dev nunca despliegan: el merge a main es el unico camino a produccion.
 on:
   workflow_run:
     workflows: ["CI"]
-    branches: ["**"]
+    branches: ["main"]
     types: [completed]
   workflow_dispatch:
 
@@ -29,10 +28,11 @@ jobs:
     name: Construir y publicar imágenes en GHCR
     runs-on: ubuntu-latest
     timeout-minutes: 25
-    # Si vino por workflow_run, exigir que CI haya pasado
+    # Guard doble: workflow_run ya filtra por main, pero workflow_dispatch puede lanzarse
+    # desde la UI sobre cualquier rama. Aqui exigimos ademas que sea main.
     if: >
-      github.event_name == 'workflow_dispatch' ||
-      github.event.workflow_run.conclusion == 'success'
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
     outputs:
       sha_short: ${{ steps.tag.outputs.sha_short }}
       owner_lc: ${{ steps.owner.outputs.lc }}

@@ -57,8 +57,8 @@ describe("NuevoDespliegue", function() {
     expect(component.tecnologiaSeleccionada()).toBe("PHP");
   });
 
-  it("carga 4 opciones de tecnología", function() {
-    expect(component.opcionesDeTecnologia().length).toBe(4);
+  it("carga 5 opciones de tecnología", function() {
+    expect(component.opcionesDeTecnologia().length).toBe(5);
   });
 
   it("limpia mensajes al cambiar origen", function() {

@@ -4,10 +4,10 @@
 // Accesibilidad (WCAG 2.3.3):
 //   El proyecto sigue el patrón invertido recomendado por web.dev y la
 //   comunidad de accesibilidad: las clases helper definen sus animaciones
-//   SOLO dentro de `@media (prefers-reduced-motion: no-preference)`.
-//   Cuando el usuario activa "reducir movimiento" en su sistema, los
-//   estilos de animación ni siquiera se aplican, por lo que no hace
-//   falta anularlos con `!important`.
+//   SOLO dentro de `@media (prefers-reduced-motion: no-preference)`. Cuando
+//   el usuario activa "reducir movimiento" en su sistema, esos estilos ni
+//   siquiera se generan, así que no hay nada que anular ni se contamina la
+//   cascada con sobrescrituras de mayor especificidad.
 //
 //   El spinner se queda siempre activo (un spinner sin movimiento no
 //   informa de nada) pero su duración cambia vía `--duration-spinner`,
@@ -88,8 +88,9 @@
 }
 
 // Clases helper de animación. Solo se aplican si el usuario NO ha pedido
-// reducir movimiento. Sin este media query alrededor, harían falta
-// `!important` para anularlas — con él, ni se cargan.
+// reducir movimiento. Envolverlas en este media query es lo que evita
+// tener que pelearse con la cascada después: si el usuario prefiere
+// menos movimiento, estas reglas ni se cargan.
 
 @media (prefers-reduced-motion: no-preference) {
   // Animaciones de carga al cargar la pagina

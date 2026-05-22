@@ -62,7 +62,7 @@ Pulsa Tab desde el inicio del documento y verifica:
 
 ### 2.1 Contraste de texto
 
-Definido en `_design-tokens.scss:27-35` con ratios verificados sobre `--fondo-tarjeta` (L=16 %):
+Definido en `00-settings/_variables.scss` con ratios verificados sobre `--fondo-tarjeta` (L=16 %):
 
 | Token | Luminancia | Ratio | Nivel |
 |---|---|---|---|

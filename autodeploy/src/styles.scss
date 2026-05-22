@@ -2,7 +2,10 @@
 // Cambiar este orden rompe la cascada — siempre añadir nuevos archivos en
 // la sección de su capa.
 
-// 00 · Settings — solo Sass vars ($breakpoint-*). No genera CSS.
+// 00 · Settings — variables del proyecto.
+//   - fonts.scss        @import de Google Fonts
+//   - css-variables.scss Sass vars de breakpoints ($breakpoint-*)
+//   - variables.scss    TODAS las CSS Custom Properties (:root + .tema-claro)
 @use "styles/00-settings/fonts";
 @use "styles/00-settings/css-variables";
 @use "styles/00-settings/variables";
@@ -12,9 +15,8 @@
 @use "styles/01-tools/funciones";
 @use "styles/01-tools/animaciones";
 
-// 02 · Generic — reset + design tokens (Custom Properties CSS).
+// 02 · Generic — reset CSS.
 @use "styles/02-generic/reset";
-@use "styles/02-generic/design-tokens";
 
 // 03 · Elements — estilos base sobre tags HTML (button, input, ...).
 @use "styles/03-elements/buttons";

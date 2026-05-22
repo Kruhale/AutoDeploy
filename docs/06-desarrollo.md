@@ -22,9 +22,9 @@ El proyecto se ha desarrollado en **5 sprints** de 2 semanas (de marzo a mayo 20
 **Problema**: Por defecto Spring WebSocket no procesa headers como `Authorization: Bearer ...` en el handshake. Si el WebSocket está expuesto, cualquiera podría conectarse.
 **Solución**: Añadir un `HandshakeInterceptor` que extrae el JWT del query param (`?token=...`) y valida con `JwtUtil`. Si es inválido, cierra el socket antes de upgradear.
 
-### 3. Variables Custom Properties en Settings (DIW)
-**Problema**: En la primera iteración de SCSS, las Custom Properties (`:root { --x: y; }`) estaban en `00-settings/_variables.scss`. ITCSS dice que Settings no debe generar CSS — y `:root` sí lo genera.
-**Solución**: Mover todas a `02-generic/_design-tokens.scss`. Aclarado en el README de styles con la tabla Sass vs Custom Properties. Era el principal antipatrón del proyecto anterior (Cofira) y se corrige explícitamente.
+### 3. Centralizar los design tokens (DIW)
+**Problema**: Tener Custom Properties dispersas por componentes o redefinidas en cada archivo hace imposible cambiar un color en todo el sitio sin tocar decenas de partials. Falta de "fuente única de verdad".
+**Solución**: Centralizar todas las Custom Properties en `00-settings/_variables.scss` (`:root {}` para modo oscuro por defecto, `.tema-claro {}` para overrides). Las Sass vars de breakpoints quedan aparte en `_css-variables.scss` porque los mixins las necesitan en compilación. Documentado en el README de styles con la tabla Sass vs Custom Properties.
 
 ### 4. Container queries vs media queries
 **Problema**: La tarjeta de servidor aparece en sidebar (~280px), grid (~340px) y panel detalle (>600px). Hacer un media query con varios breakpoints rompía el ancho del contenedor real porque el viewport es el mismo.

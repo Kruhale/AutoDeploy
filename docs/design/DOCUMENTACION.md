@@ -28,7 +28,7 @@ Este documento sigue la estructura de 7 secciones que pide la rúbrica DIW (Órb
 | **Contraste** | Paleta deliberadamente oscura con un acento amarillo (`--amarillo-normal: hsl(47, 86%, 56%)`) sobre fondos `hsl(30, 5%, 7-16%)`. Contraste texto principal `--texto-claro` (`hsl(40, 33%, 91%)`) sobre `--fondo-tarjeta` (`hsl(32, 4%, 16%)`) verificado en WebAIM (>4.5:1 WCAG AA). |
 | **Alineación** | Layouts de página con CSS Grid (`grid-template-columns: minmax(0, 1fr)` y `auto-fit + minmax`). Componentes con Flexbox via `@include flex-centro/entre/columna`. Sin "flotantes" sueltos. |
 | **Proximidad** | Sistema de espaciado de 15 niveles (`--spacing-size-xxs` a `--spacing-size-8xl`). Reglas: 8-12px entre elementos relacionados, 16-24px entre relacionados, 32-48px entre secciones, 64px+ entre bloques principales. |
-| **Repetición** | Design tokens centralizados en `02-generic/_design-tokens.scss` — todo color, tipografía, espaciado, sombra, radius, duración viene de una única fuente. Si cambia `--amarillo-normal`, cambia toda la app. |
+| **Repetición** | Design tokens centralizados en `00-settings/_variables.scss` — todo color, tipografía, espaciado, sombra, radius, duración viene de una única fuente. Si cambia `--amarillo-normal`, cambia toda la app. |
 
 ### 1.2 Metodología CSS: ITCSS + BEM
 
@@ -37,16 +37,18 @@ Este documento sigue la estructura de 7 secciones que pide la rúbrica DIW (Órb
 7 capas que se cargan en orden creciente de especificidad. El orquestador único es `src/styles.scss`:
 
 ```
-00-settings    · solo Sass vars ($var). No genera CSS.
+00-settings    · variables del proyecto: Sass vars de breakpoints
+                 (_css-variables.scss) y todas las CSS Custom Properties
+                 (_variables.scss con :root y .tema-claro).
 01-tools       · mixins, funciones, animaciones reutilizables.
-02-generic     · reset + design tokens (CSS Custom Properties).
+02-generic     · reset CSS.
 03-elements    · estilos base sobre tags HTML (button, input, ...).
 04-layout      · estructura de página (header, main, footer, grids).
 05-components  · bloques BEM concretos (40+ partials).
 06-utilities   · helpers .u-* (última capa, ganan por orden).
 ```
 
-> **Aclaración crítica** sobre Settings: en Cofira las Custom Properties (`:root { --x: y; }`) estaban en `00-settings/_variables.scss`. En AutoDeploy se han movido a `02-generic/_design-tokens.scss` porque generan CSS real, y Settings debe quedarse sólo con Sass vars (breakpoints). Detalle completo en `autodeploy/src/styles/README.md`.
+> **Convención del proyecto**: el archivo `00-settings/_variables.scss` es la fuente única de verdad del sistema de diseño. Ahí viven todos los tokens visibles al navegador (colores, fondos, textos, bordes, tipografía, espaciado, radios, sombras, transiciones, z-index, layout) bajo `:root {}` y los overrides del modo claro bajo `.tema-claro {}`. Las Sass vars de breakpoints quedan aparte en `_css-variables.scss` porque los mixins las consumen en compilación. Detalle completo en `autodeploy/src/styles/README.md`.
 
 #### BEM — Block Element Modifier
 
@@ -73,15 +75,14 @@ Esta convención garantiza que CSS resuelve sin colisiones aunque los estilos se
 src/styles/
 ├── 00-settings/
 │   ├── _fonts.scss          ← @import Outfit + JetBrains Mono
-│   ├── _css-variables.scss  ← $breakpoint-sm/md/lg/xl/2xl
-│   └── _variables.scss      ← @use 'css-variables' as *;
+│   ├── _css-variables.scss  ← Sass vars: $breakpoint-sm/md/lg/xl/2xl
+│   └── _variables.scss      ← :root { --x } + .tema-claro { --x }
 ├── 01-tools/
 │   ├── _mixins.scss         ← 31 mixins
 │   ├── _funciones.scss      ← 11 funciones
 │   └── _animaciones.scss    ← keyframes + .animar/.revelar/.spinner
 ├── 02-generic/
-│   ├── _reset.scss          ← reset + transición de tema
-│   └── _design-tokens.scss  ← :root { --x } + .tema-claro { --x }
+│   └── _reset.scss          ← reset + transición de tema
 ├── 03-elements/
 │   ├── _buttons.scss        ← .boton--primario/secundario/ghost/peligro
 │   └── _forms.scss          ← .campo, .toggle, .interruptor
@@ -109,7 +110,7 @@ src/styles/
 
 ### 1.4 Sistema de design tokens
 
-Los tokens viven en `02-generic/_design-tokens.scss` como Custom Properties bajo `:root {}` y overrides en `.tema-claro {}`.
+Los tokens viven en `00-settings/_variables.scss` como Custom Properties bajo `:root {}` y overrides en `.tema-claro {}`.
 
 **Familias documentadas**:
 
@@ -436,7 +437,7 @@ Animaciones disponibles:
 
 ### 6.1 Variables de tema
 
-Dos bloques de Custom Properties en `02-generic/_design-tokens.scss`:
+Dos bloques de Custom Properties en `00-settings/_variables.scss`:
 
 ```scss
 :root {

@@ -47,7 +47,7 @@ La auditoría completa con archivo, línea y propuesta de fix está en el cuerpo
 
 ### Técnicas
 
-1. **ITCSS + BEM funciona si se respeta la cascada**. La primera vez (en Cofira) puse Custom Properties en Settings y empecé a luchar contra la propia metodología. Mover los tokens a `02-generic/_design-tokens.scss` resolvió todo y desbloqueó la lectura del README de styles para terceros.
+1. **ITCSS + BEM funciona si se respeta la cascada**. La clave es tener una sola fuente de verdad para los tokens: `00-settings/_variables.scss` contiene `:root {}` y `.tema-claro {}` con todos los colores, fondos, textos, espaciados, radios, sombras y transiciones del proyecto. Cualquier componente que necesite un valor visual lo lee de ahí con `var(--token)`; si mañana cambia `--amarillo-normal`, cambia toda la app sin tocar 40 archivos.
 
 2. **`@function` y `@include` no son adorno**. Definirlos sin usarlos (como en Cofira) es peor que no tenerlos: confunde al lector. En AutoDeploy los 31 mixins y 11 funciones tienen al menos un uso real, documentado en el README.
 

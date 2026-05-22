@@ -5,9 +5,11 @@ Los estilos de AutoDeploy siguen [ITCSS](https://itcss.io/) (Inverted Triangle C
 ## Las 7 capas
 
 ```
-00-settings     · solo variables Sass ($var). No genera CSS.
+00-settings     · variables del proyecto: Sass vars de breakpoints
+                  ($breakpoint-*) y TODAS las CSS Custom Properties
+                  (:root { --amarillo-normal: ... } + .tema-claro).
 01-tools        · mixins, funciones y keyframes/animaciones reutilizables.
-02-generic      · reset + design tokens (CSS Custom Properties).
+02-generic      · reset CSS.
 03-elements     · estilos base sobre tags HTML (button, input, a, …).
 04-layout       · estructura de página (header, main, footer, grid).
 05-components   · bloques BEM concretos (tarjetas, secciones, páginas).
@@ -27,18 +29,18 @@ Cualquier archivo nuevo se añade a `styles.scss` en su sección, nunca antes ni
 | ¿Genera CSS? | No por sí solas | Sí, viajan en el bundle como `:root { --x: y; }` |
 | El orden de import importa | **Sí**. Usarlas antes de declararlas falla la build. | **No**. El navegador resuelve `var()` contra la cascada final del documento, independientemente del orden con que llegó al CSS. |
 | ¿Se pueden cambiar en runtime? | No (son texto sustituido) | Sí (`document.documentElement.style.setProperty(...)`, temas, media queries) |
-| Capa ITCSS correcta | **Settings (00)** | **Generic/Theme (02)** |
+| Capa ITCSS correcta | **Settings (00)** — `_css-variables.scss` | **Settings (00)** — `_variables.scss` |
 
-**Por qué importa**: poner Custom Properties en Settings es un error conceptual común. Settings se supone que no genera CSS — y `:root { --x: y; }` sí lo genera. Settings tiene que quedarse con Sass vars (breakpoints, mapas de tokens) y los tokens visibles al navegador viven en `02-generic/_design-tokens.scss`.
+**Convención de este proyecto**: las dos categorías viven en `00-settings`, pero en archivos separados. `_css-variables.scss` contiene únicamente las Sass vars de breakpoints porque los mixins de `01-tools/_mixins.scss` las necesitan en compilación. `_variables.scss` contiene la fuente única de verdad del sistema de diseño: todas las CSS Custom Properties (colores, fondos, textos, bordes, tipografía, espaciado, radios, sombras, transiciones, z-index, layout) bajo `:root {}` y los overrides de modo claro bajo `.tema-claro {}`. Cualquier valor reutilizable del proyecto sale de ahí.
 
-El error contrario también es común: justificar el orden de carga de Settings diciendo "si no se carga antes, los `var()` no funcionarían". Es falso para Custom Properties. El orden solo importa para Sass vars.
+Aclaración técnica útil: para los `var()` el orden de import no importa (el navegador resuelve la cascada en runtime), pero conceptualmente las variables son **Settings** del sistema, así que es donde tiene sentido tenerlas todas centralizadas. El orden de import sí importa para las Sass vars: por eso `_css-variables.scss` se carga antes que `_mixins.scss`.
 
 ## Cuándo va cada cosa
 
 | Si lo que vas a escribir es… | Capa | Ejemplo |
 |------------------------------|------|---------|
-| Una Sass var (`$breakpoint-md: 768px`) | `00-settings` | `_css-variables.scss`, `_variables.scss` |
-| Una Custom Property visible al navegador (`--amarillo-normal`) | `02-generic` | `_design-tokens.scss` |
+| Una Sass var de breakpoint (`$breakpoint-md: 768px`) | `00-settings` | `_css-variables.scss` |
+| Una Custom Property visible al navegador (`--amarillo-normal`, `--spacing-size-l`, `--radius-m`...) | `00-settings` | `_variables.scss` |
 | Un mixin con `@content` o parámetros | `01-tools` | `_mixins.scss` |
 | Una función (`@function`) que devuelve un valor | `01-tools` | `_funciones.scss` |
 | Un keyframe o una clase de animación global | `01-tools` | `_animaciones.scss` (`.animar`, `.revelar`, `.spinner`, `.aparecer`) |

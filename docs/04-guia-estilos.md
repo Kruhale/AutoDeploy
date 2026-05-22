@@ -17,7 +17,7 @@ El archivo contiene seis páginas:
 
 ## Sistema de color
 
-Tokens en HSL (`02-generic/_design-tokens.scss`):
+Tokens en HSL (`00-settings/_variables.scss`):
 
 | Token | Valor | Uso |
 |---|---|---|
@@ -60,7 +60,7 @@ Tipografía fluida: hero de bienvenida usa `font-size: fluido(2.5rem, 4.5rem)` (
 
 ## Espaciado
 
-15 niveles de `--spacing-size-xxs` (0.25rem) a `--spacing-size-8xl` (6rem) en `02-generic/_design-tokens.scss`. Reglas:
+15 niveles de `--spacing-size-xxs` (0.25rem) a `--spacing-size-8xl` (6rem) en `00-settings/_variables.scss`. Reglas:
 
 - 8-12px entre elementos muy relacionados.
 - 16-24px entre elementos relacionados.

@@ -11,6 +11,7 @@ Panel SaaS de gestión y despliegue automático para servidores VPS. Permite con
 ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 **Producción**: https://autodeploy.kruhale.com (TLS Let's Encrypt, healthcheck UP).
+**Figma**: https://www.figma.com/design/sNOYtZb7Oclv3pFLv5xY4Z/AutoDeployService?node-id=338-18&t=MWyZEmhlbzjXqj2D-1
 
 ## Stack tecnológico
 

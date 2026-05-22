@@ -81,7 +81,7 @@
             </section>
             <section class="campo nuevo-despliegue__campo--mitad">
               <label class="campo__etiqueta" for="campo-directorio-raiz">{{ "nuevoDespliegue.paso02.rootDirectory" | translate }}</label>
-              <input id="campo-directorio-raiz" class="campo__input" type="text" [placeholder]="'nuevoDespliegue.paso02.rootDirectoryPlaceholder' | translate" [ngModel]="directorioRaiz()" (ngModelChange)="directorioRaiz.set($event)">
+              <input id="campo-directorio-raiz" class="campo__input" type="text" [placeholder]="'nuevoDespliegue.paso02.rootDirectoryPlaceholder' | translate" [ngModel]="directorioRemotoGit()" (ngModelChange)="directorioRemotoGit.set($event)">
             </section>
           </section>
         } @else {

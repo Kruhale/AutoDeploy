@@ -4,7 +4,7 @@
 
 ## Prototipo Figma
 
-El enlace público al archivo se incluirá en la defensa del proyecto (compartir desde Figma → "Get link" → permisos View). Localmente el prototipo se mantiene en `figma.com` bajo la cuenta del autor.
+**Enlace al prototipo:** https://www.figma.com/design/sNOYtZb7Oclv3pFLv5xY4Z/AutoDeployService?node-id=338-18&t=MWyZEmhlbzjXqj2D-1
 
 El archivo contiene seis páginas:
 

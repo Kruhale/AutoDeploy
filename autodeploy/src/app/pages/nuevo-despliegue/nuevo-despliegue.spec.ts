@@ -36,9 +36,9 @@ describe("NuevoDespliegue", function() {
     expect(component.sslActivo()).toBeTrue();
   });
 
-  it("inicia con rama 'main' y directorio './'", function() {
+  it("inicia con rama 'main' y directorio destino por defecto", function() {
     expect(component.rama()).toBe("main");
-    expect(component.directorioRaiz()).toBe("./");
+    expect(component.directorioRemotoGit()).toBe("~/apps/miapp");
   });
 
   it("permite cambiar origenCodigo a 'zip'", function() {

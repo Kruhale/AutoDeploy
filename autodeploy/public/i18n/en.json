@@ -689,8 +689,8 @@
       "repositoryUrlPlaceholder": "https://github.com/user/repo.git",
       "branch": "Branch",
       "branchPlaceholder": "main",
-      "rootDirectory": "Root directory",
-      "rootDirectoryPlaceholder": "./",
+      "rootDirectory": "Target directory on VPS",
+      "rootDirectoryPlaceholder": "~/apps/myapp",
       "zip": {
         "arrastrar": "Drag your .zip here or click to select",
         "detalle": "Maximum size 50 MB",

@@ -689,8 +689,8 @@
       "repositoryUrlPlaceholder": "https://github.com/usuario/repo.git",
       "branch": "Rama",
       "branchPlaceholder": "main",
-      "rootDirectory": "Directorio raíz",
-      "rootDirectoryPlaceholder": "./",
+      "rootDirectory": "Directorio destino en el VPS",
+      "rootDirectoryPlaceholder": "~/apps/miapp",
       "zip": {
         "arrastrar": "Arrastra tu .zip aquí o pulsa para seleccionar",
         "detalle": "Tamaño máximo 50 MB",

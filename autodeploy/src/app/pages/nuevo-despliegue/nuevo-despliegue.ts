@@ -25,7 +25,7 @@ export class NuevoDespliegue implements OnInit {
   desplegando = signal(false);
   repositorioUrl = signal("");
   rama = signal("main");
-  directorioRaiz = signal("./");
+  directorioRemotoGit = signal("~/apps/miapp");
   puertoAplicacion = signal("8080");
   dominio = signal("");
   servidorDestinoId = signal<string>("");
@@ -165,16 +165,22 @@ export class NuevoDespliegue implements OnInit {
       this.mensajeError.set(this.translate.instant("nuevoDespliegue.errores.repositorioRequerido"));
       return;
     }
+    if (!this.directorioRemotoGit().trim()) {
+      this.mensajeError.set(this.translate.instant("nuevoDespliegue.errores.directorioRequerido"));
+      return;
+    }
 
     this.desplegando.set(true);
     const componente = this;
     const cuerpo = {
       servidorId: this.servidorDestinoId(),
-      tipo: this.tecnologiaSeleccionada(),
-      url: this.repositorioUrl() || this.dominio() || null
+      repoUrl: this.repositorioUrl(),
+      directorio: this.directorioRemotoGit(),
+      rama: this.rama() || "main",
+      tecnologia: this.tecnologiaSeleccionada()
     };
 
-    this.http.post<{ success: boolean; message: string; data: any }>("/api/despliegues", cuerpo).subscribe({
+    this.http.post<{ success: boolean; message: string; data: any }>("/api/deploy/git", cuerpo).subscribe({
       next: function() {
         componente.desplegando.set(false);
         componente.mensajeExito.set(componente.translate.instant("nuevoDespliegue.exito.registrado"));

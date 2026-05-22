@@ -4,7 +4,7 @@ Este documento sigue la estructura de 7 secciones que pide la rúbrica DIW (Órb
 
 > **Aplicación desplegada**: https://autodeploy.kruhale.com
 > **Repositorio**: https://github.com/Kruhale/AutoDeploy
-> **Figma**: enlace al prototipo en `docs/04-guia-estilos.md`.
+> **Figma**: https://www.figma.com/design/sNOYtZb7Oclv3pFLv5xY4Z/AutoDeployService?node-id=338-18&t=MWyZEmhlbzjXqj2D-1
 
 ## Índice
 

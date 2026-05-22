@@ -1,11 +1,51 @@
-target
+# Build artefactos Maven
+target/
+build/
+*.jar
+*.war
 *.class
-.idea
-*.iml
-.git
-.gitignore
-*.log
-HELP.md
+
+# Maven local
+.mvn/
 mvnw
 mvnw.cmd
-.mvn
+HELP.md
+
+# IDE
+.idea/
+*.iml
+.vscode/
+.settings/
+.project
+.classpath
+.factorypath
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# Control de versiones
+.git/
+.gitignore
+.gitattributes
+
+# Logs y temporales
+*.log
+logs/
+tmp/
+temp/
+
+# Tests y reportes
+coverage/
+test-output/
+surefire-reports/
+
+# Documentacion fuera del contexto Docker
+README.md
+docs/
+*.md
+
+# Configuracion local sensible (nunca debe llegar a la imagen)
+.env
+.env.*
+!.env.example

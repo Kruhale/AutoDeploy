@@ -1,14 +1,42 @@
-node_modules
-dist
-.angular
+# Dependencias y artefactos de Node
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 *.log
-.git
-.gitignore
-e2e
-playwright-report
-test-results
+
+# Tests E2E y unitarios (no necesarios en imagen de produccion)
+e2e/
+playwright-report/
+test-results/
 **/*.spec.ts
-coverage
-.vscode
-.idea
+coverage/
+karma.conf.js
+
+# IDE y editor
+.vscode/
+.idea/
+*.iml
+.editorconfig
+
+# Sistema operativo
 .DS_Store
+Thumbs.db
+
+# Control de versiones
+.git/
+.gitignore
+.gitattributes
+
+# Documentacion fuera del contexto Docker
+# OJO: no excluir *.md globalmente porque public/img/capturas/README.md
+# se sirve como asset estatico (Angular copia public/**/* a dist).
+/README.md
+docs/
+
+# Configuracion local sensible (nunca debe llegar a la imagen)
+.env
+.env.*
+!.env.example

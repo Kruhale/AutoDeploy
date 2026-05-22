@@ -34,6 +34,6 @@ describe("BarraPieApp", function() {
   });
 
   it("usa el selector app-barra-pie-app", function() {
-    expect(fixture.nativeElement.tagName.toLowerCase()).toBe("app-barra-pie-app");
+    expect(fixture.componentRef.location.nativeElement.tagName.toLowerCase()).toBe("app-barra-pie-app");
   });
 });

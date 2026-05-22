@@ -41,6 +41,6 @@ describe("Footer", function() {
   });
 
   it("usa el selector app-footer", function() {
-    expect(fixture.nativeElement.tagName.toLowerCase()).toBe("app-footer");
+    expect(fixture.componentRef.location.nativeElement.tagName.toLowerCase()).toBe("app-footer");
   });
 });

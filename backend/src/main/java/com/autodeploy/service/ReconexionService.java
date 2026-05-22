@@ -6,8 +6,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
 
 import java.util.List;
 
@@ -24,18 +27,31 @@ public class ReconexionService {
     private final ServidorRepository servidorRepository;
     private final SshCommandService sshCommandService;
     private final BackupService backupService;
+    private final Environment environment;
 
     public ReconexionService(ServidorRepository servidorRepository,
                              SshCommandService sshCommandService,
-                             BackupService backupService) {
+                             BackupService backupService,
+                             Environment environment) {
         this.servidorRepository = servidorRepository;
         this.sshCommandService = sshCommandService;
         this.backupService = backupService;
+        this.environment = environment;
     }
 
     @EventListener(ApplicationReadyEvent.class)
     @Async
     public void reconectarTrasArranque() {
+        // En perfil `test` no reconectamos: cada test recreaba el contexto y
+        // disparaba un ping SSH por cada servidor en BBDD. Con timeouts de
+        // 15s y decenas de servidores residuales el CI tardaba mas de 10
+        // minutos. Tests usan SpyBeans/Mocks para los flujos que necesitan.
+        boolean perfilTest = Arrays.asList(environment.getActiveProfiles()).contains("test");
+        if (perfilTest) {
+            logger.info("Reconexion al arrancar omitida (perfil test activo)");
+            return;
+        }
+
         List<Servidor> listaServidores = servidorRepository.findAll();
         logger.info("Reconexion al arrancar: {} servidores en BBDD", listaServidores.size());
 

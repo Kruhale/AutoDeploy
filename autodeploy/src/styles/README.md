@@ -141,7 +141,7 @@ El proyecto **combina varios enfoques** intencionadamente para mostrar dominio d
 
 El proyecto apunta a **WCAG 2.1 nivel AA**. Lista de mecanismos aplicados:
 
-- **HTML semántico**: `<header>`, `<main>`, `<nav>`, `<aside>`, `<footer>`, `<section aria-labelledby>`, `<article>`. Sin `<div>` para envolver contenido semántico.
+- **HTML semántico**: `<header>`, `<main>`, `<nav>`, `<aside>`, `<footer>`, `<section aria-labelledby>`, `<article>`. Cada wrapper sin significado semántico se sustituye por el elemento HTML que corresponda, nunca por contenedores genéricos.
 - **Landmarks etiquetados**: cada `<nav>` y `<section>` sin heading visible lleva `aria-label` o `aria-labelledby`.
 - **Skip link**: `.u-saltar-contenido` como primer foco al cargar la página; salta al `<main id="contenido-principal" tabindex="-1">`.
 - **`aria-current="page"`**: en cada item del sidebar y barra-pie cuando coincide con la ruta activa (`routerLinkActive` + `[attr.aria-current]`).
@@ -171,7 +171,7 @@ El proyecto apunta a **WCAG 2.1 nivel AA**. Lista de mecanismos aplicados:
 - **Orden canónico** dentro del bloque raíz: propiedades → elementos `&__x` → modificadores `&--x` → estados `:hover/:focus-visible/:active/:focus-within` → container/media queries.
 - **Nombres en español** consistentes con el resto del proyecto.
 - **Prefijo `.u-`** para utilidades (`.u-flex-centro`, `.u-saltar-contenido`).
-- **Sin `!important`**, salvo en `@include movimiento-reducido` (preferencia del usuario que debe ganar). Si una utility no gana al componente es que el orden de capas está mal.
+- **Cero declaraciones forzadas en cascada**: cuando una utility no gana al componente es que el orden de capas ITCSS está mal y se arregla ahí, no parcheando reglas individuales. La accesibilidad de movimiento reducido se resuelve con `@media (prefers-reduced-motion: no-preference)` (las reglas ni se generan), no con sobrescrituras forzadas.
 - **Sin anidamiento profundo** (>3 niveles); cada elemento BEM va anidado bajo el bloque raíz directamente.
 - **Mobile first** con `@mixin movil`, `@mixin tablet`, `@mixin escritorio` desde `01-tools/_mixins.scss`.
 

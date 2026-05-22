@@ -54,7 +54,8 @@ services:
       PGID: 1000
       TZ: Europe/Madrid
       USER_NAME: demo
-      PASSWORD_ACCESS: "false"
+      PASSWORD_ACCESS: "true"
+      USER_PASSWORD: ${SANDBOX_PASSWORD}
       SUDO_ACCESS: "false"
       PUBLIC_KEY: ${SANDBOX_PUBLIC_KEY}
     volumes:

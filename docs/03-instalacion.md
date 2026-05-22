@@ -40,6 +40,10 @@ AUTODEPLOY_CIFRADO_CLAVE=$(openssl rand -base64 32)
 # y pega aquí el contenido de id_ed25519_autodeploy_sandbox.pub
 SANDBOX_PUBLIC_KEY=ssh-ed25519 AAAA... usuario@host
 
+# Contraseña del usuario `demo` del sandbox. PASSWORD_ACCESS está activo en
+# el contenedor, así que la UI puede conectar por clave SSH o por contraseña.
+SANDBOX_PASSWORD=cambia-esta-password
+
 # Opcional (asistente IA). Si se omite, la página /app/asistente-ia
 # mostrará un aviso al primer mensaje.
 # OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxxxxxx

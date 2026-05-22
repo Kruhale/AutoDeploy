@@ -701,7 +701,7 @@
         "detalle": "Dimensione massima 50 MB",
         "quitar": "Rimuovi file",
         "directorioDestino": "Directory remota di destinazione",
-        "directorioDestinoPlaceholder": "/var/www/miaapp"
+        "directorioDestinoPlaceholder": "/web/demo"
       }
     },
     "paso03": {

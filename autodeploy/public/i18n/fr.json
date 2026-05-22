@@ -701,7 +701,7 @@
         "detalle": "Taille maximale 50 Mo",
         "quitar": "Retirer le fichier",
         "directorioDestino": "Répertoire distant cible",
-        "directorioDestinoPlaceholder": "/var/www/monapp"
+        "directorioDestinoPlaceholder": "/web/demo"
       }
     },
     "paso03": {

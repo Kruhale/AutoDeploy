@@ -35,7 +35,7 @@ export class NuevoDespliegue implements OnInit {
 
   archivoZipSeleccionado = signal<File | null>(null);
   archivoArrastrandose = signal(false);
-  directorioRemotoZip = signal<string>("/var/www/miapp");
+  directorioRemotoZip = signal<string>("/web/demo");
   progresoSubida = signal<number>(0);
 
   opcionesDeTecnologia = signal<OpcionTecnologia[]>([]);

@@ -701,7 +701,7 @@
         "detalle": "Maximum size 50 MB",
         "quitar": "Remove file",
         "directorioDestino": "Target remote directory",
-        "directorioDestinoPlaceholder": "/var/www/myapp"
+        "directorioDestinoPlaceholder": "/web/demo"
       }
     },
     "paso03": {

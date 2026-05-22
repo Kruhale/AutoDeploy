@@ -701,7 +701,7 @@
         "detalle": "Tamaño máximo 50 MB",
         "quitar": "Quitar archivo",
         "directorioDestino": "Directorio remoto destino",
-        "directorioDestinoPlaceholder": "/var/www/miapp"
+        "directorioDestinoPlaceholder": "/web/demo"
       }
     },
     "paso03": {

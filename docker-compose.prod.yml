@@ -60,9 +60,6 @@ services:
       PUBLIC_KEY: ${SANDBOX_PUBLIC_KEY}
     volumes:
       - sandbox-config:/config
-      # Fuerza PasswordAuthentication yes incluso si la imagen no regenera
-      # sshd_config en arranques posteriores al primero.
-      - ./sandbox/sshd-password.conf:/etc/ssh/sshd_config.d/99-password.conf:ro
     ports:
       - "2223:2222"
     networks:

@@ -217,8 +217,8 @@ export class Cuenta {
     this.cancelando.set(true);
     try {
       await this.usuarioService.cancelarSuscripcion();
-    } catch {
-      // El estado del plan se queda como estaba; el usuario puede reintentar desde el mismo boton.
+    } catch (error) {
+      console.error("Error al cancelar suscripción:", error);
     } finally {
       this.cancelando.set(false);
     }

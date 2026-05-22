@@ -278,6 +278,7 @@ export class Pago implements OnInit {
 
     const usuarioId = this.usuarioService.usuarioId();
     if (!usuarioId) {
+      console.warn('Sesión inválida: usuarioId vacío. Redirigiendo a login.');
       this.router.navigate(['/login']);
       return;
     }
@@ -294,8 +295,8 @@ export class Pago implements OnInit {
       await this.usuarioService.actualizarPlan(usuarioId, planElegido);
       this.planService.activarPlan(planElegido);
       componenteActual.estadoPago.set('exito');
-    } catch {
-      // La pantalla cambia a estado 'error' y el usuario puede reintentar.
+    } catch (error) {
+      console.error('Error al actualizar plan:', error);
       componenteActual.estadoPago.set('error');
     }
   }

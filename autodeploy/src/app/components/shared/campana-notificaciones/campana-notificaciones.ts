@@ -54,8 +54,8 @@ export class CampanaNotificaciones implements OnInit, OnDestroy {
 		try {
 			await this.notificacionService.obtenerConteoNoLeidas(usuarioId);
 			await this.notificacionService.listarNoLeidas(usuarioId);
-		} catch {
-			// La campana se queda en estado vacio; un reintento ocurrira al recargar la pagina.
+		} catch (error) {
+			console.error("Error al cargar notificaciones:", error);
 		}
 	}
 
@@ -70,8 +70,8 @@ export class CampanaNotificaciones implements OnInit, OnDestroy {
 	async marcarComoLeida(notificacionId: string): Promise<void> {
 		try {
 			await this.notificacionService.marcarComoLeida(notificacionId);
-		} catch {
-			// Si la peticion falla, la notificacion queda sin marcar; el proximo click vuelve a intentarlo.
+		} catch (error) {
+			console.error("Error al marcar notificación como leída:", error);
 		}
 	}
 
@@ -80,8 +80,8 @@ export class CampanaNotificaciones implements OnInit, OnDestroy {
 		if (usuarioIdActual) {
 			try {
 				await this.notificacionService.marcarTodasComoLeidas(usuarioIdActual);
-			} catch {
-				// Igual que el caso individual: silencioso por UX, se reintenta al volver a hacer click.
+			} catch (error) {
+				console.error("Error al marcar todas como leídas:", error);
 			}
 		}
 	}
@@ -89,8 +89,8 @@ export class CampanaNotificaciones implements OnInit, OnDestroy {
 	async eliminarNotificacion(notificacionId: string): Promise<void> {
 		try {
 			await this.notificacionService.eliminarNotificacion(notificacionId);
-		} catch {
-			// El item se queda en la lista; recargar la campana lo refrescara.
+		} catch (error) {
+			console.error("Error al eliminar notificación:", error);
 		}
 	}
 

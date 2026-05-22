@@ -170,7 +170,7 @@
         </section>
         <section class="campo">
           <label class="campo__etiqueta" for="campo-puerto">{{ "nuevoDespliegue.paso03.applicationPort" | translate }}</label>
-          <input id="campo-puerto" class="campo__input" type="text" [ngModel]="puertoAplicacion()" (ngModelChange)="puertoAplicacion.set($event)">
+          <input id="campo-puerto" class="campo__input" type="text" [placeholder]="'nuevoDespliegue.paso03.applicationPortPlaceholder' | translate" [ngModel]="puertoAplicacion()" (ngModelChange)="puertoAplicacion.set($event)">
         </section>
         <section class="campo">
           <label class="campo__etiqueta" for="campo-dominio">{{ "nuevoDespliegue.paso03.dominio" | translate }}</label>

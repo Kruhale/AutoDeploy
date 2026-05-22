@@ -18,7 +18,7 @@
 
 ## Conectar tu primer servidor
 
-![Listado de servidores del usuario con tarjetas y estado SSH (online/offline)](./assets/capturas/64-listado-servidores.png)
+![Panel principal con el servidor Pruebas-BUENAS conectado, métricas en vivo (CPU 2.4%, RAM 54%, disco 84%) y la tarjeta del sandbox-ssh](./assets/capturas/64-listado-servidores.png)
 
 1. Tras el login, el sistema lleva directamente a **Onboarding** (`/app/onboarding`).
 2. Rellenar:
@@ -32,7 +32,7 @@
 3. Pulsar **"Probar conexión"**. AutoDeploy intentará un SSH al VPS y mostrará si funciona o falla.
 4. Si funciona, pulsar **"Guardar"**. Las credenciales se cifran con AES antes de persistir.
 
-![Pantalla de onboarding tras una prueba de conexion SSH exitosa, mostrando el visto verde y el boton para guardar el servidor](./assets/capturas/74-onboarding-conexion-ok.png)
+![Terminal SSH ya conectada al servidor recién dado de alta en modo claro, con el prompt activo del contenedor sandbox listo para recibir comandos](./assets/capturas/74-onboarding-conexion-ok.png)
 
 > AutoDeploy nunca guarda credenciales en texto plano. La clave de cifrado vive en el servidor del SaaS y nunca se expone al frontend.
 
@@ -50,7 +50,7 @@ Las tarjetas usan **container queries**: en el sidebar plegado o en una columna 
 
 > La terminal SSH integrada permite ejecutar comandos directamente desde el navegador, con colores ANSI y latencia muy baja gracias al WebSocket persistente:
 
-![Terminal SSH interactiva en xterm.js conectada al VPS del usuario, mostrando comandos reales y salida con colores](./assets/capturas/66-terminal-ssh.png)
+![Terminal SSH interactiva en xterm.js conectada al VPS del usuario, mostrando la salida del comando uname -a con detalles del kernel Linux/Ubuntu](./assets/capturas/66-terminal-ssh.png)
 
 ## Desplegar una aplicación
 
@@ -76,7 +76,7 @@ Las tarjetas usan **container queries**: en el sidebar plegado o en una columna 
 2. Ver el estado de `ufw` y la lista de reglas activas con puerto, protocolo, acción y comentario.
 3. Añadir nueva regla con `allow`/`deny` y el comentario que ayude a recordar para qué es.
 
-![Pagina de firewall con las reglas UFW del servidor (allow 22/tcp, allow 443/tcp, etc.) y el formulario para anadir una nueva regla](./assets/capturas/69-firewall-reglas.png)
+![Página de cortafuegos con una regla activa (3306/TCP allow para MySQL desde 0.0.0.0/0) y las plantillas rápidas para los puertos comunes (22, 80, 443, 5432)](./assets/capturas/69-firewall-reglas.png)
 
 ## Networking y DNS
 
@@ -84,7 +84,7 @@ Las tarjetas usan **container queries**: en el sidebar plegado o en una columna 
 2. Resolver registros DNS (`A`, `AAAA`, `MX`, `TXT`) de cualquier dominio desde el propio VPS gracias a `dnsjava`.
 3. Configurar subdominios y redirecciones que se materializan en bloques de nginx en el VPS.
 
-![Pagina de networking con el resultado de un lookup DNS (registros A, AAAA, MX, TXT) y la tabla de subdominios configurados en el servidor](./assets/capturas/70-networking-dns.png)
+![Página Redes y SSL con el dominio demo.autodeploy.kruhale.com configurado y los accesos rápidos a renovación SSL, registros DNS y redirecciones](./assets/capturas/70-networking-dns.png)
 
 ## Asistente IA
 
@@ -93,7 +93,7 @@ Las tarjetas usan **container queries**: en el sidebar plegado o en una columna 
 3. La IA responde con la explicación y el comando sugerido.
 4. Si quieres ejecutarlo, pulsa **"Ejecutar"** → AutoDeploy lo manda por SSH al servidor activo y muestra la salida.
 
-![Chat del asistente IA con una pregunta del usuario sobre como abrir un puerto, la respuesta del modelo con el comando sugerido y el boton Ejecutar](./assets/capturas/67-asistente-ia-chat.png)
+![Chat del asistente IA Nimbus con una pregunta del usuario sobre cómo levantar un servidor web con nginx, la respuesta del modelo con el comando sudo apt-get install nginx -y y el botón Ejecutar en el servidor](./assets/capturas/67-asistente-ia-chat.png)
 
 > La IA requiere un plan **Pro** o **Business**. En plan **Free** la sección está visible pero el botón "Enviar" muestra un mensaje invitando a actualizar.
 
@@ -107,7 +107,7 @@ Tres planes con dominios y servidores incluidos según el tier. Cambio de plan i
 
 Notificaciones push servidas por el WebSocket `/ws/notificaciones/{usuarioId}`. Toast en la esquina + badge contador en la campana del header. Las leídas se borran solas a los 30 días.
 
-![Campana de notificaciones del header desplegada con un listado de eventos recientes (backup completado, despliegue OK, fallo de healthcheck) y el badge numerico](./assets/capturas/72-notificaciones-campana.png)
+![Campana de notificaciones del header con badge "3" y listado de eventos recientes (servidor caído, despliegue completado, CPU >90% y certificado SSL renovado)](./assets/capturas/72-notificaciones-campana.png)
 
 ## Cambiar idioma y tema
 
@@ -116,15 +116,15 @@ Notificaciones push servidas por el WebSocket `/ws/notificaciones/{usuarioId}`. 
 
 Si nunca has tocado el botón de tema, AutoDeploy sigue automáticamente la preferencia de tu sistema operativo. En cuanto pulsas el botón, tu elección prevalece.
 
-![Misma pantalla del dashboard en modo claro tras pulsar el toggle del header, manteniendo el acento amarillo y mejorando el contraste sobre fondos claros](./assets/capturas/73-tema-claro.png)
+![Pantalla Conectar servidor en modo claro tras pulsar el toggle del header, manteniendo el acento amarillo en el botón principal y el contraste sobre fondos claros en formularios y sidebar](./assets/capturas/73-tema-claro.png)
 
 ## Diseño responsive
 
 La aplicación está probada a 320 px, 375 px, 768 px y 1024 px. La barra lateral pasa a menú hamburguesa, las tarjetas se apilan y los inputs aumentan de tamaño para tap accesible:
 
-![Captura de la aplicacion en un viewport movil (375 px) con el menu hamburguesa cerrado y las tarjetas apiladas en una sola columna](./assets/capturas/57-responsive-movil.png)
+![Home pública de AutoDeploy en viewport móvil (375 px) con el menú hamburguesa visible y el bloque hero apilado verticalmente](./assets/capturas/57-responsive-movil.png)
 
-![Captura de la aplicacion en un viewport tablet (768 px) con la barra lateral colapsada en iconos y la rejilla de tarjetas en dos columnas](./assets/capturas/58-responsive-tablet.png)
+![Home pública de AutoDeploy en viewport tablet (768 px) con el header completo (Características, Cómo funciona, Precios) y el bloque hero centrado](./assets/capturas/58-responsive-tablet.png)
 
 ## Atajos de teclado y accesibilidad
 

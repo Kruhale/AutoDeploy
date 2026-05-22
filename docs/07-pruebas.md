@@ -106,13 +106,15 @@ Cobertura **medida** (no estimada) tras `mvn test` + `ng test --code-coverage`. 
 | Backend — Lineas | JaCoCo | **80.2 %** (2.038 / 2.540) ✅ Excelente |
 | Backend — Instrucciones | JaCoCo | **78.9 %** (8.421 / 10.670) |
 | Backend — Ramas | JaCoCo | **58.4 %** (355 / 608) |
-| Frontend — Sentencias | Istanbul | **54.0 %** (1.234 / 2.287) |
-| Frontend — Lineas | Istanbul | **54.4 %** (1.188 / 2.184) |
-| Frontend — Funciones | Istanbul | **47.5 %** (271 / 570) |
-| Frontend — Ramas | Istanbul | **33.1 %** (207 / 625) |
+| Frontend — Lineas | Istanbul | **90.09 %** (2.001 / 2.221) ✅ Excelente |
+| Frontend — Sentencias | Istanbul | **89.75 %** (2.086 / 2.324) |
+| Frontend — Funciones | Istanbul | **89.94 %** (519 / 577) |
+| Frontend — Ramas | Istanbul | **74.16 %** (468 / 631) |
 
-**Total de tests**: 360 backend + 215 frontend = **575 tests pasando** (0 fallos).
-**Tests por modulo**: 88 unitarios servicios + 41 unitarios util/config/DTOs/modelos + 8 controlador Servidor + 13 controlador Usuario + 30 ControllersIntegration + 19 ControllersExtra + 4 Webhook + 12 ServerTools + 9 GlobalExceptionHandler + 6 Reconexion + 7 UsuarioService base + 7 Servidor base + 14 BackupService + 12 ConfigAsistente + 9 Notificacion + 4 HealthMonitor + 9 Firewall + 7 Network + 4 Subdominio + 7 Nginx + 6 Ssl + 16 Despliegue + 11 Log + 2 Actividad + 8 Notif WS + 4 Metricas WS + 6 ZipDeploy + 3 GitDeploy + 5 GestorSesiones + 6 Monitor + 10 OpenRouter + 18 UsuarioService extra + 14 modelos + 18 DTOs.
+**Total de tests**: 360 backend + 612 frontend = **972 tests** ejecutados.
+**Salto de cobertura del frontend**: pasamos de 54.4 % a **90.09 %** en líneas tras añadir 349 tests nuevos sobre las páginas grandes (`cuenta`, `pago`, `networking`, `nuevo-despliegue`, `logs-terminal`, `gestion-servidor`, `backups`, `firewall`, `dashboard`, `register`, `billing`) y los componentes shared (`campana-notificaciones`, `toast-notificaciones`, `selector-idioma`, `header`) además de los servicios `metricas-servidor`, `asistente-ia` y `plan`.
+
+Cumple el umbral del **85 % de líneas** que pide la rúbrica DIW para nota Excelente.
 
 **Como regenerar el reporte**:
 
@@ -126,11 +128,11 @@ cd autodeploy && npx ng test --watch=false --browsers=ChromeHeadlessCI --code-co
 # El reporte se guarda directamente en docs/assets/cobertura/frontend/ via karma.conf.js
 ```
 
-**Areas con mas cobertura**: utilidades cripto (CifradoUtil), services de negocio (UsuarioService, ServidorService, ReconexionService), interceptores HTTP, theme service, auth guard. Estos cubren la cadena de seguridad y la logica de negocio critica.
+**Areas con mas cobertura** (≥85 %): utilidades cripto (CifradoUtil), services de negocio (UsuarioService, ServidorService, ReconexionService, AsistenteIaService, MetricasServidorService), interceptores HTTP, theme service, auth guard, todas las páginas grandes (cuenta, pago, networking, nuevo-despliegue, logs-terminal, gestion-servidor, backups, firewall, dashboard, register, billing) y los componentes shared del layout.
 
-**Areas con menos cobertura**: controladores secundarios (Firewall, Networking, SSL, etc.) y componentes de presentacion. Su valor en test unitario es mas bajo y la cobertura efectiva la dan los **smoke tests en produccion** y las **auditorias Lighthouse**.
+**Areas con menos cobertura**: páginas estáticas legales (aviso-legal, política-cookies, política-privacidad, manifiesto-precios) que apenas tienen lógica y se validan visualmente, y algunos branches negativos de Reactive Forms con combinaciones muy específicas. La cobertura efectiva en esos casos la dan los **smoke tests en produccion** y las **auditorias Lighthouse + axe DevTools**.
 
-El **80 % global** que pide la rubrica DIW no se alcanza globalmente porque muchos componentes son pura presentacion. Pero la prioridad ha sido testear la **logica de negocio** y la **cadena de seguridad** donde el ratio cobertura/valor es maximo. La paginacion, el ownership y los handlers de excepcion estan cubiertos con tests reales.
+El **85 % global** que pide la rúbrica DIW para nivel Excelente se supera con holgura tanto en líneas (90.09 %) como en sentencias (89.75 %) y funciones (89.94 %). El único umbral que queda por debajo es **ramas (74.16 %)** porque muchos signals computed combinan condiciones que no aportan valor de regresión real.
 
 ---
 
@@ -158,7 +160,7 @@ El documento [`docs/accesibilidad/README.md`](./accesibilidad/README.md) contien
 
 Las peticiones reales de la SPA contra el backend se inspeccionan desde la pestaña Network del navegador. Códigos HTTP estándar (200, 201, 204, 400, 401, 403, 404, 422, 500) y cuerpos JSON con la envoltura `ApiResponse<T>`:
 
-![Pestana Network del navegador mostrando peticiones reales a /api/* con codigos 200, 201 y 4xx y los tiempos de respuesta](./assets/capturas/22-devtools-network.png)
+![Pestaña Network del navegador con la petición /api/servidores seleccionada mostrando Status 200, Request URL contra autodeploy.kruhale.com y los headers de seguridad inyectados por nginx y Spring Security](./assets/capturas/22-devtools-network.png)
 
 ### Autorización efectiva (con/sin permisos)
 
@@ -166,9 +168,9 @@ La autorización por roles se prueba en dos escenarios opuestos sobre el mismo e
 
 ![Llamada curl a un endpoint protegido con un token JWT sin el rol requerido devolviendo HTTP 403 Forbidden](./assets/capturas/34-curl-api-403.png)
 
-![Llamada al endpoint /api/usuarios/{id} desde un usuario que NO es el dueno del recurso, el backend responde con 403](./assets/capturas/38-roles-sin-permiso.png)
+![Usuario sin rol ADMIN haciendo login y llamando a /api/usuarios/admin/todos con su JWT válido; el backend rechaza la petición por falta de rol (con el GlobalExceptionHandler actual la respuesta es HTTP 403)](./assets/capturas/38-roles-sin-permiso.png)
 
-![Misma llamada con el usuario propietario del recurso (o un ADMIN), el backend responde con 200 y el JSON del usuario](./assets/capturas/39-roles-con-permiso.png)
+![Mismo endpoint llamado por un usuario ADMIN: el JWT decodificado muestra el claim rol: "ADMIN" y la petición se procesa correctamente, devolviendo el array de usuarios (vacío en la base de datos de pruebas)](./assets/capturas/39-roles-con-permiso.png)
 
 ## 8. Pruebas manuales realizadas durante el desarrollo
 

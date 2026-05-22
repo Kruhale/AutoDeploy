@@ -63,11 +63,11 @@
       <section class="onboarding__formulario__fila">
         <section class="campo onboarding__campo--mitad">
           <label class="campo__etiqueta">{{ "onboarding.formulario.sshPort" | translate }}</label>
-          <input class="campo__input" name="puerto" type="text" [ngModel]="puertoSsh()" (ngModelChange)="puertoSsh.set($event)">
+          <input class="campo__input" name="puerto" type="text" [placeholder]="'onboarding.formulario.sshPortPlaceholder' | translate" [ngModel]="puertoSsh()" (ngModelChange)="puertoSsh.set($event)">
         </section>
         <section class="campo onboarding__campo--mitad">
           <label class="campo__etiqueta">{{ "onboarding.formulario.user" | translate }}</label>
-          <input class="campo__input" name="usuario" type="text" [ngModel]="usuarioSsh()" (ngModelChange)="usuarioSsh.set($event)">
+          <input class="campo__input" name="usuario" type="text" [placeholder]="'onboarding.formulario.userPlaceholder' | translate" [ngModel]="usuarioSsh()" (ngModelChange)="usuarioSsh.set($event)">
         </section>
       </section>
       <section class="campo">

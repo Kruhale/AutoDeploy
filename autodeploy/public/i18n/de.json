@@ -712,6 +712,7 @@
       "sslDescripcion": "Firewall aktiviert",
       "targetServer": "Zielserver",
       "applicationPort": "Anwendungs-Port",
+      "applicationPortPlaceholder": "3000",
       "dominio": "Domain / Subdomain",
       "dominioPlaceholder": "meineapp.autodeploy.sh",
       "nota": "Wir konfigurieren automatisch eine Nginx-Instanz als Reverse Proxy für diesen Dienst."
@@ -766,7 +767,9 @@
       "ipAddress": "IP-Adresse",
       "ipAddressPlaceholder": "123.456.78.90",
       "sshPort": "SSH-Port",
+      "sshPortPlaceholder": "22",
       "user": "Benutzer",
+      "userPlaceholder": "ubuntu",
       "authMethod": "Authentifizierungsmethode",
       "authMethodKey": "SSH-Schlüssel",
       "contrasena": "Passwort",
@@ -1422,8 +1425,11 @@
     "formulario": {
       "titulo": "Nachricht senden",
       "nombre": "Name",
+      "nombrePlaceholder": "Dein Name",
       "email": "E-Mail",
+      "emailPlaceholder": "deine@email.de",
       "asunto": "Betreff",
+      "asuntoPlaceholder": "Worum geht es?",
       "mensaje": "Nachricht",
       "enviar": "E-Mail senden"
     },

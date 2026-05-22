@@ -145,7 +145,7 @@ db.usuario.createIndex({ email: 1 }, { unique: true });
 
 La separación en capas se aplica de forma estricta: cada paquete tiene una responsabilidad y no se mezclan.
 
-![Arbol de carpetas del backend con la separacion MVC: config, controller, dto, exception, model, repository, service, util](./assets/capturas/43-mvc-estructura.png)
+![Árbol de carpetas del backend con la separación por capas: config, controller, dto, exception, model, repository, security, service, util](./assets/capturas/43-mvc-estructura.png)
 
 | Capa | Paquete | Responsabilidad |
 |---|---|---|
@@ -161,7 +161,7 @@ La separación en capas se aplica de forma estricta: cada paquete tiene una resp
 
 La rúbrica exige autenticación y autorización **con roles**. Sobre la cadena Spring Security + JWT se aplica `@PreAuthorize` con SpEL para combinar rol y ownership:
 
-![Codigo Java del controlador con la anotacion @PreAuthorize comprobando rol ADMIN y ownership del usuario por SpEL](./assets/capturas/44-preauthorize-codigo.png)
+![Código Java de ServidorController con @PreAuthorize("isAuthenticated()") a nivel de clase, dejando claro que toda operación sobre servidores requiere un JWT válido antes de pasar a las comprobaciones de ownership por método](./assets/capturas/44-preauthorize-codigo.png)
 
 - `@PreAuthorize("hasRole('ADMIN')")` — endpoints estrictamente administrativos.
 - `@PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")` — ownership: el dueño del recurso o un admin.
@@ -266,6 +266,10 @@ Servicios Docker (`docker-compose.prod.yml`):
 ## Diseño de la API
 
 Documentación completa con `springdoc-openapi` en `/swagger-ui.html` (proxificado por nginx). Resumen de endpoints principales en [`API.md`](./API.md).
+
+El OpenAPI declara un `SecurityScheme` tipo **HTTP Bearer JWT** que Swagger UI materializa en el botón **Authorize** y en un candado por endpoint. Eso permite probar peticiones autenticadas desde la propia documentación, sin salir del navegador:
+
+![Swagger UI de AutoDeploy con el botón Authorize visible en la cabecera y los iconos de candado en los endpoints protegidos a la derecha (esquema bearerAuth registrado a nivel global)](./assets/capturas/45-swagger-bearer-candado.png)
 
 Estructura general de respuesta — patrón **ApiResponse wrapper** (todos los endpoints devuelven el mismo formato):
 

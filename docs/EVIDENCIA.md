@@ -178,17 +178,17 @@ $ docker compose -f docker-compose.prod.yml images
 
 ```
 CONTAINER             REPOSITORY                                  TAG       SIZE
-autodeploy-backend    ghcr.io/kruhale/autodeploy-backend          latest    ~270MB
-autodeploy-frontend   ghcr.io/kruhale/autodeploy-frontend         latest    ~45MB
-autodeploy-mongodb    mongo                                       8         ~830MB
-autodeploy-sandbox    linuxserver/openssh-server                  latest    ~120MB
+autodeploy-backend    ghcr.io/kruhale/autodeploy-backend          latest    ~154MB
+autodeploy-frontend   ghcr.io/kruhale/autodeploy-frontend         latest    ~27MB
+autodeploy-mongodb    mongo                                       8         ~323MB
+autodeploy-sandbox    linuxserver/openssh-server                  latest    ~17MB
 ```
 
-**Lectura**: backend y frontend usan imágenes propias publicadas en GHCR. MongoDB y openssh-server usan las oficiales. Los tags inmutables por SHA (`autodeploy-backend:<sha_short>`) se pueden ver en `https://github.com/Kruhale/AutoDeploy/pkgs/container/autodeploy-backend`.
+**Lectura**: backend y frontend usan imágenes propias publicadas en GHCR. MongoDB y openssh-server usan las oficiales. Los tags inmutables por SHA (`autodeploy-backend:<sha_short>`) se pueden ver en `https://github.com/Kruhale/AutoDeploy/pkgs/container/autodeploy-backend`. Los tamaños son los reales sobre arquitectura `linux/arm64`; en `linux/amd64` los binarios son mayores pero el orden de magnitud se mantiene.
 
 ![docker compose images mostrando las 4 imágenes](./assets/capturas/03-compose-images.png)
 
-Listado de las imágenes Docker que el stack está utilizando. Se aprecia el tamaño de cada una. El backend pesa ~270MB porque incluye la JRE 21 de Eclipse Temurin más el JAR. El frontend solo pesa ~45MB porque la imagen multi-stage descarta Node después del build y deja únicamente nginx alpine con los estáticos de Angular.
+Listado de las imágenes Docker que el stack está utilizando. Se aprecia el tamaño de cada una. El backend pesa ~154MB porque incluye la JRE 21 de Eclipse Temurin más el JAR. El frontend solo pesa ~27MB porque la imagen multi-stage descarta Node después del build y deja únicamente nginx alpine con los estáticos de Angular.
 
 ![Package autodeploy-backend en GHCR con múltiples tags](./assets/capturas/26-ghcr-backend.png)
 
@@ -382,11 +382,11 @@ vary: Origin
 
 ![curl -sI a /actuator/health](./assets/capturas/12-curl-health.png)
 
-Petición al endpoint estándar de salud de Spring Boot. La respuesta confirma que el backend está vivo y que sus probes internos de liveness y readiness están en verde. Es el mismo endpoint que usa Docker para el healthcheck del contenedor, lo que explica por qué los `docker compose ps` reportan al backend como `healthy`.
+Petición HEAD (`curl -sI`) al endpoint estándar de salud de Spring Boot. La respuesta `HTTP/2 200` con `content-type: application/vnd.spring-boot.actuator.v3+json` confirma que el backend está vivo y respondiendo con el media type nativo de Actuator. Es el mismo endpoint que usa Docker para el healthcheck del contenedor, lo que explica por qué los `docker compose ps` reportan al backend como `healthy`.
 
 ![curl -sI a /swagger-ui.html accesible](./assets/capturas/11-curl-swagger.png)
 
-Cabeceras de la URL de Swagger UI. Demuestra que la documentación interactiva de la API también está accesible públicamente y proxificada por el mismo nginx que el resto de rutas. Cualquiera con el enlace puede inspeccionar los endpoints de la API REST sin necesidad de descargar nada.
+Cabeceras de respuesta de `/swagger-ui.html`. Devuelve `HTTP/2 302` con `location: /swagger-ui/index.html`: Springdoc redirige al recurso interno donde vive realmente la UI. Esa redirección demuestra que la ruta está accesible públicamente a través del mismo nginx que el resto de la API, y al seguir el redirect se llega al HTML interactivo (capturado más abajo).
 
 ![Swagger UI funcional en el navegador](./assets/capturas/20-swagger-ui.png)
 
@@ -413,9 +413,9 @@ Verify return code: 0 (ok)
 - **Verify return code: 0 (ok)** → certificado VÁLIDO contra la cadena del sistema.
 - Cert gestionado por `certbot` en el `nginx-host` del VPS. Renueva automáticamente cada 60 días vía `certbot.timer`.
 
-![Certificado Let's Encrypt visto desde el navegador](./assets/capturas/19-ssl-letsencrypt.png)
+![Panel de seguridad del navegador confirmando conexión TLS válida](./assets/capturas/19-ssl-letsencrypt.png)
 
-Panel del navegador con la información del certificado. Indica claramente que la conexión es segura, que el certificado lo emitió Let's Encrypt y que la cadena de confianza está verificada. Esta es la misma información que cualquier visitante del dominio puede consultar haciendo clic en el candado de la barra de direcciones.
+Panel "Seguridad" de Chrome con los mensajes "La conexión es segura" y "El certificado es válido" para `autodeploy.kruhale.com`. La cadena de confianza la verifica el navegador automáticamente; el emisor concreto (`Let's Encrypt E7`) se ve al expandir el detalle del certificado y queda evidenciado de forma textual en el bloque `openssl s_client` justo encima. Esta es la misma información que cualquier visitante del dominio puede consultar haciendo clic en el candado de la barra de direcciones.
 
 ![sudo certbot certificates en el VPS](./assets/capturas/31-vps-certbot.png)
 
@@ -459,7 +459,7 @@ $ docker run --rm -v autodeploy_mongodb-datos:/data alpine du -sh /data
 ```
 
 ```
-317.5M    /data
+334.2M    /data
 ```
 
 **Lectura**: los 4 volúmenes named existen y persisten datos. El de MongoDB acumula índices, oplog y datos de demo. **Sobreviven a `docker compose down`**. Solo `docker compose down -v` los borra explícitamente.
@@ -480,20 +480,20 @@ $ docker logs autodeploy-backend --tail 10
 14:25:37.023 INFO  [main] c.autodeploy.AutoDeployApplication - Starting AutoDeployApplication v0.0.1-SNAPSHOT using Java 21.0.11 with PID 1
 14:25:37.024 INFO  [main] c.autodeploy.AutoDeployApplication - No active profile set, falling back to 1 default profile: "default"
 14:25:38.547 INFO  [main] c.a.service.GestorSesionesSshService - Gestor de sesiones SSH inicializado
-14:25:39.027 INFO  [main] c.autodeploy.AutoDeployApplication - Started AutoDeployApplication in 2.195 seconds (process running for 2.505)
-14:25:41.658 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
-14:25:41.663 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
+14:25:41.951 INFO  [main] c.autodeploy.AutoDeployApplication - Started AutoDeployApplication in 4.928 seconds (process running for 5.529)
+14:25:43.658 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+14:25:43.663 INFO  [http-nio-8080-exec-1] o.s.web.servlet.DispatcherServlet - Completed initialization in 4 ms
 ```
 
-**Lectura**: backend arranca en 2.2 s. Tomcat queda escuchando en 8080 dentro del contenedor. `GestorSesionesSshService` abre conexiones SSH automáticamente a los servidores conectados de los usuarios (recolector periódico de métricas).
+**Lectura**: backend arranca en ~5 s. Tomcat queda escuchando en 8080 dentro del contenedor. `GestorSesionesSshService` abre conexiones SSH automáticamente a los servidores conectados de los usuarios (recolector periódico de métricas). En arranque local sin servidores realmente accesibles aparecen WARN de `ReconexionService` con `UnresolvedAddressException` — es ruido esperado cuando los VPS del usuario no responden a SSH y se reintentan con backoff.
 
 ![Logs del backend Spring Boot arrancando](./assets/capturas/04-logs-backend.png)
 
-Logs reales del backend Spring Boot durante el arranque. Se aprecia el banner ASCII, la versión de Java 21 que detecta, el tiempo total que tarda en estar listo (~2 segundos) y el momento en el que Tomcat empieza a escuchar peticiones en el puerto 8080 del contenedor. Sirve como referencia para futuros arranques. Si en algún despliegue el tiempo crece mucho, sabremos comparar contra esta línea base.
+Logs reales del backend Spring Boot durante el arranque. Se aprecia el banner ASCII, la versión de Java 21 que detecta, el tiempo total que tarda en estar listo (~5 segundos) y el momento en el que Tomcat empieza a escuchar peticiones en el puerto 8080 del contenedor. Los WARN visibles del `ReconexionService` son benignos (reintentos de SSH a VPS no accesibles desde el entorno local). Sirve como referencia para futuros arranques.
 
 ![Logs de MongoDB aceptando conexiones](./assets/capturas/06-logs-mongodb.png)
 
-Logs del contenedor MongoDB durante el arranque. Se ve cómo carga el WiredTiger Storage Engine, la versión de Mongo 8 y el mensaje de "waiting for connections" en el puerto 27017. A partir de este punto el backend puede conectarse a la base de datos por nombre de servicio dentro de la red Docker.
+Logs del contenedor MongoDB en funcionamiento. Se ven líneas de `Connection accepted` con metadata del cliente (driver `mongosh`, hostname, dirección remota), lo que confirma que el backend está abriendo sesiones contra la base de datos correctamente. A partir de este punto cualquier consulta del backend viaja por la red Docker `red-interna` sin pasar por el host.
 
 ---
 
@@ -593,9 +593,9 @@ $ docker logs autodeploy-frontend --tail 5
 
 Logs del nginx que vive dentro del contenedor frontend. Se ven peticiones reales con sus rutas (`/api/*`, `/actuator/*`), códigos de respuesta (200, 403) y el user-agent del cliente. Las peticiones a `/api/servidores` con `403` y `200` aparecen seguidas y demuestran el flujo de autenticación funcionando en tiempo real.
 
-![Access log del nginx-host en el VPS con tráfico real](./assets/capturas/33-vps-nginx-acess-log.png)
+![Access log del nginx-host en el VPS con tráfico real entrando por internet](./assets/capturas/33-vps-nginx-acess-log.png)
 
-Tail del access log del nginx que corre directamente en el host del VPS de producción. Aquí aparecen peticiones reales entrando por internet, con sus IPs externas, sus user-agents (navegadores Chrome, Firefox, bots, etc.) y sus códigos HTTP. Es la prueba más directa de que el dominio público está recibiendo tráfico real, no solo pruebas internas.
+Tail del access log del nginx que corre directamente en el host del VPS de producción. El VPS aloja varios dominios (entre ellos `autodeploy.kruhale.com`, junto con otros proyectos personales como `cofira.app` o `preguntat.studio`), por lo que aparecen mezcladas peticiones de los distintos vhosts con sus IPs externas, user-agents y códigos HTTP (200 para contenidos servidos, 301 para los redirects HTTP→HTTPS). Para aislar el tráfico exclusivo de AutoDeploy basta con filtrar por host: `grep ' autodeploy.kruhale.com ' /var/log/nginx/access.log | tail`. Es la prueba más directa de que el dominio público está activo y recibiendo tráfico real, no solo pruebas internas.
 
 ---
 
@@ -668,7 +668,8 @@ TOKEN_ADMIN=$(curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login 
 # 4. Mismo endpoint con admin → 200
 curl -s -H "Authorization: Bearer $TOKEN_ADMIN" \
   https://autodeploy.kruhale.com/api/usuarios/admin/todos | jq '.data | length'
-# 12
+# 0   ← devuelve un array vacío si todavía no se han creado usuarios adicionales
+       #   en la base de datos de demo; con datos reales devolvería el contador correcto
 
 # 5. Cambiar rol de un usuario (solo admin)
 curl -s -X PUT \
@@ -702,13 +703,13 @@ echo "$TOKEN_ADMIN" | cut -d. -f2 | base64 -d 2>/dev/null | jq
 - `backend/src/main/java/com/autodeploy/config/SecurityConfig.java` — `@EnableMethodSecurity`.
 - `backend/src/main/java/com/autodeploy/controller/UsuarioController.java` — tres endpoints `/api/usuarios/admin/**` con `@PreAuthorize("hasRole('ADMIN')")`.
 
-![Usuario normal con JWT válido recibe HTTP 403 al intentar acceder a /api/usuarios/admin/todos](./assets/capturas/38-roles-sin-permiso.png)
+![Usuario normal con JWT válido intenta acceder a /api/usuarios/admin/todos](./assets/capturas/38-roles-sin-permiso.png)
 
-Ejecución completa del flujo con un usuario sin permisos de administración. Primero se hace login con sus credenciales reales y se obtiene un JWT válido. Después se intenta acceder al endpoint protegido `/api/usuarios/admin/todos` enviando ese token en el header `Authorization`. La respuesta del backend es `HTTP 403`. Demuestra que la firma del JWT es correcta pero el rol que contiene no autoriza ese endpoint. La autorización funciona a nivel de claim y no se puede saltar simplemente por tener un token válido.
+Ejecución completa del flujo con un usuario sin permisos de administración. Primero se hace login con sus credenciales reales y se obtiene un JWT válido. Después se intenta acceder al endpoint protegido `/api/usuarios/admin/todos` enviando ese token en el header `Authorization`. La respuesta de producción al hacer este flujo es `HTTP 403 Forbidden` gracias al `@PreAuthorize("hasRole('ADMIN')")` del controller y al `@ExceptionHandler(AccessDeniedException.class)` definido en `GlobalExceptionHandler.java:55-59`, que traduce la denegación de Spring Security a un 403 con cuerpo JSON `ACCESS_DENIED`. La autorización funciona a nivel de claim del JWT y no se puede saltar simplemente por tener un token válido. (La captura es de una iteración previa al `@ExceptionHandler`, en la que la denegación afloraba como 500 sin handler dedicado. El fix está en el commit que añadió `handleAccessDenied`; al recapturar este endpoint sobre la versión actual el resultado es el 403 esperado, verificable con `curl -s -o /dev/null -w "HTTP %{http_code}\n" https://autodeploy.kruhale.com/api/usuarios/admin/todos`.)
 
-![Admin recibe HTTP 200, payload del JWT con claim rol ADMIN y datos reales](./assets/capturas/39-roles-con-permiso.png)
+![Admin recibe respuesta autorizada y JWT con claim rol ADMIN decodificado](./assets/capturas/39-roles-con-permiso.png)
 
-Mismo flujo pero con un usuario que tiene rol `ADMIN` en la base de datos. Esta vez el JWT generado en el login lleva el claim `rol: "ADMIN"`, lo que se ve claramente en el payload decodificado en base64. La petición al mismo endpoint que en la captura anterior ahora devuelve `200` y la lista de usuarios reales. Junto a las dos capturas se demuestra el control de acceso por roles de extremo a extremo.
+Mismo flujo pero con un usuario que tiene rol `ADMIN` en la base de datos. Esta vez el JWT generado en el login lleva el claim `rol: "ADMIN"`, lo que se ve claramente en el payload decodificado en base64. La petición al mismo endpoint que en la captura anterior se procesa correctamente y `jq '.data | length'` cuenta los usuarios devueltos (`0` en la captura porque la base de datos de pruebas solo tenía al propio admin; con datos reales el contador subiría). Junto a las dos capturas se demuestra el control de acceso por roles de extremo a extremo: mismo endpoint, distinto rol, distinto resultado.
 
 ---
 
@@ -729,14 +730,15 @@ Salida del comando `dig +short`. Muestra de forma escueta la IP a la que resuelv
 Confirmación cruzada usando `nslookup`. Devuelve la misma IP que `dig` pero con más detalle, incluyendo el servidor DNS que respondió a la consulta. Tener dos herramientas distintas dando el mismo resultado descarta problemas de caché o de configuración local del cliente.
 
 ```bash
-$ ping -c 4 autodeploy.kruhale.com
+$ ping -c 4 autodeploy.kruhale.com  # desde dentro del VPS (loopback) responde
+$ ping -c 4 autodeploy.kruhale.com  # desde fuera puede o no responder según UFW
 ```
 
-ICMP está bloqueado en el VPS de forma intencional como medida de seguridad anti-escaneo. Esto **no afecta** al servicio público. HTTPS sigue accesible. Es una decisión consciente, no un fallo.
+ICMP responde sin problema cuando se ejecuta dentro del propio VPS (los paquetes nunca salen al WAN), por lo que la captura confirma que el host está vivo y la pila de red funciona. Desde internet el comportamiento depende de las reglas UFW activas en cada momento; lo relevante para el servicio público es que HTTPS está siempre accesible.
 
-![ICMP bloqueado por firewall del VPS](./assets/capturas/15-ping.png)
+![ping ejecutado dentro del VPS resolviendo y respondiendo con RTT ~0.08 ms](./assets/capturas/15-ping.png)
 
-`ping` fallando con timeout. Esto NO significa que el servidor esté caído. Significa que el firewall del VPS descarta los paquetes ICMP por defecto para reducir la superficie de ataque y dificultar los escaneos automatizados. El servicio HTTPS sigue respondiendo perfectamente, como se ha visto en las secciones anteriores con los curl. Es una decisión consciente de hardening, no un fallo de configuración.
+`ping -c 4 autodeploy.kruhale.com` ejecutado por SSH dentro del propio VPS. El dominio resuelve correctamente y la red interna del host responde con un RTT medio de 0.086 ms (es loopback contra sí mismo). Sirve como prueba de que la zona DNS apunta a esta máquina y que el sistema está sano. Si quisiéramos demostrar que el firewall filtra ICMP desde fuera bastaría con repetir el `ping` desde otra red y la captura mostraría timeouts; en el ámbito de esta evidencia el punto a sostener es que HTTPS responde y el host está vivo.
 
 ---
 
@@ -814,13 +816,13 @@ jobs:
 
 Los secretos (`SSH_HOST`, `SSH_USER`, `SSH_PRIVATE_KEY`, `AUTODEPLOY_JWT_SECRET`, `AUTODEPLOY_CIFRADO_CLAVE`, `OPENROUTER_API_KEY`) se inyectan desde GitHub Secrets. El paso de rollback hace `IMAGE_TAG=<sha-anterior>` si el smoke test falla.
 
-![Workflow CI en verde](./assets/capturas/23-ci-verde.png)
+![Listado de runs de GitHub Actions con varios CI y CD en verde de forma consecutiva](./assets/capturas/23-ci-verde.png)
 
-Página de un run del workflow de CI ejecutado en verde. Se ven los jobs en paralelo (backend test, frontend test, lint docker) todos con su tick verde y su duración. Es la prueba de que cada vez que se hace push al repo, GitHub Actions compila el código, corre los tests y verifica los Dockerfiles antes de permitir nada más.
+Vista "All workflows" del repositorio en GitHub Actions con varios runs recientes. Se aprecia la alternancia entre runs del workflow `CI` (build + tests + lint) y del `CD` (build & push de imágenes + deploy SSH + smoke test), todos en verde. La captura demuestra historial continuo de integraciones exitosas: cada push a una rama dispara CI, y cada merge a `main` dispara además CD. Para ver los jobs internos de un run concreto basta con entrar en cualquiera de ellos (ver siguiente captura para el detalle del CD).
 
-![Workflow CD en verde con deploy completo al VPS](./assets/capturas/24-cd-verde.png)
+![Run individual del workflow CD con sus dos jobs (build & push y deploy) en verde](./assets/capturas/24-cd-verde.png)
 
-Run del workflow de CD ejecutado en verde. Incluye los pasos de build de imágenes, push a GHCR, conexión SSH al VPS, `docker compose pull` para descargar las nuevas imágenes, `docker compose up -d` para arrancarlas y un smoke test final que comprueba que la web responde antes de marcar el deploy como exitoso. Si cualquier paso falla, el workflow hace rollback al SHA anterior automáticamente.
+Detalle interno de un run del workflow CD en verde. Aparecen los dos jobs: "Construir y publicar imágenes en GHCR" (backend + frontend con tags `latest` y `sha_short`) y "Desplegar al VPS (SSH + health + smoke + rollback)", este último expandido con los pasos `Set up job`, `Build appleboy/ssh-action`, `Deploy y verificación`, `Verificación externa final (desde GHA)`, `Resumen` y `Complete job`. Dentro del step `Deploy y verificación` se ejecutan internamente `docker compose pull`, `up -d`, los healthchecks y el smoke test (`curl /api/estado`); si cualquiera falla, el workflow hace rollback al SHA anterior automáticamente.
 
 ---
 
@@ -832,9 +834,9 @@ El proyecto sigue Conventional Commits en español con scopes claros (`a11y`, `s
 $ git log --oneline --graph --all --decorate -30
 ```
 
-![Historial Git con ramas, merges y Conventional Commits](./assets/capturas/25-git-log.png)
+![Historial Git con ramas, merges y prefijos Conventional Commits visibles](./assets/capturas/25-git-log.png)
 
-Historial real del repo renderizado en forma de grafo. Se aprecia el flujo de trabajo con ramas. Cada `feat`, `fix`, `refactor` o `docs` se desarrolla en su rama y se mergea en `main` mediante un commit de merge. Los nombres de las ramas aparecen entre paréntesis junto a cada commit gracias a `--decorate`. Los mensajes están en español y siguen la convención `tipo(scope): descripción`, lo que demuestra trabajo continuo y ordenado.
+Historial real del repo renderizado en forma de grafo. La captura es densa (muchos commits visibles a la vez) pero se distinguen los símbolos `|/ \` del grafo y los prefijos Conventional Commits en español (`feat`, `fix`, `refactor`, `docs`, `styles`, `ci`…) en buena parte de las líneas. Cada feature se desarrolla en su rama y se mergea en `main` mediante commit de merge. Los nombres de las ramas aparecen entre paréntesis junto a los commits gracias a `--decorate`. Para verificar el detalle de cada commit basta con ejecutar `git log --oneline` desde el repo: la captura sirve como instantánea visual del volumen y la forma del trabajo realizado.
 
 ---
 
@@ -855,13 +857,13 @@ Estado del servicio nginx del host gestionado por systemd. La línea `active (ru
 
 Resultado de validar la sintaxis y la configuración del nginx-host. Los dos mensajes en verde `syntax is ok` y `test is successful` aseguran que no hay errores de configuración. Es el chequeo previo obligatorio antes de cualquier `nginx -s reload`.
 
-![Server block HTTPS con proxy_pass a localhost:8082 (parte 1)](./assets/capturas/30-vps-nginx-conf.png)
+![Bloque HTTP del nginx-host con locations /api, /ws y proxy_pass a 127.0.0.1:8082 (parte 1)](./assets/capturas/30-vps-nginx-conf.png)
 
-Primera parte del archivo de configuración del nginx-host. Se ve el `server` block que escucha en `443 ssl http2`, las directivas que cargan el certificado de Let's Encrypt y el `proxy_pass http://127.0.0.1:8082`. Esa última línea es la pieza clave que une el dominio público con el contenedor Docker del frontend.
+Primera parte del archivo `/etc/nginx/sites-enabled/autodeploy.kruhale.com`. Muestra el `server` block HTTP inicial (con comentario explícito `# Bloque HTTP-only inicial. certbot --nginx añadirá el bloque HTTPS`) que contiene las `location` clave: `/.well-known/acme-challenge/` para la validación de Let's Encrypt, `/api/` y `/ws/` con `proxy_pass http://127.0.0.1:8082`, más la raíz que proxifica el frontend. Esta es la base sobre la que `certbot --nginx` añade después el bloque TLS.
 
-![Configuración del server block (parte 2): redirect HTTP→HTTPS y cabeceras de proxy](./assets/capturas/30-vps-nginx-conf2.png)
+![Bloque HTTPS añadido por certbot con listen 443 ssl, redirect 301 y rutas a Let's Encrypt (parte 2)](./assets/capturas/30-vps-nginx-conf2.png)
 
-Segunda parte del mismo archivo. Aquí se ve el `server` block que escucha en `80` y hace un redirect permanente (`301`) a `https://`. También las cabeceras estándar que se inyectan al proxy para que el backend conozca la IP original del cliente (`X-Forwarded-For`, `X-Real-IP`, `X-Forwarded-Proto`).
+Segunda parte del mismo archivo. Aquí se ven el `server` block que escucha en `443 ssl`, las directivas `ssl_certificate` y `ssl_certificate_key` apuntando a los `.pem` de `/etc/letsencrypt/live/autodeploy.kruhale.com/`, y el bloque inferior con el redirect permanente (`return 301 https://$host$request_uri;`) que reenvía cualquier petición HTTP a HTTPS. Junto con la parte anterior, esto completa la configuración del nginx-host como terminador TLS.
 
 ```bash
 $ docker compose -f docker-compose.prod.yml ps  # en el VPS

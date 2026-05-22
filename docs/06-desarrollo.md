@@ -104,17 +104,17 @@ Resultado: los 7 hallazgos quedan cerrados antes de la defensa. La tabla complet
 
 El frontend usa exclusivamente las APIs modernas de Angular 20 (signals, standalone, `inject()`) y JavaScript ES moderno (async/await, ningún `var`, ningún `.then()` encadenado). Algunos ejemplos representativos del propio código del proyecto:
 
-![Codigo TypeScript con uso de signal, computed y effect del ThemeService del proyecto](./assets/capturas/47-signals-codigo.png)
+![Componente Cuenta en TypeScript usando múltiples signals para gestionar el estado reactivo del formulario de perfil (datos del usuario, modo edición, errores, estado de guardado)](./assets/capturas/47-signals-codigo.png)
 
-![Metodo async/await en un servicio Angular llamando al backend con HttpClient y manejando el ApiResponse](./assets/capturas/48-async-await-servicio.png)
+![Servicio Angular MetricasServidorService llamando al backend con clienteHttp.get y firstValueFrom para usar async/await sobre HttpClient (en lugar de cadenas .then o callbacks)](./assets/capturas/48-async-await-servicio.png)
 
-![Componente standalone usando inject para resolver dependencias en lugar del constructor clasico](./assets/capturas/49-inject-standalone.png)
+![Componente Login standalone usando inject(FormBuilder) junto con DI por constructor para Router, AuthService, UsuarioService y TranslateService](./assets/capturas/49-inject-standalone.png)
 
 ### Validación de formularios
 
 Todo formulario crítico (login, registro, conexión SSH, crear despliegue) usa **Reactive Forms** con validadores síncronos y asíncronos. El error se muestra inline y se anuncia a lectores de pantalla mediante `aria-invalid` y `aria-describedby`:
 
-![Formulario de registro mostrando los errores inline de password (longitud, mayuscula, minuscula, numero y caracter especial) con marca visual de invalido](./assets/capturas/50-formulario-validado.png)
+![Formulario de login con la validación inline activada y el mensaje "Email y contraseña son obligatorios" en rojo bajo los campos, demostrando la marca visual de inválido con Reactive Forms](./assets/capturas/50-formulario-validado.png)
 
 ### Comunicación asíncrona
 

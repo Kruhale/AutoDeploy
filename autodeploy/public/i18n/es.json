@@ -712,6 +712,7 @@
       "sslDescripcion": "Cortafuegos habilitado",
       "targetServer": "Servidor de destino",
       "applicationPort": "Puerto de la aplicación",
+      "applicationPortPlaceholder": "3000",
       "dominio": "Dominio / subdominio",
       "dominioPlaceholder": "miapp.autodeploy.sh",
       "nota": "Configuraremos automáticamente una instancia Nginx como reverse proxy para este servicio."
@@ -766,7 +767,9 @@
       "ipAddress": "Dirección IP",
       "ipAddressPlaceholder": "123.456.78.90",
       "sshPort": "Puerto SSH",
+      "sshPortPlaceholder": "22",
       "user": "Usuario",
+      "userPlaceholder": "ubuntu",
       "authMethod": "Método de autenticación",
       "authMethodKey": "Clave SSH",
       "contrasena": "Contraseña",
@@ -1422,8 +1425,11 @@
     "formulario": {
       "titulo": "Enviar un mensaje",
       "nombre": "Nombre",
+      "nombrePlaceholder": "Tu nombre",
       "email": "Correo electrónico",
+      "emailPlaceholder": "tu@correo.com",
       "asunto": "Asunto",
+      "asuntoPlaceholder": "¿Sobre qué nos escribes?",
       "mensaje": "Mensaje",
       "enviar": "Enviar email"
     },

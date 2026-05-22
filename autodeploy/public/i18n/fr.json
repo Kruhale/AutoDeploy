@@ -712,6 +712,7 @@
       "sslDescripcion": "Pare-feu activé",
       "targetServer": "Serveur de destination",
       "applicationPort": "Port de l'application",
+      "applicationPortPlaceholder": "3000",
       "dominio": "Domaine / sous-domaine",
       "dominioPlaceholder": "monapp.autodeploy.sh",
       "nota": "Nous configurerons automatiquement une instance Nginx comme reverse proxy pour ce service."
@@ -766,7 +767,9 @@
       "ipAddress": "Adresse IP",
       "ipAddressPlaceholder": "123.456.78.90",
       "sshPort": "Port SSH",
+      "sshPortPlaceholder": "22",
       "user": "Utilisateur",
+      "userPlaceholder": "ubuntu",
       "authMethod": "Méthode d'authentification",
       "authMethodKey": "Clé SSH",
       "contrasena": "Mot de passe",
@@ -1422,8 +1425,11 @@
     "formulario": {
       "titulo": "Envoyer un message",
       "nombre": "Nom",
+      "nombrePlaceholder": "Votre nom",
       "email": "E-mail",
+      "emailPlaceholder": "vous@exemple.com",
       "asunto": "Objet",
+      "asuntoPlaceholder": "À quel sujet ?",
       "mensaje": "Message",
       "enviar": "Envoyer l'e-mail"
     },

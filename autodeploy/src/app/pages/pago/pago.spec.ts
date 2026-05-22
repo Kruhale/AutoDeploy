@@ -1,26 +1,54 @@
-import { TestBed } from "@angular/core/testing";
+import { TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { provideHttpClient } from "@angular/common/http";
-import { provideHttpClientTesting } from "@angular/common/http/testing";
-import { provideRouter } from "@angular/router";
+import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
+import { provideRouter, Router, ActivatedRoute } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import { Pago } from "./pago";
+import { UsuarioService } from "../../services/usuario.service";
+import { PlanService } from "../../services/plan.service";
 
 describe("Pago", function() {
   let componente: Pago;
+  let httpMock: HttpTestingController;
+  let usuarioService: UsuarioService;
+  let planService: PlanService;
+  let router: Router;
+  let mapaQueryParams: Map<string, string>;
 
   beforeEach(async function() {
+    mapaQueryParams = new Map<string, string>();
+    const rutaActivadaMock = {
+      snapshot: {
+        queryParamMap: {
+          get: function(clave: string): string | null {
+            return mapaQueryParams.get(clave) ?? null;
+          }
+        }
+      }
+    };
+
     await TestBed.configureTestingModule({
       imports: [Pago, TranslateModule.forRoot()],
       providers: [
         provideRouter([]),
         provideHttpClient(),
-        provideHttpClientTesting()
+        provideHttpClientTesting(),
+        { provide: ActivatedRoute, useValue: rutaActivadaMock }
       ]
     }).compileComponents();
+
+    httpMock = TestBed.inject(HttpTestingController);
+    usuarioService = TestBed.inject(UsuarioService);
+    planService = TestBed.inject(PlanService);
+    router = TestBed.inject(Router);
 
     const fixture = TestBed.createComponent(Pago);
     componente = fixture.componentInstance;
     fixture.detectChanges();
+  });
+
+  afterEach(function() {
+    httpMock.verify();
   });
 
   it("se crea con plan 'pro' por defecto", function() {
@@ -160,5 +188,182 @@ describe("Pago", function() {
     expect(componente.cvvVisible()).toBeFalse();
     componente.cvvVisible.set(true);
     expect(componente.cvvVisible()).toBeTrue();
+  });
+
+  it("formatearNumeroTarjeta: aplica espacios y guarda el numero limpio", function() {
+    const inputFalso = document.createElement("input");
+    inputFalso.value = "4111111111111111";
+    const evento = { target: inputFalso } as unknown as Event;
+    componente.formatearNumeroTarjeta(evento);
+    expect(componente.numeroTarjeta()).toBe("4111 1111 1111 1111");
+    expect(inputFalso.value).toBe("4111 1111 1111 1111");
+  });
+
+  it("formatearNumeroTarjeta: limita a 15 digitos cuando es Amex", function() {
+    componente.numeroTarjeta.set("34");
+    const inputFalso = document.createElement("input");
+    inputFalso.value = "378282246310005999";
+    componente.formatearNumeroTarjeta({ target: inputFalso } as unknown as Event);
+    expect(componente.numeroTarjeta().replace(/\s/g, "").length).toBe(15);
+  });
+
+  it("formatearFecha: inserta la barra tras el mes", function() {
+    const inputFalso = document.createElement("input");
+    inputFalso.value = "1235";
+    componente.formatearFecha({ target: inputFalso } as unknown as Event);
+    expect(componente.fechaExpiracion()).toBe("12/35");
+  });
+
+  it("formatearFecha: con menos de 2 digitos no inserta barra", function() {
+    const inputFalso = document.createElement("input");
+    inputFalso.value = "1";
+    componente.formatearFecha({ target: inputFalso } as unknown as Event);
+    expect(componente.fechaExpiracion()).toBe("1");
+  });
+
+  it("formatearCvv: limita a 3 digitos en tarjetas no Amex", function() {
+    componente.numeroTarjeta.set("4111111111111111");
+    const inputFalso = document.createElement("input");
+    inputFalso.value = "1234567";
+    componente.formatearCvv({ target: inputFalso } as unknown as Event);
+    expect(componente.cvv().length).toBe(3);
+  });
+
+  it("formatearCvv: permite 4 digitos en Amex", function() {
+    componente.numeroTarjeta.set("3782 822463 10005");
+    const inputFalso = document.createElement("input");
+    inputFalso.value = "12345";
+    componente.formatearCvv({ target: inputFalso } as unknown as Event);
+    expect(componente.cvv().length).toBe(4);
+  });
+
+  it("validarNumero: error si no pasa el algoritmo Luhn", function() {
+    componente.numeroTarjeta.set("4111 1111 1111 1112");
+    componente.validarNumero();
+    expect(componente.errorNumero()).not.toBe("");
+  });
+
+  it("validarFecha: error con formato incorrecto sin barra", function() {
+    componente.fechaExpiracion.set("1235");
+    componente.validarFecha();
+    expect(componente.errorFecha()).not.toBe("");
+  });
+
+  it("validarFecha: error si la tarjeta esta vencida", function() {
+    componente.fechaExpiracion.set("01/20");
+    componente.validarFecha();
+    expect(componente.errorFecha()).not.toBe("");
+  });
+
+  it("validarCvv: longitud insuficiente para Amex", function() {
+    componente.numeroTarjeta.set("3782 822463 10005");
+    componente.cvv.set("12");
+    componente.validarCvv();
+    expect(componente.errorCvv()).not.toBe("");
+  });
+
+  it("ngOnInit selecciona el plan business si viene en queryParam", function() {
+    mapaQueryParams.set("plan", "business");
+    const fixture = TestBed.createComponent(Pago);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.planSeleccionado()).toBe("business");
+  });
+
+  it("ngOnInit ignora un valor de plan invalido en queryParam", function() {
+    mapaQueryParams.set("plan", "diamond");
+    const fixture = TestBed.createComponent(Pago);
+    fixture.detectChanges();
+    expect(fixture.componentInstance.planSeleccionado()).toBe("pro");
+  });
+
+  it("infoDelPlan: devuelve datos para 'business'", function() {
+    componente.planSeleccionado.set("business");
+    expect(componente.infoDelPlan()).toBeDefined();
+  });
+
+  it("procesarPago: no hace nada si el formulario es invalido", async function() {
+    componente.comprobacionNumero = false;
+    await componente.procesarPago();
+    expect(componente.estadoPago()).toBe("formulario");
+  });
+
+  it("procesarPago: redirige a /login si no hay usuarioId", async function() {
+    componente.comprobacionNumero = true;
+    componente.comprobacionNombre = true;
+    componente.comprobacionFecha = true;
+    componente.comprobacionCvv = true;
+    usuarioService.usuarioId.set("");
+    spyOn(console, "warn");
+    const espiaNavegar = spyOn(router, "navigate");
+    await componente.procesarPago();
+    expect(espiaNavegar).toHaveBeenCalledWith(["/login"]);
+  });
+
+  it("procesarPago: estado 'exito' cuando el servicio responde OK", fakeAsync(function() {
+    componente.comprobacionNumero = true;
+    componente.comprobacionNombre = true;
+    componente.comprobacionFecha = true;
+    componente.comprobacionCvv = true;
+    usuarioService.usuarioId.set("user-id-1");
+    componente.planSeleccionado.set("pro");
+    componente.procesarPago();
+    expect(componente.estadoPago()).toBe("procesando");
+    tick(2500);
+    const peticion = httpMock.expectOne("/api/usuarios/user-id-1/plan");
+    peticion.flush({ success: true, message: "OK", data: { id: "user-id-1", nombre: "x", email: "x@x.com", token: null, plan: "pro", fechaFinSuscripcion: null, idioma: "es" } });
+    tick();
+    expect(componente.estadoPago()).toBe("exito");
+    expect(planService.planActual()).toBe("pro");
+  }));
+
+  it("procesarPago: estado 'error' cuando el servicio falla", fakeAsync(function() {
+    componente.comprobacionNumero = true;
+    componente.comprobacionNombre = true;
+    componente.comprobacionFecha = true;
+    componente.comprobacionCvv = true;
+    usuarioService.usuarioId.set("user-id-1");
+    componente.planSeleccionado.set("business");
+    spyOn(console, "error");
+    componente.procesarPago();
+    tick(2500);
+    const peticion = httpMock.expectOne("/api/usuarios/user-id-1/plan");
+    peticion.flush({ success: false, message: "fallo", data: null });
+    tick();
+    expect(componente.estadoPago()).toBe("error");
+  }));
+
+  it("irAlDashboard navega a /app/dashboard", function() {
+    const espiaNavegar = spyOn(router, "navigate");
+    componente.irAlDashboard();
+    expect(espiaNavegar).toHaveBeenCalledWith(["/app/dashboard"]);
+  });
+
+  it("reintentar restablece el estado a 'formulario'", function() {
+    componente.estadoPago.set("error");
+    componente.reintentar();
+    expect(componente.estadoPago()).toBe("formulario");
+  });
+
+  it("comprobarFormularioCompleto: desactiva el boton si no hay validaciones", function() {
+    const botonFalso = document.createElement("button");
+    botonFalso.className = "pago__boton-pagar";
+    document.body.appendChild(botonFalso);
+    componente.numeroTarjeta.set("4111 1111 1111 1111");
+    componente.validarNumero();
+    expect(botonFalso.disabled).toBeTrue();
+    document.body.removeChild(botonFalso);
+  });
+
+  it("comprobarFormularioCompleto: activa el boton cuando todas las validaciones pasan", function() {
+    const botonFalso = document.createElement("button");
+    botonFalso.className = "pago__boton-pagar";
+    document.body.appendChild(botonFalso);
+    componente.comprobacionNombre = true;
+    componente.comprobacionFecha = true;
+    componente.comprobacionCvv = true;
+    componente.numeroTarjeta.set("4111 1111 1111 1111");
+    componente.validarNumero();
+    expect(botonFalso.disabled).toBeFalse();
+    document.body.removeChild(botonFalso);
   });
 });

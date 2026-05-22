@@ -6,22 +6,22 @@
 
 **Enlace al prototipo:** https://www.figma.com/design/sNOYtZb7Oclv3pFLv5xY4Z/AutoDeployService?node-id=338-18&t=MWyZEmhlbzjXqj2D-1
 
-![Vista general del archivo Figma con las seis paginas del prototipo (moodboard, guia de estilo, componentes, mockups, sitemap, wireframes)](./assets/capturas/53-figma-overview.png)
+![Vista general del archivo Figma con las páginas del prototipo visibles en el panel lateral (Cover, Moodboard, Definición, Designs, Components, Guía de estilos)](./assets/capturas/53-figma-overview.png)
 
-El archivo contiene seis páginas:
+El archivo contiene las siguientes páginas (visibles en la captura):
 
-1. **Moodboard** — Dirección estética con palabras clave (oscuro, profesional, cálido, técnico) y referencias visuales (Linear, Stripe, Coolify).
-2. **Guía de estilo** — Paleta de color HSL con escalas semánticas, escala tipográfica de 10 niveles (H1 a caption con Outfit), librería de iconos (FontAwesome 6), sistema de espaciado de 15 niveles (`xxs..8xl`, múltiplos de 4 y 8 px).
-3. **Componentes** — Biblioteca de componentes con todos los estados (default / hover / focus / active / disabled / invalid).
-4. **Mockups** — Pantallas finales con contenido real: bienvenida, login, dashboard, billing, asistente-ia, terminal, onboarding.
-5. **Sitemap** — Diagrama completo de las 27 rutas (públicas, autenticadas, legales).
-6. **Wireframes** — Baja fidelidad de 6 pantallas core.
+1. **Cover** — Portada del archivo.
+2. **Moodboard** — Dirección estética con palabras clave (oscuro, profesional, cálido, técnico) y referencias visuales (Linear, Stripe, Coolify).
+3. **Definición** — Sitemap completo de las rutas (públicas, autenticadas, legales) y wireframes de baja fidelidad de las pantallas core.
+4. **Designs** — Pantallas finales con contenido real: bienvenida, login, dashboard, billing, asistente-ia, terminal, onboarding.
+5. **Components** — Biblioteca de componentes con todos los estados (default / hover / focus / active / disabled / invalid) construidos con Auto-layout.
+6. **Guía de estilos** — Paleta de color HSL con escalas semánticas, escala tipográfica de 10 niveles (Outfit), librería de iconos (FontAwesome 6) y sistema de espaciado de 15 niveles.
 
 ![Pagina de guia de estilos en Figma con la paleta de color HSL, la escala tipografica de Outfit, los tokens de espaciado y los iconos](./assets/capturas/56-figma-guia-estilos.png)
 
 Todos los tokens están sistematizados como **variables de Figma**, lo que permite cambiar un color o un espaciado y propagarlo a todo el archivo sin tocar instancia por instancia. Los tokens viven en colecciones separadas (Color, Spacing, Typography) y se replican exactamente en `00-settings/_variables.scss`:
 
-![Panel Local variables de Figma con las colecciones de Color, Spacing y Typography mostrando los tokens nombrados y sus valores HSL/rem](./assets/capturas/54-figma-variables.png)
+![Panel Estilos de color de Figma con la foundation cromática del proyecto (escalas Amarillo, Blanco y Gris) que alimenta las variables del sistema de diseño](./assets/capturas/54-figma-variables.png)
 
 Cada componente se ha construido con **Auto-layout** y propiedades reutilizables (variantes para estados, tamaños y acentos). Así, los cambios de espaciado o tipografía se propagan a todas las instancias sin retocar a mano:
 
@@ -110,7 +110,7 @@ Diseñados en la página "Wireframes" del prototipo Figma (no se exportan a carp
 
 El SCSS se organiza con **ITCSS** (especificidad creciente por capa) y nomenclatura **BEM** en los componentes:
 
-![Arbol de carpetas autodeploy/src/styles con las 6 capas de ITCSS: 00-settings, 01-tools, 02-generic, 03-elements, 04-layout, 05-components](./assets/capturas/61-itcss-estructura.png)
+![Árbol de carpetas autodeploy/src/styles con las 7 capas de ITCSS: 00-settings, 01-tools, 02-generic, 03-elements, 04-layout, 05-components, 06-utilities](./assets/capturas/61-itcss-estructura.png)
 
 | Capa | Contenido |
 |---|---|
@@ -120,6 +120,7 @@ El SCSS se organiza con **ITCSS** (especificidad creciente por capa) y nomenclat
 | `03-elements/` | Estilos base de elementos HTML (`button`, `input`, `form`). |
 | `04-layout/` | Estructuras macro (cabecera, sidebar, footer, grids). |
 | `05-components/` | Componentes BEM (`.tarjeta-servidor`, `.pagina-firewall__regla`, `.spinner--cyan`). Estilos locales por página viven en `pages/X/X.scss`. |
+| `06-utilities/` | Clases utilitarias finales (skip link `.visually-hidden`, helpers de accesibilidad) con la mayor especificidad. |
 
 ## Referencia completa
 

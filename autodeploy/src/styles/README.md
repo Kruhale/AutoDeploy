@@ -223,9 +223,9 @@ Cada página Angular sigue este patrón:
 3. Los estilos reales están en `src/styles/05-components/_pagina-<página>.scss` con bloque BEM `.pagina-<página>__*`.
 4. Ese partial se importa en `styles.scss` dentro de la sección `// 05 · Components`.
 
-### Excepción documentada
+### Sin excepciones
 
-`pages/cuenta/cuenta.scss` mantiene sus ~1800 líneas en local porque usa `:host` (scoping nativo de Angular). Mover esa página a global obligaría a reescribir la raíz y se ha decidido aplazar para no romper visualmente. Es la única excepción al patrón.
+Todas las páginas siguen el patrón "scss local vacío + partial global en 05-components/". La última excepción que quedaba (`pages/cuenta/cuenta.scss`, ~1800 líneas con `:host`) se migró a `05-components/_pagina-cuenta.scss` el 2026-05-22: el bloque `:host { display: block; }` pasó a `app-cuenta { display: block; }`, que afecta al host element del componente sin necesidad de ViewEncapsulation local.
 
 ## Cómo añadir una página nueva
 

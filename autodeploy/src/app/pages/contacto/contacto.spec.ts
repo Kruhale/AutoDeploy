@@ -94,21 +94,19 @@ describe("Contacto", function() {
     protegido.asuntoMensaje.set("Asunto Test");
     protegido.cuerpoMensaje.set("Cuerpo Test");
 
-    // window.location no es siempre redefinible en navegadores modernos
-    // (Chrome marca la propiedad como no configurable), asi que en vez de
-    // sustituir el objeto entero interceptamos el setter de location.href
-    // con un spy. Asi capturamos lo que el componente asigna sin tocar la
-    // navegacion real.
-    let hrefAsignado = "";
-    const espia = spyOnProperty(window.location, "href", "set").and.callFake(function(valor: string) {
-      hrefAsignado = valor;
+    // Espiamos el metodo `abrirEnlaceMailto` que el componente expone
+    // protected justo para que el test pueda interceptarlo sin tocar
+    // window.location.href (que no es configurable).
+    let enlaceCapturado = "";
+    const componenteConProtegido = componente as unknown as { abrirEnlaceMailto: (enlace: string) => void };
+    spyOn(componenteConProtegido, "abrirEnlaceMailto").and.callFake(function(enlace: string) {
+      enlaceCapturado = enlace;
     });
 
     componente.enviarPorEmail();
-    expect(espia).toHaveBeenCalled();
-    expect(hrefAsignado).toContain("mailto:contacto@autodeploy.dev");
-    expect(hrefAsignado).toContain("subject=");
-    expect(hrefAsignado).toContain("body=");
+    expect(enlaceCapturado).toContain("mailto:contacto@autodeploy.dev");
+    expect(enlaceCapturado).toContain("subject=");
+    expect(enlaceCapturado).toContain("body=");
     expect(protegido.enviado()).toBeTrue();
   });
 

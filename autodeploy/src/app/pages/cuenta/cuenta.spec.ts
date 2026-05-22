@@ -217,10 +217,14 @@ describe("Cuenta", function() {
   it("cambiarPlan a 'free' desde un plan de pago cancela la suscripcion", async function() {
     await flushPeticionesUsuario("507f1f77bcf86cd799439011");
     planService.planActual.set("pro");
-    const promesa = componente.cambiarPlan("free");
+    componente.cambiarPlan("free");
     const peticion = httpMock.expectOne("/api/usuarios/507f1f77bcf86cd799439011/cancelar-suscripcion");
     peticion.flush({ success: true, message: "OK", data: { id: "507f1f77bcf86cd799439011", nombre: "Pepe", email: "pepe@test.com", token: null, plan: "free", fechaFinSuscripcion: "2026-12-31", idioma: "es" } });
-    await promesa;
+    // cambiarPlan llama a cancelarSuscripcion() sin await (fire-and-forget),
+    // asi que el `finally { cancelando.set(false) }` queda pendiente. Hay
+    // que dar dos vueltas a la microtask queue antes de comprobar el flag.
+    await fixture.whenStable();
+    await fixture.whenStable();
     expect(componente.cancelando()).toBeFalse();
   });
 
@@ -468,9 +472,23 @@ describe("Cuenta", function() {
   it("cargarClavesYNotificaciones adapta claves con fechaCreacion null a '—'", async function() {
     const peticionClaves = httpMock.expectOne("/api/usuarios/507f1f77bcf86cd799439011/claves-ssh");
     peticionClaves.flush({ success: true, message: "OK", data: [{ id: "k-a", nombre: "kA", huella: "h", fechaCreacion: null }] });
+    // La segunda peticion (notificaciones) solo se dispara cuando la
+    // microtask de `await listarClavesSsh()` se procesa. Tras migrar
+    // usuarioService a firstValueFrom + async/await hay varios await
+    // anidados antes de que el componente lance la siguiente HTTP, y
+    // fixture.whenStable() por si solo no espera todas las microtasks
+    // de promesas externas a la Zone. Iteramos varias veces para que
+    // la cola de microtasks se vacie completamente.
+    for (let i = 0; i < 5; i++) {
+      await Promise.resolve();
+      await fixture.whenStable();
+    }
     const peticionPrefs = httpMock.expectOne("/api/usuarios/507f1f77bcf86cd799439011/notificaciones");
     peticionPrefs.flush({ success: true, message: "OK", data: { email: false, alertasCriticas: false, eventosDespliegue: false } });
-    await fixture.whenStable();
+    for (let i = 0; i < 5; i++) {
+      await Promise.resolve();
+      await fixture.whenStable();
+    }
     expect(componente.listaDeClavesSsh()[0].fechaCreacion).toBe("—");
     expect(componente.notificacionesEmail()).toBeFalse();
   });

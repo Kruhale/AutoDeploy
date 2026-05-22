@@ -31,8 +31,15 @@ export class Contacto {
     const cuerpoFinal = cuerpoLimpio + firmaUsuario;
     const enlaceMailto = `mailto:${this.correoDestino}?subject=${encodeURIComponent(asuntoLimpio)}&body=${encodeURIComponent(cuerpoFinal)}`;
 
-    window.location.href = enlaceMailto;
+    this.abrirEnlaceMailto(enlaceMailto);
     this.enviado.set(true);
+  }
+
+  // Extraido a metodo aparte para que los tests puedan hacer spy. No se
+  // puede mockear window.location.href con spyOnProperty porque la
+  // propiedad no es configurable en navegadores modernos.
+  protected abrirEnlaceMailto(enlace: string): void {
+    window.location.href = enlace;
   }
 
   resetearFormulario(): void {

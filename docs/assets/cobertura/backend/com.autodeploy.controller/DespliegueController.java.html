@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DespliegueController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">DespliegueController.java</span></div><h1>DespliegueController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.config.Seguridad;
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.dto.NuevoDespliegueRequest;
+import com.autodeploy.model.Despliegue;
+import com.autodeploy.service.DespliegueService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
+import java.util.List;
+
+@Tag(name = &quot;Despliegues&quot;, description = &quot;Historial de despliegues de aplicaciones&quot;)
+@RestController
+@RequestMapping(&quot;/api/despliegues&quot;)
+@PreAuthorize(&quot;isAuthenticated()&quot;)
+public class DespliegueController {
+
+    private final DespliegueService despliegueService;
+    private final Seguridad seguridad;
+
+<span class="fc" id="L36">    public DespliegueController(DespliegueService despliegueService, Seguridad seguridad) {</span>
+<span class="fc" id="L37">        this.despliegueService = despliegueService;</span>
+<span class="fc" id="L38">        this.seguridad = seguridad;</span>
+<span class="fc" id="L39">    }</span>
+
+    @Operation(summary = &quot;Historial global (solo ADMIN). Soporta paginacion con ?page=0&amp;size=20&quot;)
+    @GetMapping
+    @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;?&gt;&gt; obtenerHistorial(Pageable pageable) {
+<span class="nc bnc" id="L45" title="All 4 branches missed.">        if (pageable != null &amp;&amp; pageable.isPaged()) {</span>
+<span class="nc" id="L46">            Page&lt;Despliegue&gt; pagina = despliegueService.obtenerHistorialPaginado(pageable);</span>
+<span class="nc" id="L47">            return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, pagina));</span>
+        }
+<span class="nc" id="L49">        List&lt;Despliegue&gt; lista = despliegueService.obtenerHistorial();</span>
+<span class="nc" id="L50">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, lista));</span>
+    }
+
+    @Operation(summary = &quot;Historial de despliegues de un servidor del usuario&quot;)
+    @GetMapping(&quot;/servidor/{servidorId}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;List&lt;Despliegue&gt;&gt;&gt; obtenerPorServidor(@PathVariable String servidorId) {
+<span class="fc" id="L57">        List&lt;Despliegue&gt; listaDeDesplieguesDelServidor = despliegueService.obtenerPorServidor(servidorId);</span>
+
+<span class="fc" id="L59">        ApiResponse&lt;List&lt;Despliegue&gt;&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, listaDeDesplieguesDelServidor);</span>
+<span class="fc" id="L60">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Registrar un nuevo despliegue en un servidor del usuario&quot;)
+    @PostMapping
+    public ResponseEntity&lt;ApiResponse&lt;Despliegue&gt;&gt; registrar(@RequestBody @Valid NuevoDespliegueRequest peticion,
+                                                              Authentication autenticacion) {
+<span class="nc bnc" id="L67" title="All 4 branches missed.">        if (!seguridad.esAdmin(autenticacion) &amp;&amp; !seguridad.esDuenioDelServidor(peticion.servidorId(), autenticacion)) {</span>
+<span class="nc" id="L68">            throw new AccessDeniedException(&quot;El servidor no pertenece al usuario autenticado&quot;);</span>
+        }
+<span class="nc" id="L70">        Despliegue despliegue = despliegueService.registrar(peticion.servidorId(), peticion.tipo(), peticion.url());</span>
+<span class="nc" id="L71">        URI ubicacion = URI.create(&quot;/api/despliegues/&quot; + despliegue.getId());</span>
+
+<span class="nc" id="L73">        ApiResponse&lt;Despliegue&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Despliegue iniciado&quot;, despliegue);</span>
+<span class="nc" id="L74">        return ResponseEntity.created(ubicacion).body(cuerpo);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

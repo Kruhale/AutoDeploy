@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetricaServidor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.model</a> &gt; <span class="el_source">MetricaServidor.java</span></div><h1>MetricaServidor.java</h1><pre class="source lang-java linenums">package com.autodeploy.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Document(collection = &quot;metricaServidor&quot;)
+public class MetricaServidor {
+
+    @Id
+    private String id;
+
+    @Indexed
+    private String servidorId;
+
+    private double cpuPorcentaje;
+    private long ramUsadaMb;
+    private long ramTotalMb;
+    private int discoUsadoPorcentaje;
+    private long discoUsadoGb;
+    private long discoTotalGb;
+    private double cargaPromedio;
+    private long tiempoEncendidoSegundos;
+    private List&lt;String&gt; webDesplegadas;
+    private List&lt;String&gt; containersDocker;
+    private boolean sesionActiva;
+    private LocalDateTime fechaMedicion;
+
+<span class="fc" id="L33">    public MetricaServidor() {</span>
+<span class="fc" id="L34">        this.webDesplegadas = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L35">        this.containersDocker = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L36">        this.fechaMedicion = LocalDateTime.now();</span>
+<span class="fc" id="L37">        this.sesionActiva = false;</span>
+<span class="fc" id="L38">    }</span>
+
+<span class="fc" id="L40">    public String getId() { return id; }</span>
+<span class="fc" id="L41">    public void setId(String id) { this.id = id; }</span>
+
+<span class="fc" id="L43">    public String getServidorId() { return servidorId; }</span>
+<span class="fc" id="L44">    public void setServidorId(String servidorId) { this.servidorId = servidorId; }</span>
+
+<span class="fc" id="L46">    public double getCpuPorcentaje() { return cpuPorcentaje; }</span>
+<span class="fc" id="L47">    public void setCpuPorcentaje(double cpuPorcentaje) { this.cpuPorcentaje = cpuPorcentaje; }</span>
+
+<span class="fc" id="L49">    public long getRamUsadaMb() { return ramUsadaMb; }</span>
+<span class="fc" id="L50">    public void setRamUsadaMb(long ramUsadaMb) { this.ramUsadaMb = ramUsadaMb; }</span>
+
+<span class="fc" id="L52">    public long getRamTotalMb() { return ramTotalMb; }</span>
+<span class="fc" id="L53">    public void setRamTotalMb(long ramTotalMb) { this.ramTotalMb = ramTotalMb; }</span>
+
+<span class="fc" id="L55">    public int getDiscoUsadoPorcentaje() { return discoUsadoPorcentaje; }</span>
+<span class="fc" id="L56">    public void setDiscoUsadoPorcentaje(int discoUsadoPorcentaje) { this.discoUsadoPorcentaje = discoUsadoPorcentaje; }</span>
+
+<span class="fc" id="L58">    public long getDiscoUsadoGb() { return discoUsadoGb; }</span>
+<span class="fc" id="L59">    public void setDiscoUsadoGb(long discoUsadoGb) { this.discoUsadoGb = discoUsadoGb; }</span>
+
+<span class="fc" id="L61">    public long getDiscoTotalGb() { return discoTotalGb; }</span>
+<span class="fc" id="L62">    public void setDiscoTotalGb(long discoTotalGb) { this.discoTotalGb = discoTotalGb; }</span>
+
+<span class="fc" id="L64">    public double getCargaPromedio() { return cargaPromedio; }</span>
+<span class="fc" id="L65">    public void setCargaPromedio(double cargaPromedio) { this.cargaPromedio = cargaPromedio; }</span>
+
+<span class="fc" id="L67">    public long getTiempoEncendidoSegundos() { return tiempoEncendidoSegundos; }</span>
+<span class="fc" id="L68">    public void setTiempoEncendidoSegundos(long tiempoEncendidoSegundos) { this.tiempoEncendidoSegundos = tiempoEncendidoSegundos; }</span>
+
+<span class="fc" id="L70">    public List&lt;String&gt; getWebDesplegadas() { return webDesplegadas; }</span>
+<span class="fc" id="L71">    public void setWebDesplegadas(List&lt;String&gt; webDesplegadas) { this.webDesplegadas = webDesplegadas; }</span>
+
+<span class="fc" id="L73">    public List&lt;String&gt; getContainersDocker() { return containersDocker; }</span>
+<span class="fc" id="L74">    public void setContainersDocker(List&lt;String&gt; containersDocker) { this.containersDocker = containersDocker; }</span>
+
+<span class="fc" id="L76">    public boolean isSesionActiva() { return sesionActiva; }</span>
+<span class="fc" id="L77">    public void setSesionActiva(boolean sesionActiva) { this.sesionActiva = sesionActiva; }</span>
+
+<span class="fc" id="L79">    public LocalDateTime getFechaMedicion() { return fechaMedicion; }</span>
+<span class="fc" id="L80">    public void setFechaMedicion(LocalDateTime fechaMedicion) { this.fechaMedicion = fechaMedicion; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

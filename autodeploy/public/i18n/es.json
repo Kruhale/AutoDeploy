@@ -468,7 +468,11 @@
     "ariaOcultarClave": "Ocultar contraseña",
     "ariaVerClave": "Ver contraseña",
     "claveEtiqueta": "Contraseña",
-    "clavePlaceholder": "••••••••"
+    "clavePlaceholder": "••••••••",
+    "errorEmailObligatorio": "El email es obligatorio",
+    "errorEmailFormato": "El email no tiene un formato válido",
+    "errorClaveObligatoria": "La contraseña es obligatoria",
+    "errorClaveCorta": "La contraseña debe tener al menos 8 caracteres"
   },
   "register": {
     "sello": "Edición 2026 · Registro abierto",

@@ -468,7 +468,11 @@
     "ariaOcultarClave": "Nascondi password",
     "ariaVerClave": "Mostra password",
     "claveEtiqueta": "Password",
-    "clavePlaceholder": "••••••••"
+    "clavePlaceholder": "••••••••",
+    "errorEmailObligatorio": "L'email è obbligatoria",
+    "errorEmailFormato": "Formato email non valido",
+    "errorClaveObligatoria": "La password è obbligatoria",
+    "errorClaveCorta": "La password deve avere almeno 8 caratteri"
   },
   "register": {
     "sello": "Edizione 2026 · Registrazione aperta",

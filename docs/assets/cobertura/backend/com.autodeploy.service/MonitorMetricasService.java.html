@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MonitorMetricasService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">MonitorMetricasService.java</span></div><h1>MonitorMetricasService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.model.MetricaServidor;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.repository.MetricaServidorRepository;
+import com.autodeploy.repository.ServidorRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+@Service
+public class MonitorMetricasService {
+
+<span class="fc" id="L19">    private static final Logger LOGGER = LoggerFactory.getLogger(MonitorMetricasService.class);</span>
+
+    private static final String COMANDO_RECOLECCION =
+            &quot;echo '===CPU===' &amp;&amp; (top -bn1 2&gt;/dev/null | grep -i 'cpu(s)' | awk '{print $2+$4}' || echo 0) &amp;&amp; &quot; +
+            &quot;echo '===RAM===' &amp;&amp; (free -m 2&gt;/dev/null | awk 'NR==2{print $3\&quot; \&quot;$2}' || echo '0 0') &amp;&amp; &quot; +
+            &quot;echo '===DISCO===' &amp;&amp; (df -h / 2&gt;/dev/null | awk 'NR==2{gsub(\&quot;%\&quot;,\&quot;\&quot;,$5); print $3\&quot; \&quot;$2\&quot; \&quot;$5}' || echo '0 0 0') &amp;&amp; &quot; +
+            &quot;echo '===CARGA===' &amp;&amp; (uptime 2&gt;/dev/null | awk -F'load average:' '{print $2}' | awk -F',' '{print $1}' | tr -d ' ' || echo 0) &amp;&amp; &quot; +
+            &quot;echo '===UPTIME===' &amp;&amp; (awk '{print int($1)}' /proc/uptime 2&gt;/dev/null || echo 0) &amp;&amp; &quot; +
+            &quot;echo '===NGINX===' &amp;&amp; (ls /etc/nginx/sites-enabled 2&gt;/dev/null | grep -v default || echo '') &amp;&amp; &quot; +
+            &quot;echo '===DOCKER===' &amp;&amp; (docker ps --format '{{.Names}}' 2&gt;/dev/null || echo '') &amp;&amp; &quot; +
+            &quot;echo '===FIN==='&quot;;
+
+    private final ServidorRepository servidorRepository;
+    private final MetricaServidorRepository metricaServidorRepository;
+    private final GestorSesionesSshService gestorSesionesSshService;
+    private final MetricasWebSocketHandler metricasWebSocketHandler;
+    private final ReconexionService reconexionService;
+
+    public MonitorMetricasService(
+            ServidorRepository servidorRepository,
+            MetricaServidorRepository metricaServidorRepository,
+            GestorSesionesSshService gestorSesionesSshService,
+            MetricasWebSocketHandler metricasWebSocketHandler,
+<span class="fc" id="L42">            ReconexionService reconexionService) {</span>
+<span class="fc" id="L43">        this.servidorRepository = servidorRepository;</span>
+<span class="fc" id="L44">        this.metricaServidorRepository = metricaServidorRepository;</span>
+<span class="fc" id="L45">        this.gestorSesionesSshService = gestorSesionesSshService;</span>
+<span class="fc" id="L46">        this.metricasWebSocketHandler = metricasWebSocketHandler;</span>
+<span class="fc" id="L47">        this.reconexionService = reconexionService;</span>
+<span class="fc" id="L48">    }</span>
+
+    @Scheduled(fixedDelay = 30000, initialDelay = 10000)
+    public void recolectarMetricasDeTodos() {
+<span class="fc" id="L52">        List&lt;Servidor&gt; listaServidores = servidorRepository.findAll();</span>
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (listaServidores.isEmpty()) {</span>
+<span class="fc" id="L54">            return;</span>
+        }
+<span class="fc" id="L56">        LOGGER.debug(&quot;Recolectando metricas de {} servidores&quot;, listaServidores.size());</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        for (Servidor servidor : listaServidores) {</span>
+<span class="fc" id="L58">            recolectarParaServidor(servidor);</span>
+<span class="fc" id="L59">        }</span>
+<span class="fc" id="L60">    }</span>
+
+    public MetricaServidor recolectarParaServidor(Servidor servidor) {
+<span class="fc" id="L63">        MetricaServidor metricaResultado = new MetricaServidor();</span>
+<span class="fc" id="L64">        metricaResultado.setServidorId(servidor.getId());</span>
+
+        boolean conexionFunciono;
+        try {
+<span class="fc" id="L68">            String salidaCruda = gestorSesionesSshService.ejecutar(servidor.getId(), COMANDO_RECOLECCION);</span>
+<span class="fc" id="L69">            rellenarDesdeSalida(metricaResultado, salidaCruda);</span>
+<span class="fc" id="L70">            metricaResultado.setSesionActiva(true);</span>
+<span class="fc" id="L71">            conexionFunciono = true;</span>
+<span class="fc" id="L72">        } catch (Exception excepcionRecoleccion) {</span>
+<span class="fc" id="L73">            LOGGER.warn(&quot;No se pudo recolectar metricas de {} ({}): {}&quot;,</span>
+<span class="fc" id="L74">                    servidor.getNombre(), servidor.getDireccionIp(), excepcionRecoleccion.getMessage());</span>
+<span class="fc" id="L75">            metricaResultado.setSesionActiva(false);</span>
+<span class="fc" id="L76">            conexionFunciono = false;</span>
+<span class="fc" id="L77">        }</span>
+
+<span class="fc" id="L79">        reconexionService.anotarPing(servidor, conexionFunciono);</span>
+
+<span class="fc" id="L81">        MetricaServidor metricaGuardada = metricaServidorRepository.save(metricaResultado);</span>
+<span class="fc" id="L82">        metricasWebSocketHandler.difundirMetrica(metricaGuardada);</span>
+<span class="fc" id="L83">        return metricaGuardada;</span>
+    }
+
+    private void rellenarDesdeSalida(MetricaServidor metrica, String salidaCompleta) {
+<span class="fc" id="L87">        String bloqueCpu = extraerBloque(salidaCompleta, &quot;===CPU===&quot;, &quot;===RAM===&quot;);</span>
+<span class="fc" id="L88">        String bloqueRam = extraerBloque(salidaCompleta, &quot;===RAM===&quot;, &quot;===DISCO===&quot;);</span>
+<span class="fc" id="L89">        String bloqueDisco = extraerBloque(salidaCompleta, &quot;===DISCO===&quot;, &quot;===CARGA===&quot;);</span>
+<span class="fc" id="L90">        String bloqueCarga = extraerBloque(salidaCompleta, &quot;===CARGA===&quot;, &quot;===UPTIME===&quot;);</span>
+<span class="fc" id="L91">        String bloqueUptime = extraerBloque(salidaCompleta, &quot;===UPTIME===&quot;, &quot;===NGINX===&quot;);</span>
+<span class="fc" id="L92">        String bloqueNginx = extraerBloque(salidaCompleta, &quot;===NGINX===&quot;, &quot;===DOCKER===&quot;);</span>
+<span class="fc" id="L93">        String bloqueDocker = extraerBloque(salidaCompleta, &quot;===DOCKER===&quot;, &quot;===FIN===&quot;);</span>
+
+<span class="fc" id="L95">        metrica.setCpuPorcentaje(parsearDoubleSeguro(bloqueCpu));</span>
+<span class="fc" id="L96">        rellenarMemoria(metrica, bloqueRam);</span>
+<span class="fc" id="L97">        rellenarDisco(metrica, bloqueDisco);</span>
+<span class="fc" id="L98">        metrica.setCargaPromedio(parsearDoubleSeguro(bloqueCarga));</span>
+<span class="fc" id="L99">        metrica.setTiempoEncendidoSegundos(parsearLongSeguro(bloqueUptime));</span>
+<span class="fc" id="L100">        metrica.setWebDesplegadas(parsearListaLineas(bloqueNginx));</span>
+<span class="fc" id="L101">        metrica.setContainersDocker(parsearListaLineas(bloqueDocker));</span>
+<span class="fc" id="L102">    }</span>
+
+    private void rellenarMemoria(MetricaServidor metrica, String bloque) {
+<span class="fc" id="L105">        String textoLimpio = bloque.trim();</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (textoLimpio.isEmpty()) {</span>
+<span class="fc" id="L107">            return;</span>
+        }
+<span class="fc" id="L109">        String[] partes = textoLimpio.split(&quot;\\s+&quot;);</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">        if (partes.length &lt; 2) {</span>
+<span class="nc" id="L111">            return;</span>
+        }
+<span class="fc" id="L113">        metrica.setRamUsadaMb(parsearLongSeguro(partes[0]));</span>
+<span class="fc" id="L114">        metrica.setRamTotalMb(parsearLongSeguro(partes[1]));</span>
+<span class="fc" id="L115">    }</span>
+
+    private void rellenarDisco(MetricaServidor metrica, String bloque) {
+<span class="fc" id="L118">        String textoLimpio = bloque.trim();</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (textoLimpio.isEmpty()) {</span>
+<span class="fc" id="L120">            return;</span>
+        }
+<span class="fc" id="L122">        String[] partes = textoLimpio.split(&quot;\\s+&quot;);</span>
+<span class="pc bpc" id="L123" title="1 of 2 branches missed.">        if (partes.length &lt; 3) {</span>
+<span class="nc" id="L124">            return;</span>
+        }
+<span class="fc" id="L126">        long discoUsado = parsearTamanoAGigas(partes[0]);</span>
+<span class="fc" id="L127">        long discoTotal = parsearTamanoAGigas(partes[1]);</span>
+<span class="fc" id="L128">        int porcentajeUso = (int) parsearLongSeguro(partes[2]);</span>
+<span class="fc" id="L129">        metrica.setDiscoUsadoGb(discoUsado);</span>
+<span class="fc" id="L130">        metrica.setDiscoTotalGb(discoTotal);</span>
+<span class="fc" id="L131">        metrica.setDiscoUsadoPorcentaje(porcentajeUso);</span>
+<span class="fc" id="L132">    }</span>
+
+    private long parsearTamanoAGigas(String texto) {
+<span class="fc" id="L135">        String textoLimpio = texto.trim();</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        if (textoLimpio.isEmpty()) {</span>
+<span class="nc" id="L137">            return 0L;</span>
+        }
+<span class="fc" id="L139">        char unidad = textoLimpio.charAt(textoLimpio.length() - 1);</span>
+<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        if (!Character.isLetter(unidad)) {</span>
+<span class="nc" id="L141">            return parsearLongSeguro(textoLimpio);</span>
+        }
+<span class="fc" id="L143">        String soloNumero = textoLimpio.substring(0, textoLimpio.length() - 1);</span>
+<span class="fc" id="L144">        double cantidad = parsearDoubleSeguro(soloNumero);</span>
+<span class="fc bfc" id="L145" title="All 2 branches covered.">        if (unidad == 'T') {</span>
+<span class="fc" id="L146">            return (long) (cantidad * 1024);</span>
+        }
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">        if (unidad == 'M') {</span>
+<span class="nc" id="L149">            return (long) (cantidad / 1024);</span>
+        }
+<span class="pc bpc" id="L151" title="1 of 2 branches missed.">        if (unidad == 'K') {</span>
+<span class="nc" id="L152">            return 0L;</span>
+        }
+<span class="fc" id="L154">        return (long) cantidad;</span>
+    }
+
+    private List&lt;String&gt; parsearListaLineas(String bloque) {
+<span class="fc" id="L158">        List&lt;String&gt; listaLineas = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L159">        String[] lineas = bloque.split(&quot;\n&quot;);</span>
+<span class="fc" id="L160">        List&lt;String&gt; lineasLista = Arrays.asList(lineas);</span>
+<span class="fc bfc" id="L161" title="All 2 branches covered.">        for (String linea : lineasLista) {</span>
+<span class="fc" id="L162">            String lineaLimpia = linea.trim();</span>
+<span class="fc bfc" id="L163" title="All 2 branches covered.">            if (!lineaLimpia.isEmpty()) {</span>
+<span class="fc" id="L164">                listaLineas.add(lineaLimpia);</span>
+            }
+<span class="fc" id="L166">        }</span>
+<span class="fc" id="L167">        return listaLineas;</span>
+    }
+
+    private String extraerBloque(String texto, String marcadorInicio, String marcadorFin) {
+<span class="fc" id="L171">        int indiceInicio = texto.indexOf(marcadorInicio);</span>
+<span class="fc" id="L172">        int indiceFin = texto.indexOf(marcadorFin);</span>
+<span class="pc bpc" id="L173" title="3 of 6 branches missed.">        if (indiceInicio &lt; 0 || indiceFin &lt; 0 || indiceFin &lt;= indiceInicio) {</span>
+<span class="nc" id="L174">            return &quot;&quot;;</span>
+        }
+<span class="fc" id="L176">        String fragmento = texto.substring(indiceInicio + marcadorInicio.length(), indiceFin);</span>
+<span class="fc" id="L177">        return fragmento.trim();</span>
+    }
+
+    private double parsearDoubleSeguro(String texto) {
+        try {
+<span class="fc" id="L182">            String textoLimpio = texto.trim();</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">            if (textoLimpio.isEmpty()) {</span>
+<span class="nc" id="L184">                return 0.0;</span>
+            }
+<span class="fc" id="L186">            return Double.parseDouble(textoLimpio);</span>
+<span class="fc" id="L187">        } catch (NumberFormatException excepcionFormato) {</span>
+<span class="fc" id="L188">            return 0.0;</span>
+        }
+    }
+
+    private long parsearLongSeguro(String texto) {
+        try {
+<span class="fc" id="L194">            String textoLimpio = texto.trim();</span>
+<span class="pc bpc" id="L195" title="1 of 2 branches missed.">            if (textoLimpio.isEmpty()) {</span>
+<span class="nc" id="L196">                return 0L;</span>
+            }
+<span class="fc" id="L198">            return Long.parseLong(textoLimpio);</span>
+<span class="fc" id="L199">        } catch (NumberFormatException excepcionFormato) {</span>
+<span class="fc" id="L200">            return 0L;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

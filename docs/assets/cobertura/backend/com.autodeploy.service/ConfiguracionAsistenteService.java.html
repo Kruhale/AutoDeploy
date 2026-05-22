@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfiguracionAsistenteService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">ConfiguracionAsistenteService.java</span></div><h1>ConfiguracionAsistenteService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.dto.ConfiguracionAsistenteRequest;
+import com.autodeploy.dto.ConfiguracionAsistenteResponse;
+import com.autodeploy.model.ConfiguracionAsistenteIa;
+import com.autodeploy.repository.ConfiguracionAsistenteIaRepository;
+import com.autodeploy.util.CifradoUtil;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class ConfiguracionAsistenteService {
+
+    private final ConfiguracionAsistenteIaRepository configuracionRepository;
+
+    @Value(&quot;${autodeploy.cifrado.clave}&quot;)
+    private String claveCifrado;
+
+<span class="fc" id="L24">    public ConfiguracionAsistenteService(ConfiguracionAsistenteIaRepository configuracionRepository) {</span>
+<span class="fc" id="L25">        this.configuracionRepository = configuracionRepository;</span>
+<span class="fc" id="L26">    }</span>
+
+    public ConfiguracionAsistenteIa obtenerOCrear(String usuarioId) {
+<span class="fc" id="L29">        Optional&lt;ConfiguracionAsistenteIa&gt; configuracionExistente = configuracionRepository.findByUsuarioId(usuarioId);</span>
+
+<span class="fc bfc" id="L31" title="All 2 branches covered.">        if (configuracionExistente.isPresent()) {</span>
+<span class="fc" id="L32">            return configuracionExistente.get();</span>
+        }
+
+<span class="fc" id="L35">        ConfiguracionAsistenteIa nuevaConfiguracion = new ConfiguracionAsistenteIa();</span>
+<span class="fc" id="L36">        nuevaConfiguracion.setUsuarioId(usuarioId);</span>
+<span class="fc" id="L37">        ConfiguracionAsistenteIa configuracionGuardada = configuracionRepository.save(nuevaConfiguracion);</span>
+<span class="fc" id="L38">        return configuracionGuardada;</span>
+    }
+
+    public ConfiguracionAsistenteResponse obtenerResumen(String usuarioId) {
+<span class="fc" id="L42">        ConfiguracionAsistenteIa configuracion = obtenerOCrear(usuarioId);</span>
+
+<span class="fc bfc" id="L44" title="All 4 branches covered.">        boolean tieneApiKey = configuracion.getApiKeyCifrada() != null &amp;&amp; !configuracion.getApiKeyCifrada().isBlank();</span>
+<span class="fc" id="L45">        List&lt;String&gt; listaComandos = configuracion.getComandosAutoAprobados();</span>
+
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        if (listaComandos == null) {</span>
+<span class="fc" id="L48">            listaComandos = new ArrayList&lt;&gt;();</span>
+        }
+
+<span class="fc" id="L51">        ConfiguracionAsistenteResponse resumen = new ConfiguracionAsistenteResponse(tieneApiKey, configuracion.getModeloPreferido(), listaComandos);</span>
+<span class="fc" id="L52">        return resumen;</span>
+    }
+
+    public ConfiguracionAsistenteResponse actualizar(String usuarioId, ConfiguracionAsistenteRequest peticion) {
+<span class="fc" id="L56">        ConfiguracionAsistenteIa configuracion = obtenerOCrear(usuarioId);</span>
+
+<span class="pc bpc" id="L58" title="1 of 4 branches missed.">        if (peticion.apiKey() != null &amp;&amp; !peticion.apiKey().isBlank()) {</span>
+<span class="fc" id="L59">            String apiKeyCifrada = CifradoUtil.cifrar(peticion.apiKey(), claveCifrado);</span>
+<span class="fc" id="L60">            configuracion.setApiKeyCifrada(apiKeyCifrada);</span>
+        }
+
+<span class="pc bpc" id="L63" title="1 of 4 branches missed.">        if (peticion.modeloPreferido() != null &amp;&amp; !peticion.modeloPreferido().isBlank()) {</span>
+<span class="fc" id="L64">            configuracion.setModeloPreferido(peticion.modeloPreferido());</span>
+        }
+
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (peticion.comandosAutoAprobados() != null) {</span>
+<span class="fc" id="L68">            configuracion.setComandosAutoAprobados(peticion.comandosAutoAprobados());</span>
+        }
+
+<span class="fc" id="L71">        configuracion.setFechaActualizacion(LocalDateTime.now());</span>
+<span class="fc" id="L72">        ConfiguracionAsistenteIa configuracionGuardada = configuracionRepository.save(configuracion);</span>
+
+<span class="fc" id="L74">        ConfiguracionAsistenteResponse resumen = obtenerResumen(configuracionGuardada.getUsuarioId());</span>
+<span class="fc" id="L75">        return resumen;</span>
+    }
+
+    public String obtenerApiKeyDescifrada(String usuarioId) {
+<span class="fc" id="L79">        ConfiguracionAsistenteIa configuracion = obtenerOCrear(usuarioId);</span>
+
+<span class="pc bpc" id="L81" title="1 of 4 branches missed.">        if (configuracion.getApiKeyCifrada() == null || configuracion.getApiKeyCifrada().isBlank()) {</span>
+<span class="fc" id="L82">            return null;</span>
+        }
+
+<span class="fc" id="L85">        String apiKeyDescifrada = CifradoUtil.descifrar(configuracion.getApiKeyCifrada(), claveCifrado);</span>
+<span class="fc" id="L86">        return apiKeyDescifrada;</span>
+    }
+
+    public boolean estaAutoAprobado(String comando, List&lt;String&gt; patronesAutoAprobados) {
+<span class="fc bfc" id="L90" title="All 4 branches covered.">        if (patronesAutoAprobados == null || patronesAutoAprobados.isEmpty()) {</span>
+<span class="fc" id="L91">            return false;</span>
+        }
+
+<span class="fc" id="L94">        String comandoNormalizado = comando.trim();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        for (String patron : patronesAutoAprobados) {</span>
+<span class="fc" id="L96">            String patronNormalizado = patron.trim();</span>
+<span class="fc bfc" id="L97" title="All 2 branches covered.">            if (comandoNormalizado.startsWith(patronNormalizado)) {</span>
+<span class="fc" id="L98">                return true;</span>
+            }
+<span class="fc" id="L100">        }</span>
+
+<span class="fc" id="L102">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

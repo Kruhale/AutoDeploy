@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServidorService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">ServidorService.java</span></div><h1>ServidorService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.dto.ConexionSshRequest;
+import com.autodeploy.exception.ResourceNotFoundException;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.repository.ServidorRepository;
+import com.autodeploy.util.CifradoUtil;
+import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.session.ClientSession;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+@Service
+public class ServidorService {
+
+    private final ServidorRepository servidorRepository;
+
+    @Value(&quot;${autodeploy.cifrado.clave}&quot;)
+    private String claveCifrado;
+
+<span class="fc" id="L26">    public ServidorService(ServidorRepository servidorRepository) {</span>
+<span class="fc" id="L27">        this.servidorRepository = servidorRepository;</span>
+<span class="fc" id="L28">    }</span>
+
+    public Servidor registrar(ConexionSshRequest peticion, String usuarioId) {
+<span class="fc" id="L31">        Servidor nuevoServidor = new Servidor();</span>
+<span class="fc" id="L32">        nuevoServidor.setUsuarioId(usuarioId);</span>
+<span class="fc" id="L33">        nuevoServidor.setNombre(peticion.nombre());</span>
+<span class="fc" id="L34">        nuevoServidor.setDireccionIp(peticion.direccionIp());</span>
+<span class="fc" id="L35">        nuevoServidor.setPuertoSsh(peticion.puertoSsh());</span>
+<span class="fc" id="L36">        nuevoServidor.setUsuarioSsh(peticion.usuarioSsh());</span>
+<span class="fc" id="L37">        nuevoServidor.setMetodoAutenticacion(peticion.metodoAutenticacion());</span>
+
+<span class="pc bpc" id="L39" title="1 of 4 branches missed.">        if (&quot;password&quot;.equals(peticion.metodoAutenticacion()) &amp;&amp; peticion.password() != null) {</span>
+<span class="fc" id="L40">            String passwordCifrada = CifradoUtil.cifrar(peticion.password(), claveCifrado);</span>
+<span class="fc" id="L41">            nuevoServidor.setPasswordCifrada(passwordCifrada);</span>
+        }
+
+<span class="pc bpc" id="L44" title="1 of 4 branches missed.">        if (&quot;key&quot;.equals(peticion.metodoAutenticacion()) &amp;&amp; peticion.claveSshPrivada() != null) {</span>
+<span class="fc" id="L45">            String claveCifrada = CifradoUtil.cifrar(peticion.claveSshPrivada(), claveCifrado);</span>
+<span class="fc" id="L46">            nuevoServidor.setClaveSshPrivada(claveCifrada);</span>
+        }
+
+<span class="fc" id="L49">        nuevoServidor.setEstado(&quot;conectado&quot;);</span>
+
+<span class="fc" id="L51">        Servidor servidorGuardado = servidorRepository.save(nuevoServidor);</span>
+<span class="fc" id="L52">        return servidorGuardado;</span>
+    }
+
+    public List&lt;Servidor&gt; listar() {
+<span class="fc" id="L56">        List&lt;Servidor&gt; listaDeServidores = servidorRepository.findAll();</span>
+<span class="fc" id="L57">        return listaDeServidores;</span>
+    }
+
+    public List&lt;Servidor&gt; listarPorUsuario(String usuarioId) {
+<span class="fc" id="L61">        return servidorRepository.findByUsuarioId(usuarioId);</span>
+    }
+
+    public Page&lt;Servidor&gt; listarPorUsuarioPaginado(String usuarioId, Pageable pageable) {
+<span class="fc" id="L65">        return servidorRepository.findByUsuarioId(usuarioId, pageable);</span>
+    }
+
+    public Servidor obtenerPorId(String id) {
+<span class="fc" id="L69">        Servidor servidor = servidorRepository.findById(id)</span>
+<span class="fc" id="L70">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Servidor no encontrado&quot;));</span>
+<span class="fc" id="L71">        return servidor;</span>
+    }
+
+    public Servidor obtenerDelUsuario(String id, String usuarioId) {
+<span class="nc" id="L75">        return servidorRepository.findByIdAndUsuarioId(id, usuarioId)</span>
+<span class="nc" id="L76">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Servidor no encontrado&quot;));</span>
+    }
+
+    public void eliminar(String id) {
+<span class="fc" id="L80">        boolean existe = servidorRepository.existsById(id);</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (!existe) {</span>
+<span class="fc" id="L82">            throw new ResourceNotFoundException(&quot;Servidor no encontrado&quot;);</span>
+        }
+<span class="fc" id="L84">        servidorRepository.deleteById(id);</span>
+<span class="fc" id="L85">    }</span>
+
+    public boolean probarConexion(ConexionSshRequest peticion) {
+<span class="fc" id="L88">        SshClient cliente = SshClient.setUpDefaultClient();</span>
+<span class="fc" id="L89">        cliente.start();</span>
+
+        try {
+<span class="fc" id="L92">            ClientSession sesion = cliente.connect(</span>
+<span class="fc" id="L93">                    peticion.usuarioSsh(),</span>
+<span class="fc" id="L94">                    peticion.direccionIp(),</span>
+<span class="fc" id="L95">                    peticion.puertoSsh()</span>
+<span class="nc" id="L96">            ).verify(10, TimeUnit.SECONDS).getSession();</span>
+
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (&quot;password&quot;.equals(peticion.metodoAutenticacion())) {</span>
+<span class="nc" id="L99">                sesion.addPasswordIdentity(peticion.password());</span>
+            }
+
+<span class="nc" id="L102">            sesion.auth().verify(10, TimeUnit.SECONDS);</span>
+<span class="nc" id="L103">            sesion.close();</span>
+<span class="nc" id="L104">            return true;</span>
+<span class="fc" id="L105">        } catch (Exception excepcion) {</span>
+<span class="fc" id="L106">            return false;</span>
+        } finally {
+<span class="fc" id="L108">            cliente.stop();</span>
+        }
+    }
+
+    public String descifrarPassword(Servidor servidor) {
+<span class="nc bnc" id="L113" title="All 2 branches missed.">        if (servidor.getPasswordCifrada() == null) {</span>
+<span class="nc" id="L114">            return null;</span>
+        }
+<span class="nc" id="L116">        String passwordDescifrada = CifradoUtil.descifrar(servidor.getPasswordCifrada(), claveCifrado);</span>
+<span class="nc" id="L117">        return passwordDescifrada;</span>
+    }
+
+    public String descifrarClaveSsh(Servidor servidor) {
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        if (servidor.getClaveSshPrivada() == null) {</span>
+<span class="nc" id="L122">            return null;</span>
+        }
+<span class="nc" id="L124">        String claveDescifrada = CifradoUtil.descifrar(servidor.getClaveSshPrivada(), claveCifrado);</span>
+<span class="nc" id="L125">        return claveDescifrada;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

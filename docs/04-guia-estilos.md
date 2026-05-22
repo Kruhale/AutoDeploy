@@ -6,6 +6,8 @@
 
 **Enlace al prototipo:** https://www.figma.com/design/sNOYtZb7Oclv3pFLv5xY4Z/AutoDeployService?node-id=338-18&t=MWyZEmhlbzjXqj2D-1
 
+![Vista general del archivo Figma con las seis paginas del prototipo (moodboard, guia de estilo, componentes, mockups, sitemap, wireframes)](./assets/capturas/53-figma-overview.png)
+
 El archivo contiene seis páginas:
 
 1. **Moodboard** — Dirección estética con palabras clave (oscuro, profesional, cálido, técnico) y referencias visuales (Linear, Stripe, Coolify).
@@ -14,6 +16,16 @@ El archivo contiene seis páginas:
 4. **Mockups** — Pantallas finales con contenido real: bienvenida, login, dashboard, billing, asistente-ia, terminal, onboarding.
 5. **Sitemap** — Diagrama completo de las 27 rutas (públicas, autenticadas, legales).
 6. **Wireframes** — Baja fidelidad de 6 pantallas core.
+
+![Pagina de guia de estilos en Figma con la paleta de color HSL, la escala tipografica de Outfit, los tokens de espaciado y los iconos](./assets/capturas/56-figma-guia-estilos.png)
+
+Todos los tokens están sistematizados como **variables de Figma**, lo que permite cambiar un color o un espaciado y propagarlo a todo el archivo sin tocar instancia por instancia. Los tokens viven en colecciones separadas (Color, Spacing, Typography) y se replican exactamente en `00-settings/_variables.scss`:
+
+![Panel Local variables de Figma con las colecciones de Color, Spacing y Typography mostrando los tokens nombrados y sus valores HSL/rem](./assets/capturas/54-figma-variables.png)
+
+Cada componente se ha construido con **Auto-layout** y propiedades reutilizables (variantes para estados, tamaños y acentos). Así, los cambios de espaciado o tipografía se propagan a todas las instancias sin retocar a mano:
+
+![Componente en Figma con Auto-layout activo, mostrando el panel lateral derecho con las propiedades de direccion, padding y gap](./assets/capturas/55-figma-autolayaout.png)
 
 ## Sistema de color
 
@@ -93,6 +105,21 @@ Diseñados en la página "Wireframes" del prototipo Figma (no se exportan a carp
 | `.tabla-sitios` | `__fila` interactiva | `:hover`, `:active`, `:focus-within` | `05-components/_tabla-sitios.scss` |
 | `.spinner` | `--grande`, `--cyan`, `--verde` | keyframe `giro-spinner` 0.8 s linear | `01-tools/_animaciones.scss` |
 | `app-galeria-capturas` | reutilizable con input `[capturas]` | container queries (1↔2 columnas) | `05-components/_galeria-capturas.scss` |
+
+## Arquitectura CSS — ITCSS + BEM
+
+El SCSS se organiza con **ITCSS** (especificidad creciente por capa) y nomenclatura **BEM** en los componentes:
+
+![Arbol de carpetas autodeploy/src/styles con las 6 capas de ITCSS: 00-settings, 01-tools, 02-generic, 03-elements, 04-layout, 05-components](./assets/capturas/61-itcss-estructura.png)
+
+| Capa | Contenido |
+|---|---|
+| `00-settings/` | Custom Properties (colores, espaciados, tipografías), breakpoints Sass, z-index. **Fuente única** del sistema de diseño. |
+| `01-tools/` | Mixins (`@include movimiento-permitido`, `@include media-arriba(...)`), funciones (`fluido()`), animaciones globales. |
+| `02-generic/` | Reset + box-sizing. |
+| `03-elements/` | Estilos base de elementos HTML (`button`, `input`, `form`). |
+| `04-layout/` | Estructuras macro (cabecera, sidebar, footer, grids). |
+| `05-components/` | Componentes BEM (`.tarjeta-servidor`, `.pagina-firewall__regla`, `.spinner--cyan`). Estilos locales por página viven en `pages/X/X.scss`. |
 
 ## Referencia completa
 

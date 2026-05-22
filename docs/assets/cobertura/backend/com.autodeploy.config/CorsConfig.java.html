@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CorsConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.config</a> &gt; <span class="el_source">CorsConfig.java</span></div><h1>CorsConfig.java</h1><pre class="source lang-java linenums">package com.autodeploy.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+@Configuration
+<span class="fc" id="L10">public class CorsConfig {</span>
+
+    @Bean
+    public CorsFilter corsFilter() {
+<span class="fc" id="L14">        CorsConfiguration configuracionCors = new CorsConfiguration();</span>
+<span class="fc" id="L15">        configuracionCors.addAllowedOrigin(&quot;http://localhost:4200&quot;);</span>
+<span class="fc" id="L16">        configuracionCors.addAllowedMethod(&quot;*&quot;);</span>
+<span class="fc" id="L17">        configuracionCors.addAllowedHeader(&quot;*&quot;);</span>
+<span class="fc" id="L18">        configuracionCors.setAllowCredentials(true);</span>
+
+<span class="fc" id="L20">        UrlBasedCorsConfigurationSource fuenteDeConfiguracion = new UrlBasedCorsConfigurationSource();</span>
+<span class="fc" id="L21">        fuenteDeConfiguracion.registerCorsConfiguration(&quot;/api/**&quot;, configuracionCors);</span>
+
+<span class="fc" id="L23">        return new CorsFilter(fuenteDeConfiguracion);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

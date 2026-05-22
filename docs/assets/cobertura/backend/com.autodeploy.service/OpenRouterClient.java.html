@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>OpenRouterClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">OpenRouterClient.java</span></div><h1>OpenRouterClient.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.dto.MensajeUsuario;
+import com.autodeploy.exception.BadRequestException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
+@Component
+public class OpenRouterClient {
+
+    private static final String URL_OPENROUTER = &quot;https://openrouter.ai/api/v1/chat/completions&quot;;
+<span class="fc" id="L28">    private static final Logger LOGGER = LoggerFactory.getLogger(OpenRouterClient.class);</span>
+
+    private final RestTemplate restTemplate;
+    private final ObjectMapper objectMapper;
+
+<span class="fc" id="L33">    public OpenRouterClient() {</span>
+<span class="fc" id="L34">        this.restTemplate = new RestTemplate();</span>
+<span class="fc" id="L35">        this.objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L36">    }</span>
+
+    public String enviarConversacion(String apiKey, String modelo, String promptSistema, List&lt;MensajeUsuario&gt; historial, String mensajeNuevo) {
+<span class="fc" id="L39">        List&lt;Map&lt;String, String&gt;&gt; listaDeMensajes = construirListaMensajes(promptSistema, historial, mensajeNuevo);</span>
+
+<span class="fc" id="L41">        Map&lt;String, Object&gt; cuerpoPeticion = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L42">        cuerpoPeticion.put(&quot;model&quot;, modelo);</span>
+<span class="fc" id="L43">        cuerpoPeticion.put(&quot;messages&quot;, listaDeMensajes);</span>
+<span class="fc" id="L44">        cuerpoPeticion.put(&quot;temperature&quot;, 0.3);</span>
+
+<span class="fc" id="L46">        HttpHeaders cabeceras = new HttpHeaders();</span>
+<span class="fc" id="L47">        cabeceras.setContentType(MediaType.APPLICATION_JSON);</span>
+<span class="fc" id="L48">        cabeceras.setBearerAuth(apiKey);</span>
+<span class="fc" id="L49">        cabeceras.set(&quot;HTTP-Referer&quot;, &quot;https://autodeploy.local&quot;);</span>
+<span class="fc" id="L50">        cabeceras.set(&quot;X-Title&quot;, &quot;AutoDeploy AI Assistant&quot;);</span>
+
+<span class="fc" id="L52">        HttpEntity&lt;Map&lt;String, Object&gt;&gt; peticionHttp = new HttpEntity&lt;&gt;(cuerpoPeticion, cabeceras);</span>
+
+        try {
+<span class="fc" id="L55">            String respuestaJson = restTemplate.postForObject(URL_OPENROUTER, peticionHttp, String.class);</span>
+<span class="fc" id="L56">            String contenidoMensaje = extraerContenidoMensaje(respuestaJson);</span>
+<span class="fc" id="L57">            return contenidoMensaje;</span>
+<span class="fc" id="L58">        } catch (HttpClientErrorException errorCliente) {</span>
+<span class="fc" id="L59">            String cuerpoErrorRecibido = errorCliente.getResponseBodyAsString();</span>
+<span class="fc" id="L60">            HttpStatusCode codigoEstado = errorCliente.getStatusCode();</span>
+<span class="fc" id="L61">            LOGGER.warn(&quot;OpenRouter respondio {} : {}&quot;, codigoEstado, cuerpoErrorRecibido);</span>
+<span class="fc" id="L62">            String mensajeUsuario = traducirErrorCliente(codigoEstado.value(), cuerpoErrorRecibido);</span>
+<span class="fc" id="L63">            throw new BadRequestException(mensajeUsuario);</span>
+<span class="fc" id="L64">        } catch (HttpServerErrorException errorServidor) {</span>
+<span class="fc" id="L65">            LOGGER.error(&quot;OpenRouter caido o error 5xx: {}&quot;, errorServidor.getMessage());</span>
+<span class="fc" id="L66">            throw new BadRequestException(&quot;OpenRouter no esta disponible ahora mismo. Intentalo en unos minutos.&quot;);</span>
+<span class="fc" id="L67">        } catch (ResourceAccessException errorConexion) {</span>
+<span class="fc" id="L68">            LOGGER.error(&quot;Sin conexion con OpenRouter: {}&quot;, errorConexion.getMessage());</span>
+<span class="fc" id="L69">            throw new BadRequestException(&quot;No se ha podido conectar con OpenRouter. Revisa tu conexion.&quot;);</span>
+<span class="fc" id="L70">        } catch (Exception excepcionInesperada) {</span>
+<span class="fc" id="L71">            LOGGER.error(&quot;Error inesperado llamando a OpenRouter&quot;, excepcionInesperada);</span>
+<span class="fc" id="L72">            throw new BadRequestException(&quot;Error inesperado al hablar con la IA: &quot; + excepcionInesperada.getMessage());</span>
+        }
+    }
+
+    private String traducirErrorCliente(int codigoHttp, String cuerpoError) {
+<span class="fc bfc" id="L77" title="All 2 branches covered.">        if (codigoHttp == 401) {</span>
+<span class="fc" id="L78">            return &quot;Tu API key de OpenRouter no es valida. Revisa los Ajustes.&quot;;</span>
+        }
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (codigoHttp == 402) {</span>
+<span class="fc" id="L81">            return &quot;No tienes creditos en OpenRouter para este modelo. Recarga o cambia a un modelo gratis.&quot;;</span>
+        }
+<span class="fc bfc" id="L83" title="All 2 branches covered.">        if (codigoHttp == 404) {</span>
+<span class="fc" id="L84">            return &quot;El modelo seleccionado no existe en OpenRouter. Elige otro en los Ajustes.&quot;;</span>
+        }
+<span class="fc bfc" id="L86" title="All 2 branches covered.">        if (codigoHttp == 429) {</span>
+<span class="fc" id="L87">            return &quot;Demasiadas peticiones. Espera unos segundos antes de volver a probar.&quot;;</span>
+        }
+<span class="fc" id="L89">        String mensajeBackup = &quot;OpenRouter rechazo la peticion (codigo &quot; + codigoHttp + &quot;).&quot;;</span>
+<span class="fc" id="L90">        return mensajeBackup;</span>
+    }
+
+    private List&lt;Map&lt;String, String&gt;&gt; construirListaMensajes(String promptSistema, List&lt;MensajeUsuario&gt; historial, String mensajeNuevo) {
+<span class="fc" id="L94">        List&lt;Map&lt;String, String&gt;&gt; listaDeMensajes = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L96">        Map&lt;String, String&gt; mensajeSistema = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L97">        mensajeSistema.put(&quot;role&quot;, &quot;system&quot;);</span>
+<span class="fc" id="L98">        mensajeSistema.put(&quot;content&quot;, promptSistema);</span>
+<span class="fc" id="L99">        listaDeMensajes.add(mensajeSistema);</span>
+
+<span class="pc bpc" id="L101" title="1 of 2 branches missed.">        if (historial != null) {</span>
+<span class="fc bfc" id="L102" title="All 2 branches covered.">            for (MensajeUsuario mensajeHistorial : historial) {</span>
+<span class="fc" id="L103">                Map&lt;String, String&gt; mensajeFormateado = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L104">                mensajeFormateado.put(&quot;role&quot;, mensajeHistorial.rol());</span>
+<span class="fc" id="L105">                mensajeFormateado.put(&quot;content&quot;, mensajeHistorial.contenido());</span>
+<span class="fc" id="L106">                listaDeMensajes.add(mensajeFormateado);</span>
+<span class="fc" id="L107">            }</span>
+        }
+
+<span class="fc" id="L110">        Map&lt;String, String&gt; mensajeActual = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L111">        mensajeActual.put(&quot;role&quot;, &quot;user&quot;);</span>
+<span class="fc" id="L112">        mensajeActual.put(&quot;content&quot;, mensajeNuevo);</span>
+<span class="fc" id="L113">        listaDeMensajes.add(mensajeActual);</span>
+
+<span class="fc" id="L115">        return listaDeMensajes;</span>
+    }
+
+    private String extraerContenidoMensaje(String respuestaJson) throws Exception {
+<span class="fc" id="L119">        JsonNode arbolJson = objectMapper.readTree(respuestaJson);</span>
+<span class="fc" id="L120">        JsonNode nodoOpciones = arbolJson.path(&quot;choices&quot;);</span>
+
+<span class="pc bpc" id="L122" title="1 of 4 branches missed.">        if (!nodoOpciones.isArray() || nodoOpciones.isEmpty()) {</span>
+<span class="fc" id="L123">            throw new RuntimeException(&quot;Respuesta vacia de OpenRouter&quot;);</span>
+        }
+
+<span class="fc" id="L126">        JsonNode primeraOpcion = nodoOpciones.get(0);</span>
+<span class="fc" id="L127">        JsonNode nodoMensaje = primeraOpcion.path(&quot;message&quot;);</span>
+<span class="fc" id="L128">        String contenido = nodoMensaje.path(&quot;content&quot;).asText(&quot;&quot;);</span>
+<span class="fc" id="L129">        return contenido;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

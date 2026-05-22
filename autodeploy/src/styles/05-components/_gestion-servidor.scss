@@ -340,13 +340,26 @@
     }
 
     &__btn {
+      // Reset porque la misma clase se usa en <button> (subdominios) y en
+      // <i> (aplicaciones). Sin esto, los <button> heredan fondo gris claro
+      // del navegador y queda como cuadrado raro alrededor del icono.
+      background: transparent;
+      border: none;
+      padding: 0.375rem;
+      border-radius: var(--radius-s);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
       font-size: var(--font-size-base);
       color: var(--texto-apagado);
       cursor: pointer;
-      transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+                  background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
       &:hover {
         color: var(--texto-claro);
+        background-color: rgba(240, 236, 226, 0.06);
       }
 
       &:focus-visible {
@@ -359,6 +372,7 @@
 
         &:hover {
           color: var(--rojo-normal);
+          background-color: rgba(239, 68, 68, 0.08);
         }
 
         &:focus-visible {

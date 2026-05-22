@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LogService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">LogService.java</span></div><h1>LogService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.exception.BadRequestException;
+import com.autodeploy.model.Servidor;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.regex.Pattern;
+
+@Service
+public class LogService {
+
+    // Solo dejamos rutas de log seguras (sin espacios ni comodines) para evitar inyecciones
+<span class="fc" id="L15">    private static final Pattern RUTA_LOG_VALIDA = Pattern.compile(&quot;^[A-Za-z0-9_./~-]+$&quot;);</span>
+
+    // Solo dejamos patrones de busqueda con caracteres seguros (sin shell, sin tuberias)
+<span class="fc" id="L18">    private static final Pattern PATRON_BUSQUEDA_VALIDO = Pattern.compile(&quot;^[A-Za-z0-9 ._/:@-]+$&quot;);</span>
+
+    private final SshCommandService sshCommandService;
+
+<span class="fc" id="L22">    public LogService(SshCommandService sshCommandService) {</span>
+<span class="fc" id="L23">        this.sshCommandService = sshCommandService;</span>
+<span class="fc" id="L24">    }</span>
+
+    public List&lt;String&gt; obtenerUltimasLineas(Servidor servidor, String archivo, int lineas) {
+<span class="fc" id="L27">        validarRutaArchivo(archivo);</span>
+<span class="fc" id="L28">        validarNumeroLineas(lineas);</span>
+
+<span class="fc" id="L30">        String comando = &quot;tail -n &quot; + lineas + &quot; &quot; + archivo;</span>
+<span class="fc" id="L31">        String salidaDelComando = sshCommandService.ejecutarComando(servidor, comando);</span>
+
+<span class="fc" id="L33">        String[] listaDeLineas = salidaDelComando.split(&quot;\n&quot;);</span>
+<span class="fc" id="L34">        return Arrays.asList(listaDeLineas);</span>
+    }
+
+    public List&lt;String&gt; buscarEnLogs(Servidor servidor, String archivo, String patron) {
+<span class="fc" id="L38">        validarRutaArchivo(archivo);</span>
+<span class="fc" id="L39">        validarPatronBusqueda(patron);</span>
+
+        // grep -F trata el patron como texto literal, asi evitamos que se interprete como regex
+<span class="fc" id="L42">        String comando = &quot;grep -F &quot; + entrecomillarSeguro(patron) + &quot; &quot; + archivo + &quot; | tail -50&quot;;</span>
+<span class="fc" id="L43">        String salidaDelComando = sshCommandService.ejecutarComando(servidor, comando);</span>
+
+<span class="fc" id="L45">        String[] listaDeLineas = salidaDelComando.split(&quot;\n&quot;);</span>
+<span class="fc" id="L46">        return Arrays.asList(listaDeLineas);</span>
+    }
+
+    private static void validarRutaArchivo(String archivo) {
+<span class="fc bfc" id="L50" title="All 4 branches covered.">        if (archivo == null || archivo.isBlank()) {</span>
+<span class="fc" id="L51">            throw new BadRequestException(&quot;La ruta del archivo de log no puede estar vacia&quot;);</span>
+        }
+<span class="fc bfc" id="L53" title="All 2 branches covered.">        if (!RUTA_LOG_VALIDA.matcher(archivo).matches()) {</span>
+<span class="fc" id="L54">            throw new BadRequestException(&quot;Ruta de log no valida (solo se permiten letras, numeros, /, -, _, .)&quot;);</span>
+        }
+<span class="fc" id="L56">    }</span>
+
+    private static void validarPatronBusqueda(String patron) {
+<span class="pc bpc" id="L59" title="1 of 4 branches missed.">        if (patron == null || patron.isBlank()) {</span>
+<span class="fc" id="L60">            throw new BadRequestException(&quot;El patron de busqueda no puede estar vacio&quot;);</span>
+        }
+<span class="fc bfc" id="L62" title="All 2 branches covered.">        if (patron.length() &gt; 200) {</span>
+<span class="fc" id="L63">            throw new BadRequestException(&quot;El patron de busqueda es demasiado largo (max 200 caracteres)&quot;);</span>
+        }
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (!PATRON_BUSQUEDA_VALIDO.matcher(patron).matches()) {</span>
+<span class="fc" id="L66">            throw new BadRequestException(&quot;Patron de busqueda no valido (solo se permiten caracteres seguros)&quot;);</span>
+        }
+<span class="fc" id="L68">    }</span>
+
+    private static void validarNumeroLineas(int lineas) {
+<span class="fc bfc" id="L71" title="All 4 branches covered.">        if (lineas &lt;= 0 || lineas &gt; 5000) {</span>
+<span class="fc" id="L72">            throw new BadRequestException(&quot;El numero de lineas debe estar entre 1 y 5000&quot;);</span>
+        }
+<span class="fc" id="L74">    }</span>
+
+    private static String entrecomillarSeguro(String texto) {
+        // Doble seguridad: aunque la entrada esta validada, envolvemos en comillas simples
+<span class="fc" id="L78">        return &quot;'&quot; + texto.replace(&quot;'&quot;, &quot;'\\''&quot;) + &quot;'&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

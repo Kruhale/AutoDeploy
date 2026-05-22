@@ -13,9 +13,9 @@
         <p class="pagina-registro__subtitulo">{{ 'register.subtitulo' | translate }}</p>
       </header>
 
-      <form class="pagina-registro__formulario">
+      <form class="pagina-registro__formulario" [formGroup]="formularioRegistro" (ngSubmit)="crearCuenta()" novalidate>
         @if (mensajeDeErrorVisible()) {
-          <p class="pagina-registro__error">
+          <p class="pagina-registro__error" role="alert" aria-live="polite">
             <span class="pagina-registro__error__punto" aria-hidden="true"></span>
             {{ mensajeDeError() }}
           </p>
@@ -26,7 +26,10 @@
             <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
             {{ 'register.nombreEtiqueta' | translate }}
           </label>
-          <input class="campo__input" id="nombre" name="nombre" type="text" [placeholder]="'register.nombrePlaceholder' | translate" autocomplete="name" [ngModel]="nombreCompleto()" (ngModelChange)="nombreCompleto.set($event)">
+          <input class="campo__input" id="nombre" name="nombre" type="text"
+                 [placeholder]="'register.nombrePlaceholder' | translate" autocomplete="name"
+                 formControlName="nombre"
+                 [attr.aria-invalid]="campoConError('nombre')">
         </section>
 
         <section class="campo">
@@ -34,7 +37,10 @@
             <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
             {{ 'register.emailEtiqueta' | translate }}
           </label>
-          <input class="campo__input" id="email" name="email" type="email" [placeholder]="'register.emailPlaceholder' | translate" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
+          <input class="campo__input" id="email" name="email" type="email"
+                 [placeholder]="'register.emailPlaceholder' | translate" autocomplete="email"
+                 formControlName="email"
+                 [attr.aria-invalid]="campoConError('email')">
         </section>
 
         <section class="campo">
@@ -44,13 +50,15 @@
           </label>
           <section class="pagina-registro__campo-password">
             <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
-              [placeholder]="'register.clavePlaceholder' | translate" autocomplete="new-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
+              [placeholder]="'register.clavePlaceholder' | translate" autocomplete="new-password"
+              formControlName="password"
+              [attr.aria-invalid]="campoConError('password')">
             <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
               [attr.aria-label]="(passwordEsVisible() ? 'register.ariaOcultarClave' : 'register.ariaVerClave') | translate">
               <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
             </button>
           </section>
-          @if (passwordUsuario().length > 0) {
+          @if (passwordEnElInput().length > 0) {
             <ul class="pagina-registro__criterios">
               <li class="pagina-registro__criterio" [class.pagina-registro__criterio--ok]="criterioLongitud()">
                 <span class="pagina-registro__criterio__icono" aria-hidden="true">
@@ -93,15 +101,22 @@
           </label>
           <section class="pagina-registro__campo-password">
             <input class="campo__input" id="confirmar-password" name="confirmar-password" [type]="confirmPasswordEsVisible() ? 'text' : 'password'"
-              [placeholder]="'register.confirmarPasswordPlaceholder' | translate" autocomplete="new-password" [ngModel]="confirmPasswordUsuario()" (ngModelChange)="confirmPasswordUsuario.set($event)">
+              [placeholder]="'register.confirmarPasswordPlaceholder' | translate" autocomplete="new-password"
+              formControlName="confirmPassword"
+              [attr.aria-invalid]="hayConfirmacionInvalida()">
             <button class="pagina-registro__boton-ver" type="button" (click)="alternarVisibilidadConfirmPassword()"
               [attr.aria-label]="(confirmPasswordEsVisible() ? 'register.ariaOcultarConfirmar' : 'register.ariaVerConfirmar') | translate">
               <i [class]="confirmPasswordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
             </button>
           </section>
+          @if (hayConfirmacionInvalida()) {
+            <span class="campo__error" id="confirmar-password-error">
+              {{ 'register.errorPasswordsNoCoinciden' | translate }}
+            </span>
+          }
         </section>
 
-        <button class="pagina-registro__boton-enviar" type="button" (click)="crearCuenta()" [disabled]="cargando()">
+        <button class="pagina-registro__boton-enviar" type="submit" [disabled]="cargando()">
           <span class="pagina-registro__boton-enviar__texto">{{ (cargando() ? 'register.botonCargando' : 'register.boton') | translate }}</span>
           <span class="pagina-registro__boton-enviar__flecha" aria-hidden="true">→</span>
         </button>
@@ -124,7 +139,7 @@
         {{ 'register.sello' | translate }}
       </span>
       <a class="pagina-registro__logo" routerLink="/">
-        <img class="pagina-registro__logo__imagen" src="logo.png" alt="AutoDeploy" width="32" height="32">
+        <img class="pagina-registro__logo__imagen" src="logo-128.webp" alt="AutoDeploy" width="32" height="32" decoding="async" fetchpriority="high">
         <span class="pagina-registro__logo__texto">Auto<span class="pagina-registro__logo__texto--acento">Deploy</span></span>
       </a>
     </header>

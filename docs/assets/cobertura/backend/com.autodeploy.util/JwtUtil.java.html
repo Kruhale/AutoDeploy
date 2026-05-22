@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.util</a> &gt; <span class="el_source">JwtUtil.java</span></div><h1>JwtUtil.java</h1><pre class="source lang-java linenums">package com.autodeploy.util;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+
+@Component
+<span class="fc" id="L15">public class JwtUtil {</span>
+
+    private static final long DURACION_MS = 86400000L;
+    private static final int LONGITUD_MINIMA_SECRETO = 32;
+
+    @Value(&quot;${autodeploy.jwt.secret:}&quot;)
+    private String secreto;
+
+    @PostConstruct
+    void verificarSecreto() {
+<span class="fc bfc" id="L25" title="All 4 branches covered.">        if (secreto == null || secreto.isBlank()) {</span>
+<span class="fc" id="L26">            throw new IllegalStateException(</span>
+                &quot;AUTODEPLOY_JWT_SECRET no esta definida. Configura la variable de entorno &quot;
+                + &quot;(o autodeploy.jwt.secret en application.properties) con al menos &quot;
+                + LONGITUD_MINIMA_SECRETO + &quot; caracteres antes de arrancar.&quot;
+            );
+        }
+<span class="fc bfc" id="L32" title="All 2 branches covered.">        if (secreto.getBytes(StandardCharsets.UTF_8).length &lt; LONGITUD_MINIMA_SECRETO) {</span>
+<span class="fc" id="L33">            throw new IllegalStateException(</span>
+                &quot;AUTODEPLOY_JWT_SECRET es demasiado corta (minimo &quot; + LONGITUD_MINIMA_SECRETO
+                + &quot; bytes para HMAC-SHA seguro).&quot;
+            );
+        }
+<span class="fc" id="L38">    }</span>
+
+    public String generarToken(String usuarioId, String email) {
+<span class="fc" id="L41">        return generarToken(usuarioId, email, &quot;USUARIO&quot;);</span>
+    }
+
+    public String generarToken(String usuarioId, String email, String rol) {
+<span class="fc" id="L45">        SecretKey claveSecreta = Keys.hmacShaKeyFor(secreto.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L46">        return Jwts.builder()</span>
+<span class="fc" id="L47">                .subject(usuarioId)</span>
+<span class="fc" id="L48">                .claim(&quot;email&quot;, email)</span>
+<span class="fc bfc" id="L49" title="All 2 branches covered.">                .claim(&quot;rol&quot;, rol != null ? rol : &quot;USUARIO&quot;)</span>
+<span class="fc" id="L50">                .issuedAt(new Date())</span>
+<span class="fc" id="L51">                .expiration(new Date(System.currentTimeMillis() + DURACION_MS))</span>
+<span class="fc" id="L52">                .signWith(claveSecreta)</span>
+<span class="fc" id="L53">                .compact();</span>
+    }
+
+    public String extraerUsuarioId(String token) {
+<span class="fc" id="L57">        return parsearToken(token).getSubject();</span>
+    }
+
+    public String extraerRol(String token) {
+<span class="fc" id="L61">        Object rol = parsearToken(token).get(&quot;rol&quot;);</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        return rol != null ? rol.toString() : &quot;USUARIO&quot;;</span>
+    }
+
+    public boolean esValido(String token) {
+        try {
+<span class="fc" id="L67">            parsearToken(token);</span>
+<span class="fc" id="L68">            return true;</span>
+<span class="fc" id="L69">        } catch (Exception error) {</span>
+<span class="fc" id="L70">            return false;</span>
+        }
+    }
+
+    private Claims parsearToken(String token) {
+<span class="fc" id="L75">        SecretKey claveSecreta = Keys.hmacShaKeyFor(secreto.getBytes(StandardCharsets.UTF_8));</span>
+<span class="fc" id="L76">        return Jwts.parser()</span>
+<span class="fc" id="L77">                .verifyWith(claveSecreta)</span>
+<span class="fc" id="L78">                .build()</span>
+<span class="fc" id="L79">                .parseSignedClaims(token)</span>
+<span class="fc" id="L80">                .getPayload();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

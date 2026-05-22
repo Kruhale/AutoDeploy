@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Usuario.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.model</a> &gt; <span class="el_source">Usuario.java</span></div><h1>Usuario.java</h1><pre class="source lang-java linenums">package com.autodeploy.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.Indexed;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Document(collection = &quot;usuario&quot;)
+public class Usuario {
+
+    public static final String ROL_USUARIO = &quot;USUARIO&quot;;
+    public static final String ROL_ADMIN = &quot;ADMIN&quot;;
+
+    @Id
+    private String id;
+    private String nombre;
+    @Indexed(unique = true)
+    private String email;
+    @JsonIgnore
+    private String passwordHash;
+    private LocalDateTime fechaCreacion;
+    private String plan;
+    private String rol;
+    private String idioma;
+    private LocalDateTime fechaInicioSuscripcion;
+    private LocalDateTime fechaFinSuscripcion;
+<span class="fc" id="L31">    private List&lt;ClaveSshUsuario&gt; clavesSsh = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L32">    private PreferenciasNotificacion preferenciasNotificacion = new PreferenciasNotificacion();</span>
+
+<span class="fc" id="L34">    public Usuario() {</span>
+<span class="fc" id="L35">        this.fechaCreacion = LocalDateTime.now();</span>
+<span class="fc" id="L36">        this.plan = &quot;free&quot;;</span>
+<span class="fc" id="L37">        this.rol = ROL_USUARIO;</span>
+<span class="fc" id="L38">        this.idioma = &quot;es&quot;;</span>
+<span class="fc" id="L39">        this.clavesSsh = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L40">        this.preferenciasNotificacion = new PreferenciasNotificacion();</span>
+<span class="fc" id="L41">    }</span>
+
+<span class="fc" id="L43">    public Usuario(String nombre, String email, String passwordHash) {</span>
+<span class="fc" id="L44">        this.nombre = nombre;</span>
+<span class="fc" id="L45">        this.email = email;</span>
+<span class="fc" id="L46">        this.passwordHash = passwordHash;</span>
+<span class="fc" id="L47">        this.fechaCreacion = LocalDateTime.now();</span>
+<span class="fc" id="L48">        this.plan = &quot;free&quot;;</span>
+<span class="fc" id="L49">        this.rol = ROL_USUARIO;</span>
+<span class="fc" id="L50">        this.idioma = &quot;es&quot;;</span>
+<span class="fc" id="L51">        this.clavesSsh = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L52">        this.preferenciasNotificacion = new PreferenciasNotificacion();</span>
+<span class="fc" id="L53">    }</span>
+
+    public List&lt;ClaveSshUsuario&gt; getClavesSsh() {
+<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (clavesSsh == null) clavesSsh = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L57">        return clavesSsh;</span>
+    }
+<span class="fc" id="L59">    public void setClavesSsh(List&lt;ClaveSshUsuario&gt; clavesSsh) { this.clavesSsh = clavesSsh; }</span>
+
+    public PreferenciasNotificacion getPreferenciasNotificacion() {
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (preferenciasNotificacion == null) preferenciasNotificacion = new PreferenciasNotificacion();</span>
+<span class="fc" id="L63">        return preferenciasNotificacion;</span>
+    }
+<span class="fc" id="L65">    public void setPreferenciasNotificacion(PreferenciasNotificacion preferenciasNotificacion) { this.preferenciasNotificacion = preferenciasNotificacion; }</span>
+
+<span class="fc" id="L67">    public String getId() { return id; }</span>
+<span class="fc" id="L68">    public void setId(String id) { this.id = id; }</span>
+
+<span class="fc" id="L70">    public String getNombre() { return nombre; }</span>
+<span class="fc" id="L71">    public void setNombre(String nombre) { this.nombre = nombre; }</span>
+
+<span class="fc" id="L73">    public String getEmail() { return email; }</span>
+<span class="fc" id="L74">    public void setEmail(String email) { this.email = email; }</span>
+
+<span class="fc" id="L76">    public String getPasswordHash() { return passwordHash; }</span>
+<span class="fc" id="L77">    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }</span>
+
+<span class="fc" id="L79">    public LocalDateTime getFechaCreacion() { return fechaCreacion; }</span>
+
+<span class="fc" id="L81">    public String getPlan() { return plan; }</span>
+<span class="fc" id="L82">    public void setPlan(String plan) { this.plan = plan; }</span>
+
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">    public String getRol() { return rol != null ? rol : ROL_USUARIO; }</span>
+<span class="fc" id="L85">    public void setRol(String rol) { this.rol = rol; }</span>
+
+<span class="fc" id="L87">    public LocalDateTime getFechaInicioSuscripcion() { return fechaInicioSuscripcion; }</span>
+<span class="fc" id="L88">    public void setFechaInicioSuscripcion(LocalDateTime fechaInicioSuscripcion) { this.fechaInicioSuscripcion = fechaInicioSuscripcion; }</span>
+
+<span class="fc" id="L90">    public LocalDateTime getFechaFinSuscripcion() { return fechaFinSuscripcion; }</span>
+<span class="fc" id="L91">    public void setFechaFinSuscripcion(LocalDateTime fechaFinSuscripcion) { this.fechaFinSuscripcion = fechaFinSuscripcion; }</span>
+
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">    public String getIdioma() { return idioma != null ? idioma : &quot;es&quot;; }</span>
+<span class="fc" id="L94">    public void setIdioma(String idioma) { this.idioma = idioma; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

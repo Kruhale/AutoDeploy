@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsuarioController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">UsuarioController.java</span></div><h1>UsuarioController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.dto.LoginRequest;
+import com.autodeploy.dto.LoginResponse;
+import com.autodeploy.dto.RegistroRequest;
+import com.autodeploy.model.ClaveSshUsuario;
+import com.autodeploy.model.PreferenciasNotificacion;
+import com.autodeploy.model.Usuario;
+import com.autodeploy.service.UsuarioService;
+
+import java.util.List;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
+import java.util.Map;
+
+@Tag(name = &quot;Usuarios&quot;, description = &quot;Gestión de usuarios y autenticación&quot;)
+@RestController
+@RequestMapping(&quot;/api/usuarios&quot;)
+public class UsuarioController {
+
+    private final UsuarioService usuarioService;
+
+<span class="fc" id="L37">    public UsuarioController(UsuarioService usuarioService) {</span>
+<span class="fc" id="L38">        this.usuarioService = usuarioService;</span>
+<span class="fc" id="L39">    }</span>
+
+    @Operation(summary = &quot;Registrar usuario&quot;)
+    @PostMapping(&quot;/registro&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;LoginResponse&gt;&gt; registrar(@RequestBody @Valid RegistroRequest peticion) {
+<span class="fc" id="L44">        Usuario usuario = usuarioService.registrar(peticion);</span>
+<span class="fc" id="L45">        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);</span>
+<span class="fc" id="L46">        URI ubicacion = URI.create(&quot;/api/usuarios/&quot; + usuario.getId());</span>
+
+<span class="fc" id="L48">        ApiResponse&lt;LoginResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Usuario registrado&quot;, respuesta);</span>
+<span class="fc" id="L49">        return ResponseEntity.created(ubicacion).body(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Login&quot;)
+    @PostMapping(&quot;/login&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;LoginResponse&gt;&gt; login(@RequestBody @Valid LoginRequest peticion) {
+<span class="fc" id="L55">        LoginResponse respuesta = usuarioService.login(peticion);</span>
+
+<span class="fc" id="L57">        ApiResponse&lt;LoginResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Login correcto&quot;, respuesta);</span>
+<span class="fc" id="L58">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Obtener perfil del usuario por id&quot;)
+    @GetMapping(&quot;/{id}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;LoginResponse&gt;&gt; obtener(@PathVariable String id) {
+<span class="fc" id="L65">        Usuario usuario = usuarioService.obtenerPorId(id);</span>
+<span class="fc" id="L66">        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);</span>
+
+<span class="fc" id="L68">        ApiResponse&lt;LoginResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, respuesta);</span>
+<span class="fc" id="L69">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Actualizar nombre y email del perfil propio&quot;)
+    @PutMapping(&quot;/{id}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;LoginResponse&gt;&gt; actualizar(
+            @PathVariable String id,
+            @RequestBody Map&lt;String, String&gt; datos) {
+<span class="fc" id="L78">        String nombre = datos.getOrDefault(&quot;nombre&quot;, &quot;&quot;);</span>
+<span class="fc" id="L79">        String email = datos.getOrDefault(&quot;email&quot;, &quot;&quot;);</span>
+
+<span class="fc" id="L81">        Usuario usuario = usuarioService.actualizar(id, nombre, email);</span>
+<span class="fc" id="L82">        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);</span>
+
+<span class="fc" id="L84">        ApiResponse&lt;LoginResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Perfil actualizado&quot;, respuesta);</span>
+<span class="fc" id="L85">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Cambiar el plan de suscripcion (free, pro, business)&quot;)
+    @PutMapping(&quot;/{id}/plan&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;LoginResponse&gt;&gt; actualizarPlan(
+            @PathVariable String id,
+            @RequestBody Map&lt;String, String&gt; datos) {
+<span class="fc" id="L94">        String plan = datos.getOrDefault(&quot;plan&quot;, &quot;free&quot;);</span>
+
+<span class="fc" id="L96">        Usuario usuario = usuarioService.actualizarPlan(id, plan);</span>
+<span class="fc" id="L97">        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);</span>
+
+<span class="fc" id="L99">        ApiResponse&lt;LoginResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Plan actualizado&quot;, respuesta);</span>
+<span class="fc" id="L100">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Cancelar la suscripcion del usuario&quot;, description = &quot;Marca fechaFinSuscripcion a un mes despues de la fecha de inicio. El acceso se mantiene hasta esa fecha.&quot;)
+    @PutMapping(&quot;/{id}/cancelar-suscripcion&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;LoginResponse&gt;&gt; cancelarSuscripcion(@PathVariable String id) {
+<span class="fc" id="L107">        Usuario usuario = usuarioService.cancelarSuscripcion(id);</span>
+<span class="fc" id="L108">        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);</span>
+
+<span class="fc" id="L110">        ApiResponse&lt;LoginResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Suscripción cancelada&quot;, respuesta);</span>
+<span class="fc" id="L111">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Actualizar idioma preferido del usuario&quot;)
+    @PutMapping(&quot;/{id}/idioma&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;LoginResponse&gt;&gt; actualizarIdioma(
+            @PathVariable String id,
+            @RequestBody Map&lt;String, String&gt; datos) {
+<span class="fc" id="L120">        String idioma = datos.getOrDefault(&quot;idioma&quot;, &quot;es&quot;);</span>
+
+<span class="fc" id="L122">        Usuario usuario = usuarioService.actualizarIdioma(id, idioma);</span>
+<span class="fc" id="L123">        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);</span>
+
+<span class="fc" id="L125">        ApiResponse&lt;LoginResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Idioma actualizado&quot;, respuesta);</span>
+<span class="fc" id="L126">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Eliminar la cuenta propia (irreversible)&quot;)
+    @DeleteMapping(&quot;/{id}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;Void&gt; eliminar(@PathVariable String id) {
+<span class="fc" id="L133">        usuarioService.eliminar(id);</span>
+<span class="fc" id="L134">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @Operation(summary = &quot;Listar todos los usuarios (solo ADMIN)&quot;)
+    @GetMapping(&quot;/admin/todos&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;List&lt;Usuario&gt;&gt;&gt; listarTodos() {
+<span class="fc" id="L141">        List&lt;Usuario&gt; usuarios = usuarioService.listarTodos();</span>
+<span class="fc" id="L142">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, usuarios));</span>
+    }
+
+    @Operation(summary = &quot;Cambiar rol de un usuario (solo ADMIN)&quot;)
+    @PutMapping(&quot;/admin/{id}/rol&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Usuario&gt;&gt; actualizarRol(
+            @PathVariable String id,
+            @RequestBody Map&lt;String, String&gt; datos) {
+<span class="fc" id="L151">        String nuevoRol = datos.getOrDefault(&quot;rol&quot;, &quot;USUARIO&quot;);</span>
+<span class="fc" id="L152">        Usuario usuario = usuarioService.actualizarRol(id, nuevoRol);</span>
+<span class="fc" id="L153">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Rol actualizado&quot;, usuario));</span>
+    }
+
+    @Operation(summary = &quot;Eliminar un usuario por ID (solo ADMIN)&quot;)
+    @DeleteMapping(&quot;/admin/{id}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
+    public ResponseEntity&lt;Void&gt; eliminarComoAdmin(@PathVariable String id) {
+<span class="fc" id="L160">        usuarioService.eliminar(id);</span>
+<span class="fc" id="L161">        return ResponseEntity.noContent().build();</span>
+    }
+
+<span class="fc" id="L164">    public record NuevaClaveRequest(String nombre, String claveCompleta) {}</span>
+
+    @Operation(summary = &quot;Listar las claves SSH guardadas en el perfil del usuario&quot;)
+    @GetMapping(&quot;/{id}/claves-ssh&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;List&lt;ClaveSshUsuario&gt;&gt;&gt; listarClavesSsh(@PathVariable String id) {
+<span class="fc" id="L170">        Usuario usuario = usuarioService.obtenerPorId(id);</span>
+<span class="fc" id="L171">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, usuario.getClavesSsh()));</span>
+    }
+
+    @Operation(summary = &quot;Anyadir una clave SSH publica al perfil del usuario&quot;)
+    @PostMapping(&quot;/{id}/claves-ssh&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;ClaveSshUsuario&gt;&gt; agregarClaveSsh(
+            @PathVariable String id,
+            @RequestBody NuevaClaveRequest peticion) {
+<span class="fc" id="L180">        ClaveSshUsuario nuevaClave = usuarioService.agregarClaveSsh(id, peticion.nombre(), peticion.claveCompleta());</span>
+<span class="fc" id="L181">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Clave SSH añadida&quot;, nuevaClave));</span>
+    }
+
+    @Operation(summary = &quot;Borrar una clave SSH del perfil del usuario&quot;)
+    @DeleteMapping(&quot;/{idUsuario}/claves-ssh/{idClave}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #idUsuario == authentication.name&quot;)
+    public ResponseEntity&lt;Void&gt; eliminarClaveSsh(@PathVariable String idUsuario, @PathVariable String idClave) {
+<span class="nc" id="L188">        usuarioService.eliminarClaveSsh(idUsuario, idClave);</span>
+<span class="nc" id="L189">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @Operation(summary = &quot;Consultar las preferencias de notificacion del usuario&quot;)
+    @GetMapping(&quot;/{id}/notificaciones&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;PreferenciasNotificacion&gt;&gt; obtenerNotificaciones(@PathVariable String id) {
+<span class="fc" id="L196">        Usuario usuario = usuarioService.obtenerPorId(id);</span>
+<span class="fc" id="L197">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, usuario.getPreferenciasNotificacion()));</span>
+    }
+
+    @Operation(summary = &quot;Actualizar preferencias de notificacion (email, alertas criticas, eventos despliegue)&quot;)
+    @PutMapping(&quot;/{id}/notificaciones&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or #id == authentication.name&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;PreferenciasNotificacion&gt;&gt; actualizarNotificaciones(
+            @PathVariable String id,
+            @RequestBody PreferenciasNotificacion preferencias) {
+<span class="fc" id="L206">        PreferenciasNotificacion actualizadas = usuarioService.actualizarPreferenciasNotificacion(id, preferencias);</span>
+<span class="fc" id="L207">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Preferencias actualizadas&quot;, actualizadas));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

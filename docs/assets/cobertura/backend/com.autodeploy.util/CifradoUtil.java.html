@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CifradoUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.util</a> &gt; <span class="el_source">CifradoUtil.java</span></div><h1>CifradoUtil.java</h1><pre class="source lang-java linenums">package com.autodeploy.util;
+
+import javax.crypto.Cipher;
+import javax.crypto.spec.GCMParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.SecureRandom;
+import java.util.Base64;
+
+/**
+ * Cifrado para guardar las credenciales SSH en MongoDB sin que se vean en claro.
+ * Usa AES/GCM (cada cifrado lleva un IV aleatorio y un tag de autenticidad).
+ * Los valores antiguos en AES/ECB siguen pudiendose descifrar para no perder credenciales viejas.
+ */
+public class CifradoUtil {
+
+    private static final String ALGORITMO_GCM = &quot;AES/GCM/NoPadding&quot;;
+    private static final String ALGORITMO_LEGACY = &quot;AES&quot;;
+    private static final String PREFIJO_GCM = &quot;v2:&quot;;
+    private static final int LONGITUD_IV = 12;
+    private static final int LONGITUD_TAG_BITS = 128;
+<span class="fc" id="L23">    private static final SecureRandom GENERADOR_IV = new SecureRandom();</span>
+
+    private CifradoUtil() {
+    }
+
+    public static String cifrar(String textoPlano, String clave) {
+        try {
+<span class="fc" id="L30">            byte[] claveBytes = derivarClave(clave);</span>
+<span class="fc" id="L31">            SecretKeySpec especificacionClave = new SecretKeySpec(claveBytes, &quot;AES&quot;);</span>
+
+<span class="fc" id="L33">            byte[] vectorInicial = new byte[LONGITUD_IV];</span>
+<span class="fc" id="L34">            GENERADOR_IV.nextBytes(vectorInicial);</span>
+
+<span class="fc" id="L36">            Cipher cifrador = Cipher.getInstance(ALGORITMO_GCM);</span>
+<span class="fc" id="L37">            GCMParameterSpec parametrosGcm = new GCMParameterSpec(LONGITUD_TAG_BITS, vectorInicial);</span>
+<span class="fc" id="L38">            cifrador.init(Cipher.ENCRYPT_MODE, especificacionClave, parametrosGcm);</span>
+
+<span class="fc" id="L40">            byte[] textoCifradoConTag = cifrador.doFinal(textoPlano.getBytes(StandardCharsets.UTF_8));</span>
+
+<span class="fc" id="L42">            byte[] saliente = new byte[LONGITUD_IV + textoCifradoConTag.length];</span>
+<span class="fc" id="L43">            System.arraycopy(vectorInicial, 0, saliente, 0, LONGITUD_IV);</span>
+<span class="fc" id="L44">            System.arraycopy(textoCifradoConTag, 0, saliente, LONGITUD_IV, textoCifradoConTag.length);</span>
+
+<span class="fc" id="L46">            return PREFIJO_GCM + Base64.getEncoder().encodeToString(saliente);</span>
+<span class="nc" id="L47">        } catch (Exception excepcion) {</span>
+<span class="nc" id="L48">            throw new RuntimeException(&quot;Error al cifrar&quot;, excepcion);</span>
+        }
+    }
+
+    public static String descifrar(String textoCifrado, String clave) {
+<span class="pc bpc" id="L53" title="1 of 4 branches missed.">        if (textoCifrado != null &amp;&amp; textoCifrado.startsWith(PREFIJO_GCM)) {</span>
+<span class="fc" id="L54">            return descifrarGcm(textoCifrado.substring(PREFIJO_GCM.length()), clave);</span>
+        }
+<span class="nc" id="L56">        return descifrarLegacyEcb(textoCifrado, clave);</span>
+    }
+
+    private static String descifrarGcm(String textoSinPrefijo, String clave) {
+        try {
+<span class="fc" id="L61">            byte[] claveBytes = derivarClave(clave);</span>
+<span class="fc" id="L62">            SecretKeySpec especificacionClave = new SecretKeySpec(claveBytes, &quot;AES&quot;);</span>
+
+<span class="fc" id="L64">            byte[] entrada = Base64.getDecoder().decode(textoSinPrefijo);</span>
+<span class="fc" id="L65">            byte[] vectorInicial = new byte[LONGITUD_IV];</span>
+<span class="fc" id="L66">            System.arraycopy(entrada, 0, vectorInicial, 0, LONGITUD_IV);</span>
+
+<span class="fc" id="L68">            byte[] textoCifradoConTag = new byte[entrada.length - LONGITUD_IV];</span>
+<span class="fc" id="L69">            System.arraycopy(entrada, LONGITUD_IV, textoCifradoConTag, 0, textoCifradoConTag.length);</span>
+
+<span class="fc" id="L71">            Cipher descifrador = Cipher.getInstance(ALGORITMO_GCM);</span>
+<span class="fc" id="L72">            GCMParameterSpec parametrosGcm = new GCMParameterSpec(LONGITUD_TAG_BITS, vectorInicial);</span>
+<span class="fc" id="L73">            descifrador.init(Cipher.DECRYPT_MODE, especificacionClave, parametrosGcm);</span>
+
+<span class="fc" id="L75">            byte[] textoDescifrado = descifrador.doFinal(textoCifradoConTag);</span>
+<span class="fc" id="L76">            return new String(textoDescifrado, StandardCharsets.UTF_8);</span>
+<span class="nc" id="L77">        } catch (Exception excepcion) {</span>
+<span class="nc" id="L78">            throw new RuntimeException(&quot;Error al descifrar&quot;, excepcion);</span>
+        }
+    }
+
+    private static String descifrarLegacyEcb(String textoCifrado, String clave) {
+        try {
+<span class="fc" id="L84">            byte[] claveBytes = derivarClaveLegacy(clave);</span>
+<span class="fc" id="L85">            SecretKeySpec especificacionClave = new SecretKeySpec(claveBytes, ALGORITMO_LEGACY);</span>
+
+<span class="fc" id="L87">            Cipher cifrador = Cipher.getInstance(ALGORITMO_LEGACY);</span>
+<span class="fc" id="L88">            cifrador.init(Cipher.DECRYPT_MODE, especificacionClave);</span>
+
+<span class="nc" id="L90">            byte[] textoDescifrado = cifrador.doFinal(Base64.getDecoder().decode(textoCifrado));</span>
+<span class="nc" id="L91">            return new String(textoDescifrado, StandardCharsets.UTF_8);</span>
+<span class="fc" id="L92">        } catch (Exception excepcion) {</span>
+<span class="fc" id="L93">            throw new RuntimeException(&quot;Error al descifrar&quot;, excepcion);</span>
+        }
+    }
+
+    private static byte[] derivarClave(String clave) {
+        try {
+<span class="fc" id="L99">            MessageDigest digestor = MessageDigest.getInstance(&quot;SHA-256&quot;);</span>
+<span class="fc" id="L100">            return digestor.digest(clave.getBytes(StandardCharsets.UTF_8));</span>
+<span class="nc" id="L101">        } catch (Exception excepcion) {</span>
+<span class="nc" id="L102">            throw new RuntimeException(&quot;No se pudo derivar la clave AES con SHA-256&quot;, excepcion);</span>
+        }
+    }
+
+    private static byte[] derivarClaveLegacy(String clave) {
+<span class="fc" id="L107">        byte[] claveOriginal = clave.getBytes(StandardCharsets.UTF_8);</span>
+<span class="fc" id="L108">        byte[] claveAjustada = new byte[16];</span>
+<span class="fc" id="L109">        int longitudCopiada = Math.min(claveOriginal.length, 16);</span>
+<span class="fc" id="L110">        System.arraycopy(claveOriginal, 0, claveAjustada, 0, longitudCopiada);</span>
+<span class="fc" id="L111">        return claveAjustada;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

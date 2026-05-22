@@ -249,17 +249,29 @@ Cualquier push a `main` dispara el workflow `cd.yml`, que:
 
 4. Hace un `curl -ksf https://<dominio>/api/estado` como smoke test. Si falla, el workflow falla en rojo.
 
-GitHub Secrets necesarios (Settings → Secrets and variables → Actions):
+GitHub Secrets necesarios (Settings → Secrets and variables → Actions → New repository secret):
 
-| Secret | Valor |
-|--------|-------|
-| `SSH_HOST` | dominio o IP pública del VPS |
-| `SSH_USER` | usuario SSH del VPS (típicamente `deploy` o `ubuntu`) |
-| `SSH_PORT` | `22` (o el que uses) |
-| `SSH_PRIVATE_KEY` | clave privada SSH completa (formato OpenSSH) |
-| `AUTODEPLOY_JWT_SECRET` | el mismo del `.env` |
-| `AUTODEPLOY_CIFRADO_CLAVE` | el mismo del `.env` |
-| `OPENROUTER_API_KEY` | API key del asistente IA |
+| Secret | Valor de ejemplo | Para que sirve |
+|--------|------------------|----------------|
+| `SSH_HOST` | `autodeploy.kruhale.com` o `203.0.113.42` | dominio o IP publica del VPS al que entra el job de deploy |
+| `SSH_USER` | `deploy` o `ubuntu` | usuario SSH del VPS con permisos sobre `DEPLOY_PATH` |
+| `SSH_PORT` | `22` | puerto SSH del VPS (opcional, default 22) |
+| `SSH_PRIVATE_KEY` | bloque `-----BEGIN OPENSSH PRIVATE KEY-----...END...-----` | clave privada SSH completa en formato OpenSSH (no usar `id_rsa` viejo de RSA-PEM). Generar con `ssh-keygen -t ed25519 -f deploy-key -C "github-actions"` y meter la **publica** (`deploy-key.pub`) en `~/.ssh/authorized_keys` del usuario `SSH_USER` |
+| `DEPLOY_PATH` | `/opt/AutoDeploy` | ruta absoluta del clon del repo en el VPS donde el job hace `git reset --hard` y arranca compose |
+| `SMOKE_URL` | `https://autodeploy.kruhale.com` | URL publica que el job verifica con `curl /api/estado` tras desplegar (sin slash al final). Si falla, dispara el rollback automatico |
+| `AUTODEPLOY_JWT_SECRET` | base64 de 48 bytes | el mismo del `.env` del VPS, por si el job lo regenera (opcional) |
+| `AUTODEPLOY_CIFRADO_CLAVE` | base64 de 32 bytes | el mismo del `.env` del VPS (opcional) |
+| `OPENROUTER_API_KEY` | `sk-or-v1-...` | API key del asistente IA (opcional, los usuarios la pueden configurar desde la UI) |
+
+**Importante:** los secrets se crean **una sola vez** y los siguientes despliegues los leen automaticamente. Si rotas el `SSH_PRIVATE_KEY` debes actualizar tambien `authorized_keys` del VPS. Si cambias `DEPLOY_PATH` debes mover el clon del repo en el VPS.
+
+**Verificacion rapida** (que la SSH del runner conecta al VPS):
+
+```bash
+# Desde tu maquina, simula lo que hace el runner
+ssh -i deploy-key -p 22 deploy@autodeploy.kruhale.com "cd /opt/AutoDeploy && git status"
+# Debe responder sin password con el git status del repo
+```
 
 ### Opción B — manual desde la máquina local
 

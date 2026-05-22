@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GestorSesionesSshService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">GestorSesionesSshService.java</span></div><h1>GestorSesionesSshService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.model.Servidor;
+import jakarta.annotation.PostConstruct;
+import jakarta.annotation.PreDestroy;
+import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.channel.ChannelExec;
+import org.apache.sshd.client.session.ClientSession;
+import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.KeyPair;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+@Service
+public class GestorSesionesSshService {
+
+<span class="fc" id="L27">    private static final Logger LOGGER = LoggerFactory.getLogger(GestorSesionesSshService.class);</span>
+    private static final int TIMEOUT_CONEXION_SEGUNDOS = 15;
+    private static final int TIMEOUT_COMANDO_SEGUNDOS = 20;
+
+    private final ServidorService servidorService;
+<span class="fc" id="L32">    private final Map&lt;String, ClientSession&gt; sesionesActivas = new ConcurrentHashMap&lt;&gt;();</span>
+    private SshClient clienteSshCompartido;
+
+<span class="fc" id="L35">    public GestorSesionesSshService(ServidorService servidorService) {</span>
+<span class="fc" id="L36">        this.servidorService = servidorService;</span>
+<span class="fc" id="L37">    }</span>
+
+    @PostConstruct
+    public void inicializar() {
+<span class="fc" id="L41">        this.clienteSshCompartido = SshClient.setUpDefaultClient();</span>
+<span class="fc" id="L42">        this.clienteSshCompartido.start();</span>
+<span class="fc" id="L43">        LOGGER.info(&quot;Gestor de sesiones SSH inicializado&quot;);</span>
+<span class="fc" id="L44">    }</span>
+
+    @PreDestroy
+    public void apagar() {
+<span class="fc" id="L48">        LOGGER.info(&quot;Cerrando {} sesiones SSH activas&quot;, sesionesActivas.size());</span>
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">        for (Map.Entry&lt;String, ClientSession&gt; entrada : sesionesActivas.entrySet()) {</span>
+            try {
+<span class="nc" id="L51">                entrada.getValue().close();</span>
+<span class="nc" id="L52">            } catch (Exception excepcionCierre) {</span>
+<span class="nc" id="L53">                LOGGER.warn(&quot;Error al cerrar sesion {}: {}&quot;, entrada.getKey(), excepcionCierre.getMessage());</span>
+<span class="nc" id="L54">            }</span>
+<span class="nc" id="L55">        }</span>
+<span class="fc" id="L56">        sesionesActivas.clear();</span>
+<span class="pc bpc" id="L57" title="1 of 2 branches missed.">        if (clienteSshCompartido != null) {</span>
+<span class="fc" id="L58">            clienteSshCompartido.stop();</span>
+        }
+<span class="fc" id="L60">    }</span>
+
+    public String ejecutar(String servidorId, String comando) {
+<span class="fc" id="L63">        ClientSession sesionViva = obtenerSesionViva(servidorId);</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">        if (sesionViva == null) {</span>
+<span class="fc" id="L65">            throw new RuntimeException(&quot;No hay sesion SSH disponible para el servidor &quot; + servidorId);</span>
+        }
+        try {
+<span class="nc" id="L68">            ChannelExec canalEjecucion = sesionViva.createExecChannel(comando);</span>
+<span class="nc" id="L69">            canalEjecucion.open().verify(TIMEOUT_COMANDO_SEGUNDOS, TimeUnit.SECONDS);</span>
+
+<span class="nc" id="L71">            String salidaComando = leerSalida(canalEjecucion.getInvertedOut());</span>
+
+<span class="nc" id="L73">            canalEjecucion.close();</span>
+<span class="nc" id="L74">            return salidaComando;</span>
+<span class="nc" id="L75">        } catch (Exception excepcionEjecucion) {</span>
+<span class="nc" id="L76">            LOGGER.warn(&quot;Fallo al ejecutar sobre sesion {}: {}&quot;, servidorId, excepcionEjecucion.getMessage());</span>
+<span class="nc" id="L77">            descartarSesion(servidorId);</span>
+<span class="nc" id="L78">            throw new RuntimeException(&quot;Error ejecutando comando SSH: &quot; + excepcionEjecucion.getMessage(), excepcionEjecucion);</span>
+        }
+    }
+
+    public boolean tieneSesionViva(String servidorId) {
+<span class="fc" id="L83">        ClientSession sesion = sesionesActivas.get(servidorId);</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">        if (sesion == null) {</span>
+<span class="fc" id="L85">            return false;</span>
+        }
+<span class="nc bnc" id="L87" title="All 4 branches missed.">        boolean estaViva = sesion.isOpen() &amp;&amp; !sesion.isClosed();</span>
+<span class="nc" id="L88">        return estaViva;</span>
+    }
+
+    public void cerrarSesion(String servidorId) {
+<span class="fc" id="L92">        ClientSession sesion = sesionesActivas.remove(servidorId);</span>
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">        if (sesion != null) {</span>
+            try {
+<span class="nc" id="L95">                sesion.close();</span>
+<span class="nc" id="L96">            } catch (Exception excepcionCierre) {</span>
+<span class="nc" id="L97">                LOGGER.warn(&quot;Error al cerrar sesion {}: {}&quot;, servidorId, excepcionCierre.getMessage());</span>
+<span class="nc" id="L98">            }</span>
+        }
+<span class="fc" id="L100">    }</span>
+
+    private ClientSession obtenerSesionViva(String servidorId) {
+<span class="fc" id="L103">        ClientSession sesionCacheada = sesionesActivas.get(servidorId);</span>
+<span class="pc bpc" id="L104" title="5 of 6 branches missed.">        boolean sesionUsable = sesionCacheada != null &amp;&amp; sesionCacheada.isOpen() &amp;&amp; !sesionCacheada.isClosed();</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">        if (sesionUsable) {</span>
+<span class="nc" id="L106">            return sesionCacheada;</span>
+        }
+
+<span class="fc" id="L109">        descartarSesion(servidorId);</span>
+<span class="fc" id="L110">        ClientSession sesionNueva = abrirSesionNueva(servidorId);</span>
+<span class="pc bpc" id="L111" title="1 of 2 branches missed.">        if (sesionNueva != null) {</span>
+<span class="nc" id="L112">            sesionesActivas.put(servidorId, sesionNueva);</span>
+        }
+<span class="fc" id="L114">        return sesionNueva;</span>
+    }
+
+    private ClientSession abrirSesionNueva(String servidorId) {
+        Servidor servidor;
+        try {
+<span class="fc" id="L120">            servidor = servidorService.obtenerPorId(servidorId);</span>
+<span class="fc" id="L121">        } catch (Exception excepcionBusqueda) {</span>
+<span class="fc" id="L122">            LOGGER.warn(&quot;Servidor {} no existe: {}&quot;, servidorId, excepcionBusqueda.getMessage());</span>
+<span class="fc" id="L123">            return null;</span>
+<span class="fc" id="L124">        }</span>
+
+        try {
+<span class="fc" id="L127">            ClientSession sesionAbierta = clienteSshCompartido.connect(</span>
+<span class="fc" id="L128">                    servidor.getUsuarioSsh(),</span>
+<span class="fc" id="L129">                    servidor.getDireccionIp(),</span>
+<span class="fc" id="L130">                    servidor.getPuertoSsh()</span>
+<span class="nc" id="L131">            ).verify(TIMEOUT_CONEXION_SEGUNDOS, TimeUnit.SECONDS).getSession();</span>
+
+<span class="nc" id="L133">            autenticarSesion(sesionAbierta, servidor);</span>
+<span class="nc" id="L134">            sesionAbierta.auth().verify(TIMEOUT_CONEXION_SEGUNDOS, TimeUnit.SECONDS);</span>
+
+<span class="nc" id="L136">            LOGGER.info(&quot;Sesion SSH abierta para servidor {} ({})&quot;, servidor.getNombre(), servidor.getDireccionIp());</span>
+<span class="nc" id="L137">            return sesionAbierta;</span>
+<span class="fc" id="L138">        } catch (Exception excepcionConexion) {</span>
+<span class="fc" id="L139">            LOGGER.warn(&quot;No se pudo abrir sesion SSH a {} ({}): {}&quot;,</span>
+<span class="fc" id="L140">                    servidor.getNombre(), servidor.getDireccionIp(), excepcionConexion.getMessage());</span>
+<span class="fc" id="L141">            return null;</span>
+        }
+    }
+
+    private void autenticarSesion(ClientSession sesion, Servidor servidor) throws Exception {
+<span class="nc bnc" id="L146" title="All 2 branches missed.">        if (&quot;password&quot;.equals(servidor.getMetodoAutenticacion())) {</span>
+<span class="nc" id="L147">            String passwordDescifrada = servidorService.descifrarPassword(servidor);</span>
+<span class="nc" id="L148">            sesion.addPasswordIdentity(passwordDescifrada);</span>
+<span class="nc" id="L149">            return;</span>
+        }
+
+<span class="nc bnc" id="L152" title="All 2 branches missed.">        if (&quot;key&quot;.equals(servidor.getMetodoAutenticacion())) {</span>
+<span class="nc" id="L153">            String clavePrivadaDescifrada = servidorService.descifrarClaveSsh(servidor);</span>
+<span class="nc" id="L154">            Path archivoTemporal = Files.createTempFile(&quot;ssh_key_&quot;, &quot;.pem&quot;);</span>
+<span class="nc" id="L155">            Files.writeString(archivoTemporal, clavePrivadaDescifrada);</span>
+<span class="nc" id="L156">            FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">            for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {</span>
+<span class="nc" id="L158">                sesion.addPublicKeyIdentity(parClaves);</span>
+<span class="nc" id="L159">            }</span>
+<span class="nc" id="L160">            Files.deleteIfExists(archivoTemporal);</span>
+        }
+<span class="nc" id="L162">    }</span>
+
+    private void descartarSesion(String servidorId) {
+<span class="fc" id="L165">        ClientSession sesionDescartada = sesionesActivas.remove(servidorId);</span>
+<span class="pc bpc" id="L166" title="1 of 2 branches missed.">        if (sesionDescartada == null) {</span>
+<span class="fc" id="L167">            return;</span>
+        }
+        try {
+<span class="nc" id="L170">            sesionDescartada.close();</span>
+<span class="nc" id="L171">        } catch (Exception excepcionCierre) {</span>
+<span class="nc" id="L172">            LOGGER.debug(&quot;No se pudo cerrar sesion descartada: {}&quot;, excepcionCierre.getMessage());</span>
+<span class="nc" id="L173">        }</span>
+<span class="nc" id="L174">    }</span>
+
+    private String leerSalida(InputStream flujoEntrada) throws Exception {
+<span class="nc" id="L177">        ByteArrayOutputStream bufferSalida = new ByteArrayOutputStream();</span>
+<span class="nc" id="L178">        byte[] buffer = new byte[4096];</span>
+        int bytesLeidos;
+<span class="nc bnc" id="L180" title="All 2 branches missed.">        while ((bytesLeidos = flujoEntrada.read(buffer)) != -1) {</span>
+<span class="nc" id="L181">            bufferSalida.write(buffer, 0, bytesLeidos);</span>
+        }
+<span class="nc" id="L183">        String salidaTexto = bufferSalida.toString(StandardCharsets.UTF_8);</span>
+<span class="nc" id="L184">        return salidaTexto;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

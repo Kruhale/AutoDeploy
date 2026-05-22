@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReconexionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">ReconexionService.java</span></div><h1>ReconexionService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.model.Servidor;
+import com.autodeploy.repository.ServidorRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+/**
+ * Cuando arranca el backend, hace ping SSH a cada servidor para ver si sigue vivo
+ * y reinstala el cron de los backups automaticos si se ha caido.
+ */
+@Service
+public class ReconexionService {
+
+<span class="fc" id="L21">    private static final Logger logger = LoggerFactory.getLogger(ReconexionService.class);</span>
+    private static final String MARCA_CRON_BACKUP = &quot;autodeploy-backup&quot;;
+
+    private final ServidorRepository servidorRepository;
+    private final SshCommandService sshCommandService;
+    private final BackupService backupService;
+
+    public ReconexionService(ServidorRepository servidorRepository,
+                             SshCommandService sshCommandService,
+<span class="fc" id="L30">                             BackupService backupService) {</span>
+<span class="fc" id="L31">        this.servidorRepository = servidorRepository;</span>
+<span class="fc" id="L32">        this.sshCommandService = sshCommandService;</span>
+<span class="fc" id="L33">        this.backupService = backupService;</span>
+<span class="fc" id="L34">    }</span>
+
+    @EventListener(ApplicationReadyEvent.class)
+    @Async
+    public void reconectarTrasArranque() {
+<span class="fc" id="L39">        List&lt;Servidor&gt; listaServidores = servidorRepository.findAll();</span>
+<span class="fc" id="L40">        logger.info(&quot;Reconexion al arrancar: {} servidores en BBDD&quot;, listaServidores.size());</span>
+
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        for (Servidor servidor : listaServidores) {</span>
+<span class="fc" id="L43">            refrescarEstado(servidor);</span>
+<span class="pc bpc" id="L44" title="1 of 4 branches missed.">            if (servidor.isBackupsAutomaticosActivos() &amp;&amp; &quot;conectado&quot;.equals(servidor.getEstado())) {</span>
+<span class="nc" id="L45">                verificarCronDeBackup(servidor);</span>
+            }
+<span class="fc" id="L47">        }</span>
+
+<span class="fc" id="L49">        logger.info(&quot;Reconexion al arrancar completada&quot;);</span>
+<span class="fc" id="L50">    }</span>
+
+    /** Pinga el servidor por SSH con &quot;echo OK&quot; y actualiza su estado en la BBDD */
+    public boolean refrescarEstado(Servidor servidor) {
+        try {
+<span class="fc" id="L55">            String salida = sshCommandService.ejecutarComando(servidor, &quot;echo OK&quot;);</span>
+<span class="pc bpc" id="L56" title="2 of 4 branches missed.">            boolean responde = salida != null &amp;&amp; salida.contains(&quot;OK&quot;);</span>
+<span class="fc" id="L57">            anotarPing(servidor, responde);</span>
+<span class="fc" id="L58">            return responde;</span>
+<span class="fc" id="L59">        } catch (Exception excepcion) {</span>
+<span class="fc" id="L60">            logger.warn(&quot;SSH ping fallido en servidor {} ({}): {}&quot;, servidor.getId(), servidor.getDireccionIp(), excepcion.getMessage());</span>
+<span class="fc" id="L61">            anotarPing(servidor, false);</span>
+<span class="fc" id="L62">            return false;</span>
+        }
+    }
+
+    /**
+     * Apunta el resultado de un ping: si va bien, &quot;conectado&quot; y reset del contador.
+     * Si falla, suma 1 al contador y marca &quot;desconectado&quot; al 3er fallo seguido.
+     */
+    public void anotarPing(Servidor servidor, boolean conexionFunciono) {
+<span class="fc bfc" id="L71" title="All 2 branches covered.">        if (conexionFunciono) {</span>
+<span class="fc" id="L72">            servidor.setEstado(&quot;conectado&quot;);</span>
+<span class="fc" id="L73">            servidor.setFallosConsecutivosSsh(0);</span>
+        } else {
+<span class="fc" id="L75">            int nuevosFallos = servidor.getFallosConsecutivosSsh() + 1;</span>
+<span class="fc" id="L76">            servidor.setFallosConsecutivosSsh(nuevosFallos);</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">            if (nuevosFallos &gt;= 3) {</span>
+<span class="fc" id="L78">                servidor.setEstado(&quot;desconectado&quot;);</span>
+            }
+        }
+<span class="fc" id="L81">        servidorRepository.save(servidor);</span>
+<span class="fc" id="L82">    }</span>
+
+    /** Mira si el cron del backup automatico sigue en el VPS, y si no lo vuelve a instalar */
+    private void verificarCronDeBackup(Servidor servidor) {
+        try {
+<span class="nc" id="L87">            String crontabRemoto = sshCommandService.ejecutarComando(servidor, &quot;crontab -l 2&gt;/dev/null || true&quot;);</span>
+<span class="nc bnc" id="L88" title="All 4 branches missed.">            boolean cronPresente = crontabRemoto != null &amp;&amp; crontabRemoto.contains(MARCA_CRON_BACKUP);</span>
+
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (!cronPresente) {</span>
+<span class="nc" id="L91">                logger.info(&quot;Cron de backup ausente en servidor {}: reinstalando&quot;, servidor.getId());</span>
+<span class="nc" id="L92">                backupService.activarBackupsAutomaticos(servidor.getId(), servidor.getHoraBackupAutomatico());</span>
+            }
+<span class="nc" id="L94">        } catch (Exception excepcion) {</span>
+<span class="nc" id="L95">            logger.warn(&quot;No se pudo verificar el cron de backup en servidor {}: {}&quot;, servidor.getId(), excepcion.getMessage());</span>
+<span class="nc" id="L96">        }</span>
+<span class="nc" id="L97">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

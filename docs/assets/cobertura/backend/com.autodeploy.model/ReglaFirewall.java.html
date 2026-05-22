@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ReglaFirewall.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.model</a> &gt; <span class="el_source">ReglaFirewall.java</span></div><h1>ReglaFirewall.java</h1><pre class="source lang-java linenums">package com.autodeploy.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+
+@Document(collection = &quot;regla_firewall&quot;)
+public class ReglaFirewall {
+
+    @Id
+    private String id;
+    private String servidorId;
+    private String puerto;
+    private String protocolo;
+    private String accion;
+    private String origen;
+    private String descripcion;
+    private LocalDateTime fechaCreacion;
+
+<span class="fc" id="L21">    public ReglaFirewall() {</span>
+<span class="fc" id="L22">        this.fechaCreacion = LocalDateTime.now();</span>
+<span class="fc" id="L23">    }</span>
+
+<span class="fc" id="L25">    public ReglaFirewall(String servidorId, String puerto, String protocolo, String accion, String origen, String descripcion) {</span>
+<span class="fc" id="L26">        this.servidorId = servidorId;</span>
+<span class="fc" id="L27">        this.puerto = puerto;</span>
+<span class="fc" id="L28">        this.protocolo = protocolo;</span>
+<span class="fc" id="L29">        this.accion = accion;</span>
+<span class="fc" id="L30">        this.origen = origen;</span>
+<span class="fc" id="L31">        this.descripcion = descripcion;</span>
+<span class="fc" id="L32">        this.fechaCreacion = LocalDateTime.now();</span>
+<span class="fc" id="L33">    }</span>
+
+<span class="fc" id="L35">    public String getId() { return id; }</span>
+<span class="fc" id="L36">    public void setId(String id) { this.id = id; }</span>
+
+<span class="fc" id="L38">    public String getServidorId() { return servidorId; }</span>
+<span class="fc" id="L39">    public void setServidorId(String servidorId) { this.servidorId = servidorId; }</span>
+
+<span class="fc" id="L41">    public String getPuerto() { return puerto; }</span>
+<span class="fc" id="L42">    public void setPuerto(String puerto) { this.puerto = puerto; }</span>
+
+<span class="fc" id="L44">    public String getProtocolo() { return protocolo; }</span>
+<span class="fc" id="L45">    public void setProtocolo(String protocolo) { this.protocolo = protocolo; }</span>
+
+<span class="fc" id="L47">    public String getAccion() { return accion; }</span>
+<span class="fc" id="L48">    public void setAccion(String accion) { this.accion = accion; }</span>
+
+<span class="fc" id="L50">    public String getOrigen() { return origen; }</span>
+<span class="fc" id="L51">    public void setOrigen(String origen) { this.origen = origen; }</span>
+
+<span class="fc" id="L53">    public String getDescripcion() { return descripcion; }</span>
+<span class="fc" id="L54">    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }</span>
+
+<span class="fc" id="L56">    public LocalDateTime getFechaCreacion() { return fechaCreacion; }</span>
+<span class="nc" id="L57">    public void setFechaCreacion(LocalDateTime fechaCreacion) { this.fechaCreacion = fechaCreacion; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

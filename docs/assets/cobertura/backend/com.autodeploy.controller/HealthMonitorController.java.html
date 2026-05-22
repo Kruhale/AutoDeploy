@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HealthMonitorController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">HealthMonitorController.java</span></div><h1>HealthMonitorController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.model.HealthCheck;
+import com.autodeploy.service.HealthMonitorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+@Tag(name = &quot;Health&quot;, description = &quot;Monitorizacion del estado de salud de los servidores&quot;)
+@RestController
+@RequestMapping(&quot;/api/health&quot;)
+@PreAuthorize(&quot;isAuthenticated()&quot;)
+public class HealthMonitorController {
+
+    private final HealthMonitorService healthMonitorService;
+
+<span class="fc" id="L27">    public HealthMonitorController(HealthMonitorService healthMonitorService) {</span>
+<span class="fc" id="L28">        this.healthMonitorService = healthMonitorService;</span>
+<span class="fc" id="L29">    }</span>
+
+    @Operation(summary = &quot;Estado de salud de todos los servidores (solo ADMIN)&quot;)
+    @GetMapping
+    @PreAuthorize(&quot;hasRole('ADMIN')&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;List&lt;HealthCheck&gt;&gt;&gt; obtenerEstadoGeneral() {
+<span class="nc" id="L35">        List&lt;HealthCheck&gt; listaDeEstados = healthMonitorService.obtenerEstadoTodosLosServidores();</span>
+
+<span class="nc" id="L37">        ApiResponse&lt;List&lt;HealthCheck&gt;&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, listaDeEstados);</span>
+<span class="nc" id="L38">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Estado de salud de un servidor del usuario&quot;)
+    @GetMapping(&quot;/{servidorId}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Map&lt;String, Object&gt;&gt;&gt; obtenerEstadoDelServidor(@PathVariable String servidorId) {
+<span class="fc" id="L45">        Optional&lt;HealthCheck&gt; ultimoEstado = healthMonitorService.obtenerEstado(servidorId);</span>
+<span class="fc" id="L46">        List&lt;HealthCheck&gt; historial = healthMonitorService.obtenerHistorial(servidorId);</span>
+
+        // HashMap permite valores null cuando no hay ultimo estado todavia (a diferencia de Map.of)
+<span class="fc" id="L49">        Map&lt;String, Object&gt; datos = new java.util.HashMap&lt;&gt;();</span>
+<span class="fc" id="L50">        datos.put(&quot;ultimoEstado&quot;, ultimoEstado.orElse(null));</span>
+<span class="fc" id="L51">        datos.put(&quot;historial&quot;, historial);</span>
+
+<span class="fc" id="L53">        ApiResponse&lt;Map&lt;String, Object&gt;&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, datos);</span>
+<span class="fc" id="L54">        return ResponseEntity.ok(cuerpo);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

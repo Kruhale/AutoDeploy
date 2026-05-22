@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificacionService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">NotificacionService.java</span></div><h1>NotificacionService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.dto.NotificacionDTO;
+import com.autodeploy.model.Notificacion;
+import com.autodeploy.repository.NotificacionRepository;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Service
+public class NotificacionService {
+
+	private final NotificacionRepository notificacionRepository;
+	private final NotificacionesWebSocketHandler notificacionesWebSocketHandler;
+
+	public NotificacionService(NotificacionRepository notificacionRepository,
+<span class="fc" id="L18">	                            @Lazy NotificacionesWebSocketHandler notificacionesWebSocketHandler) {</span>
+<span class="fc" id="L19">		this.notificacionRepository = notificacionRepository;</span>
+<span class="fc" id="L20">		this.notificacionesWebSocketHandler = notificacionesWebSocketHandler;</span>
+<span class="fc" id="L21">	}</span>
+
+	public Notificacion crearNotificacion(String tipo, String titulo, String descripcion, String usuarioId) {
+<span class="fc" id="L24">		Notificacion notificacionNueva = new Notificacion(tipo, titulo, descripcion, usuarioId);</span>
+<span class="fc" id="L25">		Notificacion notificacionGuardada = notificacionRepository.save(notificacionNueva);</span>
+
+<span class="fc" id="L27">		NotificacionDTO dtoParaWs = new NotificacionDTO(</span>
+<span class="fc" id="L28">			notificacionGuardada.getId(),</span>
+<span class="fc" id="L29">			notificacionGuardada.getTipo(),</span>
+<span class="fc" id="L30">			notificacionGuardada.getTitulo(),</span>
+<span class="fc" id="L31">			notificacionGuardada.getDescripcion(),</span>
+<span class="fc" id="L32">			notificacionGuardada.isLeida(),</span>
+<span class="fc" id="L33">			notificacionGuardada.getFechaCreacion()</span>
+		);
+<span class="fc" id="L35">		notificacionesWebSocketHandler.notificarUsuario(usuarioId, dtoParaWs);</span>
+
+<span class="fc" id="L37">		return notificacionGuardada;</span>
+	}
+
+	public List&lt;NotificacionDTO&gt; listarPorUsuario(String usuarioId) {
+<span class="fc" id="L41">		List&lt;Notificacion&gt; notificacionesDelUsuario = notificacionRepository.findByUsuarioIdOrderByFechaCreacionDesc(usuarioId);</span>
+<span class="fc" id="L42">		return notificacionesDelUsuario.stream()</span>
+<span class="fc" id="L43">			.map(notif -&gt; new NotificacionDTO(notif.getId(), notif.getTipo(), notif.getTitulo(), notif.getDescripcion(), notif.isLeida(), notif.getFechaCreacion()))</span>
+<span class="fc" id="L44">			.collect(Collectors.toList());</span>
+	}
+
+	public List&lt;NotificacionDTO&gt; listarNoLeidas(String usuarioId) {
+<span class="fc" id="L48">		List&lt;Notificacion&gt; notificacionesNoLeidas = notificacionRepository.findByUsuarioIdAndLeidaFalseOrderByFechaCreacionDesc(usuarioId);</span>
+<span class="fc" id="L49">		return notificacionesNoLeidas.stream()</span>
+<span class="fc" id="L50">			.map(notif -&gt; new NotificacionDTO(notif.getId(), notif.getTipo(), notif.getTitulo(), notif.getDescripcion(), notif.isLeida(), notif.getFechaCreacion()))</span>
+<span class="fc" id="L51">			.collect(Collectors.toList());</span>
+	}
+
+	public long contarNoLeidas(String usuarioId) {
+<span class="fc" id="L55">		return notificacionRepository.countByUsuarioIdAndLeidaFalse(usuarioId);</span>
+	}
+
+	public void marcarComoLeida(String notificacionId) {
+<span class="fc" id="L59">		Notificacion notificacion = notificacionRepository.findById(notificacionId).orElse(null);</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">		if (notificacion != null) {</span>
+<span class="fc" id="L61">			notificacion.setLeida(true);</span>
+<span class="fc" id="L62">			notificacionRepository.save(notificacion);</span>
+		}
+<span class="fc" id="L64">	}</span>
+
+	public void marcarTodasComoLeidas(String usuarioId) {
+<span class="fc" id="L67">		List&lt;Notificacion&gt; notificacionesNoLeidas = notificacionRepository.findByUsuarioIdAndLeidaFalseOrderByFechaCreacionDesc(usuarioId);</span>
+<span class="fc" id="L68">		notificacionesNoLeidas.forEach(notif -&gt; notif.setLeida(true));</span>
+<span class="fc" id="L69">		notificacionRepository.saveAll(notificacionesNoLeidas);</span>
+<span class="fc" id="L70">	}</span>
+
+	public void eliminarNotificacion(String notificacionId) {
+<span class="fc" id="L73">		notificacionRepository.deleteById(notificacionId);</span>
+<span class="fc" id="L74">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

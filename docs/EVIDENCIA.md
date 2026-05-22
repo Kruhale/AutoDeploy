@@ -2,7 +2,7 @@
 
 Salidas reales recogidas contra el despliegue público de AutoDeploy en `https://autodeploy.kruhale.com/` (VPS Ubuntu 24.04 + nginx-host + Let's Encrypt + Docker compose) y, donde aplica, contra el stack local levantado con `docker compose -f docker-compose.prod.yml up -d --build` (frontend publicando `HOST_PORT=8082` al host).
 
-**Fecha de captura**: 2026-05-22.
+**Fechas**: salidas textuales recogidas el 2026-05-21 y capturas de pantalla del 2026-05-22.
 
 > Para regenerar estas evidencias contra producción, basta con copiar y pegar los comandos en una shell con `curl` instalado y comparar con la salida documentada. Contra local, primero `docker compose -f docker-compose.prod.yml up -d --build` y esperar a que los servicios reporten `(healthy)`.
 
@@ -106,7 +106,7 @@ flowchart LR
 | `frontend` (nginx) | `ghcr.io/kruhale/autodeploy-frontend` | 80 | **8082** | `red-interna` | `nginx-logs` |
 | `backend` (Spring Boot) | `ghcr.io/kruhale/autodeploy-backend` | 8080 | — | `red-interna` | `backend-logs` |
 | `mongodb` | `mongo:8` oficial | 27017 | — | `red-interna` | `mongodb-datos` |
-| `sandbox-ssh` | `linuxserver/openssh-server` | 2222 | **2223** | `red-interna` | `sandbox-ssh-config` |
+| `sandbox-ssh` | `linuxserver/openssh-server` | 2222 | **2223** | `red-interna` | `sandbox-config` |
 
 Documentación completa con ADRs y diagrama de secuencia del despliegue Git en [`docs/ARCHITECTURE.md`](./ARCHITECTURE.md).
 
@@ -340,8 +340,8 @@ content-type: application/json
 ```
 
 **Lectura**: la cadena completa funciona end-to-end:
-1. Login emite un JWT firmado con HMAC-SHA384 (`alg: HS384`).
-2. Frontend lo guarda y el HTTP interceptor lo inyecta como `Authorization: Bearer`.
+1. Login emite un JWT firmado con HMAC-SHA. `JwtUtil.java` usa `Keys.hmacShaKeyFor(secreto.getBytes())` que selecciona el algoritmo (HS256, HS384 o HS512) en función de la longitud del `AUTODEPLOY_JWT_SECRET` configurado.
+2. Frontend lo guarda en `sessionStorage` y el HTTP interceptor lo inyecta como `Authorization: Bearer`.
 3. nginx-host + nginx contenedor pasan la cabecera intacta al backend.
 4. `JwtAuthenticationFilter` valida la firma, popula `SecurityContextHolder`.
 5. El controller responde 200 con los servidores del usuario.
@@ -946,6 +946,6 @@ Las 8 criterios de la rúbrica de despliegue (RA1 a RA6) quedan demostradas con 
 | **C6 · Documentación** | README + 7 docs en `docs/` (ARCHITECTURE, DEPLOY, API, ARTIFACTS, VERIFICATION, EVIDENCIA, snippets), troubleshooting + ejemplos curl + despliegue paso a paso desde cero | Tabla de "Documentación relacionada" al inicio | ✅ Nivel 4 |
 | **C7 · Artefactos** | Inventario completo de ficheros versionados, generados, imágenes publicadas en GHCR con tags inmutables, volúmenes persistentes y política de `.gitignore`/`.dockerignore` | §2, §11, §21 | ✅ Nivel 4 |
 | **C8 · Verificación de red** | `docker compose ps` local + VPS, `dig`/`nslookup`/`ping`, `curl -I` a 6 endpoints distintos, DNS interno Docker resuelve `backend`, TLS verificado con `openssl s_client`, headers de seguridad presentes | §1, §3, §5, §10, §16, §19 | ✅ Nivel 4 |
-| **DWES · API REST con roles** | Sistema `USUARIO`/`ADMIN`, JWT firmado con HMAC-SHA384, claim `rol` en el token, endpoints admin protegidos con `@PreAuthorize("hasRole('ADMIN')")`, login + 403 + 200 demostrados con curl real | §6, §7, §15 | ✅ Nivel 4 |
+| **DWES · API REST con roles** | Sistema `USUARIO`/`ADMIN`, JWT firmado con HMAC-SHA (algoritmo determinado por la longitud del secreto), claim `rol` en el token, endpoints admin protegidos con `@PreAuthorize("hasRole('ADMIN')")`, login + 403 + 200 demostrados con curl real | §6, §7, §15 | ✅ Nivel 4 |
 
 **Total**: 40 capturas reales + 21 secciones documentadas + 6 documentos cruzados.

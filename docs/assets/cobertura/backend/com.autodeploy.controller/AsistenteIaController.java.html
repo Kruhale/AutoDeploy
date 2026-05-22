@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsistenteIaController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">AsistenteIaController.java</span></div><h1>AsistenteIaController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.config.Seguridad;
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.dto.EjecutarComandoIaRequest;
+import com.autodeploy.dto.MensajeChatRequest;
+import com.autodeploy.dto.RespuestaChatIa;
+import com.autodeploy.service.AsistenteIaService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+@Tag(name = &quot;Asistente IA&quot;, description = &quot;Chat IA con ejecucion de comandos remotos&quot;)
+@RestController
+@RequestMapping(&quot;/api/asistente-ia&quot;)
+@PreAuthorize(&quot;isAuthenticated()&quot;)
+public class AsistenteIaController {
+
+    private final AsistenteIaService asistenteIaService;
+    private final Seguridad seguridad;
+
+<span class="fc" id="L32">    public AsistenteIaController(AsistenteIaService asistenteIaService, Seguridad seguridad) {</span>
+<span class="fc" id="L33">        this.asistenteIaService = asistenteIaService;</span>
+<span class="fc" id="L34">        this.seguridad = seguridad;</span>
+<span class="fc" id="L35">    }</span>
+
+    @Operation(summary = &quot;Enviar mensaje al asistente. Si la peticion incluye un servidorId, debe ser de un servidor del usuario.&quot;)
+    @PostMapping(&quot;/mensaje&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;RespuestaChatIa&gt;&gt; enviarMensaje(@RequestBody @Valid MensajeChatRequest peticion,
+                                                                       Authentication autenticacion) {
+<span class="pc bpc" id="L41" title="2 of 4 branches missed.">        if (peticion.servidorId() != null &amp;&amp; !peticion.servidorId().isBlank()) {</span>
+<span class="nc" id="L42">            verificarPropietarioDeServidor(peticion.servidorId(), autenticacion);</span>
+        }
+<span class="nc" id="L44">        RespuestaChatIa respuesta = asistenteIaService.procesarMensaje(peticion);</span>
+<span class="nc" id="L45">        ApiResponse&lt;RespuestaChatIa&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Respuesta generada&quot;, respuesta);</span>
+<span class="nc" id="L46">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Ejecutar comando tras confirmacion del usuario en un servidor propio&quot;)
+    @PostMapping(&quot;/ejecutar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Map&lt;String, String&gt;&gt;&gt; ejecutarComando(@RequestBody @Valid EjecutarComandoIaRequest peticion,
+                                                                              Authentication autenticacion) {
+<span class="nc" id="L53">        verificarPropietarioDeServidor(peticion.servidorId(), autenticacion);</span>
+<span class="nc" id="L54">        String salida = asistenteIaService.ejecutarComandoConfirmado(peticion.servidorId(), peticion.comando());</span>
+<span class="nc" id="L55">        Map&lt;String, String&gt; datos = Map.of(&quot;salida&quot;, salida);</span>
+<span class="nc" id="L56">        ApiResponse&lt;Map&lt;String, String&gt;&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Comando ejecutado&quot;, datos);</span>
+<span class="nc" id="L57">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    private void verificarPropietarioDeServidor(String servidorId, Authentication autenticacion) {
+<span class="pc bpc" id="L61" title="2 of 4 branches missed.">        if (seguridad.esAdmin(autenticacion) || seguridad.esDuenioDelServidor(servidorId, autenticacion)) {</span>
+<span class="nc" id="L62">            return;</span>
+        }
+<span class="fc" id="L64">        throw new AccessDeniedException(&quot;El servidor no pertenece al usuario autenticado&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

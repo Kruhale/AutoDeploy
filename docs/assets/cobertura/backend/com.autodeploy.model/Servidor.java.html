@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Servidor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.model</a> &gt; <span class="el_source">Servidor.java</span></div><h1>Servidor.java</h1><pre class="source lang-java linenums">package com.autodeploy.model;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+
+@Document(collection = &quot;servidor&quot;)
+public class Servidor {
+
+    @Id
+    private String id;
+    // FK al Usuario propietario. Sirve para que cada usuario solo vea/modifique sus VPS
+    private String usuarioId;
+    private String nombre;
+    private String direccionIp;
+    private int puertoSsh;
+    private String usuarioSsh;
+    private String metodoAutenticacion;
+    @JsonIgnore
+    private String passwordCifrada;
+    @JsonIgnore
+    private String claveSshPrivada;
+    private String estado;
+    private LocalDateTime fechaCreacion;
+<span class="fc" id="L27">    private boolean backupsAutomaticosActivos = false;</span>
+<span class="fc" id="L28">    private String horaBackupAutomatico = &quot;03:00&quot;;</span>
+<span class="fc" id="L29">    private int fallosConsecutivosSsh = 0;</span>
+
+<span class="fc" id="L31">    public Servidor() {</span>
+<span class="fc" id="L32">        this.puertoSsh = 22;</span>
+<span class="fc" id="L33">        this.usuarioSsh = &quot;root&quot;;</span>
+<span class="fc" id="L34">        this.metodoAutenticacion = &quot;password&quot;;</span>
+<span class="fc" id="L35">        this.estado = &quot;pendiente&quot;;</span>
+<span class="fc" id="L36">        this.fechaCreacion = LocalDateTime.now();</span>
+<span class="fc" id="L37">        this.backupsAutomaticosActivos = false;</span>
+<span class="fc" id="L38">        this.horaBackupAutomatico = &quot;03:00&quot;;</span>
+<span class="fc" id="L39">        this.fallosConsecutivosSsh = 0;</span>
+<span class="fc" id="L40">    }</span>
+
+<span class="fc" id="L42">    public int getFallosConsecutivosSsh() { return fallosConsecutivosSsh; }</span>
+<span class="fc" id="L43">    public void setFallosConsecutivosSsh(int fallosConsecutivosSsh) { this.fallosConsecutivosSsh = fallosConsecutivosSsh; }</span>
+
+<span class="fc" id="L45">    public boolean isBackupsAutomaticosActivos() { return backupsAutomaticosActivos; }</span>
+<span class="fc" id="L46">    public void setBackupsAutomaticosActivos(boolean backupsAutomaticosActivos) { this.backupsAutomaticosActivos = backupsAutomaticosActivos; }</span>
+
+<span class="fc" id="L48">    public String getHoraBackupAutomatico() { return horaBackupAutomatico; }</span>
+<span class="fc" id="L49">    public void setHoraBackupAutomatico(String horaBackupAutomatico) { this.horaBackupAutomatico = horaBackupAutomatico; }</span>
+
+<span class="fc" id="L51">    public String getId() { return id; }</span>
+<span class="fc" id="L52">    public void setId(String id) { this.id = id; }</span>
+
+<span class="fc" id="L54">    public String getUsuarioId() { return usuarioId; }</span>
+<span class="fc" id="L55">    public void setUsuarioId(String usuarioId) { this.usuarioId = usuarioId; }</span>
+
+<span class="fc" id="L57">    public String getNombre() { return nombre; }</span>
+<span class="fc" id="L58">    public void setNombre(String nombre) { this.nombre = nombre; }</span>
+
+<span class="fc" id="L60">    public String getDireccionIp() { return direccionIp; }</span>
+<span class="fc" id="L61">    public void setDireccionIp(String direccionIp) { this.direccionIp = direccionIp; }</span>
+
+<span class="fc" id="L63">    public int getPuertoSsh() { return puertoSsh; }</span>
+<span class="fc" id="L64">    public void setPuertoSsh(int puertoSsh) { this.puertoSsh = puertoSsh; }</span>
+
+<span class="fc" id="L66">    public String getUsuarioSsh() { return usuarioSsh; }</span>
+<span class="fc" id="L67">    public void setUsuarioSsh(String usuarioSsh) { this.usuarioSsh = usuarioSsh; }</span>
+
+<span class="fc" id="L69">    public String getMetodoAutenticacion() { return metodoAutenticacion; }</span>
+<span class="fc" id="L70">    public void setMetodoAutenticacion(String metodoAutenticacion) { this.metodoAutenticacion = metodoAutenticacion; }</span>
+
+<span class="nc" id="L72">    public String getPasswordCifrada() { return passwordCifrada; }</span>
+<span class="fc" id="L73">    public void setPasswordCifrada(String passwordCifrada) { this.passwordCifrada = passwordCifrada; }</span>
+
+<span class="nc" id="L75">    public String getClaveSshPrivada() { return claveSshPrivada; }</span>
+<span class="fc" id="L76">    public void setClaveSshPrivada(String claveSshPrivada) { this.claveSshPrivada = claveSshPrivada; }</span>
+
+<span class="fc" id="L78">    public String getEstado() { return estado; }</span>
+<span class="fc" id="L79">    public void setEstado(String estado) { this.estado = estado; }</span>
+
+<span class="fc" id="L81">    public LocalDateTime getFechaCreacion() { return fechaCreacion; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

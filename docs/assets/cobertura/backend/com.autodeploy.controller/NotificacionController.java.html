@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificacionController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">NotificacionController.java</span></div><h1>NotificacionController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.config.Seguridad;
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.dto.NotificacionDTO;
+import com.autodeploy.model.Notificacion;
+import com.autodeploy.repository.NotificacionRepository;
+import com.autodeploy.service.NotificacionService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.List;
+import java.util.Map;
+
+@Tag(name = &quot;Notificaciones&quot;, description = &quot;Gestión de notificaciones del usuario&quot;)
+@RestController
+@RequestMapping(&quot;/api/notificaciones&quot;)
+@PreAuthorize(&quot;isAuthenticated()&quot;)
+public class NotificacionController {
+
+	private final NotificacionService notificacionService;
+	private final NotificacionRepository notificacionRepository;
+	private final Seguridad seguridad;
+
+	public NotificacionController(NotificacionService notificacionService,
+	                              NotificacionRepository notificacionRepository,
+<span class="fc" id="L40">	                              Seguridad seguridad) {</span>
+<span class="fc" id="L41">		this.notificacionService = notificacionService;</span>
+<span class="fc" id="L42">		this.notificacionRepository = notificacionRepository;</span>
+<span class="fc" id="L43">		this.seguridad = seguridad;</span>
+<span class="fc" id="L44">	}</span>
+
+	@Operation(summary = &quot;Crear notificación&quot;, description = &quot;Solo ADMIN puede crear notificaciones para usuarios. Las del sistema se crean internamente desde otros servicios.&quot;)
+	@PostMapping
+	@PreAuthorize(&quot;hasRole('ADMIN')&quot;)
+	public ResponseEntity&lt;ApiResponse&lt;NotificacionDTO&gt;&gt; crear(@RequestBody Map&lt;String, String&gt; peticion) {
+<span class="fc" id="L50">		String usuarioId = peticion.get(&quot;usuarioId&quot;);</span>
+<span class="fc" id="L51">		String tipo = peticion.getOrDefault(&quot;tipo&quot;, &quot;info&quot;);</span>
+<span class="fc" id="L52">		String titulo = peticion.getOrDefault(&quot;titulo&quot;, &quot;Notificación&quot;);</span>
+<span class="fc" id="L53">		String descripcion = peticion.getOrDefault(&quot;descripcion&quot;, &quot;&quot;);</span>
+
+<span class="fc" id="L55">		Notificacion notificacionCreada = notificacionService.crearNotificacion(tipo, titulo, descripcion, usuarioId);</span>
+<span class="fc" id="L56">		NotificacionDTO dto = new NotificacionDTO(</span>
+<span class="fc" id="L57">			notificacionCreada.getId(),</span>
+<span class="fc" id="L58">			notificacionCreada.getTipo(),</span>
+<span class="fc" id="L59">			notificacionCreada.getTitulo(),</span>
+<span class="fc" id="L60">			notificacionCreada.getDescripcion(),</span>
+<span class="fc" id="L61">			notificacionCreada.isLeida(),</span>
+<span class="fc" id="L62">			notificacionCreada.getFechaCreacion()</span>
+		);
+<span class="fc" id="L64">		ApiResponse&lt;NotificacionDTO&gt; respuesta = new ApiResponse&lt;&gt;(true, &quot;Notificación creada&quot;, dto);</span>
+<span class="fc" id="L65">		return ResponseEntity.ok(respuesta);</span>
+	}
+
+	@Operation(summary = &quot;Listar notificaciones&quot;, description = &quot;Obtiene todas las notificaciones del usuario&quot;)
+	@GetMapping(&quot;/usuario/{usuarioId}&quot;)
+	@PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esElMismoUsuario(#usuarioId, authentication)&quot;)
+	public ResponseEntity&lt;ApiResponse&lt;List&lt;NotificacionDTO&gt;&gt;&gt; listarPorUsuario(@PathVariable String usuarioId) {
+<span class="fc" id="L72">		List&lt;NotificacionDTO&gt; notificaciones = notificacionService.listarPorUsuario(usuarioId);</span>
+<span class="fc" id="L73">		ApiResponse&lt;List&lt;NotificacionDTO&gt;&gt; respuesta = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, notificaciones);</span>
+<span class="fc" id="L74">		return ResponseEntity.ok(respuesta);</span>
+	}
+
+	@Operation(summary = &quot;Listar notificaciones paginadas&quot;, description = &quot;Soporta ?page=0&amp;size=20&quot;)
+	@GetMapping(&quot;/usuario/{usuarioId}/paginadas&quot;)
+	@PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esElMismoUsuario(#usuarioId, authentication)&quot;)
+	public ResponseEntity&lt;ApiResponse&lt;Page&lt;Notificacion&gt;&gt;&gt; listarPorUsuarioPaginadas(@PathVariable String usuarioId, Pageable pageable) {
+<span class="nc" id="L81">		Page&lt;Notificacion&gt; pagina = notificacionRepository.findByUsuarioIdOrderByFechaCreacionDesc(usuarioId, pageable);</span>
+<span class="nc" id="L82">		return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, pagina));</span>
+	}
+
+	@Operation(summary = &quot;Notificaciones no leídas&quot;, description = &quot;Obtiene solo las notificaciones no leídas&quot;)
+	@GetMapping(&quot;/usuario/{usuarioId}/no-leidas&quot;)
+	@PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esElMismoUsuario(#usuarioId, authentication)&quot;)
+	public ResponseEntity&lt;ApiResponse&lt;List&lt;NotificacionDTO&gt;&gt;&gt; listarNoLeidas(@PathVariable String usuarioId) {
+<span class="fc" id="L89">		List&lt;NotificacionDTO&gt; notificacionesNoLeidas = notificacionService.listarNoLeidas(usuarioId);</span>
+<span class="fc" id="L90">		ApiResponse&lt;List&lt;NotificacionDTO&gt;&gt; respuesta = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, notificacionesNoLeidas);</span>
+<span class="fc" id="L91">		return ResponseEntity.ok(respuesta);</span>
+	}
+
+	@Operation(summary = &quot;Contar no leídas&quot;, description = &quot;Obtiene el número de notificaciones no leídas&quot;)
+	@GetMapping(&quot;/usuario/{usuarioId}/contar-no-leidas&quot;)
+	@PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esElMismoUsuario(#usuarioId, authentication)&quot;)
+	public ResponseEntity&lt;ApiResponse&lt;Long&gt;&gt; contarNoLeidas(@PathVariable String usuarioId) {
+<span class="fc" id="L98">		long cantidadNoLeidas = notificacionService.contarNoLeidas(usuarioId);</span>
+<span class="fc" id="L99">		ApiResponse&lt;Long&gt; respuesta = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, cantidadNoLeidas);</span>
+<span class="fc" id="L100">		return ResponseEntity.ok(respuesta);</span>
+	}
+
+	@Operation(summary = &quot;Marcar como leída&quot;, description = &quot;Marca una notificación como leída&quot;)
+	@PutMapping(&quot;/{notificacionId}/marcar-leida&quot;)
+	public ResponseEntity&lt;ApiResponse&lt;Void&gt;&gt; marcarComoLeida(@PathVariable String notificacionId,
+	                                                          Authentication autenticacion) {
+<span class="fc" id="L107">		verificarPropietarioDeNotificacion(notificacionId, autenticacion);</span>
+<span class="fc" id="L108">		notificacionService.marcarComoLeida(notificacionId);</span>
+<span class="fc" id="L109">		ApiResponse&lt;Void&gt; respuesta = new ApiResponse&lt;&gt;(true, &quot;Notificación marcada como leída&quot;, null);</span>
+<span class="fc" id="L110">		return ResponseEntity.ok(respuesta);</span>
+	}
+
+	@Operation(summary = &quot;Marcar todas como leídas&quot;, description = &quot;Marca todas las notificaciones como leídas&quot;)
+	@PutMapping(&quot;/usuario/{usuarioId}/marcar-todas-leidas&quot;)
+	@PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esElMismoUsuario(#usuarioId, authentication)&quot;)
+	public ResponseEntity&lt;ApiResponse&lt;Void&gt;&gt; marcarTodasComoLeidas(@PathVariable String usuarioId) {
+<span class="fc" id="L117">		notificacionService.marcarTodasComoLeidas(usuarioId);</span>
+<span class="fc" id="L118">		ApiResponse&lt;Void&gt; respuesta = new ApiResponse&lt;&gt;(true, &quot;Todas las notificaciones marcadas como leídas&quot;, null);</span>
+<span class="fc" id="L119">		return ResponseEntity.ok(respuesta);</span>
+	}
+
+	@Operation(summary = &quot;Eliminar notificación&quot;, description = &quot;Elimina una notificación&quot;)
+	@DeleteMapping(&quot;/{notificacionId}&quot;)
+	public ResponseEntity&lt;ApiResponse&lt;Void&gt;&gt; eliminar(@PathVariable String notificacionId,
+	                                                   Authentication autenticacion) {
+<span class="fc" id="L126">		verificarPropietarioDeNotificacion(notificacionId, autenticacion);</span>
+<span class="fc" id="L127">		notificacionService.eliminarNotificacion(notificacionId);</span>
+<span class="fc" id="L128">		ApiResponse&lt;Void&gt; respuesta = new ApiResponse&lt;&gt;(true, &quot;Notificación eliminada&quot;, null);</span>
+<span class="fc" id="L129">		return ResponseEntity.ok(respuesta);</span>
+	}
+
+	private void verificarPropietarioDeNotificacion(String notificacionId, Authentication autenticacion) {
+<span class="fc" id="L133">		Notificacion notif = notificacionRepository.findById(notificacionId).orElse(null);</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">		if (notif == null) {</span>
+<span class="nc" id="L135">			return;</span>
+		}
+<span class="pc bpc" id="L137" title="2 of 4 branches missed.">		if (seguridad.esAdmin(autenticacion) || seguridad.esElMismoUsuario(notif.getUsuarioId(), autenticacion)) {</span>
+<span class="fc" id="L138">			return;</span>
+		}
+<span class="nc" id="L140">		throw new AccessDeniedException(&quot;La notificacion no pertenece al usuario autenticado&quot;);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

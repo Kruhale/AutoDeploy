@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WebhookController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">WebhookController.java</span></div><h1>WebhookController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.model.Despliegue;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.service.DespliegueService;
+import com.autodeploy.service.GitDeployService;
+import com.autodeploy.service.ServidorService;
+import com.fasterxml.jackson.databind.JsonNode;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+import java.util.Optional;
+
+@Tag(name = &quot;Webhooks&quot;, description = &quot;Endpoints para que GitHub/GitLab disparen auto-deploys cuando llega un push. Publico (autenticado por tokenWebhook generado por AutoDeploy al crear el despliegue Git).&quot;)
+@RestController
+@RequestMapping(&quot;/api/webhooks&quot;)
+public class WebhookController {
+
+    private final DespliegueService despliegueService;
+    private final ServidorService servidorService;
+    private final GitDeployService gitDeployService;
+
+<span class="fc" id="L32">    public WebhookController(DespliegueService despliegueService, ServidorService servidorService, GitDeployService gitDeployService) {</span>
+<span class="fc" id="L33">        this.despliegueService = despliegueService;</span>
+<span class="fc" id="L34">        this.servidorService = servidorService;</span>
+<span class="fc" id="L35">        this.gitDeployService = gitDeployService;</span>
+<span class="fc" id="L36">    }</span>
+
+    @Operation(summary = &quot;Recibir evento push de Git&quot;, description = &quot;Endpoint llamado por GitHub/GitLab al hacer push. Solo dispara deploy si el evento es push, el token pertenece a un despliegue conocido y la rama coincide con la configurada. El payload se espera en formato JSON estandar de GitHub/GitLab.&quot;)
+    @PostMapping(&quot;/git/{tokenWebhook}&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Map&lt;String, String&gt;&gt;&gt; recibirEventoGit(
+            @PathVariable String tokenWebhook,
+            @RequestHeader(value = &quot;X-GitHub-Event&quot;, required = false) String tipoEventoGithub,
+            @RequestHeader(value = &quot;X-Gitlab-Event&quot;, required = false) String tipoEventoGitlab,
+            @RequestBody(required = false) JsonNode cuerpoPayload
+    ) {
+<span class="fc" id="L46">        Optional&lt;Despliegue&gt; despliegueAsociado = despliegueService.buscarPorTokenWebhook(tokenWebhook);</span>
+<span class="fc" id="L47">        boolean tokenInvalido = despliegueAsociado.isEmpty();</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">        if (tokenInvalido) {</span>
+<span class="fc" id="L49">            ApiResponse&lt;Map&lt;String, String&gt;&gt; cuerpoNoAutorizado = new ApiResponse&lt;&gt;(false, &quot;Token de webhook desconocido&quot;, Map.of());</span>
+<span class="fc" id="L50">            return ResponseEntity.status(404).body(cuerpoNoAutorizado);</span>
+        }
+
+<span class="fc" id="L53">        Despliegue despliegueOriginal = despliegueAsociado.get();</span>
+
+<span class="fc" id="L55">        boolean esEventoPush = esPushValido(tipoEventoGithub, tipoEventoGitlab);</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!esEventoPush) {</span>
+<span class="fc" id="L57">            Map&lt;String, String&gt; ignorado = Map.of(</span>
+                    &quot;estado&quot;, &quot;ignorado&quot;,
+                    &quot;motivo&quot;, &quot;El evento no es un push o no llega cabecera reconocida&quot;
+            );
+<span class="fc" id="L61">            return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Evento ignorado&quot;, ignorado));</span>
+        }
+
+<span class="fc" id="L64">        Optional&lt;String&gt; ramaDelPush = extraerRamaDePayload(cuerpoPayload);</span>
+<span class="pc bpc" id="L65" title="2 of 6 branches missed.">        boolean ramaCoincide = ramaDelPush.isEmpty() || despliegueOriginal.getRama() == null || ramaDelPush.get().equals(despliegueOriginal.getRama());</span>
+<span class="fc bfc" id="L66" title="All 2 branches covered.">        if (!ramaCoincide) {</span>
+<span class="fc" id="L67">            Map&lt;String, String&gt; ignorado = Map.of(</span>
+                    &quot;estado&quot;, &quot;ignorado&quot;,
+<span class="fc" id="L69">                    &quot;motivo&quot;, &quot;La rama &quot; + ramaDelPush.get() + &quot; no coincide con la configurada (&quot; + despliegueOriginal.getRama() + &quot;)&quot;</span>
+            );
+<span class="fc" id="L71">            return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Evento ignorado&quot;, ignorado));</span>
+        }
+
+<span class="fc" id="L74">        Servidor servidor = servidorService.obtenerPorId(despliegueOriginal.getServidorId());</span>
+<span class="fc" id="L75">        Despliegue nuevoDespliegue = despliegueService.registrar(servidor.getId(), &quot;git-webhook&quot;, despliegueOriginal.getUrl());</span>
+<span class="fc" id="L76">        despliegueService.actualizarMetadatosGit(</span>
+<span class="fc" id="L77">                nuevoDespliegue.getId(),</span>
+<span class="fc" id="L78">                despliegueOriginal.getTecnologia(),</span>
+<span class="fc" id="L79">                despliegueOriginal.getRama(),</span>
+<span class="fc" id="L80">                despliegueOriginal.getDirectorioRemoto(),</span>
+<span class="fc" id="L81">                despliegueOriginal.getTokenWebhook()</span>
+        );
+
+        try {
+<span class="nc" id="L85">            String salidaDelComando = gitDeployService.desplegarConGit(servidor, despliegueOriginal.getUrl(), despliegueOriginal.getDirectorioRemoto());</span>
+<span class="nc" id="L86">            despliegueService.completar(nuevoDespliegue.getId(), salidaDelComando);</span>
+
+<span class="nc" id="L88">            Map&lt;String, String&gt; resultado = Map.of(</span>
+                    &quot;estado&quot;, &quot;desplegado&quot;,
+<span class="nc" id="L90">                    &quot;despliegueId&quot;, nuevoDespliegue.getId(),</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">                    &quot;rama&quot;, ramaDelPush.orElse(despliegueOriginal.getRama() != null ? despliegueOriginal.getRama() : &quot;main&quot;)</span>
+            );
+<span class="nc" id="L93">            return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Auto-deploy disparado&quot;, resultado));</span>
+<span class="fc" id="L94">        } catch (Exception fallo) {</span>
+<span class="fc" id="L95">            despliegueService.fallar(nuevoDespliegue.getId(), fallo.getMessage());</span>
+<span class="fc" id="L96">            Map&lt;String, String&gt; errorMap = Map.of(</span>
+                    &quot;estado&quot;, &quot;fallido&quot;,
+<span class="fc" id="L98">                    &quot;despliegueId&quot;, nuevoDespliegue.getId(),</span>
+<span class="fc" id="L99">                    &quot;error&quot;, fallo.getMessage()</span>
+            );
+<span class="fc" id="L101">            return ResponseEntity.status(500).body(new ApiResponse&lt;&gt;(false, &quot;Auto-deploy fallido&quot;, errorMap));</span>
+        }
+    }
+
+    private boolean esPushValido(String eventoGithub, String eventoGitlab) {
+<span class="fc" id="L106">        boolean esPushGithub = &quot;push&quot;.equalsIgnoreCase(eventoGithub);</span>
+<span class="pc bpc" id="L107" title="1 of 4 branches missed.">        boolean esPushGitlab = eventoGitlab != null &amp;&amp; eventoGitlab.toLowerCase().contains(&quot;push&quot;);</span>
+<span class="fc bfc" id="L108" title="All 4 branches covered.">        return esPushGithub || esPushGitlab;</span>
+    }
+
+    private Optional&lt;String&gt; extraerRamaDePayload(JsonNode payload) {
+<span class="pc bpc" id="L112" title="1 of 2 branches missed.">        if (payload == null) {</span>
+<span class="nc" id="L113">            return Optional.empty();</span>
+        }
+
+<span class="fc" id="L116">        String refRecibida = payload.path(&quot;ref&quot;).asText(&quot;&quot;);</span>
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        if (refRecibida.startsWith(&quot;refs/heads/&quot;)) {</span>
+<span class="fc" id="L118">            return Optional.of(refRecibida.substring(&quot;refs/heads/&quot;.length()));</span>
+        }
+
+<span class="fc" id="L121">        String ramaAlternativa = payload.path(&quot;branch&quot;).asText(&quot;&quot;);</span>
+<span class="pc bpc" id="L122" title="1 of 2 branches missed.">        if (!ramaAlternativa.isBlank()) {</span>
+<span class="fc" id="L123">            return Optional.of(ramaAlternativa);</span>
+        }
+
+<span class="nc" id="L126">        return Optional.empty();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

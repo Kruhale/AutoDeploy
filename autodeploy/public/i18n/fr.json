@@ -468,7 +468,11 @@
     "ariaOcultarClave": "Masquer le mot de passe",
     "ariaVerClave": "Afficher le mot de passe",
     "claveEtiqueta": "Mot de passe",
-    "clavePlaceholder": "••••••••"
+    "clavePlaceholder": "••••••••",
+    "errorEmailObligatorio": "L'email est obligatoire",
+    "errorEmailFormato": "Format d'email invalide",
+    "errorClaveObligatoria": "Le mot de passe est obligatoire",
+    "errorClaveCorta": "Le mot de passe doit faire au moins 8 caractères"
   },
   "register": {
     "sello": "Édition 2026 · Inscription ouverte",

@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ServidorController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">ServidorController.java</span></div><h1>ServidorController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.dto.ConexionSshRequest;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.service.ServidorService;
+import com.autodeploy.service.SshCommandService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.net.URI;
+import java.util.List;
+
+@Tag(name = &quot;Servidores&quot;, description = &quot;CRUD de servidores SSH del usuario autenticado&quot;)
+@RestController
+@RequestMapping(&quot;/api/servidores&quot;)
+@PreAuthorize(&quot;isAuthenticated()&quot;)
+public class ServidorController {
+
+    private final ServidorService servidorService;
+    private final SshCommandService sshCommandService;
+
+<span class="fc" id="L37">    public ServidorController(ServidorService servidorService, SshCommandService sshCommandService) {</span>
+<span class="fc" id="L38">        this.servidorService = servidorService;</span>
+<span class="fc" id="L39">        this.sshCommandService = sshCommandService;</span>
+<span class="fc" id="L40">    }</span>
+
+    @Operation(summary = &quot;Registrar servidor&quot;, description = &quot;Añade un nuevo servidor SSH como propiedad del usuario autenticado&quot;)
+    @PostMapping
+    public ResponseEntity&lt;ApiResponse&lt;Servidor&gt;&gt; registrar(@RequestBody @Valid ConexionSshRequest peticion,
+                                                           Authentication autenticacion) {
+<span class="fc" id="L46">        String usuarioId = autenticacion.getName();</span>
+<span class="fc" id="L47">        Servidor servidor = servidorService.registrar(peticion, usuarioId);</span>
+<span class="fc" id="L48">        URI ubicacion = URI.create(&quot;/api/servidores/&quot; + servidor.getId());</span>
+
+<span class="fc" id="L50">        ApiResponse&lt;Servidor&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Servidor registrado&quot;, servidor);</span>
+<span class="fc" id="L51">        return ResponseEntity.created(ubicacion).body(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Listar servidores&quot;, description = &quot;Devuelve la lista de servidores del usuario autenticado (todos si es ADMIN)&quot;)
+    @GetMapping
+    public ResponseEntity&lt;ApiResponse&lt;List&lt;Servidor&gt;&gt;&gt; listar(Authentication autenticacion) {
+<span class="fc" id="L57">        String usuarioId = autenticacion.getName();</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        List&lt;Servidor&gt; lista = esAdmin(autenticacion)</span>
+<span class="nc" id="L59">                ? servidorService.listar()</span>
+<span class="fc" id="L60">                : servidorService.listarPorUsuario(usuarioId);</span>
+<span class="fc" id="L61">        ApiResponse&lt;List&lt;Servidor&gt;&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, lista);</span>
+<span class="fc" id="L62">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Listar servidores paginados&quot;, description = &quot;Version paginada con ?page=0&amp;size=20. Util si hay muchos servidores&quot;)
+    @GetMapping(&quot;/paginadas&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Page&lt;Servidor&gt;&gt;&gt; listarPaginadas(Authentication autenticacion, Pageable pageable) {
+<span class="fc" id="L68">        String usuarioId = autenticacion.getName();</span>
+<span class="fc" id="L69">        Page&lt;Servidor&gt; pagina = servidorService.listarPorUsuarioPaginado(usuarioId, pageable);</span>
+<span class="fc" id="L70">        ApiResponse&lt;Page&lt;Servidor&gt;&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, pagina);</span>
+<span class="fc" id="L71">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Obtener servidor por id&quot;)
+    @GetMapping(&quot;/{id}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#id, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Servidor&gt;&gt; obtener(@PathVariable String id) {
+<span class="fc" id="L78">        Servidor servidor = servidorService.obtenerPorId(id);</span>
+
+<span class="fc" id="L80">        ApiResponse&lt;Servidor&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, servidor);</span>
+<span class="fc" id="L81">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Probar conexion SSH&quot;, description = &quot;Verifica si el servidor es accesible por SSH sin guardarlo&quot;)
+    @PostMapping(&quot;/probar-conexion&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Boolean&gt;&gt; probarConexion(@RequestBody @Valid ConexionSshRequest peticion) {
+<span class="fc" id="L87">        boolean conectado = servidorService.probarConexion(peticion);</span>
+
+<span class="pc bpc" id="L89" title="1 of 2 branches missed.">        String mensaje = conectado ? &quot;Conexion SSH exitosa&quot; : &quot;No se pudo conectar&quot;;</span>
+<span class="fc" id="L90">        ApiResponse&lt;Boolean&gt; cuerpo = new ApiResponse&lt;&gt;(conectado, mensaje, conectado);</span>
+<span class="fc" id="L91">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Reiniciar servidor&quot;, description = &quot;Ejecuta sudo reboot en el servidor via SSH (solo el propietario o ADMIN)&quot;)
+    @PostMapping(&quot;/{id}/reboot&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#id, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; reiniciar(@PathVariable String id) {
+<span class="nc" id="L98">        Servidor servidor = servidorService.obtenerPorId(id);</span>
+<span class="nc" id="L99">        sshCommandService.ejecutarComando(servidor, &quot;sudo reboot&quot;);</span>
+
+<span class="nc" id="L101">        ApiResponse&lt;String&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Reinicio iniciado en &quot; + servidor.getNombre(), null);</span>
+<span class="nc" id="L102">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Eliminar servidor&quot;, description = &quot;Borra el servidor (solo el propietario o ADMIN)&quot;)
+    @DeleteMapping(&quot;/{id}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#id, authentication)&quot;)
+    public ResponseEntity&lt;Void&gt; eliminar(@PathVariable String id) {
+<span class="fc" id="L109">        servidorService.eliminar(id);</span>
+<span class="fc" id="L110">        return ResponseEntity.noContent().build();</span>
+    }
+
+    private static boolean esAdmin(Authentication autenticacion) {
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">        if (autenticacion == null) {</span>
+<span class="nc" id="L115">            return false;</span>
+        }
+<span class="fc bfc" id="L117" title="All 2 branches covered.">        for (GrantedAuthority autoridad : autenticacion.getAuthorities()) {</span>
+<span class="pc bpc" id="L118" title="1 of 2 branches missed.">            if (&quot;ROLE_ADMIN&quot;.equals(autoridad.getAuthority())) {</span>
+<span class="nc" id="L119">                return true;</span>
+            }
+<span class="fc" id="L121">        }</span>
+<span class="fc" id="L122">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

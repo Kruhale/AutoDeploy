@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SshWebSocketHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">SshWebSocketHandler.java</span></div><h1>SshWebSocketHandler.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.model.Servidor;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.channel.ChannelShell;
+import org.apache.sshd.client.session.ClientSession;
+import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.ConcurrentWebSocketSessionDecorator;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.security.KeyPair;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
+
+@Component
+public class SshWebSocketHandler extends TextWebSocketHandler {
+
+<span class="fc" id="L33">    private static final Logger log = LoggerFactory.getLogger(SshWebSocketHandler.class);</span>
+    private static final String ATTR_SSH_CLIENT = &quot;sshClient&quot;;
+    private static final String ATTR_SSH_SESSION = &quot;sshSession&quot;;
+    private static final String ATTR_SSH_CHANNEL = &quot;sshChannel&quot;;
+    private static final String ATTR_OUTPUT_STREAM = &quot;outputStream&quot;;
+    private static final String ATTR_SESION_SINCRONIZADA = &quot;sesionSincronizada&quot;;
+
+    private final ServidorService servidorService;
+    private final ObjectMapper objectMapper;
+<span class="fc" id="L42">    private final Map&lt;String, Thread&gt; hilosDeLectura = new ConcurrentHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L44">    public SshWebSocketHandler(ServidorService servidorService) {</span>
+<span class="fc" id="L45">        this.servidorService = servidorService;</span>
+<span class="fc" id="L46">        this.objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L47">    }</span>
+
+    @Override
+    protected void handleTextMessage(WebSocketSession sesionWs, TextMessage mensaje) throws Exception {
+<span class="nc" id="L51">        WebSocketSession sesionSegura = obtenerSesionSegura(sesionWs);</span>
+<span class="nc" id="L52">        JsonNode json = objectMapper.readTree(mensaje.getPayload());</span>
+<span class="nc" id="L53">        String tipo = json.get(&quot;tipo&quot;).asText();</span>
+
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (&quot;connect&quot;.equals(tipo)) {</span>
+<span class="nc" id="L56">            manejarConexion(sesionSegura, json);</span>
+<span class="nc bnc" id="L57" title="All 2 branches missed.">        } else if (&quot;input&quot;.equals(tipo)) {</span>
+<span class="nc" id="L58">            manejarEntrada(sesionSegura, json);</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        } else if (&quot;resize&quot;.equals(tipo)) {</span>
+<span class="nc" id="L60">            manejarRedimensionar(sesionSegura, json);</span>
+        }
+<span class="nc" id="L62">    }</span>
+
+    private WebSocketSession obtenerSesionSegura(WebSocketSession sesionWs) {
+<span class="nc" id="L65">        WebSocketSession existente = (WebSocketSession) sesionWs.getAttributes().get(ATTR_SESION_SINCRONIZADA);</span>
+<span class="nc bnc" id="L66" title="All 2 branches missed.">        if (existente != null) {</span>
+<span class="nc" id="L67">            return existente;</span>
+        }
+<span class="nc" id="L69">        WebSocketSession decorada = new ConcurrentWebSocketSessionDecorator(sesionWs, 5000, 1024 * 1024);</span>
+<span class="nc" id="L70">        sesionWs.getAttributes().put(ATTR_SESION_SINCRONIZADA, decorada);</span>
+<span class="nc" id="L71">        return decorada;</span>
+    }
+
+    private void manejarConexion(WebSocketSession sesionWs, JsonNode json) {
+        try {
+<span class="nc" id="L76">            String servidorId = json.get(&quot;servidorId&quot;).asText();</span>
+<span class="nc" id="L77">            Servidor servidor = servidorService.obtenerPorId(servidorId);</span>
+
+<span class="nc" id="L79">            SshClient cliente = SshClient.setUpDefaultClient();</span>
+<span class="nc" id="L80">            cliente.start();</span>
+
+<span class="nc" id="L82">            ClientSession sesionSsh = cliente.connect(</span>
+<span class="nc" id="L83">                    servidor.getUsuarioSsh(),</span>
+<span class="nc" id="L84">                    servidor.getDireccionIp(),</span>
+<span class="nc" id="L85">                    servidor.getPuertoSsh()</span>
+<span class="nc" id="L86">            ).verify(15, TimeUnit.SECONDS).getSession();</span>
+
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            if (&quot;password&quot;.equals(servidor.getMetodoAutenticacion())) {</span>
+<span class="nc" id="L89">                String password = servidorService.descifrarPassword(servidor);</span>
+<span class="nc" id="L90">                sesionSsh.addPasswordIdentity(password);</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">            } else if (&quot;key&quot;.equals(servidor.getMetodoAutenticacion())) {</span>
+<span class="nc" id="L92">                String clavePrivada = servidorService.descifrarClaveSsh(servidor);</span>
+<span class="nc" id="L93">                Path archivoTemporal = Files.createTempFile(&quot;ssh_key_&quot;, &quot;.pem&quot;);</span>
+<span class="nc" id="L94">                Files.writeString(archivoTemporal, clavePrivada);</span>
+
+<span class="nc" id="L96">                FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">                for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {</span>
+<span class="nc" id="L98">                    sesionSsh.addPublicKeyIdentity(parClaves);</span>
+<span class="nc" id="L99">                }</span>
+
+<span class="nc" id="L101">                Files.deleteIfExists(archivoTemporal);</span>
+            }
+
+<span class="nc" id="L104">            sesionSsh.auth().verify(15, TimeUnit.SECONDS);</span>
+
+<span class="nc" id="L106">            ChannelShell canalShell = sesionSsh.createShellChannel();</span>
+<span class="nc" id="L107">            canalShell.setPtyType(&quot;xterm-256color&quot;);</span>
+<span class="nc" id="L108">            canalShell.setPtyColumns(80);</span>
+<span class="nc" id="L109">            canalShell.setPtyLines(24);</span>
+<span class="nc" id="L110">            canalShell.open().verify(10, TimeUnit.SECONDS);</span>
+
+<span class="nc" id="L112">            OutputStream flujoSalida = canalShell.getInvertedIn();</span>
+<span class="nc" id="L113">            InputStream flujoEntrada = canalShell.getInvertedOut();</span>
+
+<span class="nc" id="L115">            sesionWs.getAttributes().put(ATTR_SSH_CLIENT, cliente);</span>
+<span class="nc" id="L116">            sesionWs.getAttributes().put(ATTR_SSH_SESSION, sesionSsh);</span>
+<span class="nc" id="L117">            sesionWs.getAttributes().put(ATTR_SSH_CHANNEL, canalShell);</span>
+<span class="nc" id="L118">            sesionWs.getAttributes().put(ATTR_OUTPUT_STREAM, flujoSalida);</span>
+
+<span class="nc" id="L120">            Thread hiloDeLectura = new Thread(new Runnable() {</span>
+                @Override
+                public void run() {
+                    try {
+<span class="nc" id="L124">                        byte[] buffer = new byte[4096];</span>
+                        int bytesLeidos;
+<span class="nc bnc" id="L126" title="All 2 branches missed.">                        while ((bytesLeidos = flujoEntrada.read(buffer)) != -1) {</span>
+<span class="nc" id="L127">                            String datos = new String(buffer, 0, bytesLeidos, StandardCharsets.UTF_8);</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">                            if (sesionWs.isOpen()) {</span>
+<span class="nc" id="L129">                                sesionWs.sendMessage(new TextMessage(datos));</span>
+                            }
+<span class="nc" id="L131">                        }</span>
+<span class="nc" id="L132">                    } catch (IOException excepcion) {</span>
+<span class="nc" id="L133">                        log.debug(&quot;Hilo de lectura SSH finalizado: {}&quot;, excepcion.getMessage());</span>
+<span class="nc" id="L134">                    }</span>
+<span class="nc" id="L135">                }</span>
+<span class="nc" id="L136">            }, &quot;ssh-reader-&quot; + sesionWs.getId());</span>
+
+<span class="nc" id="L138">            hiloDeLectura.setDaemon(true);</span>
+<span class="nc" id="L139">            hiloDeLectura.start();</span>
+<span class="nc" id="L140">            hilosDeLectura.put(sesionWs.getId(), hiloDeLectura);</span>
+
+<span class="nc" id="L142">            String mensajeExito = objectMapper.writeValueAsString(</span>
+<span class="nc" id="L143">                    Map.of(&quot;tipo&quot;, &quot;connected&quot;, &quot;servidor&quot;, servidor.getNombre())</span>
+            );
+<span class="nc" id="L145">            sesionWs.sendMessage(new TextMessage(mensajeExito));</span>
+
+<span class="nc" id="L147">        } catch (Exception excepcion) {</span>
+<span class="nc" id="L148">            log.error(&quot;Error al conectar SSH: {}&quot;, excepcion.getMessage());</span>
+            try {
+<span class="nc" id="L150">                String mensajeLegible = traducirErrorConexion(excepcion);</span>
+<span class="nc" id="L151">                String mensajeError = objectMapper.writeValueAsString(</span>
+<span class="nc" id="L152">                        Map.of(&quot;tipo&quot;, &quot;error&quot;, &quot;mensaje&quot;, mensajeLegible)</span>
+                );
+<span class="nc" id="L154">                sesionWs.sendMessage(new TextMessage(mensajeError));</span>
+<span class="nc" id="L155">            } catch (IOException ioExcepcion) {</span>
+<span class="nc" id="L156">                log.error(&quot;Error al enviar mensaje de error&quot;, ioExcepcion);</span>
+<span class="nc" id="L157">            }</span>
+<span class="nc" id="L158">        }</span>
+<span class="nc" id="L159">    }</span>
+
+    private String traducirErrorConexion(Exception excepcion) {
+<span class="nc" id="L162">        String causaTextual = obtenerCausaRaiz(excepcion).toLowerCase();</span>
+
+<span class="nc bnc" id="L164" title="All 6 branches missed.">        if (causaTextual.contains(&quot;unresolved&quot;) || causaTextual.contains(&quot;nodename&quot;) || causaTextual.contains(&quot;no such host&quot;)) {</span>
+<span class="nc" id="L165">            return &quot;No se pudo resolver el nombre del servidor. Verifica la dirección IP o el dominio.&quot;;</span>
+        }
+<span class="nc bnc" id="L167" title="All 2 branches missed.">        if (causaTextual.contains(&quot;connection refused&quot;)) {</span>
+<span class="nc" id="L168">            return &quot;Conexión rechazada. El servidor SSH no está escuchando en ese puerto.&quot;;</span>
+        }
+<span class="nc bnc" id="L170" title="All 4 branches missed.">        if (causaTextual.contains(&quot;timeout&quot;) || causaTextual.contains(&quot;timed out&quot;)) {</span>
+<span class="nc" id="L171">            return &quot;Tiempo de espera agotado. El servidor no responde.&quot;;</span>
+        }
+<span class="nc bnc" id="L173" title="All 2 branches missed.">        if (causaTextual.contains(&quot;auth&quot;)) {</span>
+<span class="nc" id="L174">            return &quot;Autenticación fallida. Revisa el usuario, la contraseña o la clave SSH.&quot;;</span>
+        }
+<span class="nc bnc" id="L176" title="All 4 branches missed.">        if (causaTextual.contains(&quot;network is unreachable&quot;) || causaTextual.contains(&quot;no route to host&quot;)) {</span>
+<span class="nc" id="L177">            return &quot;Red inalcanzable. Comprueba la conectividad de red con el servidor.&quot;;</span>
+        }
+
+<span class="nc" id="L180">        String mensaje = excepcion.getMessage();</span>
+<span class="nc bnc" id="L181" title="All 2 branches missed.">        return mensaje != null ? mensaje : &quot;Error desconocido al conectar.&quot;;</span>
+    }
+
+    private String obtenerCausaRaiz(Throwable excepcion) {
+<span class="nc" id="L185">        Throwable causa = excepcion;</span>
+<span class="nc" id="L186">        StringBuilder acumulado = new StringBuilder();</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">        while (causa != null) {</span>
+<span class="nc bnc" id="L188" title="All 2 branches missed.">            if (causa.getMessage() != null) {</span>
+<span class="nc" id="L189">                acumulado.append(causa.getMessage()).append(&quot; &quot;);</span>
+            }
+<span class="nc" id="L191">            acumulado.append(causa.getClass().getSimpleName()).append(&quot; &quot;);</span>
+<span class="nc" id="L192">            causa = causa.getCause();</span>
+        }
+<span class="nc" id="L194">        return acumulado.toString();</span>
+    }
+
+    private void manejarEntrada(WebSocketSession sesionWs, JsonNode json) throws IOException {
+<span class="nc" id="L198">        OutputStream flujoSalida = (OutputStream) sesionWs.getAttributes().get(ATTR_OUTPUT_STREAM);</span>
+<span class="nc bnc" id="L199" title="All 2 branches missed.">        if (flujoSalida == null) {</span>
+<span class="nc" id="L200">            return;</span>
+        }
+
+<span class="nc" id="L203">        String datos = json.get(&quot;datos&quot;).asText();</span>
+<span class="nc" id="L204">        flujoSalida.write(datos.getBytes(StandardCharsets.UTF_8));</span>
+<span class="nc" id="L205">        flujoSalida.flush();</span>
+<span class="nc" id="L206">    }</span>
+
+    private void manejarRedimensionar(WebSocketSession sesionWs, JsonNode json) throws IOException {
+<span class="nc" id="L209">        ChannelShell canalShell = (ChannelShell) sesionWs.getAttributes().get(ATTR_SSH_CHANNEL);</span>
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (canalShell == null) {</span>
+<span class="nc" id="L211">            return;</span>
+        }
+
+<span class="nc" id="L214">        int columnas = json.get(&quot;columnas&quot;).asInt(80);</span>
+<span class="nc" id="L215">        int filas = json.get(&quot;filas&quot;).asInt(24);</span>
+
+<span class="nc" id="L217">        canalShell.sendWindowChange(columnas, filas);</span>
+<span class="nc" id="L218">    }</span>
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession sesionWs, CloseStatus estado) {
+<span class="nc" id="L222">        log.info(&quot;WebSocket cerrado: {}&quot;, sesionWs.getId());</span>
+
+<span class="nc" id="L224">        Thread hiloDeLectura = hilosDeLectura.remove(sesionWs.getId());</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (hiloDeLectura != null) {</span>
+<span class="nc" id="L226">            hiloDeLectura.interrupt();</span>
+        }
+
+<span class="nc" id="L229">        ChannelShell canalShell = (ChannelShell) sesionWs.getAttributes().get(ATTR_SSH_CHANNEL);</span>
+<span class="nc bnc" id="L230" title="All 4 branches missed.">        if (canalShell != null &amp;&amp; canalShell.isOpen()) {</span>
+            try {
+<span class="nc" id="L232">                canalShell.close();</span>
+<span class="nc" id="L233">            } catch (IOException excepcion) {</span>
+<span class="nc" id="L234">                log.debug(&quot;Error al cerrar canal SSH&quot;, excepcion);</span>
+<span class="nc" id="L235">            }</span>
+        }
+
+<span class="nc" id="L238">        ClientSession sesionSsh = (ClientSession) sesionWs.getAttributes().get(ATTR_SSH_SESSION);</span>
+<span class="nc bnc" id="L239" title="All 4 branches missed.">        if (sesionSsh != null &amp;&amp; sesionSsh.isOpen()) {</span>
+            try {
+<span class="nc" id="L241">                sesionSsh.close();</span>
+<span class="nc" id="L242">            } catch (IOException excepcion) {</span>
+<span class="nc" id="L243">                log.debug(&quot;Error al cerrar sesion SSH&quot;, excepcion);</span>
+<span class="nc" id="L244">            }</span>
+        }
+
+<span class="nc" id="L247">        SshClient cliente = (SshClient) sesionWs.getAttributes().get(ATTR_SSH_CLIENT);</span>
+<span class="nc bnc" id="L248" title="All 2 branches missed.">        if (cliente != null) {</span>
+<span class="nc" id="L249">            cliente.stop();</span>
+        }
+<span class="nc" id="L251">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

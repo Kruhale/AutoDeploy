@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NginxController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">NginxController.java</span></div><h1>NginxController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.dto.ConfigurarNginxRequest;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.service.NginxService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Tag(name = &quot;Nginx&quot;, description = &quot;Instalacion y configuracion de nginx en el servidor&quot;)
+@RestController
+@RequestMapping(&quot;/api/nginx&quot;)
+@PreAuthorize(&quot;isAuthenticated() and (hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication))&quot;)
+public class NginxController {
+
+    private final NginxService nginxService;
+
+<span class="fc" id="L29">    public NginxController(NginxService nginxService) {</span>
+<span class="fc" id="L30">        this.nginxService = nginxService;</span>
+<span class="fc" id="L31">    }</span>
+
+    @Operation(summary = &quot;Instalar nginx en el servidor&quot;)
+    @PostMapping(&quot;/{servidorId}/instalar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; instalar(@PathVariable String servidorId) {
+<span class="nc" id="L36">        Servidor servidor = nginxService.obtenerServidorOLanzarError(servidorId);</span>
+<span class="nc" id="L37">        String salidaInstalacion = nginxService.instalarNginx(servidor);</span>
+
+<span class="nc" id="L39">        ApiResponse&lt;String&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Nginx instalado&quot;, salidaInstalacion);</span>
+<span class="nc" id="L40">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Configurar virtual host en nginx&quot;)
+    @PostMapping(&quot;/{servidorId}/configurar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; configurar(
+            @PathVariable String servidorId,
+            @RequestBody ConfigurarNginxRequest peticion) {
+
+<span class="fc" id="L49">        Servidor servidor = nginxService.obtenerServidorOLanzarError(servidorId);</span>
+<span class="fc" id="L50">        String configGenerada = nginxService.generarConfig(peticion.dominio(), peticion.puertoProxy());</span>
+<span class="nc" id="L51">        String salidaSubida = nginxService.subirConfig(servidor, peticion.dominio(), configGenerada);</span>
+
+<span class="nc" id="L53">        ApiResponse&lt;String&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Configuracion aplicada&quot;, salidaSubida);</span>
+<span class="nc" id="L54">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Listar virtual hosts configurados en nginx&quot;)
+    @GetMapping(&quot;/{servidorId}/hosts&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;List&lt;String&gt;&gt;&gt; listarHosts(@PathVariable String servidorId) {
+<span class="nc" id="L60">        Servidor servidor = nginxService.obtenerServidorOLanzarError(servidorId);</span>
+<span class="nc" id="L61">        List&lt;String&gt; listaDeHosts = nginxService.listarVirtualHosts(servidor);</span>
+
+<span class="nc" id="L63">        ApiResponse&lt;List&lt;String&gt;&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, listaDeHosts);</span>
+<span class="nc" id="L64">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Eliminar virtual host de nginx&quot;)
+    @DeleteMapping(&quot;/{servidorId}/hosts/{dominio}&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; eliminarHost(
+            @PathVariable String servidorId,
+            @PathVariable String dominio) {
+
+<span class="fc" id="L73">        Servidor servidor = nginxService.obtenerServidorOLanzarError(servidorId);</span>
+<span class="nc" id="L74">        String salidaEliminacion = nginxService.eliminarVirtualHost(servidor, dominio);</span>
+
+<span class="nc" id="L76">        ApiResponse&lt;String&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Virtual host eliminado&quot;, salidaEliminacion);</span>
+<span class="nc" id="L77">        return ResponseEntity.ok(cuerpo);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

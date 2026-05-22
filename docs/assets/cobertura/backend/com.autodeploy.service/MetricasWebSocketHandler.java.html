@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MetricasWebSocketHandler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">MetricasWebSocketHandler.java</span></div><h1>MetricasWebSocketHandler.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.model.MetricaServidor;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
+import org.springframework.web.socket.TextMessage;
+import org.springframework.web.socket.WebSocketSession;
+import org.springframework.web.socket.handler.TextWebSocketHandler;
+
+import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
+
+@Component
+public class MetricasWebSocketHandler extends TextWebSocketHandler {
+
+<span class="fc" id="L19">    private static final Logger LOGGER = LoggerFactory.getLogger(MetricasWebSocketHandler.class);</span>
+
+<span class="fc" id="L21">    private final Set&lt;WebSocketSession&gt; sesionesAbiertas = new CopyOnWriteArraySet&lt;&gt;();</span>
+    private final ObjectMapper objectMapper;
+
+<span class="fc" id="L24">    public MetricasWebSocketHandler(ObjectMapper objectMapper) {</span>
+<span class="fc" id="L25">        this.objectMapper = objectMapper;</span>
+<span class="fc" id="L26">    }</span>
+
+    @Override
+    public void afterConnectionEstablished(WebSocketSession sesionWs) {
+<span class="fc" id="L30">        sesionesAbiertas.add(sesionWs);</span>
+<span class="fc" id="L31">        LOGGER.info(&quot;Cliente conectado al canal de metricas: {} (total {})&quot;, sesionWs.getId(), sesionesAbiertas.size());</span>
+<span class="fc" id="L32">    }</span>
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession sesionWs, CloseStatus estado) {
+<span class="fc" id="L36">        sesionesAbiertas.remove(sesionWs);</span>
+<span class="fc" id="L37">        LOGGER.info(&quot;Cliente desconectado del canal de metricas: {}&quot;, sesionWs.getId());</span>
+<span class="fc" id="L38">    }</span>
+
+    public void difundirMetrica(MetricaServidor metrica) {
+<span class="fc bfc" id="L41" title="All 2 branches covered.">        if (sesionesAbiertas.isEmpty()) {</span>
+<span class="fc" id="L42">            return;</span>
+        }
+        try {
+<span class="fc" id="L45">            String jsonMetrica = objectMapper.writeValueAsString(metrica);</span>
+<span class="fc" id="L46">            TextMessage mensajeTexto = new TextMessage(jsonMetrica);</span>
+<span class="fc bfc" id="L47" title="All 2 branches covered.">            for (WebSocketSession sesion : sesionesAbiertas) {</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">                if (sesion.isOpen()) {</span>
+                    try {
+<span class="fc" id="L50">                        sesion.sendMessage(mensajeTexto);</span>
+<span class="nc" id="L51">                    } catch (Exception excepcionEnvio) {</span>
+<span class="nc" id="L52">                        LOGGER.debug(&quot;Error enviando metrica a {}: {}&quot;, sesion.getId(), excepcionEnvio.getMessage());</span>
+<span class="fc" id="L53">                    }</span>
+                }
+<span class="fc" id="L55">            }</span>
+<span class="nc" id="L56">        } catch (Exception excepcionSerializacion) {</span>
+<span class="nc" id="L57">            LOGGER.warn(&quot;Error serializando metrica: {}&quot;, excepcionSerializacion.getMessage());</span>
+<span class="fc" id="L58">        }</span>
+<span class="fc" id="L59">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

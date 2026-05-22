@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConfiguracionAsistenteController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">ConfiguracionAsistenteController.java</span></div><h1>ConfiguracionAsistenteController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.dto.ConfiguracionAsistenteRequest;
+import com.autodeploy.dto.ConfiguracionAsistenteResponse;
+import com.autodeploy.service.ConfiguracionAsistenteService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Tag(name = &quot;Configuracion asistente IA&quot;, description = &quot;API key y comandos auto-aprobados del asistente&quot;)
+@RestController
+@RequestMapping(&quot;/api/asistente-ia/configuracion&quot;)
+@PreAuthorize(&quot;isAuthenticated() and (hasRole('ADMIN') or @seguridad.esElMismoUsuario(#usuarioId, authentication))&quot;)
+public class ConfiguracionAsistenteController {
+
+    private final ConfiguracionAsistenteService configuracionService;
+
+<span class="fc" id="L26">    public ConfiguracionAsistenteController(ConfiguracionAsistenteService configuracionService) {</span>
+<span class="fc" id="L27">        this.configuracionService = configuracionService;</span>
+<span class="fc" id="L28">    }</span>
+
+    @Operation(summary = &quot;Obtener configuracion del usuario&quot;)
+    @GetMapping(&quot;/{usuarioId}&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;ConfiguracionAsistenteResponse&gt;&gt; obtener(@PathVariable String usuarioId) {
+<span class="fc" id="L33">        ConfiguracionAsistenteResponse resumen = configuracionService.obtenerResumen(usuarioId);</span>
+<span class="fc" id="L34">        ApiResponse&lt;ConfiguracionAsistenteResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, resumen);</span>
+<span class="fc" id="L35">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Actualizar configuracion del usuario&quot;)
+    @PutMapping(&quot;/{usuarioId}&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;ConfiguracionAsistenteResponse&gt;&gt; actualizar(@PathVariable String usuarioId, @RequestBody ConfiguracionAsistenteRequest peticion) {
+<span class="fc" id="L41">        ConfiguracionAsistenteResponse resumen = configuracionService.actualizar(usuarioId, peticion);</span>
+<span class="fc" id="L42">        ApiResponse&lt;ConfiguracionAsistenteResponse&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Configuracion actualizada&quot;, resumen);</span>
+<span class="fc" id="L43">        return ResponseEntity.ok(cuerpo);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HealthCheck.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.model</a> &gt; <span class="el_source">HealthCheck.java</span></div><h1>HealthCheck.java</h1><pre class="source lang-java linenums">package com.autodeploy.model;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.time.LocalDateTime;
+
+@Document(collection = &quot;health_check&quot;)
+public class HealthCheck {
+
+    @Id
+    private String id;
+    private String servidorId;
+    private String nombreServidor;
+    private String estado;
+    private long tiempoRespuestaMs;
+    private String mensaje;
+    private LocalDateTime fechaComprobacion;
+
+<span class="nc" id="L20">    public HealthCheck() {}</span>
+
+<span class="fc" id="L22">    public HealthCheck(String servidorId, String nombreServidor, String estado, long tiempoRespuestaMs, String mensaje) {</span>
+<span class="fc" id="L23">        this.servidorId = servidorId;</span>
+<span class="fc" id="L24">        this.nombreServidor = nombreServidor;</span>
+<span class="fc" id="L25">        this.estado = estado;</span>
+<span class="fc" id="L26">        this.tiempoRespuestaMs = tiempoRespuestaMs;</span>
+<span class="fc" id="L27">        this.mensaje = mensaje;</span>
+<span class="fc" id="L28">        this.fechaComprobacion = LocalDateTime.now();</span>
+<span class="fc" id="L29">    }</span>
+
+<span class="fc" id="L31">    public String getId() { return id; }</span>
+<span class="fc" id="L32">    public void setId(String id) { this.id = id; }</span>
+
+<span class="fc" id="L34">    public String getServidorId() { return servidorId; }</span>
+<span class="fc" id="L35">    public void setServidorId(String servidorId) { this.servidorId = servidorId; }</span>
+
+<span class="fc" id="L37">    public String getNombreServidor() { return nombreServidor; }</span>
+<span class="fc" id="L38">    public void setNombreServidor(String nombreServidor) { this.nombreServidor = nombreServidor; }</span>
+
+<span class="fc" id="L40">    public String getEstado() { return estado; }</span>
+<span class="fc" id="L41">    public void setEstado(String estado) { this.estado = estado; }</span>
+
+<span class="fc" id="L43">    public long getTiempoRespuestaMs() { return tiempoRespuestaMs; }</span>
+<span class="fc" id="L44">    public void setTiempoRespuestaMs(long tiempoRespuestaMs) { this.tiempoRespuestaMs = tiempoRespuestaMs; }</span>
+
+<span class="fc" id="L46">    public String getMensaje() { return mensaje; }</span>
+<span class="fc" id="L47">    public void setMensaje(String mensaje) { this.mensaje = mensaje; }</span>
+
+<span class="fc" id="L49">    public LocalDateTime getFechaComprobacion() { return fechaComprobacion; }</span>
+<span class="fc" id="L50">    public void setFechaComprobacion(LocalDateTime fechaComprobacion) { this.fechaComprobacion = fechaComprobacion; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

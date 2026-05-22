@@ -468,7 +468,11 @@
     "ariaOcultarClave": "Hide password",
     "ariaVerClave": "Show password",
     "claveEtiqueta": "Password",
-    "clavePlaceholder": "••••••••"
+    "clavePlaceholder": "••••••••",
+    "errorEmailObligatorio": "Email is required",
+    "errorEmailFormato": "Email format is invalid",
+    "errorClaveObligatoria": "Password is required",
+    "errorClaveCorta": "Password must be at least 8 characters"
   },
   "register": {
     "sello": "2026 Edition · Onboarding open",

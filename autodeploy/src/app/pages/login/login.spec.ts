@@ -40,8 +40,7 @@ describe("Login", function() {
   });
 
   it("debe rechazar login con campos vacíos", fakeAsync(function() {
-    componente.emailUsuario.set("");
-    componente.passwordUsuario.set("");
+    componente.formularioLogin.patchValue({ email: "", password: "" });
 
     componente.iniciarSesion();
     tick();
@@ -51,8 +50,7 @@ describe("Login", function() {
   }));
 
   it("debe llamar a UsuarioService.login con email/password correctos y navegar a /app", fakeAsync(function() {
-    componente.emailUsuario.set("test@test.com");
-    componente.passwordUsuario.set("password123");
+    componente.formularioLogin.patchValue({ email: "test@test.com", password: "password123" });
     usuarioServiceSpy.login.and.returnValue(Promise.resolve({} as any));
 
     componente.iniciarSesion();
@@ -64,8 +62,7 @@ describe("Login", function() {
   }));
 
   it("debe mostrar mensaje de error si login falla", fakeAsync(function() {
-    componente.emailUsuario.set("test@test.com");
-    componente.passwordUsuario.set("malpassword");
+    componente.formularioLogin.patchValue({ email: "test@test.com", password: "malpassword" });
     usuarioServiceSpy.login.and.returnValue(Promise.reject(new Error("Credenciales invalidas")));
 
     componente.iniciarSesion();
@@ -74,6 +71,26 @@ describe("Login", function() {
     expect(componente.mensajeDeErrorVisible()).toBe(true);
     expect(componente.mensajeDeError()).toBe("Credenciales invalidas");
     expect(routerNavigateSpy).not.toHaveBeenCalled();
+  }));
+
+  it("debe rechazar email con formato invalido", fakeAsync(function() {
+    componente.formularioLogin.patchValue({ email: "no-es-email", password: "password123" });
+
+    componente.iniciarSesion();
+    tick();
+
+    expect(componente.campoConError("email")).toBe(true);
+    expect(usuarioServiceSpy.login).not.toHaveBeenCalled();
+  }));
+
+  it("debe rechazar password con menos de 8 caracteres", fakeAsync(function() {
+    componente.formularioLogin.patchValue({ email: "a@b.com", password: "abc" });
+
+    componente.iniciarSesion();
+    tick();
+
+    expect(componente.campoConError("password")).toBe(true);
+    expect(usuarioServiceSpy.login).not.toHaveBeenCalled();
   }));
 
   it("alternarVisibilidadPassword debe alternar el flag", function() {

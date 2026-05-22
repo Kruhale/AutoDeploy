@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsuarioService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">UsuarioService.java</span></div><h1>UsuarioService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.dto.LoginRequest;
+import com.autodeploy.dto.LoginResponse;
+import com.autodeploy.dto.RegistroRequest;
+import com.autodeploy.exception.BadRequestException;
+import com.autodeploy.exception.ResourceNotFoundException;
+import com.autodeploy.model.Usuario;
+import com.autodeploy.repository.ConfiguracionAsistenteIaRepository;
+import com.autodeploy.repository.NotificacionRepository;
+import com.autodeploy.repository.UsuarioRepository;
+import com.autodeploy.util.JwtUtil;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+
+@Service
+public class UsuarioService {
+
+    private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final NotificacionRepository notificacionRepository;
+    private final ConfiguracionAsistenteIaRepository configuracionAsistenteRepository;
+
+    public UsuarioService(
+            UsuarioRepository usuarioRepository,
+            PasswordEncoder passwordEncoder,
+            JwtUtil jwtUtil,
+            NotificacionRepository notificacionRepository,
+<span class="fc" id="L32">            ConfiguracionAsistenteIaRepository configuracionAsistenteRepository) {</span>
+<span class="fc" id="L33">        this.usuarioRepository = usuarioRepository;</span>
+<span class="fc" id="L34">        this.passwordEncoder = passwordEncoder;</span>
+<span class="fc" id="L35">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L36">        this.notificacionRepository = notificacionRepository;</span>
+<span class="fc" id="L37">        this.configuracionAsistenteRepository = configuracionAsistenteRepository;</span>
+<span class="fc" id="L38">    }</span>
+
+    public Usuario registrar(RegistroRequest peticion) {
+<span class="fc" id="L41">        boolean emailExiste = usuarioRepository.existsByEmail(peticion.email());</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (emailExiste) {</span>
+<span class="fc" id="L43">            throw new BadRequestException(&quot;Ya existe un usuario con ese email&quot;);</span>
+        }
+
+<span class="fc" id="L46">        String hashPassword = passwordEncoder.encode(peticion.password());</span>
+<span class="fc" id="L47">        Usuario nuevoUsuario = new Usuario(peticion.nombre(), peticion.email(), hashPassword);</span>
+
+<span class="fc" id="L49">        Usuario usuarioGuardado = usuarioRepository.save(nuevoUsuario);</span>
+<span class="fc" id="L50">        return usuarioGuardado;</span>
+    }
+
+    public LoginResponse login(LoginRequest peticion) {
+<span class="fc" id="L54">        Usuario usuario = usuarioRepository.findByEmail(peticion.email())</span>
+<span class="fc" id="L55">                .orElseThrow(() -&gt; new BadRequestException(&quot;Email o password incorrectos&quot;));</span>
+
+<span class="fc" id="L57">        boolean passwordCorrecta = passwordEncoder.matches(peticion.password(), usuario.getPasswordHash());</span>
+<span class="fc bfc" id="L58" title="All 2 branches covered.">        if (!passwordCorrecta) {</span>
+<span class="fc" id="L59">            throw new BadRequestException(&quot;Email o password incorrectos&quot;);</span>
+        }
+
+<span class="fc" id="L62">        String tokenJwt = jwtUtil.generarToken(usuario.getId(), usuario.getEmail(), usuario.getRol());</span>
+<span class="fc" id="L63">        return construirLoginResponse(usuario, tokenJwt);</span>
+    }
+
+    public Usuario obtenerPorId(String id) {
+<span class="fc" id="L67">        return usuarioRepository.findById(id)</span>
+<span class="fc" id="L68">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Usuario no encontrado&quot;));</span>
+    }
+
+    public Usuario actualizar(String id, String nombre, String email) {
+<span class="fc" id="L72">        Usuario usuario = obtenerPorId(id);</span>
+<span class="fc" id="L73">        usuario.setNombre(nombre);</span>
+<span class="fc" id="L74">        usuario.setEmail(email);</span>
+<span class="fc" id="L75">        return usuarioRepository.save(usuario);</span>
+    }
+
+    public Usuario actualizarPlan(String id, String plan) {
+<span class="fc" id="L79">        Usuario usuario = obtenerPorId(id);</span>
+<span class="fc" id="L80">        usuario.setPlan(plan);</span>
+<span class="fc" id="L81">        usuario.setFechaInicioSuscripcion(LocalDateTime.now());</span>
+<span class="fc" id="L82">        usuario.setFechaFinSuscripcion(null);</span>
+<span class="fc" id="L83">        return usuarioRepository.save(usuario);</span>
+    }
+
+    public java.util.List&lt;Usuario&gt; listarTodos() {
+<span class="fc" id="L87">        return usuarioRepository.findAll();</span>
+    }
+
+    public Usuario actualizarRol(String id, String nuevoRol) {
+<span class="pc bpc" id="L91" title="1 of 4 branches missed.">        if (!Usuario.ROL_USUARIO.equals(nuevoRol) &amp;&amp; !Usuario.ROL_ADMIN.equals(nuevoRol)) {</span>
+<span class="fc" id="L92">            throw new BadRequestException(&quot;Rol inválido. Use USUARIO o ADMIN&quot;);</span>
+        }
+<span class="fc" id="L94">        Usuario usuario = obtenerPorId(id);</span>
+<span class="fc" id="L95">        usuario.setRol(nuevoRol);</span>
+<span class="fc" id="L96">        return usuarioRepository.save(usuario);</span>
+    }
+
+    public Usuario cancelarSuscripcion(String id) {
+<span class="fc" id="L100">        Usuario usuario = obtenerPorId(id);</span>
+
+<span class="fc" id="L102">        LocalDateTime fechaInicio = usuario.getFechaInicioSuscripcion();</span>
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (fechaInicio == null) {</span>
+<span class="fc" id="L104">            fechaInicio = LocalDateTime.now();</span>
+        }
+<span class="fc" id="L106">        LocalDateTime fechaFin = fechaInicio.plusMonths(1);</span>
+
+<span class="fc" id="L108">        usuario.setFechaFinSuscripcion(fechaFin);</span>
+<span class="fc" id="L109">        return usuarioRepository.save(usuario);</span>
+    }
+
+    public void eliminar(String id) {
+<span class="fc" id="L113">        boolean existe = usuarioRepository.existsById(id);</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (!existe) {</span>
+<span class="fc" id="L115">            throw new ResourceNotFoundException(&quot;Usuario no encontrado&quot;);</span>
+        }
+
+<span class="fc" id="L118">        notificacionRepository.deleteByUsuarioId(id);</span>
+<span class="fc" id="L119">        configuracionAsistenteRepository.deleteByUsuarioId(id);</span>
+
+<span class="fc" id="L121">        usuarioRepository.deleteById(id);</span>
+<span class="fc" id="L122">    }</span>
+
+    public com.autodeploy.model.ClaveSshUsuario agregarClaveSsh(String idUsuario, String nombre, String claveCompleta) {
+<span class="fc" id="L125">        Usuario usuario = obtenerPorId(idUsuario);</span>
+<span class="fc" id="L126">        String huella = generarHuella(claveCompleta);</span>
+<span class="fc" id="L127">        String idClave = java.util.UUID.randomUUID().toString();</span>
+
+<span class="fc" id="L129">        com.autodeploy.model.ClaveSshUsuario nuevaClave = new com.autodeploy.model.ClaveSshUsuario(idClave, nombre, huella, claveCompleta);</span>
+<span class="fc" id="L130">        usuario.getClavesSsh().add(nuevaClave);</span>
+<span class="fc" id="L131">        usuarioRepository.save(usuario);</span>
+<span class="fc" id="L132">        return nuevaClave;</span>
+    }
+
+    public void eliminarClaveSsh(String idUsuario, String idClave) {
+<span class="fc" id="L136">        Usuario usuario = obtenerPorId(idUsuario);</span>
+<span class="fc" id="L137">        usuario.getClavesSsh().removeIf(c -&gt; idClave.equals(c.getId()));</span>
+<span class="fc" id="L138">        usuarioRepository.save(usuario);</span>
+<span class="fc" id="L139">    }</span>
+
+    public com.autodeploy.model.PreferenciasNotificacion actualizarPreferenciasNotificacion(String idUsuario, com.autodeploy.model.PreferenciasNotificacion preferencias) {
+<span class="fc" id="L142">        Usuario usuario = obtenerPorId(idUsuario);</span>
+<span class="fc" id="L143">        usuario.setPreferenciasNotificacion(preferencias);</span>
+<span class="fc" id="L144">        usuarioRepository.save(usuario);</span>
+<span class="fc" id="L145">        return preferencias;</span>
+    }
+
+    private String generarHuella(String claveCompleta) {
+<span class="pc bpc" id="L149" title="2 of 4 branches missed.">        if (claveCompleta == null || claveCompleta.isBlank()) return &quot;—&quot;;</span>
+<span class="fc" id="L150">        String[] partes = claveCompleta.trim().split(&quot;\\s+&quot;);</span>
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        if (partes.length &lt; 2) return &quot;SHA256:invalid&quot;;</span>
+        try {
+<span class="fc" id="L153">            byte[] bytesClave = java.util.Base64.getDecoder().decode(partes[1]);</span>
+<span class="fc" id="L154">            byte[] hash = java.security.MessageDigest.getInstance(&quot;SHA-256&quot;).digest(bytesClave);</span>
+<span class="fc" id="L155">            String base64 = java.util.Base64.getEncoder().withoutPadding().encodeToString(hash);</span>
+<span class="fc" id="L156">            return &quot;SHA256:&quot; + base64.substring(0, Math.min(20, base64.length()));</span>
+<span class="nc" id="L157">        } catch (Exception ignorado) {</span>
+<span class="nc" id="L158">            return &quot;SHA256:&quot; + Integer.toHexString(claveCompleta.hashCode());</span>
+        }
+    }
+
+    public LoginResponse construirLoginResponse(Usuario usuario, String token) {
+<span class="fc" id="L163">        return new LoginResponse(</span>
+<span class="fc" id="L164">            usuario.getId(),</span>
+<span class="fc" id="L165">            usuario.getNombre(),</span>
+<span class="fc" id="L166">            usuario.getEmail(),</span>
+            token,
+<span class="fc bfc" id="L168" title="All 2 branches covered.">            usuario.getPlan() != null ? usuario.getPlan() : &quot;free&quot;,</span>
+<span class="fc" id="L169">            usuario.getFechaFinSuscripcion(),</span>
+<span class="fc" id="L170">            usuario.getIdioma()</span>
+        );
+    }
+
+    public Usuario actualizarIdioma(String id, String idioma) {
+<span class="fc bfc" id="L175" title="All 4 branches covered.">        boolean idiomaValido = idioma != null &amp;&amp; java.util.Set.of(&quot;es&quot;, &quot;en&quot;, &quot;fr&quot;, &quot;de&quot;, &quot;it&quot;).contains(idioma);</span>
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        if (!idiomaValido) {</span>
+<span class="fc" id="L177">            throw new BadRequestException(&quot;Idioma no soportado&quot;);</span>
+        }
+<span class="fc" id="L179">        Usuario usuario = obtenerPorId(id);</span>
+<span class="fc" id="L180">        usuario.setIdioma(idioma);</span>
+<span class="fc" id="L181">        return usuarioRepository.save(usuario);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

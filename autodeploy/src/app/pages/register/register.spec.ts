@@ -28,11 +28,15 @@ describe("Register", function() {
     expect(component).toBeTruthy();
   });
 
-  it("inicializa los signals de formulario vacíos", function() {
-    expect(component.nombreCompleto()).toBe("");
-    expect(component.emailUsuario()).toBe("");
-    expect(component.passwordUsuario()).toBe("");
-    expect(component.confirmPasswordUsuario()).toBe("");
+  it("inicializa el formulario reactivo con campos vacíos", function() {
+    expect(component.formularioRegistro.controls.nombre.value).toBe("");
+    expect(component.formularioRegistro.controls.email.value).toBe("");
+    expect(component.formularioRegistro.controls.password.value).toBe("");
+    expect(component.formularioRegistro.controls.confirmPassword.value).toBe("");
+  });
+
+  it("el formulario es invalido inicialmente (todos los campos required)", function() {
+    expect(component.formularioRegistro.valid).toBeFalse();
   });
 
   it("inicializa la password oculta por defecto", function() {
@@ -45,34 +49,48 @@ describe("Register", function() {
     expect(component.cargando()).toBeFalse();
   });
 
-  it("criterio de longitud falla con password corta", function() {
-    component.passwordUsuario.set("ab");
+  it("criterio de longitud falla con password corta y pasa con 8+", function() {
+    component.formularioRegistro.controls.password.setValue("ab");
     expect(component.criterioLongitud()).toBeFalse();
-  });
-
-  it("criterio de longitud pasa con 8+ caracteres", function() {
-    component.passwordUsuario.set("12345678");
+    component.formularioRegistro.controls.password.setValue("12345678");
     expect(component.criterioLongitud()).toBeTrue();
   });
 
-  it("criterio mayúscula detecta correctamente", function() {
-    component.passwordUsuario.set("abcdefgh");
+  it("criterio mayuscula detecta correctamente", function() {
+    component.formularioRegistro.controls.password.setValue("abcdefgh");
     expect(component.criterioMayuscula()).toBeFalse();
-    component.passwordUsuario.set("Abcdefgh");
+    component.formularioRegistro.controls.password.setValue("Abcdefgh");
     expect(component.criterioMayuscula()).toBeTrue();
   });
 
-  it("criterio número detecta correctamente", function() {
-    component.passwordUsuario.set("Abcdefgh");
+  it("criterio numero detecta correctamente", function() {
+    component.formularioRegistro.controls.password.setValue("Abcdefgh");
     expect(component.criterioNumero()).toBeFalse();
-    component.passwordUsuario.set("Abcdefg1");
+    component.formularioRegistro.controls.password.setValue("Abcdefg1");
     expect(component.criterioNumero()).toBeTrue();
   });
 
   it("criterio especial detecta caracteres especiales", function() {
-    component.passwordUsuario.set("Abcdefg1");
+    component.formularioRegistro.controls.password.setValue("Abcdefg1");
     expect(component.criterioEspecial()).toBeFalse();
-    component.passwordUsuario.set("Abcdefg1!");
+    component.formularioRegistro.controls.password.setValue("Abcdefg1!");
     expect(component.criterioEspecial()).toBeTrue();
+  });
+
+  it("passwordEsValida es true solo cuando se cumplen los 5 criterios", function() {
+    component.formularioRegistro.controls.password.setValue("Abcdefg1!");
+    expect(component.passwordEsValida()).toBeTrue();
+  });
+
+  it("hayConfirmacionInvalida es true cuando confirmPassword no coincide y se ha intentado enviar", function() {
+    component.formularioRegistro.patchValue({
+      nombre: "Pepe",
+      email: "p@x.com",
+      password: "Abcdefg1!",
+      confirmPassword: "distinto"
+    });
+    component.formularioRegistro.controls.confirmPassword.markAsTouched();
+
+    expect(component.hayConfirmacionInvalida()).toBeTrue();
   });
 });

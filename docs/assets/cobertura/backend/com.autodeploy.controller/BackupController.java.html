@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BackupController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">BackupController.java</span></div><h1>BackupController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.config.Seguridad;
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.model.Backup;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.repository.BackupRepository;
+import com.autodeploy.service.BackupService;
+import com.autodeploy.service.ServidorService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.Map;
+
+@Tag(name = &quot;Backups&quot;, description = &quot;Copias de seguridad de los servidores del usuario&quot;)
+@RestController
+@RequestMapping(&quot;/api/backups&quot;)
+@PreAuthorize(&quot;isAuthenticated()&quot;)
+public class BackupController {
+
+    private final BackupService backupService;
+    private final ServidorService servidorService;
+    private final BackupRepository backupRepository;
+    private final Seguridad seguridad;
+
+    public BackupController(BackupService backupService,
+                            ServidorService servidorService,
+                            BackupRepository backupRepository,
+<span class="fc" id="L44">                            Seguridad seguridad) {</span>
+<span class="fc" id="L45">        this.backupService = backupService;</span>
+<span class="fc" id="L46">        this.servidorService = servidorService;</span>
+<span class="fc" id="L47">        this.backupRepository = backupRepository;</span>
+<span class="fc" id="L48">        this.seguridad = seguridad;</span>
+<span class="fc" id="L49">    }</span>
+
+<span class="fc" id="L51">    public record NuevoBackupRequest(String servidorId, String tipo) {}</span>
+
+    @Operation(summary = &quot;Listar backups de un servidor&quot;)
+    @GetMapping(&quot;/servidor/{servidorId}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;List&lt;Backup&gt;&gt;&gt; listar(@PathVariable String servidorId) {
+<span class="fc" id="L57">        List&lt;Backup&gt; backups = backupService.listarPorServidor(servidorId);</span>
+<span class="fc" id="L58">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, backups));</span>
+    }
+
+    @Operation(summary = &quot;Listar backups paginados de un servidor (?page=0&amp;size=20)&quot;)
+    @GetMapping(&quot;/servidor/{servidorId}/paginados&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Page&lt;Backup&gt;&gt;&gt; listarPaginados(@PathVariable String servidorId, Pageable pageable) {
+<span class="nc" id="L65">        Page&lt;Backup&gt; pagina = backupRepository.findByServidorIdOrderByFechaCreacionDesc(servidorId, pageable);</span>
+<span class="nc" id="L66">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, pagina));</span>
+    }
+
+    @Operation(summary = &quot;Crear backup manual de un servidor del usuario&quot;)
+    @PostMapping
+    public ResponseEntity&lt;ApiResponse&lt;Backup&gt;&gt; crear(@RequestBody NuevoBackupRequest peticion,
+                                                      Authentication autenticacion) {
+<span class="fc" id="L73">        verificarPropietarioDeServidor(peticion.servidorId(), autenticacion);</span>
+<span class="fc" id="L74">        Backup nuevoBackup = backupService.crearBackup(</span>
+<span class="fc" id="L75">                peticion.servidorId(),</span>
+<span class="pc bpc" id="L76" title="1 of 2 branches missed.">                peticion.tipo() != null ? peticion.tipo() : &quot;manual&quot;</span>
+        );
+<span class="fc" id="L78">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Backup en curso&quot;, nuevoBackup));</span>
+    }
+
+    @Operation(summary = &quot;Eliminar un backup propio&quot;)
+    @DeleteMapping(&quot;/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; eliminar(@PathVariable String id, Authentication autenticacion) {
+<span class="nc" id="L84">        verificarPropietarioDeBackup(id, autenticacion);</span>
+<span class="nc" id="L85">        backupService.eliminar(id);</span>
+<span class="nc" id="L86">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @Operation(summary = &quot;Restaurar un backup propio&quot;)
+    @PostMapping(&quot;/{id}/restaurar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; restaurar(@PathVariable String id, Authentication autenticacion) {
+<span class="fc" id="L92">        verificarPropietarioDeBackup(id, autenticacion);</span>
+<span class="nc" id="L93">        backupService.restaurar(id);</span>
+<span class="nc" id="L94">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Restauracion iniciada&quot;, null));</span>
+    }
+
+    @Operation(summary = &quot;Consultar configuracion de backups automaticos&quot;)
+    @GetMapping(&quot;/auto/{servidorId}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Map&lt;String, Object&gt;&gt;&gt; consultarAuto(@PathVariable String servidorId) {
+<span class="fc" id="L101">        Servidor servidor = servidorService.obtenerPorId(servidorId);</span>
+<span class="fc" id="L102">        Map&lt;String, Object&gt; datos = Map.of(</span>
+<span class="fc" id="L103">                &quot;activado&quot;, servidor.isBackupsAutomaticosActivos(),</span>
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">                &quot;hora&quot;, servidor.getHoraBackupAutomatico() == null ? &quot;03:00&quot; : servidor.getHoraBackupAutomatico()</span>
+        );
+<span class="fc" id="L106">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, datos));</span>
+    }
+
+    @Operation(summary = &quot;Activar/desactivar backups automaticos&quot;)
+    @PutMapping(&quot;/auto/{servidorId}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;Servidor&gt;&gt; configurarAuto(
+            @PathVariable String servidorId,
+            @RequestBody Map&lt;String, Object&gt; peticion) {
+<span class="fc" id="L115">        boolean activado = Boolean.TRUE.equals(peticion.get(&quot;activado&quot;));</span>
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        String hora = peticion.get(&quot;hora&quot;) == null ? &quot;03:00&quot; : peticion.get(&quot;hora&quot;).toString();</span>
+
+        Servidor actualizado;
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (activado) {</span>
+<span class="fc" id="L120">            actualizado = backupService.activarBackupsAutomaticos(servidorId, hora);</span>
+        } else {
+<span class="fc" id="L122">            actualizado = backupService.desactivarBackupsAutomaticos(servidorId);</span>
+        }
+
+<span class="fc bfc" id="L125" title="All 2 branches covered.">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, activado ? &quot;Cron instalado&quot; : &quot;Cron eliminado&quot;, actualizado));</span>
+    }
+
+    private void verificarPropietarioDeServidor(String servidorId, Authentication autenticacion) {
+<span class="pc bpc" id="L129" title="1 of 4 branches missed.">        if (seguridad.esAdmin(autenticacion) || seguridad.esDuenioDelServidor(servidorId, autenticacion)) {</span>
+<span class="fc" id="L130">            return;</span>
+        }
+<span class="fc" id="L132">        throw new AccessDeniedException(&quot;El servidor no pertenece al usuario autenticado&quot;);</span>
+    }
+
+    private void verificarPropietarioDeBackup(String backupId, Authentication autenticacion) {
+<span class="fc" id="L136">        Backup backup = backupRepository.findById(backupId).orElse(null);</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        if (backup == null) {</span>
+            // dejar pasar para que el servicio devuelva 404 con mensaje claro
+<span class="nc" id="L139">            return;</span>
+        }
+<span class="fc" id="L141">        verificarPropietarioDeServidor(backup.getServidorId(), autenticacion);</span>
+<span class="fc" id="L142">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

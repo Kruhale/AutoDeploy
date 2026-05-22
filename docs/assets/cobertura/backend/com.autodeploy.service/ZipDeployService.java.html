@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ZipDeployService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">ZipDeployService.java</span></div><h1>ZipDeployService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.model.Servidor;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Comparator;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
+
+@Service
+public class ZipDeployService {
+
+    private static final long TAMANO_MAXIMO_ZIP = 50L * 1024L * 1024L;
+
+    private final SftpUploadService sftpUploadService;
+    private final SshCommandService sshCommandService;
+
+<span class="fc" id="L24">    public ZipDeployService(SftpUploadService sftpUploadService, SshCommandService sshCommandService) {</span>
+<span class="fc" id="L25">        this.sftpUploadService = sftpUploadService;</span>
+<span class="fc" id="L26">        this.sshCommandService = sshCommandService;</span>
+<span class="fc" id="L27">    }</span>
+
+    public String desplegarDesdeZip(Servidor servidor, MultipartFile archivoZip, String directorioRemoto, String tecnologia) {
+<span class="fc" id="L30">        validarArchivoZip(archivoZip);</span>
+
+<span class="fc" id="L32">        Path carpetaTemporal = null;</span>
+        try {
+<span class="fc" id="L34">            carpetaTemporal = Files.createTempDirectory(&quot;autodeploy-zip-&quot;);</span>
+<span class="fc" id="L35">            extraerZip(archivoZip, carpetaTemporal);</span>
+
+<span class="fc" id="L37">            String comandoLimpieza = &quot;rm -rf &quot; + directorioRemoto + &quot; &amp;&amp; mkdir -p &quot; + directorioRemoto;</span>
+<span class="fc" id="L38">            sshCommandService.ejecutarComando(servidor, comandoLimpieza);</span>
+
+<span class="fc" id="L40">            sftpUploadService.subirCarpeta(servidor, carpetaTemporal, directorioRemoto);</span>
+
+<span class="fc" id="L42">            String comandoBuild = obtenerComandoBuild(tecnologia, directorioRemoto);</span>
+<span class="fc" id="L43">            String salidaBuild = sshCommandService.ejecutarComando(servidor, comandoBuild);</span>
+
+<span class="fc" id="L45">            return salidaBuild;</span>
+<span class="nc" id="L46">        } catch (IOException fallo) {</span>
+<span class="nc" id="L47">            throw new RuntimeException(&quot;Error procesando ZIP: &quot; + fallo.getMessage(), fallo);</span>
+        } finally {
+<span class="pc bpc" id="L49" title="1 of 2 branches missed.">            if (carpetaTemporal != null) {</span>
+<span class="fc" id="L50">                eliminarRecursivo(carpetaTemporal);</span>
+            }
+        }
+    }
+
+    private void validarArchivoZip(MultipartFile archivoZip) {
+<span class="pc bpc" id="L56" title="1 of 4 branches missed.">        boolean archivoVacio = archivoZip == null || archivoZip.isEmpty();</span>
+<span class="fc bfc" id="L57" title="All 2 branches covered.">        if (archivoVacio) {</span>
+<span class="fc" id="L58">            throw new IllegalArgumentException(&quot;El archivo ZIP esta vacio&quot;);</span>
+        }
+
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">        boolean demasiadoGrande = archivoZip.getSize() &gt; TAMANO_MAXIMO_ZIP;</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">        if (demasiadoGrande) {</span>
+<span class="nc" id="L63">            throw new IllegalArgumentException(&quot;El ZIP excede el tamano maximo de 50 MB&quot;);</span>
+        }
+
+<span class="fc" id="L66">        String nombreArchivo = archivoZip.getOriginalFilename();</span>
+<span class="pc bpc" id="L67" title="1 of 4 branches missed.">        boolean noEsZip = nombreArchivo == null || !nombreArchivo.toLowerCase().endsWith(&quot;.zip&quot;);</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (noEsZip) {</span>
+<span class="fc" id="L69">            throw new IllegalArgumentException(&quot;El archivo debe tener extension .zip&quot;);</span>
+        }
+<span class="fc" id="L71">    }</span>
+
+    private void extraerZip(MultipartFile archivoZip, Path destino) throws IOException {
+<span class="fc" id="L74">        try (InputStream entradaArchivo = archivoZip.getInputStream();</span>
+<span class="fc" id="L75">             ZipInputStream lectorZip = new ZipInputStream(entradaArchivo)) {</span>
+
+            ZipEntry entradaActual;
+<span class="fc bfc" id="L78" title="All 2 branches covered.">            while ((entradaActual = lectorZip.getNextEntry()) != null) {</span>
+<span class="fc" id="L79">                Path rutaSegura = resolverRutaSegura(destino, entradaActual.getName());</span>
+
+<span class="fc bfc" id="L81" title="All 2 branches covered.">                if (entradaActual.isDirectory()) {</span>
+<span class="fc" id="L82">                    Files.createDirectories(rutaSegura);</span>
+                } else {
+<span class="fc" id="L84">                    Files.createDirectories(rutaSegura.getParent());</span>
+<span class="fc" id="L85">                    Files.copy(lectorZip, rutaSegura);</span>
+                }
+
+<span class="fc" id="L88">                lectorZip.closeEntry();</span>
+<span class="fc" id="L89">            }</span>
+        }
+<span class="fc" id="L91">    }</span>
+
+    private Path resolverRutaSegura(Path raiz, String nombreEntrada) {
+<span class="fc" id="L94">        Path rutaCandidata = raiz.resolve(nombreEntrada).normalize();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">        boolean intentaSalirseDelDirectorio = !rutaCandidata.startsWith(raiz);</span>
+<span class="fc bfc" id="L96" title="All 2 branches covered.">        if (intentaSalirseDelDirectorio) {</span>
+<span class="fc" id="L97">            throw new IllegalArgumentException(&quot;Entrada ZIP fuera del directorio destino: &quot; + nombreEntrada);</span>
+        }
+<span class="fc" id="L99">        return rutaCandidata;</span>
+    }
+
+    private String obtenerComandoBuild(String tecnologia, String directorio) {
+<span class="fc" id="L103">        Map&lt;String, String&gt; comandosPorTecnologia = Map.of(</span>
+                &quot;nodejs&quot;, &quot;cd &quot; + directorio + &quot; &amp;&amp; npm install --omit=dev &amp;&amp; (npm run build || true)&quot;,
+                &quot;react&quot;, &quot;cd &quot; + directorio + &quot; &amp;&amp; npm install &amp;&amp; npm run build&quot;,
+                &quot;nextjs&quot;, &quot;cd &quot; + directorio + &quot; &amp;&amp; npm install &amp;&amp; npm run build&quot;,
+                &quot;estatica&quot;, &quot;echo 'Archivos estaticos copiados a &quot; + directorio + &quot;'&quot;,
+                &quot;php&quot;, &quot;cd &quot; + directorio + &quot; &amp;&amp; (composer install --no-dev 2&gt;/dev/null || echo 'sin composer.json')&quot;,
+                &quot;python&quot;, &quot;cd &quot; + directorio + &quot; &amp;&amp; (python3 -m pip install -r requirements.txt 2&gt;/dev/null || echo 'sin requirements.txt')&quot;,
+                &quot;docker-compose&quot;, &quot;cd &quot; + directorio + &quot; &amp;&amp; docker compose up -d --build&quot;
+        );
+
+<span class="fc" id="L113">        String comandoEncontrado = comandosPorTecnologia.get(tecnologia);</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">        if (comandoEncontrado != null) {</span>
+<span class="fc" id="L115">            return comandoEncontrado;</span>
+        }
+<span class="fc" id="L117">        return &quot;echo 'Despliegue ZIP completado en &quot; + directorio + &quot;'&quot;;</span>
+    }
+
+    private void eliminarRecursivo(Path carpeta) {
+<span class="fc" id="L121">        try (var flujoArchivos = Files.walk(carpeta)) {</span>
+<span class="fc" id="L122">            flujoArchivos</span>
+<span class="fc" id="L123">                    .sorted(Comparator.reverseOrder())</span>
+<span class="fc" id="L124">                    .forEach(ruta -&gt; {</span>
+                        try {
+<span class="fc" id="L126">                            Files.deleteIfExists(ruta);</span>
+<span class="nc" id="L127">                        } catch (IOException ignorado) {</span>
+                            // Carpeta temporal, si falla la limpieza no es crítico
+<span class="fc" id="L129">                        }</span>
+<span class="fc" id="L130">                    });</span>
+<span class="nc" id="L131">        } catch (IOException ignorado) {</span>
+            // Carpeta temporal, si falla la limpieza no es crítico
+<span class="fc" id="L133">        }</span>
+<span class="fc" id="L134">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

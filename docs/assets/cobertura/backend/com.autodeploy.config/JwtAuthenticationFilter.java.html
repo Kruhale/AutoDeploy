@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtAuthenticationFilter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.config</a> &gt; <span class="el_source">JwtAuthenticationFilter.java</span></div><h1>JwtAuthenticationFilter.java</h1><pre class="source lang-java linenums">package com.autodeploy.config;
+
+import com.autodeploy.util.JwtUtil;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+import java.util.List;
+
+@Component
+public class JwtAuthenticationFilter extends OncePerRequestFilter {
+
+    private static final String CABECERA_AUTORIZACION = &quot;Authorization&quot;;
+    private static final String PREFIJO_BEARER = &quot;Bearer &quot;;
+
+    private final JwtUtil jwtUtil;
+
+<span class="fc" id="L26">    public JwtAuthenticationFilter(JwtUtil jwtUtil) {</span>
+<span class="fc" id="L27">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L28">    }</span>
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest peticion, HttpServletResponse respuesta, FilterChain cadena) throws ServletException, IOException {
+<span class="fc" id="L32">        String cabeceraAuth = peticion.getHeader(CABECERA_AUTORIZACION);</span>
+
+<span class="fc bfc" id="L34" title="All 4 branches covered.">        boolean cabeceraAusente = cabeceraAuth == null || !cabeceraAuth.startsWith(PREFIJO_BEARER);</span>
+<span class="fc bfc" id="L35" title="All 2 branches covered.">        if (cabeceraAusente) {</span>
+<span class="fc" id="L36">            cadena.doFilter(peticion, respuesta);</span>
+<span class="fc" id="L37">            return;</span>
+        }
+
+<span class="fc" id="L40">        String tokenJwt = cabeceraAuth.substring(PREFIJO_BEARER.length());</span>
+<span class="fc" id="L41">        boolean tokenValido = jwtUtil.esValido(tokenJwt);</span>
+<span class="fc bfc" id="L42" title="All 2 branches covered.">        if (!tokenValido) {</span>
+<span class="fc" id="L43">            cadena.doFilter(peticion, respuesta);</span>
+<span class="fc" id="L44">            return;</span>
+        }
+
+<span class="fc" id="L47">        String usuarioId = jwtUtil.extraerUsuarioId(tokenJwt);</span>
+<span class="fc" id="L48">        String rol = jwtUtil.extraerRol(tokenJwt);</span>
+<span class="fc" id="L49">        List&lt;SimpleGrantedAuthority&gt; autoridades = List.of(new SimpleGrantedAuthority(&quot;ROLE_&quot; + rol));</span>
+<span class="fc" id="L50">        UsernamePasswordAuthenticationToken autenticacion = new UsernamePasswordAuthenticationToken(usuarioId, null, autoridades);</span>
+<span class="fc" id="L51">        autenticacion.setDetails(new WebAuthenticationDetailsSource().buildDetails(peticion));</span>
+<span class="fc" id="L52">        SecurityContextHolder.getContext().setAuthentication(autenticacion);</span>
+
+<span class="fc" id="L54">        cadena.doFilter(peticion, respuesta);</span>
+<span class="fc" id="L55">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

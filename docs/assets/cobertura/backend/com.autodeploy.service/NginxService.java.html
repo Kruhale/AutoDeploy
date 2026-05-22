@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NginxService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">NginxService.java</span></div><h1>NginxService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.exception.ResourceNotFoundException;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.repository.ServidorRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
+
+@Service
+public class NginxService {
+
+    private final SshCommandService sshCommandService;
+    private final ServidorRepository servidorRepository;
+
+<span class="fc" id="L17">    public NginxService(SshCommandService sshCommandService, ServidorRepository servidorRepository) {</span>
+<span class="fc" id="L18">        this.sshCommandService = sshCommandService;</span>
+<span class="fc" id="L19">        this.servidorRepository = servidorRepository;</span>
+<span class="fc" id="L20">    }</span>
+
+    public String instalarNginx(Servidor servidor) {
+<span class="fc" id="L23">        String comandoDeInstalacion = &quot;sudo apt-get update &amp;&amp; sudo apt-get install -y nginx&quot;;</span>
+<span class="fc" id="L24">        String salidaDeInstalacion = sshCommandService.ejecutarComando(servidor, comandoDeInstalacion);</span>
+<span class="fc" id="L25">        return salidaDeInstalacion;</span>
+    }
+
+    public String generarConfig(String dominio, int puertoProxy) {
+<span class="fc" id="L29">        String configuracionNginx = &quot;server {\n&quot;</span>
+                + &quot;    listen 80;\n&quot;
+                + &quot;    server_name &quot; + dominio + &quot;;\n&quot;
+                + &quot;\n&quot;
+                + &quot;    location / {\n&quot;
+                + &quot;        proxy_pass http://127.0.0.1:&quot; + puertoProxy + &quot;;\n&quot;
+                + &quot;        proxy_set_header Host $host;\n&quot;
+                + &quot;        proxy_set_header X-Real-IP $remote_addr;\n&quot;
+                + &quot;        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;\n&quot;
+                + &quot;        proxy_set_header X-Forwarded-Proto $scheme;\n&quot;
+                + &quot;    }\n&quot;
+                + &quot;}\n&quot;;
+<span class="fc" id="L41">        return configuracionNginx;</span>
+    }
+
+    public String subirConfig(Servidor servidor, String dominio, String config) {
+<span class="fc" id="L45">        String configEscapada = config.replace(&quot;'&quot;, &quot;'\\''&quot;);</span>
+<span class="fc" id="L46">        String rutaDisponible = &quot;/etc/nginx/sites-available/&quot; + dominio;</span>
+<span class="fc" id="L47">        String rutaHabilitada = &quot;/etc/nginx/sites-enabled/&quot; + dominio;</span>
+
+<span class="fc" id="L49">        String comandoEscribirConfig = &quot;echo '&quot; + configEscapada + &quot;' | sudo tee &quot; + rutaDisponible;</span>
+<span class="fc" id="L50">        sshCommandService.ejecutarComando(servidor, comandoEscribirConfig);</span>
+
+<span class="fc" id="L52">        String comandoCrearEnlace = &quot;sudo ln -sf &quot; + rutaDisponible + &quot; &quot; + rutaHabilitada;</span>
+<span class="fc" id="L53">        sshCommandService.ejecutarComando(servidor, comandoCrearEnlace);</span>
+
+<span class="fc" id="L55">        String comandoRecargar = &quot;sudo nginx -t &amp;&amp; sudo systemctl reload nginx&quot;;</span>
+<span class="fc" id="L56">        String salidaRecarga = sshCommandService.ejecutarComando(servidor, comandoRecargar);</span>
+<span class="fc" id="L57">        return salidaRecarga;</span>
+    }
+
+    public List&lt;String&gt; listarVirtualHosts(Servidor servidor) {
+<span class="fc" id="L61">        String salidaListado = sshCommandService.ejecutarComando(servidor, &quot;ls /etc/nginx/sites-enabled/&quot;);</span>
+<span class="fc" id="L62">        String[] nombresDeHosts = salidaListado.trim().split(&quot;\\s+&quot;);</span>
+<span class="fc" id="L63">        List&lt;String&gt; listaDeVirtualHosts = Arrays.asList(nombresDeHosts);</span>
+<span class="fc" id="L64">        return listaDeVirtualHosts;</span>
+    }
+
+    public String eliminarVirtualHost(Servidor servidor, String dominio) {
+<span class="fc" id="L68">        String rutaHabilitada = &quot;/etc/nginx/sites-enabled/&quot; + dominio;</span>
+<span class="fc" id="L69">        String rutaDisponible = &quot;/etc/nginx/sites-available/&quot; + dominio;</span>
+
+<span class="fc" id="L71">        String comandoEliminarEnlace = &quot;sudo rm -f &quot; + rutaHabilitada;</span>
+<span class="fc" id="L72">        sshCommandService.ejecutarComando(servidor, comandoEliminarEnlace);</span>
+
+<span class="fc" id="L74">        String comandoEliminarConfig = &quot;sudo rm -f &quot; + rutaDisponible;</span>
+<span class="fc" id="L75">        sshCommandService.ejecutarComando(servidor, comandoEliminarConfig);</span>
+
+<span class="fc" id="L77">        String comandoRecargar = &quot;sudo systemctl reload nginx&quot;;</span>
+<span class="fc" id="L78">        String salidaRecarga = sshCommandService.ejecutarComando(servidor, comandoRecargar);</span>
+<span class="fc" id="L79">        return salidaRecarga;</span>
+    }
+
+    public Servidor obtenerServidorOLanzarError(String servidorId) {
+<span class="fc" id="L83">        Servidor servidor = servidorRepository.findById(servidorId)</span>
+<span class="fc" id="L84">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Servidor no encontrado&quot;));</span>
+<span class="fc" id="L85">        return servidor;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirewallController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">FirewallController.java</span></div><h1>FirewallController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.config.Seguridad;
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.model.ReglaFirewall;
+import com.autodeploy.repository.ReglaFirewallRepository;
+import com.autodeploy.service.FirewallService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@Tag(name = &quot;Firewall&quot;, description = &quot;Gestion de reglas UFW del servidor&quot;)
+@RestController
+@RequestMapping(&quot;/api/firewall&quot;)
+@PreAuthorize(&quot;isAuthenticated()&quot;)
+public class FirewallController {
+
+    private final FirewallService firewallService;
+    private final ReglaFirewallRepository reglaFirewallRepository;
+    private final Seguridad seguridad;
+
+    public FirewallController(FirewallService firewallService,
+                              ReglaFirewallRepository reglaFirewallRepository,
+<span class="fc" id="L36">                              Seguridad seguridad) {</span>
+<span class="fc" id="L37">        this.firewallService = firewallService;</span>
+<span class="fc" id="L38">        this.reglaFirewallRepository = reglaFirewallRepository;</span>
+<span class="fc" id="L39">        this.seguridad = seguridad;</span>
+<span class="fc" id="L40">    }</span>
+
+<span class="fc" id="L42">    public record NuevaReglaRequest(String servidorId, String puerto, String protocolo, String accion, String origen, String descripcion) {}</span>
+<span class="fc" id="L43">    public record ServidorRequest(String servidorId) {}</span>
+
+    @Operation(summary = &quot;Listar reglas del firewall del servidor&quot;)
+    @GetMapping(&quot;/servidor/{servidorId}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;List&lt;ReglaFirewall&gt;&gt;&gt; listar(@PathVariable String servidorId) {
+<span class="fc" id="L49">        List&lt;ReglaFirewall&gt; reglas = firewallService.listarPorServidor(servidorId);</span>
+<span class="fc" id="L50">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, reglas));</span>
+    }
+
+    @Operation(summary = &quot;Crear nueva regla de firewall&quot;)
+    @PostMapping(&quot;/regla&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;ReglaFirewall&gt;&gt; agregarRegla(@RequestBody NuevaReglaRequest peticion,
+                                                                    Authentication autenticacion) {
+<span class="fc" id="L57">        verificarPropietarioDeServidor(peticion.servidorId(), autenticacion);</span>
+<span class="fc" id="L58">        ReglaFirewall nuevaRegla = firewallService.agregarRegla(</span>
+<span class="fc" id="L59">                peticion.servidorId(),</span>
+<span class="fc" id="L60">                peticion.puerto(),</span>
+<span class="pc bpc" id="L61" title="1 of 2 branches missed.">                peticion.protocolo() != null ? peticion.protocolo() : &quot;TCP&quot;,</span>
+<span class="pc bpc" id="L62" title="1 of 2 branches missed.">                peticion.accion() != null ? peticion.accion() : &quot;allow&quot;,</span>
+<span class="pc bpc" id="L63" title="1 of 2 branches missed.">                peticion.origen() != null ? peticion.origen() : &quot;0.0.0.0/0&quot;,</span>
+<span class="pc bpc" id="L64" title="1 of 2 branches missed.">                peticion.descripcion() != null ? peticion.descripcion() : &quot;&quot;</span>
+        );
+<span class="fc" id="L66">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Regla creada&quot;, nuevaRegla));</span>
+    }
+
+    @Operation(summary = &quot;Eliminar una regla por id&quot;)
+    @DeleteMapping(&quot;/regla/{id}&quot;)
+    public ResponseEntity&lt;Void&gt; eliminar(@PathVariable String id, Authentication autenticacion) {
+<span class="fc" id="L72">        ReglaFirewall regla = reglaFirewallRepository.findById(id).orElse(null);</span>
+<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (regla != null) {</span>
+<span class="fc" id="L74">            verificarPropietarioDeServidor(regla.getServidorId(), autenticacion);</span>
+        }
+<span class="fc" id="L76">        firewallService.eliminarRegla(id);</span>
+<span class="fc" id="L77">        return ResponseEntity.noContent().build();</span>
+    }
+
+    @Operation(summary = &quot;Activar firewall en el servidor&quot;)
+    @PostMapping(&quot;/activar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; activar(@RequestBody ServidorRequest peticion,
+                                                       Authentication autenticacion) {
+<span class="fc" id="L84">        verificarPropietarioDeServidor(peticion.servidorId(), autenticacion);</span>
+<span class="fc" id="L85">        firewallService.activarFirewall(peticion.servidorId());</span>
+<span class="fc" id="L86">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Firewall activado&quot;, null));</span>
+    }
+
+    @Operation(summary = &quot;Desactivar firewall en el servidor&quot;)
+    @PostMapping(&quot;/desactivar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; desactivar(@RequestBody ServidorRequest peticion,
+                                                          Authentication autenticacion) {
+<span class="fc" id="L93">        verificarPropietarioDeServidor(peticion.servidorId(), autenticacion);</span>
+<span class="fc" id="L94">        firewallService.desactivarFirewall(peticion.servidorId());</span>
+<span class="fc" id="L95">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;Firewall desactivado&quot;, null));</span>
+    }
+
+    @Operation(summary = &quot;Estado actual del firewall del servidor&quot;)
+    @GetMapping(&quot;/estado/{servidorId}&quot;)
+    @PreAuthorize(&quot;hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication)&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; estado(@PathVariable String servidorId) {
+<span class="fc" id="L102">        String estado = firewallService.estado(servidorId);</span>
+<span class="fc" id="L103">        return ResponseEntity.ok(new ApiResponse&lt;&gt;(true, &quot;OK&quot;, estado));</span>
+    }
+
+    private void verificarPropietarioDeServidor(String servidorId, Authentication autenticacion) {
+<span class="pc bpc" id="L107" title="1 of 4 branches missed.">        if (seguridad.esAdmin(autenticacion) || seguridad.esDuenioDelServidor(servidorId, autenticacion)) {</span>
+<span class="fc" id="L108">            return;</span>
+        }
+<span class="fc" id="L110">        throw new AccessDeniedException(&quot;El servidor no pertenece al usuario autenticado&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

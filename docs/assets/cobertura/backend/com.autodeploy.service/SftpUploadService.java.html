@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SftpUploadService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">SftpUploadService.java</span></div><h1>SftpUploadService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.model.Servidor;
+import com.autodeploy.util.CifradoUtil;
+import org.apache.sshd.client.SshClient;
+import org.apache.sshd.client.session.ClientSession;
+import org.apache.sshd.common.keyprovider.FileKeyPairProvider;
+import org.apache.sshd.sftp.client.SftpClient;
+import org.apache.sshd.sftp.client.SftpClientFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.security.KeyPair;
+import java.util.stream.Stream;
+import java.util.concurrent.TimeUnit;
+
+@Service
+<span class="fc" id="L23">public class SftpUploadService {</span>
+
+    @Value(&quot;${autodeploy.cifrado.clave}&quot;)
+    private String claveCifrado;
+
+    public void subirCarpeta(Servidor servidor, Path carpetaLocal, String rutaRemota) {
+<span class="nc" id="L29">        SshClient cliente = SshClient.setUpDefaultClient();</span>
+<span class="nc" id="L30">        cliente.start();</span>
+
+        try {
+<span class="nc" id="L33">            ClientSession sesion = cliente.connect(</span>
+<span class="nc" id="L34">                    servidor.getUsuarioSsh(),</span>
+<span class="nc" id="L35">                    servidor.getDireccionIp(),</span>
+<span class="nc" id="L36">                    servidor.getPuertoSsh()</span>
+<span class="nc" id="L37">            ).verify(15, TimeUnit.SECONDS).getSession();</span>
+
+<span class="nc" id="L39">            autenticarSesion(sesion, servidor);</span>
+<span class="nc" id="L40">            sesion.auth().verify(15, TimeUnit.SECONDS);</span>
+
+<span class="nc" id="L42">            SftpClientFactory fabricaSftp = SftpClientFactory.instance();</span>
+<span class="nc" id="L43">            try (SftpClient clienteSftp = fabricaSftp.createSftpClient(sesion)) {</span>
+<span class="nc" id="L44">                crearDirectorioRemoto(clienteSftp, rutaRemota);</span>
+<span class="nc" id="L45">                subirArbolDeArchivos(clienteSftp, carpetaLocal, rutaRemota);</span>
+            }
+
+<span class="nc" id="L48">            sesion.close();</span>
+<span class="nc" id="L49">        } catch (Exception excepcion) {</span>
+<span class="nc" id="L50">            throw new RuntimeException(&quot;Error al subir carpeta SFTP a &quot; + servidor.getDireccionIp() + &quot;: &quot; + excepcion.getMessage(), excepcion);</span>
+        } finally {
+<span class="nc" id="L52">            cliente.stop();</span>
+        }
+<span class="nc" id="L54">    }</span>
+
+    private void subirArbolDeArchivos(SftpClient clienteSftp, Path raizLocal, String raizRemota) throws IOException {
+<span class="nc" id="L57">        try (Stream&lt;Path&gt; recorridoArchivos = Files.walk(raizLocal)) {</span>
+<span class="nc" id="L58">            recorridoArchivos.forEach(rutaActual -&gt; {</span>
+                try {
+<span class="nc" id="L60">                    Path rutaRelativa = raizLocal.relativize(rutaActual);</span>
+<span class="nc" id="L61">                    String rutaRemotaCompleta = raizRemota + &quot;/&quot; + rutaRelativa.toString().replace('\\', '/');</span>
+<span class="nc" id="L62">                    boolean esRaiz = rutaRelativa.toString().isEmpty();</span>
+
+<span class="nc bnc" id="L64" title="All 2 branches missed.">                    if (esRaiz) {</span>
+<span class="nc" id="L65">                        return;</span>
+                    }
+
+<span class="nc bnc" id="L68" title="All 2 branches missed.">                    if (Files.isDirectory(rutaActual)) {</span>
+<span class="nc" id="L69">                        crearDirectorioRemoto(clienteSftp, rutaRemotaCompleta);</span>
+                    } else {
+<span class="nc" id="L71">                        subirArchivo(clienteSftp, rutaActual, rutaRemotaCompleta);</span>
+                    }
+<span class="nc" id="L73">                } catch (Exception fallo) {</span>
+<span class="nc" id="L74">                    throw new RuntimeException(&quot;Fallo al subir &quot; + rutaActual + &quot;: &quot; + fallo.getMessage(), fallo);</span>
+<span class="nc" id="L75">                }</span>
+<span class="nc" id="L76">            });</span>
+        }
+<span class="nc" id="L78">    }</span>
+
+    private void subirArchivo(SftpClient clienteSftp, Path archivoLocal, String rutaRemota) throws IOException {
+<span class="nc" id="L81">        byte[] bytesDelArchivo = Files.readAllBytes(archivoLocal);</span>
+<span class="nc" id="L82">        try (OutputStream salidaRemota = clienteSftp.write(rutaRemota)) {</span>
+<span class="nc" id="L83">            salidaRemota.write(bytesDelArchivo);</span>
+        }
+<span class="nc" id="L85">    }</span>
+
+    private void crearDirectorioRemoto(SftpClient clienteSftp, String rutaRemota) {
+        try {
+<span class="nc" id="L89">            clienteSftp.mkdir(rutaRemota);</span>
+<span class="nc" id="L90">        } catch (IOException directorioPosiblementeExiste) {</span>
+            // Ignorar si ya existe; otros errores los reporta la siguiente operación
+<span class="nc" id="L92">        }</span>
+<span class="nc" id="L93">    }</span>
+
+    private void autenticarSesion(ClientSession sesion, Servidor servidor) throws Exception {
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (&quot;password&quot;.equals(servidor.getMetodoAutenticacion())) {</span>
+<span class="nc" id="L97">            String passwordDescifrada = CifradoUtil.descifrar(servidor.getPasswordCifrada(), claveCifrado);</span>
+<span class="nc" id="L98">            sesion.addPasswordIdentity(passwordDescifrada);</span>
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        } else if (&quot;key&quot;.equals(servidor.getMetodoAutenticacion())) {</span>
+<span class="nc" id="L100">            String clavePrivadaDescifrada = CifradoUtil.descifrar(servidor.getClaveSshPrivada(), claveCifrado);</span>
+<span class="nc" id="L101">            Path archivoTemporal = Files.createTempFile(&quot;ssh_key_&quot;, &quot;.pem&quot;);</span>
+<span class="nc" id="L102">            Files.writeString(archivoTemporal, clavePrivadaDescifrada);</span>
+
+<span class="nc" id="L104">            FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);</span>
+<span class="nc bnc" id="L105" title="All 2 branches missed.">            for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {</span>
+<span class="nc" id="L106">                sesion.addPublicKeyIdentity(parClaves);</span>
+<span class="nc" id="L107">            }</span>
+
+<span class="nc" id="L109">            Files.deleteIfExists(archivoTemporal);</span>
+        }
+<span class="nc" id="L111">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

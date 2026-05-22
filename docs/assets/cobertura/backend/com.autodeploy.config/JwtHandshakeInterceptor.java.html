@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JwtHandshakeInterceptor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.config</a> &gt; <span class="el_source">JwtHandshakeInterceptor.java</span></div><h1>JwtHandshakeInterceptor.java</h1><pre class="source lang-java linenums">package com.autodeploy.config;
+
+import com.autodeploy.util.JwtUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.http.server.ServletServerHttpRequest;
+import org.springframework.stereotype.Component;
+import org.springframework.web.socket.WebSocketHandler;
+import org.springframework.web.socket.server.HandshakeInterceptor;
+
+import java.net.URI;
+import java.util.Map;
+
+/**
+ * Comprueba el JWT que viene en la URL del WebSocket (?token=...) antes de aceptar la conexion.
+ * Si esta bien, guarda el usuarioId y el rol para usarlos luego en el handler.
+ */
+@Component
+public class JwtHandshakeInterceptor implements HandshakeInterceptor {
+
+    public static final String ATTR_USUARIO_ID = &quot;usuarioId&quot;;
+    public static final String ATTR_ROL = &quot;rol&quot;;
+
+<span class="fc" id="L26">    private static final Logger LOGGER = LoggerFactory.getLogger(JwtHandshakeInterceptor.class);</span>
+
+    private final JwtUtil jwtUtil;
+
+<span class="fc" id="L30">    public JwtHandshakeInterceptor(JwtUtil jwtUtil) {</span>
+<span class="fc" id="L31">        this.jwtUtil = jwtUtil;</span>
+<span class="fc" id="L32">    }</span>
+
+    @Override
+    public boolean beforeHandshake(ServerHttpRequest peticion,
+                                   ServerHttpResponse respuesta,
+                                   WebSocketHandler handler,
+                                   Map&lt;String, Object&gt; attributes) {
+<span class="fc" id="L39">        URI uri = peticion.getURI();</span>
+<span class="fc" id="L40">        String consulta = uri.getQuery();</span>
+<span class="fc" id="L41">        String tokenJwt = extraerToken(consulta);</span>
+
+        // De momento dejamos pasar el handshake aunque no haya token (solo loggeamos warning).
+        // Cuando el frontend mande siempre el token, cambiar el &quot;return true&quot; por &quot;return false&quot;.
+<span class="pc bpc" id="L45" title="1 of 4 branches missed.">        if (tokenJwt == null || tokenJwt.isBlank()) {</span>
+<span class="fc" id="L46">            LOGGER.warn(&quot;Handshake WS sin token en query param ({}) — proximamente sera obligatorio&quot;, uri.getPath());</span>
+<span class="fc" id="L47">            return true;</span>
+        }
+
+<span class="fc bfc" id="L50" title="All 2 branches covered.">        if (!jwtUtil.esValido(tokenJwt)) {</span>
+<span class="fc" id="L51">            LOGGER.warn(&quot;Handshake WS con token JWT invalido ({}) — proximamente sera rechazado&quot;, uri.getPath());</span>
+<span class="fc" id="L52">            return true;</span>
+        }
+
+<span class="fc" id="L55">        String usuarioId = jwtUtil.extraerUsuarioId(tokenJwt);</span>
+<span class="fc" id="L56">        String rol = jwtUtil.extraerRol(tokenJwt);</span>
+<span class="fc" id="L57">        attributes.put(ATTR_USUARIO_ID, usuarioId);</span>
+<span class="fc" id="L58">        attributes.put(ATTR_ROL, rol);</span>
+<span class="fc" id="L59">        return true;</span>
+    }
+
+    @Override
+    public void afterHandshake(ServerHttpRequest peticion,
+                               ServerHttpResponse respuesta,
+                               WebSocketHandler handler,
+                               Exception excepcion) {
+<span class="fc bfc" id="L67" title="All 2 branches covered.">        if (excepcion != null) {</span>
+<span class="fc" id="L68">            LOGGER.error(&quot;Error tras handshake WS&quot;, excepcion);</span>
+        }
+<span class="fc" id="L70">    }</span>
+
+    private static String extraerToken(String consulta) {
+<span class="pc bpc" id="L73" title="1 of 4 branches missed.">        if (consulta == null || consulta.isBlank()) {</span>
+<span class="fc" id="L74">            return null;</span>
+        }
+<span class="fc" id="L76">        String[] partes = consulta.split(&quot;&amp;&quot;);</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        for (String parte : partes) {</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">            if (parte.startsWith(&quot;token=&quot;)) {</span>
+<span class="fc" id="L79">                return parte.substring(&quot;token=&quot;.length());</span>
+            }
+        }
+<span class="nc" id="L82">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

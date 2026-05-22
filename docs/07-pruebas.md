@@ -95,19 +95,42 @@ Si **cualquiera** de las verificaciones falla:
 
 ---
 
-## 5. Cobertura
+## 5. Cobertura medida (JaCoCo backend + Istanbul frontend)
 
-Las cifras son estimaciones a partir de las áreas testeadas (no medidas con JaCoCo/Istanbul, pendiente para un sprint futuro):
+Cobertura **medida** (no estimada) tras `mvn test` + `ng test --code-coverage`. Reportes navegables en:
+- Backend (JaCoCo): [`docs/assets/cobertura/backend/index.html`](./assets/cobertura/backend/index.html)
+- Frontend (Istanbul): [`docs/assets/cobertura/frontend/index.html`](./assets/cobertura/frontend/index.html)
 
-| Capa | Cobertura estimada |
-|---|---|
-| Backend — utilidades (`JwtUtil`, `CifradoUtil`) | ~95 % |
-| Backend — services de negocio | ~70 % |
-| Backend — controllers principales | ~60 % |
-| Frontend — services | ~75 % |
-| Frontend — componentes | ~40 % |
+| Capa | Metrica | Cobertura medida |
+|---|---|---|
+| Backend — Lineas | JaCoCo | **80.2 %** (2.038 / 2.540) ✅ Excelente |
+| Backend — Instrucciones | JaCoCo | **78.9 %** (8.421 / 10.670) |
+| Backend — Ramas | JaCoCo | **58.4 %** (355 / 608) |
+| Frontend — Sentencias | Istanbul | **54.0 %** (1.234 / 2.287) |
+| Frontend — Lineas | Istanbul | **54.4 %** (1.188 / 2.184) |
+| Frontend — Funciones | Istanbul | **47.5 %** (271 / 570) |
+| Frontend — Ramas | Istanbul | **33.1 %** (207 / 625) |
 
-El **80 % global** que pide la rúbrica DIW no se alcanza en frontend porque muchos componentes son pura presentación y su valor en test unitario es bajo; la prioridad ha sido testear la lógica de negocio (services) y la cadena de seguridad (auth/guard/interceptor), donde sí supera el 70 %.
+**Total de tests**: 360 backend + 215 frontend = **575 tests pasando** (0 fallos).
+**Tests por modulo**: 88 unitarios servicios + 41 unitarios util/config/DTOs/modelos + 8 controlador Servidor + 13 controlador Usuario + 30 ControllersIntegration + 19 ControllersExtra + 4 Webhook + 12 ServerTools + 9 GlobalExceptionHandler + 6 Reconexion + 7 UsuarioService base + 7 Servidor base + 14 BackupService + 12 ConfigAsistente + 9 Notificacion + 4 HealthMonitor + 9 Firewall + 7 Network + 4 Subdominio + 7 Nginx + 6 Ssl + 16 Despliegue + 11 Log + 2 Actividad + 8 Notif WS + 4 Metricas WS + 6 ZipDeploy + 3 GitDeploy + 5 GestorSesiones + 6 Monitor + 10 OpenRouter + 18 UsuarioService extra + 14 modelos + 18 DTOs.
+
+**Como regenerar el reporte**:
+
+```bash
+# Backend
+cd backend && mvn clean test
+cp -r target/site/jacoco/. ../docs/assets/cobertura/backend/
+
+# Frontend
+cd autodeploy && npx ng test --watch=false --browsers=ChromeHeadlessCI --code-coverage
+# El reporte se guarda directamente en docs/assets/cobertura/frontend/ via karma.conf.js
+```
+
+**Areas con mas cobertura**: utilidades cripto (CifradoUtil), services de negocio (UsuarioService, ServidorService, ReconexionService), interceptores HTTP, theme service, auth guard. Estos cubren la cadena de seguridad y la logica de negocio critica.
+
+**Areas con menos cobertura**: controladores secundarios (Firewall, Networking, SSL, etc.) y componentes de presentacion. Su valor en test unitario es mas bajo y la cobertura efectiva la dan los **smoke tests en produccion** y las **auditorias Lighthouse**.
+
+El **80 % global** que pide la rubrica DIW no se alcanza globalmente porque muchos componentes son pura presentacion. Pero la prioridad ha sido testear la **logica de negocio** y la **cadena de seguridad** donde el ratio cobertura/valor es maximo. La paginacion, el ownership y los handlers de excepcion estan cubiertos con tests reales.
 
 ---
 
@@ -118,6 +141,10 @@ Las **auditorías automatizadas** están documentadas en [`docs/accesibilidad/AU
 - **Lighthouse Accesibilidad**: **100 / 100** en `/`, `/login` y `/register` (auditadas el 2026-05-21).
 - Resto de páginas (dashboard, billing, asistente IA, terminal): pendiente auditar — el código aplica los mismos mecanismos WCAG que las anteriores (skip link, `aria-current`, `aria-label` distintivo, `prefers-reduced-motion`, contrastes verificados).
 
+![Reporte Lighthouse de la pagina publica con puntuaciones en Performance, Accessibility, Best Practices y SEO](./assets/capturas/59-lighthouse.png)
+
+![Extension axe DevTools tras escanear la aplicacion mostrando cero violaciones criticas WCAG AA](./assets/capturas/60-axe-devtools.png)
+
 **Pruebas manuales complementarias**:
 
 - **VoiceOver** (macOS Cmd+F5): navegación con teclado por landing, login y dashboard. Se verifica que los landmarks se anuncian (header, navigation, main, footer), que el item activo del sidebar se lee como "página actual" gracias a `aria-current`, y que el skip link salta al `<main>` con un único Tab + Enter desde la primera carga.
@@ -127,7 +154,23 @@ El documento [`docs/accesibilidad/README.md`](./accesibilidad/README.md) contien
 
 ---
 
-## 7. Pruebas manuales realizadas durante el desarrollo
+## 7. Pruebas de la API REST (DevTools + curl)
+
+Las peticiones reales de la SPA contra el backend se inspeccionan desde la pestaña Network del navegador. Códigos HTTP estándar (200, 201, 204, 400, 401, 403, 404, 422, 500) y cuerpos JSON con la envoltura `ApiResponse<T>`:
+
+![Pestana Network del navegador mostrando peticiones reales a /api/* con codigos 200, 201 y 4xx y los tiempos de respuesta](./assets/capturas/22-devtools-network.png)
+
+### Autorización efectiva (con/sin permisos)
+
+La autorización por roles se prueba en dos escenarios opuestos sobre el mismo endpoint:
+
+![Llamada curl a un endpoint protegido con un token JWT sin el rol requerido devolviendo HTTP 403 Forbidden](./assets/capturas/34-curl-api-403.png)
+
+![Llamada al endpoint /api/usuarios/{id} desde un usuario que NO es el dueno del recurso, el backend responde con 403](./assets/capturas/38-roles-sin-permiso.png)
+
+![Misma llamada con el usuario propietario del recurso (o un ADMIN), el backend responde con 200 y el JSON del usuario](./assets/capturas/39-roles-con-permiso.png)
+
+## 8. Pruebas manuales realizadas durante el desarrollo
 
 Checklist exploratorio repetido al final de cada sprint:
 

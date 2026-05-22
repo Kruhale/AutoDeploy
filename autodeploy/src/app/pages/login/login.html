@@ -3,7 +3,7 @@
   <aside class="pagina-login__panel-marca">
     <header class="pagina-login__panel-marca__cabecera">
       <a class="pagina-login__logo" routerLink="/">
-        <img class="pagina-login__logo__imagen" src="logo.png" alt="AutoDeploy" width="32" height="32">
+        <img class="pagina-login__logo__imagen" src="logo-128.webp" alt="AutoDeploy" width="32" height="32" decoding="async" fetchpriority="high">
         <span class="pagina-login__logo__texto">Auto<span class="pagina-login__logo__texto--acento">Deploy</span></span>
       </a>
       <span class="pagina-login__sello">
@@ -63,9 +63,9 @@
         <p class="pagina-login__subtitulo">{{ 'login.subtitulo' | translate }}</p>
       </header>
 
-      <form class="pagina-login__formulario">
+      <form class="pagina-login__formulario" [formGroup]="formularioLogin" (ngSubmit)="iniciarSesion()" novalidate>
         @if (mensajeDeErrorVisible()) {
-          <p class="pagina-login__error">
+          <p class="pagina-login__error" role="alert" aria-live="polite">
             <span class="pagina-login__error__punto" aria-hidden="true"></span>
             {{ mensajeDeError() }}
           </p>
@@ -76,7 +76,15 @@
             <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
             {{ 'login.emailEtiqueta' | translate }}
           </label>
-          <input class="campo__input" id="email" name="email" type="email" [placeholder]="'login.emailPlaceholder' | translate" autocomplete="email" [ngModel]="emailUsuario()" (ngModelChange)="emailUsuario.set($event)">
+          <input class="campo__input" id="email" name="email" type="email"
+                 [placeholder]="'login.emailPlaceholder' | translate"
+                 autocomplete="email"
+                 formControlName="email"
+                 [attr.aria-invalid]="campoConError('email')"
+                 [attr.aria-describedby]="campoConError('email') ? 'email-error' : null">
+          @if (campoConError('email')) {
+            <span class="campo__error" id="email-error">{{ primerErrorDeCampo('email') }}</span>
+          }
         </section>
 
         <section class="campo">
@@ -85,16 +93,24 @@
             {{ 'login.claveEtiqueta' | translate }}
           </label>
           <section class="pagina-login__campo-password">
-            <input class="campo__input" id="password" name="password" [type]="passwordEsVisible() ? 'text' : 'password'"
-              [placeholder]="'login.clavePlaceholder' | translate" autocomplete="current-password" [ngModel]="passwordUsuario()" (ngModelChange)="passwordUsuario.set($event)">
+            <input class="campo__input" id="password" name="password"
+                   [type]="passwordEsVisible() ? 'text' : 'password'"
+                   [placeholder]="'login.clavePlaceholder' | translate"
+                   autocomplete="current-password"
+                   formControlName="password"
+                   [attr.aria-invalid]="campoConError('password')"
+                   [attr.aria-describedby]="campoConError('password') ? 'password-error' : null">
             <button class="pagina-login__boton-ver" type="button" (click)="alternarVisibilidadPassword()"
               [attr.aria-label]="(passwordEsVisible() ? 'login.ariaOcultarClave' : 'login.ariaVerClave') | translate">
               <i [class]="passwordEsVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
             </button>
           </section>
+          @if (campoConError('password')) {
+            <span class="campo__error" id="password-error">{{ primerErrorDeCampo('password') }}</span>
+          }
         </section>
 
-        <button class="pagina-login__boton-enviar" type="button" (click)="iniciarSesion()" [disabled]="cargando()">
+        <button class="pagina-login__boton-enviar" type="submit" [disabled]="cargando()">
           <span class="pagina-login__boton-enviar__texto">{{ (cargando() ? 'login.botonCargando' : 'login.boton') | translate }}</span>
           <span class="pagina-login__boton-enviar__flecha" aria-hidden="true">→</span>
         </button>

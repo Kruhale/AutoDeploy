@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BackupService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">BackupService.java</span></div><h1>BackupService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.model.Backup;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.repository.BackupRepository;
+import com.autodeploy.repository.ServidorRepository;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
+
+@Service
+public class BackupService {
+
+    private static final String RUTA_BACKUPS = &quot;$HOME/.autodeploy/backups&quot;;
+    private static final String RUTA_SCRIPT_REMOTO = &quot;$HOME/.autodeploy/backup.sh&quot;;
+    private static final String MARCA_CRON = &quot;autodeploy-backup&quot;;
+
+    private final BackupRepository backupRepository;
+    private final ServidorService servidorService;
+    private final ServidorRepository servidorRepository;
+    private final SshCommandService sshCommandService;
+
+    public BackupService(BackupRepository backupRepository,
+                         ServidorService servidorService,
+                         ServidorRepository servidorRepository,
+<span class="fc" id="L34">                         SshCommandService sshCommandService) {</span>
+<span class="fc" id="L35">        this.backupRepository = backupRepository;</span>
+<span class="fc" id="L36">        this.servidorService = servidorService;</span>
+<span class="fc" id="L37">        this.servidorRepository = servidorRepository;</span>
+<span class="fc" id="L38">        this.sshCommandService = sshCommandService;</span>
+<span class="fc" id="L39">    }</span>
+
+    public List&lt;Backup&gt; listarPorServidor(String servidorId) {
+<span class="fc" id="L42">        return backupRepository.findByServidorIdOrderByFechaCreacionDesc(servidorId);</span>
+    }
+
+    public Backup crearBackup(String servidorId, String tipo) {
+<span class="fc" id="L46">        Servidor servidor = servidorService.obtenerPorId(servidorId);</span>
+
+<span class="fc" id="L48">        Backup nuevoBackup = new Backup(servidorId, tipo);</span>
+<span class="fc" id="L49">        Backup backupPersistido = backupRepository.save(nuevoBackup);</span>
+
+<span class="fc" id="L51">        CompletableFuture.runAsync(() -&gt; ejecutarBackupEnSegundoPlano(backupPersistido, servidor));</span>
+
+<span class="fc" id="L53">        return backupPersistido;</span>
+    }
+
+    private void ejecutarBackupEnSegundoPlano(Backup backup, Servidor servidor) {
+        try {
+<span class="fc" id="L58">            String rutaArchivo = &quot;/tmp/autodeploy-backups/&quot; + backup.getNombre() + &quot;.tar.gz&quot;;</span>
+<span class="fc" id="L59">            String comandoBackup = &quot;mkdir -p /tmp/autodeploy-backups &amp;&amp; &quot; +</span>
+                    &quot;tar -czf &quot; + rutaArchivo + &quot; --exclude='/tmp/autodeploy-backups' &quot; +
+                    &quot;/etc/nginx /var/www 2&gt;/dev/null || true; &quot; +
+                    &quot;du -h &quot; + rutaArchivo + &quot; | cut -f1&quot;;
+
+<span class="fc" id="L64">            String salida = sshCommandService.ejecutarComando(servidor, comandoBackup);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">            String tamanoDetectado = salida == null ? &quot;—&quot; : salida.trim();</span>
+
+<span class="fc" id="L67">            backup.setEstado(&quot;completado&quot;);</span>
+<span class="pc bpc" id="L68" title="1 of 2 branches missed.">            backup.setTamano(tamanoDetectado.isBlank() ? &quot;—&quot; : tamanoDetectado);</span>
+<span class="fc" id="L69">            backup.setRutaArchivo(rutaArchivo);</span>
+<span class="fc" id="L70">            backupRepository.save(backup);</span>
+<span class="fc" id="L71">        } catch (Exception excepcion) {</span>
+<span class="fc" id="L72">            backup.setEstado(&quot;fallido&quot;);</span>
+<span class="fc" id="L73">            backupRepository.save(backup);</span>
+<span class="fc" id="L74">        }</span>
+<span class="fc" id="L75">    }</span>
+
+    public void restaurar(String idBackup) {
+<span class="fc" id="L78">        Backup backup = backupRepository.findById(idBackup)</span>
+<span class="fc" id="L79">                .orElseThrow(() -&gt; new RuntimeException(&quot;Backup no encontrado&quot;));</span>
+
+<span class="pc bpc" id="L81" title="1 of 4 branches missed.">        if (backup.getRutaArchivo() == null || backup.getRutaArchivo().isBlank()) {</span>
+<span class="fc" id="L82">            throw new RuntimeException(&quot;El backup no tiene archivo asociado&quot;);</span>
+        }
+
+<span class="fc" id="L85">        Servidor servidor = servidorService.obtenerPorId(backup.getServidorId());</span>
+
+<span class="fc" id="L87">        Backup snapshotPrevio = new Backup(servidor.getId(), &quot;pre-restore&quot;);</span>
+<span class="fc" id="L88">        snapshotPrevio.setEstado(&quot;en_progreso&quot;);</span>
+<span class="fc" id="L89">        Backup snapshotPrevioPersistido = backupRepository.save(snapshotPrevio);</span>
+
+<span class="fc" id="L91">        CompletableFuture.runAsync(() -&gt; {</span>
+            try {
+<span class="fc" id="L93">                String rutaSnapshot = RUTA_BACKUPS + &quot;/pre-restore-&quot; + System.currentTimeMillis() + &quot;.tar.gz&quot;;</span>
+<span class="fc" id="L94">                String comandoSnapshot = &quot;mkdir -p &quot; + RUTA_BACKUPS + &quot; &amp;&amp; tar -czf &quot; + rutaSnapshot + &quot; --exclude=\&quot;&quot; + RUTA_BACKUPS + &quot;\&quot; -C $HOME . 2&gt;/dev/null || true&quot;;</span>
+<span class="fc" id="L95">                sshCommandService.ejecutarComando(servidor, comandoSnapshot);</span>
+
+<span class="fc" id="L97">                String tamanoSnapshot = ejecutarSeguro(servidor, &quot;du -h &quot; + rutaSnapshot + &quot; | cut -f1&quot;);</span>
+<span class="fc" id="L98">                snapshotPrevioPersistido.setEstado(&quot;completado&quot;);</span>
+<span class="fc" id="L99">                snapshotPrevioPersistido.setRutaArchivo(rutaSnapshot);</span>
+<span class="pc bpc" id="L100" title="3 of 4 branches missed.">                snapshotPrevioPersistido.setTamano(tamanoSnapshot == null || tamanoSnapshot.isBlank() ? &quot;—&quot; : tamanoSnapshot.trim());</span>
+<span class="fc" id="L101">                backupRepository.save(snapshotPrevioPersistido);</span>
+
+<span class="fc" id="L103">                String comandoRestauracion = &quot;tar -xzf &quot; + backup.getRutaArchivo() + &quot; -C $HOME 2&gt;/dev/null &amp;&amp; echo OK&quot;;</span>
+<span class="fc" id="L104">                sshCommandService.ejecutarComando(servidor, comandoRestauracion);</span>
+<span class="nc" id="L105">            } catch (Exception excepcion) {</span>
+<span class="nc" id="L106">                snapshotPrevioPersistido.setEstado(&quot;fallido&quot;);</span>
+<span class="nc" id="L107">                backupRepository.save(snapshotPrevioPersistido);</span>
+<span class="fc" id="L108">            }</span>
+<span class="fc" id="L109">        });</span>
+<span class="fc" id="L110">    }</span>
+
+    public void eliminar(String idBackup) {
+<span class="fc" id="L113">        Backup backup = backupRepository.findById(idBackup)</span>
+<span class="fc" id="L114">                .orElseThrow(() -&gt; new RuntimeException(&quot;Backup no encontrado&quot;));</span>
+
+<span class="pc bpc" id="L116" title="1 of 2 branches missed.">        if (backup.getRutaArchivo() != null) {</span>
+            try {
+<span class="fc" id="L118">                Servidor servidor = servidorService.obtenerPorId(backup.getServidorId());</span>
+<span class="fc" id="L119">                sshCommandService.ejecutarComando(servidor, &quot;rm -f &quot; + backup.getRutaArchivo());</span>
+<span class="fc" id="L120">            } catch (Exception ignorado) {</span>
+<span class="fc" id="L121">            }</span>
+        }
+
+<span class="fc" id="L124">        backupRepository.delete(backup);</span>
+<span class="fc" id="L125">    }</span>
+
+    public Servidor activarBackupsAutomaticos(String servidorId, String hora) {
+<span class="fc" id="L128">        Servidor servidor = servidorService.obtenerPorId(servidorId);</span>
+<span class="fc" id="L129">        String horaSanitizada = sanitizarHora(hora);</span>
+<span class="fc" id="L130">        String[] partes = horaSanitizada.split(&quot;:&quot;);</span>
+<span class="fc" id="L131">        String minuto = partes[1];</span>
+<span class="fc" id="L132">        String horaCron = partes[0];</span>
+
+<span class="fc" id="L134">        String rutaBackupsExpandida = RUTA_BACKUPS;</span>
+<span class="fc" id="L135">        String rutaScriptExpandida = RUTA_SCRIPT_REMOTO;</span>
+
+<span class="fc" id="L137">        String comandoInstalacion =</span>
+                &quot;mkdir -p &quot; + rutaBackupsExpandida + &quot; 2&gt;/dev/null &amp;&amp; &quot; +
+                &quot;cat &gt; &quot; + rutaScriptExpandida + &quot; &lt;&lt; 'BACKUPSCRIPT'\n&quot; +
+                &quot;#!/bin/sh\n&quot; +
+                &quot;FECHA=$(date +%Y%m%d-%H%M%S)\n&quot; +
+                &quot;RUTA=\&quot;&quot; + rutaBackupsExpandida + &quot;/auto-${FECHA}.tar.gz\&quot;\n&quot; +
+                &quot;mkdir -p &quot; + rutaBackupsExpandida + &quot;\n&quot; +
+                &quot;tar -czf \&quot;$RUTA\&quot; --exclude=\&quot;&quot; + rutaBackupsExpandida + &quot;\&quot; -C $HOME . 2&gt;/dev/null || true\n&quot; +
+                &quot;find &quot; + rutaBackupsExpandida + &quot; -name 'auto-*.tar.gz' -mtime +7 -delete 2&gt;/dev/null || true\n&quot; +
+                &quot;BACKUPSCRIPT\n&quot; +
+                &quot;chmod +x &quot; + rutaScriptExpandida + &quot; &amp;&amp; &quot; +
+                &quot;(crontab -l 2&gt;/dev/null | grep -v '&quot; + MARCA_CRON + &quot;'; echo '&quot; + minuto + &quot; &quot; + horaCron + &quot; * * * &quot; + rutaScriptExpandida + &quot; # &quot; + MARCA_CRON + &quot;') | crontab - 2&gt;/dev/null || echo 'cron-not-supported'&quot;;
+
+<span class="fc" id="L150">        ejecutarSeguro(servidor, comandoInstalacion);</span>
+
+<span class="fc" id="L152">        servidor.setBackupsAutomaticosActivos(true);</span>
+<span class="fc" id="L153">        servidor.setHoraBackupAutomatico(horaSanitizada);</span>
+<span class="fc" id="L154">        return servidorRepository.save(servidor);</span>
+    }
+
+    public Servidor desactivarBackupsAutomaticos(String servidorId) {
+<span class="fc" id="L158">        Servidor servidor = servidorService.obtenerPorId(servidorId);</span>
+
+<span class="fc" id="L160">        String comandoDesinstalacion =</span>
+                &quot;(crontab -l 2&gt;/dev/null | grep -v '&quot; + MARCA_CRON + &quot;') | crontab - 2&gt;/dev/null || true; &quot; +
+                &quot;rm -f &quot; + RUTA_SCRIPT_REMOTO + &quot; 2&gt;/dev/null || true&quot;;
+
+<span class="fc" id="L164">        ejecutarSeguro(servidor, comandoDesinstalacion);</span>
+
+<span class="fc" id="L166">        servidor.setBackupsAutomaticosActivos(false);</span>
+<span class="fc" id="L167">        return servidorRepository.save(servidor);</span>
+    }
+
+    @Scheduled(fixedDelay = 120000, initialDelay = 30000)
+    public void escanearBackupsAutomaticos() {
+<span class="fc" id="L172">        List&lt;Servidor&gt; servidoresConAutoActivo = servidorRepository.findAll().stream()</span>
+<span class="fc" id="L173">                .filter(Servidor::isBackupsAutomaticosActivos)</span>
+<span class="fc" id="L174">                .collect(Collectors.toList());</span>
+
+<span class="fc bfc" id="L176" title="All 2 branches covered.">        for (Servidor servidor : servidoresConAutoActivo) {</span>
+            try {
+<span class="fc" id="L178">                escanearServidor(servidor);</span>
+<span class="nc" id="L179">            } catch (Exception ignorado) {</span>
+<span class="fc" id="L180">            }</span>
+<span class="fc" id="L181">        }</span>
+<span class="fc" id="L182">    }</span>
+
+    private void escanearServidor(Servidor servidor) {
+<span class="fc" id="L185">        String comandoListado = &quot;ls -1 &quot; + RUTA_BACKUPS + &quot;/auto-*.tar.gz 2&gt;/dev/null | sort&quot;;</span>
+<span class="fc" id="L186">        String salida = sshCommandService.ejecutarComando(servidor, comandoListado);</span>
+<span class="pc bpc" id="L187" title="2 of 4 branches missed.">        if (salida == null || salida.isBlank()) return;</span>
+
+<span class="fc" id="L189">        List&lt;String&gt; rutas = Arrays.stream(salida.split(&quot;\n&quot;))</span>
+<span class="fc" id="L190">                .map(String::trim)</span>
+<span class="pc bpc" id="L191" title="1 of 2 branches missed.">                .filter(linea -&gt; !linea.isBlank())</span>
+<span class="fc" id="L192">                .collect(Collectors.toList());</span>
+
+<span class="fc" id="L194">        Set&lt;String&gt; rutasYaRegistradas = backupRepository.findByServidorIdOrderByFechaCreacionDesc(servidor.getId()).stream()</span>
+<span class="fc" id="L195">                .map(Backup::getRutaArchivo)</span>
+<span class="pc bnc" id="L196" title="All 2 branches missed.">                .filter(ruta -&gt; ruta != null)</span>
+<span class="fc" id="L197">                .collect(Collectors.toCollection(HashSet::new));</span>
+
+<span class="fc bfc" id="L199" title="All 2 branches covered.">        for (String ruta : rutas) {</span>
+<span class="pc bpc" id="L200" title="1 of 2 branches missed.">            if (rutasYaRegistradas.contains(ruta)) continue;</span>
+
+<span class="fc" id="L202">            Backup nuevoBackup = new Backup(servidor.getId(), &quot;auto&quot;);</span>
+<span class="fc" id="L203">            nuevoBackup.setNombre(extraerNombreDesdeRuta(ruta));</span>
+<span class="fc" id="L204">            nuevoBackup.setEstado(&quot;completado&quot;);</span>
+<span class="fc" id="L205">            nuevoBackup.setRutaArchivo(ruta);</span>
+<span class="fc" id="L206">            nuevoBackup.setFechaCreacion(extraerFechaDesdeRuta(ruta));</span>
+
+<span class="fc" id="L208">            String tamanoSalida = ejecutarSeguro(servidor, &quot;du -h &quot; + ruta + &quot; | cut -f1&quot;);</span>
+<span class="pc bpc" id="L209" title="2 of 4 branches missed.">            nuevoBackup.setTamano(tamanoSalida == null || tamanoSalida.isBlank() ? &quot;—&quot; : tamanoSalida.trim());</span>
+
+<span class="fc" id="L211">            backupRepository.save(nuevoBackup);</span>
+<span class="fc" id="L212">        }</span>
+<span class="fc" id="L213">    }</span>
+
+    private String extraerNombreDesdeRuta(String ruta) {
+<span class="fc" id="L216">        int ultimaBarra = ruta.lastIndexOf('/');</span>
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">        String nombreArchivo = ultimaBarra &gt;= 0 ? ruta.substring(ultimaBarra + 1) : ruta;</span>
+<span class="fc" id="L218">        return nombreArchivo.replace(&quot;.tar.gz&quot;, &quot;&quot;);</span>
+    }
+
+    private LocalDateTime extraerFechaDesdeRuta(String ruta) {
+        try {
+<span class="fc" id="L223">            String nombre = extraerNombreDesdeRuta(ruta);</span>
+<span class="fc" id="L224">            String marcaTemporal = nombre.replace(&quot;auto-&quot;, &quot;&quot;);</span>
+<span class="fc" id="L225">            DateTimeFormatter formato = DateTimeFormatter.ofPattern(&quot;yyyyMMdd-HHmmss&quot;);</span>
+<span class="fc" id="L226">            return LocalDateTime.parse(marcaTemporal, formato);</span>
+<span class="nc" id="L227">        } catch (Exception ignorado) {</span>
+<span class="nc" id="L228">            return LocalDateTime.now();</span>
+        }
+    }
+
+    private String sanitizarHora(String hora) {
+<span class="pc bpc" id="L233" title="1 of 4 branches missed.">        if (hora == null || !hora.matches(&quot;^\\d{1,2}:\\d{2}$&quot;)) return &quot;03:00&quot;;</span>
+<span class="fc" id="L234">        String[] partes = hora.split(&quot;:&quot;);</span>
+<span class="fc" id="L235">        int h = Math.max(0, Math.min(23, Integer.parseInt(partes[0])));</span>
+<span class="fc" id="L236">        int m = Math.max(0, Math.min(59, Integer.parseInt(partes[1])));</span>
+<span class="fc" id="L237">        return String.format(&quot;%02d:%02d&quot;, h, m);</span>
+    }
+
+    private String ejecutarSeguro(Servidor servidor, String comando) {
+        try {
+<span class="fc" id="L242">            return sshCommandService.ejecutarComando(servidor, comando);</span>
+<span class="fc" id="L243">        } catch (Exception excepcion) {</span>
+<span class="fc" id="L244">            return &quot;&quot;;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

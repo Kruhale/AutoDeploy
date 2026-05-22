@@ -2,7 +2,11 @@
 
 ## Secuencia de desarrollo
 
-El proyecto se ha desarrollado en **5 sprints** de 2 semanas (de marzo a mayo 2026), siguiendo SCRUM simplificado con un único integrante. Tablero en GitHub Projects asociado al repo.
+El proyecto se ha desarrollado en **5 sprints** de 2 semanas (de marzo a mayo 2026), siguiendo SCRUM simplificado con un único integrante. Tablero en GitHub Projects asociado al repo:
+
+> **GitHub Project público**: <https://github.com/users/Kruhale/projects/2>
+>
+> Campos del tablero: **Estado** (Backlog / To Do / In Progress / Done), **Sprint** (1–5), **Prioridad** (Alta / Media / Baja), **Estimación** (horas), **Categoría** (Frontend / Backend / BD / DevOps / Testing / Docs). Las tareas están repartidas en los 5 sprints y se han ido moviendo de columna conforme se completaban.
 
 | Sprint | Foco | Resultado |
 |---|---|---|
@@ -95,6 +99,30 @@ Resultado: los 7 hallazgos quedan cerrados antes de la defensa. La tabla complet
 - **PRs por rama** con título descriptivo y body que enumera cambios + test plan. CI bloquea merge si los tests fallan.
 - **CI/CD** en GitHub Actions: `ci.yml` (build + tests) y `cd.yml` (build imagen + push GHCR + SSH deploy).
 - Regla del proyecto: **un único autor por commit (`Kruhale`)**. Nunca `Co-Authored-By`.
+
+## Sintaxis moderna y patrones aplicados
+
+El frontend usa exclusivamente las APIs modernas de Angular 20 (signals, standalone, `inject()`) y JavaScript ES moderno (async/await, ningún `var`, ningún `.then()` encadenado). Algunos ejemplos representativos del propio código del proyecto:
+
+![Codigo TypeScript con uso de signal, computed y effect del ThemeService del proyecto](./assets/capturas/47-signals-codigo.png)
+
+![Metodo async/await en un servicio Angular llamando al backend con HttpClient y manejando el ApiResponse](./assets/capturas/48-async-await-servicio.png)
+
+![Componente standalone usando inject para resolver dependencias en lugar del constructor clasico](./assets/capturas/49-inject-standalone.png)
+
+### Validación de formularios
+
+Todo formulario crítico (login, registro, conexión SSH, crear despliegue) usa **Reactive Forms** con validadores síncronos y asíncronos. El error se muestra inline y se anuncia a lectores de pantalla mediante `aria-invalid` y `aria-describedby`:
+
+![Formulario de registro mostrando los errores inline de password (longitud, mayuscula, minuscula, numero y caracter especial) con marca visual de invalido](./assets/capturas/50-formulario-validado.png)
+
+### Comunicación asíncrona
+
+Se combinan **HttpClient** (REST sobre JSON) y **WebSocket** (terminal SSH interactiva + métricas en streaming). Dos canales con formatos distintos: el de terminal va en binario PTY, el de métricas en JSON cada 30 s.
+
+![Terminal SSH integrada en xterm.js mostrando comandos reales ejecutados sobre el VPS a traves del WebSocket /ws/terminal](./assets/capturas/51-websocket-terminal.png)
+
+![DevTools del navegador mostrando la conexion WebSocket /ws/metricas con los frames JSON de CPU, RAM y disco recibidos en streaming](./assets/capturas/52-websocket-metricas.png)
 
 ## Fragmentos de código relevantes
 

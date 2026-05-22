@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SslController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.controller</a> &gt; <span class="el_source">SslController.java</span></div><h1>SslController.java</h1><pre class="source lang-java linenums">package com.autodeploy.controller;
+
+import com.autodeploy.dto.ApiResponse;
+import com.autodeploy.dto.GenerarCertificadoRequest;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.service.SslService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Tag(name = &quot;SSL&quot;, description = &quot;Gestion de certificados Let's Encrypt en el servidor&quot;)
+@RestController
+@RequestMapping(&quot;/api/ssl&quot;)
+@PreAuthorize(&quot;isAuthenticated() and (hasRole('ADMIN') or @seguridad.esDuenioDelServidor(#servidorId, authentication))&quot;)
+public class SslController {
+
+    private final SslService sslService;
+
+<span class="fc" id="L26">    public SslController(SslService sslService) {</span>
+<span class="fc" id="L27">        this.sslService = sslService;</span>
+<span class="fc" id="L28">    }</span>
+
+    @Operation(summary = &quot;Instalar Certbot en el servidor&quot;)
+    @PostMapping(&quot;/{servidorId}/instalar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; instalarCertbot(@PathVariable String servidorId) {
+<span class="fc" id="L33">        Servidor servidor = sslService.obtenerServidorOLanzarError(servidorId);</span>
+<span class="nc" id="L34">        String salidaInstalacion = sslService.instalarCertbot(servidor);</span>
+
+<span class="nc" id="L36">        ApiResponse&lt;String&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Certbot instalado&quot;, salidaInstalacion);</span>
+<span class="nc" id="L37">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Generar certificado SSL para un dominio&quot;)
+    @PostMapping(&quot;/{servidorId}/generar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; generarCertificado(
+            @PathVariable String servidorId,
+            @RequestBody GenerarCertificadoRequest peticion) {
+
+<span class="fc" id="L46">        Servidor servidor = sslService.obtenerServidorOLanzarError(servidorId);</span>
+<span class="nc" id="L47">        String salidaGeneracion = sslService.generarCertificado(servidor, peticion.dominio(), peticion.email());</span>
+
+<span class="nc" id="L49">        ApiResponse&lt;String&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Certificado generado&quot;, salidaGeneracion);</span>
+<span class="nc" id="L50">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Renovar todos los certificados&quot;)
+    @PostMapping(&quot;/{servidorId}/renovar&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; renovarCertificados(@PathVariable String servidorId) {
+<span class="fc" id="L56">        Servidor servidor = sslService.obtenerServidorOLanzarError(servidorId);</span>
+<span class="nc" id="L57">        String salidaRenovacion = sslService.renovarCertificados(servidor);</span>
+
+<span class="nc" id="L59">        ApiResponse&lt;String&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;Renovacion ejecutada&quot;, salidaRenovacion);</span>
+<span class="nc" id="L60">        return ResponseEntity.ok(cuerpo);</span>
+    }
+
+    @Operation(summary = &quot;Estado de un certificado SSL&quot;)
+    @GetMapping(&quot;/{servidorId}/estado/{dominio}&quot;)
+    public ResponseEntity&lt;ApiResponse&lt;String&gt;&gt; estadoCertificado(
+            @PathVariable String servidorId,
+            @PathVariable String dominio) {
+
+<span class="fc" id="L69">        Servidor servidor = sslService.obtenerServidorOLanzarError(servidorId);</span>
+<span class="nc" id="L70">        String salidaEstado = sslService.obtenerEstadoCertificado(servidor, dominio);</span>
+
+<span class="nc" id="L72">        ApiResponse&lt;String&gt; cuerpo = new ApiResponse&lt;&gt;(true, &quot;OK&quot;, salidaEstado);</span>
+<span class="nc" id="L73">        return ResponseEntity.ok(cuerpo);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

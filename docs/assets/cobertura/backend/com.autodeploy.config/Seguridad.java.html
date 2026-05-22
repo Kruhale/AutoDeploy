@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Seguridad.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.config</a> &gt; <span class="el_source">Seguridad.java</span></div><h1>Seguridad.java</h1><pre class="source lang-java linenums">package com.autodeploy.config;
+
+import com.autodeploy.repository.ServidorRepository;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.stereotype.Component;
+
+/**
+ * Helper para usar dentro de @PreAuthorize via SpEL.
+ * Comprueba si el usuario autenticado es dueño del recurso que pide.
+ * Se registra como bean &quot;seguridad&quot; para que se referencie como @seguridad.X(...) en las anotaciones.
+ */
+@Component(&quot;seguridad&quot;)
+public class Seguridad {
+
+    private final ServidorRepository servidorRepository;
+
+<span class="fc" id="L18">    public Seguridad(ServidorRepository servidorRepository) {</span>
+<span class="fc" id="L19">        this.servidorRepository = servidorRepository;</span>
+<span class="fc" id="L20">    }</span>
+
+    /** El servidor con ese id pertenece al usuario autenticado */
+    public boolean esDuenioDelServidor(String servidorId, Authentication autenticacion) {
+<span class="fc bfc" id="L24" title="All 4 branches covered.">        if (autenticacion == null || servidorId == null) {</span>
+<span class="fc" id="L25">            return false;</span>
+        }
+<span class="fc" id="L27">        String usuarioId = extraerUsuarioId(autenticacion);</span>
+<span class="pc bpc" id="L28" title="1 of 2 branches missed.">        if (usuarioId == null) {</span>
+<span class="nc" id="L29">            return false;</span>
+        }
+<span class="fc" id="L31">        return servidorRepository.findByIdAndUsuarioId(servidorId, usuarioId).isPresent();</span>
+    }
+
+    /** El id del path coincide con el usuario autenticado (para endpoints de tipo /usuarios/{id}) */
+    public boolean esElMismoUsuario(String usuarioIdDelPath, Authentication autenticacion) {
+<span class="fc bfc" id="L36" title="All 4 branches covered.">        if (autenticacion == null || usuarioIdDelPath == null) {</span>
+<span class="fc" id="L37">            return false;</span>
+        }
+<span class="fc" id="L39">        String usuarioIdAutenticado = extraerUsuarioId(autenticacion);</span>
+<span class="fc" id="L40">        return usuarioIdDelPath.equals(usuarioIdAutenticado);</span>
+    }
+
+    public boolean esAdmin(Authentication autenticacion) {
+<span class="fc bfc" id="L44" title="All 2 branches covered.">        if (autenticacion == null) {</span>
+<span class="fc" id="L45">            return false;</span>
+        }
+<span class="fc bfc" id="L47" title="All 2 branches covered.">        for (GrantedAuthority autoridad : autenticacion.getAuthorities()) {</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">            if (&quot;ROLE_ADMIN&quot;.equals(autoridad.getAuthority())) {</span>
+<span class="fc" id="L49">                return true;</span>
+            }
+<span class="fc" id="L51">        }</span>
+<span class="fc" id="L52">        return false;</span>
+    }
+
+    private static String extraerUsuarioId(Authentication autenticacion) {
+        // getName() funciona tanto si principal es String (JWT real) como si es UserDetails (tests con .with(user()))
+<span class="fc" id="L57">        return autenticacion.getName();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

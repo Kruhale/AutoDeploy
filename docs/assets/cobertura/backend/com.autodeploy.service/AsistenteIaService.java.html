@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="es"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AsistenteIaService.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">AutoDeploy Backend</a> &gt; <a href="index.source.html" class="el_package">com.autodeploy.service</a> &gt; <span class="el_source">AsistenteIaService.java</span></div><h1>AsistenteIaService.java</h1><pre class="source lang-java linenums">package com.autodeploy.service;
+
+import com.autodeploy.dto.MensajeChatRequest;
+import com.autodeploy.dto.MensajeUsuario;
+import com.autodeploy.dto.RespuestaChatIa;
+import com.autodeploy.exception.BadRequestException;
+import com.autodeploy.exception.ResourceNotFoundException;
+import com.autodeploy.model.ConfiguracionAsistenteIa;
+import com.autodeploy.model.Servidor;
+import com.autodeploy.model.Usuario;
+import com.autodeploy.repository.UsuarioRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class AsistenteIaService {
+
+    private static final String PROMPT_SISTEMA = &quot;&quot;&quot;
+            Eres un asistente experto en administracion de servidores Linux integrado en una plataforma de despliegues llamada AutoDeploy.
+            Tu trabajo es ayudar al usuario a gestionar su servidor remoto mediante comandos SSH.
+
+            REGLAS OBLIGATORIAS:
+            1. Responde SIEMPRE en JSON valido con esta estructura exacta:
+            {
+              &quot;respuesta&quot;: &quot;texto natural dirigido al usuario explicando lo que vas a hacer o respondiendo a su pregunta&quot;,
+              &quot;comandoPropuesto&quot;: &quot;comando shell concreto a ejecutar, vacio si no quieres ejecutar nada&quot;,
+              &quot;razonamiento&quot;: &quot;explicacion breve de por que ese comando resuelve la peticion, vacio si no propones comando&quot;
+            }
+            2. Cuando el usuario pida hacer algo en el servidor, propon un unico comando shell ejecutable.
+            3. Si el usuario solo charla o pregunta algo informativo, deja &quot;comandoPropuesto&quot; vacio.
+            4. NUNCA propongas comandos destructivos sin avisar claramente en la respuesta.
+            5. Habla en espanol.
+            6. NO uses bloques de codigo markdown, devuelve SOLO el JSON.
+            &quot;&quot;&quot;;
+
+    private final ConfiguracionAsistenteService configuracionService;
+    private final OpenRouterClient openRouterClient;
+    private final ServidorService servidorService;
+    private final SshCommandService sshCommandService;
+    private final UsuarioRepository usuarioRepository;
+    private final ObjectMapper objectMapper;
+
+<span class="fc" id="L46">    public AsistenteIaService(ConfiguracionAsistenteService configuracionService, OpenRouterClient openRouterClient, ServidorService servidorService, SshCommandService sshCommandService, UsuarioRepository usuarioRepository) {</span>
+<span class="fc" id="L47">        this.configuracionService = configuracionService;</span>
+<span class="fc" id="L48">        this.openRouterClient = openRouterClient;</span>
+<span class="fc" id="L49">        this.servidorService = servidorService;</span>
+<span class="fc" id="L50">        this.sshCommandService = sshCommandService;</span>
+<span class="fc" id="L51">        this.usuarioRepository = usuarioRepository;</span>
+<span class="fc" id="L52">        this.objectMapper = new ObjectMapper();</span>
+<span class="fc" id="L53">    }</span>
+
+    public RespuestaChatIa procesarMensaje(MensajeChatRequest peticion) {
+<span class="fc" id="L56">        validarPlanDelUsuario(peticion.usuarioId());</span>
+
+<span class="fc" id="L58">        String apiKeyDescifrada = configuracionService.obtenerApiKeyDescifrada(peticion.usuarioId());</span>
+<span class="fc bfc" id="L59" title="All 2 branches covered.">        if (apiKeyDescifrada == null) {</span>
+<span class="fc" id="L60">            throw new BadRequestException(&quot;No has configurado tu API key de OpenRouter. Ve a la configuracion del asistente.&quot;);</span>
+        }
+
+<span class="fc" id="L63">        ConfiguracionAsistenteIa configuracion = configuracionService.obtenerOCrear(peticion.usuarioId());</span>
+<span class="fc" id="L64">        Servidor servidorObjetivo = servidorService.obtenerPorId(peticion.servidorId());</span>
+
+<span class="fc" id="L66">        String contextoServidor = construirContextoServidor(servidorObjetivo);</span>
+<span class="fc" id="L67">        String promptCompleto = PROMPT_SISTEMA + &quot;\n\nCONTEXTO DEL SERVIDOR ACTUAL:\n&quot; + contextoServidor;</span>
+
+<span class="fc" id="L69">        List&lt;MensajeUsuario&gt; historialRecibido = peticion.historial();</span>
+<span class="fc" id="L70">        String contenidoCrudo = openRouterClient.enviarConversacion(apiKeyDescifrada, configuracion.getModeloPreferido(), promptCompleto, historialRecibido, peticion.mensaje());</span>
+
+<span class="fc" id="L72">        RespuestaChatIa respuestaParseada = parsearRespuestaIa(contenidoCrudo);</span>
+<span class="pc bpc" id="L73" title="1 of 4 branches missed.">        boolean tieneComando = respuestaParseada.comandoPropuesto() != null &amp;&amp; !respuestaParseada.comandoPropuesto().isBlank();</span>
+
+<span class="fc bfc" id="L75" title="All 2 branches covered.">        if (!tieneComando) {</span>
+<span class="fc" id="L76">            return respuestaParseada;</span>
+        }
+
+<span class="fc" id="L79">        boolean estaAutoAprobado = configuracionService.estaAutoAprobado(respuestaParseada.comandoPropuesto(), configuracion.getComandosAutoAprobados());</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (!estaAutoAprobado) {</span>
+<span class="fc" id="L81">            RespuestaChatIa respuestaConConfirmacion = new RespuestaChatIa(respuestaParseada.respuesta(), respuestaParseada.comandoPropuesto(), respuestaParseada.razonamiento(), true, null);</span>
+<span class="fc" id="L82">            return respuestaConConfirmacion;</span>
+        }
+
+<span class="fc" id="L85">        String salidaComando = sshCommandService.ejecutarComando(servidorObjetivo, respuestaParseada.comandoPropuesto());</span>
+<span class="fc" id="L86">        RespuestaChatIa respuestaConSalida = new RespuestaChatIa(respuestaParseada.respuesta(), respuestaParseada.comandoPropuesto(), respuestaParseada.razonamiento(), false, salidaComando);</span>
+<span class="fc" id="L87">        return respuestaConSalida;</span>
+    }
+
+    public String ejecutarComandoConfirmado(String servidorId, String comando) {
+<span class="fc" id="L91">        Servidor servidor = servidorService.obtenerPorId(servidorId);</span>
+<span class="fc" id="L92">        String salida = sshCommandService.ejecutarComando(servidor, comando);</span>
+<span class="fc" id="L93">        return salida;</span>
+    }
+
+    private void validarPlanDelUsuario(String usuarioId) {
+<span class="fc" id="L97">        Usuario usuario = usuarioRepository.findById(usuarioId)</span>
+<span class="fc" id="L98">                .orElseThrow(() -&gt; new ResourceNotFoundException(&quot;Usuario no encontrado&quot;));</span>
+
+<span class="fc" id="L100">        String planDelUsuario = usuario.getPlan();</span>
+<span class="pc bpc" id="L101" title="1 of 4 branches missed.">        boolean planValido = &quot;pro&quot;.equals(planDelUsuario) || &quot;business&quot;.equals(planDelUsuario);</span>
+
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (!planValido) {</span>
+<span class="fc" id="L104">            throw new BadRequestException(&quot;El asistente IA solo esta disponible en planes Pro y Business&quot;);</span>
+        }
+<span class="fc" id="L106">    }</span>
+
+    private String construirContextoServidor(Servidor servidor) {
+<span class="fc" id="L109">        String descripcion = &quot;Nombre: &quot; + servidor.getNombre() + &quot;\nIP: &quot; + servidor.getDireccionIp() + &quot;\nPuerto SSH: &quot; + servidor.getPuertoSsh() + &quot;\nUsuario SSH: &quot; + servidor.getUsuarioSsh();</span>
+<span class="fc" id="L110">        return descripcion;</span>
+    }
+
+    private RespuestaChatIa parsearRespuestaIa(String contenidoCrudo) {
+        try {
+<span class="fc" id="L115">            String contenidoLimpio = limpiarJsonMarkdown(contenidoCrudo);</span>
+<span class="fc" id="L116">            JsonNode arbolJson = objectMapper.readTree(contenidoLimpio);</span>
+
+<span class="fc" id="L118">            String textoRespuesta = arbolJson.path(&quot;respuesta&quot;).asText(&quot;&quot;);</span>
+<span class="fc" id="L119">            String comandoExtraido = arbolJson.path(&quot;comandoPropuesto&quot;).asText(&quot;&quot;);</span>
+<span class="fc" id="L120">            String razonamientoExtraido = arbolJson.path(&quot;razonamiento&quot;).asText(&quot;&quot;);</span>
+
+<span class="fc" id="L122">            RespuestaChatIa respuesta = new RespuestaChatIa(textoRespuesta, comandoExtraido, razonamientoExtraido, false, null);</span>
+<span class="fc" id="L123">            return respuesta;</span>
+<span class="fc" id="L124">        } catch (Exception excepcion) {</span>
+<span class="fc" id="L125">            RespuestaChatIa respuestaFallback = new RespuestaChatIa(contenidoCrudo, &quot;&quot;, &quot;&quot;, false, null);</span>
+<span class="fc" id="L126">            return respuestaFallback;</span>
+        }
+    }
+
+    private String limpiarJsonMarkdown(String contenidoCrudo) {
+<span class="fc" id="L131">        String contenido = contenidoCrudo.trim();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        if (contenido.startsWith(&quot;```json&quot;)) {</span>
+<span class="fc" id="L133">            contenido = contenido.substring(7);</span>
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">        } else if (contenido.startsWith(&quot;```&quot;)) {</span>
+<span class="nc" id="L135">            contenido = contenido.substring(3);</span>
+        }
+<span class="fc bfc" id="L137" title="All 2 branches covered.">        if (contenido.endsWith(&quot;```&quot;)) {</span>
+<span class="fc" id="L138">            contenido = contenido.substring(0, contenido.length() - 3);</span>
+        }
+<span class="fc" id="L140">        return contenido.trim();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

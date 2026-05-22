@@ -1,10 +1,21 @@
-// Tools: animaciones reutilizables (keyframes + clases helpers).
-// Las animaciones específicas de un componente viven con su componente
-// (p.ej. .seccion-bienvenida__terminal__linea está en _seccion-bienvenida.scss).
+// Animaciones reutilizables: keyframes y clases helpers.
+// Las animaciones especificas de un componente viven con ese componente.
+//
+// Accesibilidad (WCAG 2.3.3):
+//   El proyecto sigue el patrón invertido recomendado por web.dev y la
+//   comunidad de accesibilidad: las clases helper definen sus animaciones
+//   SOLO dentro de `@media (prefers-reduced-motion: no-preference)`.
+//   Cuando el usuario activa "reducir movimiento" en su sistema, los
+//   estilos de animación ni siquiera se aplican, por lo que no hace
+//   falta anularlos con `!important`.
+//
+//   El spinner se queda siempre activo (un spinner sin movimiento no
+//   informa de nada) pero su duración cambia vía `--duration-spinner`,
+//   variable redefinida en `_variables.scss` con `prefers-reduced-motion`.
 
 @use "./mixins" as *;
 
-// Keyframes globales -----------------------------------------------------
+// Keyframes globales
 
 @keyframes entrar-abajo {
   from { opacity: 0; transform: translateY(20px); }
@@ -46,66 +57,10 @@
   to   { opacity: 1; transform: translateY(0); }
 }
 
-// Animaciones de carga (page load, sin scroll) ---------------------------
-
-.animar {
-  animation-fill-mode: both;
-  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-  animation-duration: 0.7s;
-  animation-delay: var(--retraso, 0ms);
-}
-
-.animar--subir   { animation-name: entrar-abajo; }
-.animar--derecha { animation-name: entrar-derecha; }
-.animar--escala  { animation-name: entrar-escala; }
-
-// Modificadores de retraso. Evitan inline styles en el HTML para
-// componer animaciones escalonadas: .animar.animar--subir.animar--retraso-200
-.animar--retraso-0   { --retraso: 0ms;   }
-.animar--retraso-100 { --retraso: 100ms; }
-.animar--retraso-150 { --retraso: 150ms; }
-.animar--retraso-200 { --retraso: 200ms; }
-.animar--retraso-300 { --retraso: 300ms; }
-.animar--retraso-400 { --retraso: 400ms; }
-
-// Scroll reveal (IntersectionObserver directive) -------------------------
-
-.revelar {
-  opacity: 0;
-  transition:
-    opacity   0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms),
-    transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms);
-}
-
-.revelar--arriba    { transform: translateY(28px); }
-.revelar--izquierda { transform: translateX(-28px); }
-.revelar--derecha   { transform: translateX(28px); }
-.revelar--escala    { transform: scale(0.94); }
-
-.revelar--visible {
-  opacity: 1;
-  transform: none;
-}
-
-// Stagger automático (hijos de un contenedor) ----------------------------
-
-.animar-hijos > * {
-  opacity: 0;
-  animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-.animar-hijos > *:nth-child(1) { animation-delay: 0ms;   }
-.animar-hijos > *:nth-child(2) { animation-delay: 80ms;  }
-.animar-hijos > *:nth-child(3) { animation-delay: 160ms; }
-.animar-hijos > *:nth-child(4) { animation-delay: 240ms; }
-.animar-hijos > *:nth-child(5) { animation-delay: 320ms; }
-.animar-hijos > *:nth-child(6) { animation-delay: 400ms; }
-
-// Spinner global de carga ------------------------------------------------
-//
-// Se renderiza con un solo div: el borde superior cyan/amarillo gira sobre
-// un círculo grisáceo. Las animaciones se quedan en transform/opacity para
-// que el navegador las componga en GPU.
+// Spinner global de carga.
+// El spinner SÍ se renderiza siempre porque indica estado de carga, pero
+// su duración la controla `--duration-spinner` (más lenta con
+// prefers-reduced-motion).
 
 .spinner {
   display: inline-block;
@@ -114,50 +69,85 @@
   border: 2px solid var(--borde-normal);
   border-top-color: var(--amarillo-normal);
   border-radius: var(--radius-full);
-  animation: giro-spinner 0.8s linear infinite;
+  animation: giro-spinner var(--duration-spinner) linear infinite;
   vertical-align: middle;
-
-  &--grande { width: 2rem; height: 2rem; border-width: 3px; }
-  &--cyan   { border-top-color: var(--cyan-normal); }
-  &--verde  { border-top-color: var(--verde-normal); }
 }
 
-// Micro-interacción "fade desde abajo" para feedback puntual (toasts,
-// confirmaciones, item recién añadido). Más breve que .animar--subir.
-.aparecer {
-  animation: fade-arriba 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+.spinner--grande {
+  width: 2rem;
+  height: 2rem;
+  border-width: 3px;
 }
 
-// Accesibilidad: respetar la preferencia del sistema operativo de
-// reducir movimiento. Si el usuario ha activado "Reduce motion" en
-// macOS/Windows/Android/iOS, las animaciones de entrada y de scroll
-// reveal se desactivan completamente (queda solo el estado final
-// visible) y las transiciones bajan a una duración irrisoria.
-//
-// El uso de !important es legítimo aquí porque la preferencia del
-// usuario es la última palabra: gana sobre cualquier regla específica
-// que un componente pudiera redefinir.
-@include movimiento-reducido {
-  .animar,
-  .animar-hijos > *,
-  .revelar,
+.spinner--cyan {
+  border-top-color: var(--cyan-normal);
+}
+
+.spinner--verde {
+  border-top-color: var(--verde-normal);
+}
+
+// Clases helper de animación. Solo se aplican si el usuario NO ha pedido
+// reducir movimiento. Sin este media query alrededor, harían falta
+// `!important` para anularlas — con él, ni se cargan.
+
+@media (prefers-reduced-motion: no-preference) {
+  // Animaciones de carga al cargar la pagina
+
+  .animar {
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+    animation-duration: 0.7s;
+    animation-delay: var(--retraso, 0ms);
+  }
+
+  .animar--subir   { animation-name: entrar-abajo; }
+  .animar--derecha { animation-name: entrar-derecha; }
+  .animar--escala  { animation-name: entrar-escala; }
+
+  // Retrasos para animar elementos uno detras de otro.
+  .animar--retraso-0   { --retraso: 0ms;   }
+  .animar--retraso-100 { --retraso: 100ms; }
+  .animar--retraso-150 { --retraso: 150ms; }
+  .animar--retraso-200 { --retraso: 200ms; }
+  .animar--retraso-300 { --retraso: 300ms; }
+  .animar--retraso-400 { --retraso: 400ms; }
+
+  // Scroll reveal (lo activa la directiva con IntersectionObserver)
+
+  .revelar {
+    opacity: 0;
+    transition:
+      opacity   0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms),
+      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms);
+  }
+
+  .revelar--arriba    { transform: translateY(28px); }
+  .revelar--izquierda { transform: translateX(-28px); }
+  .revelar--derecha   { transform: translateX(28px); }
+  .revelar--escala    { transform: scale(0.94); }
+
+  .revelar--visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  // Anima los hijos de un contenedor en cascada.
+
+  .animar-hijos > * {
+    opacity: 0;
+    animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  .animar-hijos > *:nth-child(1) { animation-delay: 0ms;   }
+  .animar-hijos > *:nth-child(2) { animation-delay: 80ms;  }
+  .animar-hijos > *:nth-child(3) { animation-delay: 160ms; }
+  .animar-hijos > *:nth-child(4) { animation-delay: 240ms; }
+  .animar-hijos > *:nth-child(5) { animation-delay: 320ms; }
+  .animar-hijos > *:nth-child(6) { animation-delay: 400ms; }
+
+  // Fade rapido desde abajo para feedback puntual (toasts, items nuevos).
   .aparecer {
-    animation: none !important;
-    transition: none !important;
-    opacity: 1 !important;
-    transform: none !important;
-  }
-
-  .spinner {
-    animation-duration: 1.5s !important;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    animation: fade-arriba 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 }

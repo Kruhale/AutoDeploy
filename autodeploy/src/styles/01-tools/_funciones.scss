@@ -1,31 +1,24 @@
-// Tools: funciones Sass reutilizables.
-//
-// Las funciones se resuelven en compilación (a diferencia de var(--token),
-// que se resuelve en runtime). Sirven para encapsular lógica matemática y
-// devolver valores derivados: conversiones de unidades, mapeo de tokens y
-// generación de clamp() fluidos.
+// Funciones Sass reutilizables.
 
 @use 'sass:math';
 @use 'sass:map';
 @use 'sass:color';
 
-// ── Conversiones de unidades ─────────────────────────────────────────────
+// Conversiones de unidades
 
-// Convierte un número en píxeles a rem, asumiendo base 16. Uso: rem(24) → 1.5rem.
+// Convierte pixeles a rem. Ej: rem(24) → 1.5rem.
 @function rem($pixeles) {
   @return math.div($pixeles, 16) * 1rem;
 }
 
-// Convierte píxeles a em respecto a un contexto. Útil para padding sensible
-// a la tipografía del propio elemento. Uso: em(12, 14) → 0.857em.
+// Convierte pixeles a em respecto a un contexto.
 @function em($pixeles, $contexto: 16) {
   @return math.div($pixeles, $contexto) * 1em;
 }
 
-// ── Acceso seguro a mapas ─────────────────────────────────────────────────
+// Acceso seguro a mapas
 
-// Devuelve el valor de un mapa Sass o aborta con error si la clave no existe.
-// Sirve para escalas tipográficas o de espaciado que viven como mapas.
+// Saca un valor de un mapa o lanza error si no existe la clave.
 @function tomar($mapa, $clave) {
   @if not map.has-key($mapa, $clave) {
     @error "La clave '#{$clave}' no existe en el mapa.";
@@ -33,11 +26,10 @@
   @return map.get($mapa, $clave);
 }
 
-// ── Tipografía y espaciado fluido (clamp generado) ───────────────────────
+// Tipografia y espaciado fluido
 
-// Devuelve un clamp() que escala linealmente entre dos valores (mínimo y
-// máximo) en función del viewport, también acotado por dos breakpoints.
-// Uso típico: font-size: fluido(2.5rem, 4.5rem); para títulos hero.
+// Devuelve un clamp() que escala entre dos valores segun el viewport.
+// Util para titulos hero. Ej: font-size: fluido(2.5rem, 4.5rem);
 @function fluido($valor-min, $valor-max, $vp-min: 30rem, $vp-max: 80rem) {
   $pendiente: math.div($valor-max - $valor-min, $vp-max - $vp-min);
   $base: $valor-min - ($pendiente * $vp-min);
@@ -45,7 +37,7 @@
   @return clamp(#{$valor-min}, #{$base} + #{$vw}vw, #{$valor-max});
 }
 
-// ── Atajos a Custom Properties (legibilidad en partials) ─────────────────
+// Atajos a Custom Properties para legibilidad
 
 @function token-color($nombre)    { @return var(--#{$nombre}); }
 @function token-espacio($nivel)   { @return var(--spacing-size-#{$nivel}); }
@@ -54,11 +46,9 @@
 @function token-z($capa)          { @return var(--z-#{$capa}); }
 @function token-duracion($vel)    { @return var(--duration-#{$vel}); }
 
-// ── Accesibilidad: color de texto sobre un fondo ─────────────────────────
+// Accesibilidad: color de texto segun el fondo
 
-// Decide si poner texto claro u oscuro encima de un color HSL en función de
-// su luminosidad. Aproximación rápida al ratio WCAG; conviene afinarla con
-// WebAIM si el fondo está cerca del umbral.
+// Devuelve texto claro u oscuro segun la luminosidad del color.
 @function contraste-sobre($color) {
   $luz: color.channel($color, "lightness", $space: hsl);
   @return if($luz > 55%, hsl(0, 0%, 10%), hsl(0, 0%, 98%));

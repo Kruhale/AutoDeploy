@@ -96,6 +96,6 @@ Sí. La aplicación cumple WCAG 2.1 nivel AA: HTML semántico, landmarks etiquet
 |---|---|---|
 | "No se pudo conectar al servidor" en onboarding | Firewall del VPS bloquea SSH | Comprobar `ufw status` en el VPS, asegurar que el puerto 22 (o el que uses) está abierto |
 | Backup automático no aparece | El cron del VPS aún no se ha ejecutado | Esperar 24h o ejecutar manualmente `~/.autodeploy/backup.sh` y refrescar |
-| Métricas en vivo paradas | El WebSocket se desconectó | Refrescar la página; el servicio reintenta cada 5 segundos automáticamente |
+| Métricas en vivo paradas | El WebSocket se desconectó | El cliente reintenta solo cada 5 s. Si tras 30 s no vuelve, refrescar la página |
 | Tema no cambia | localStorage bloqueado (modo incógnito) | Salir del incógnito o aceptar cookies de primera parte para `autodeploy.kruhale.com` |
-| 401 al refrescar | Token JWT expirado (1h) | Re-login |
+| 401 al refrescar | Token JWT expirado (24 h de validez) | Re-login |

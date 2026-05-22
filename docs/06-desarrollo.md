@@ -48,7 +48,31 @@ El proyecto se ha desarrollado en **5 sprints** de 2 semanas (de marzo a mayo 20
 
 Esto cumple la rúbrica DWES "API REST nivel Excelente" que exige *"sistema de autenticación y autorización con roles"*.
 
-### 7. Co-Authored-By en commits
+### 7. Auditoría de seguridad y endurecimiento del backend
+
+**Problema**: una revisión sistemática del código en el último sprint detectó siete vulnerabilidades reales que el testing funcional había pasado por alto:
+
+1. `CifradoUtil` usaba **AES/ECB** sin IV para credenciales SSH y API keys (mismo plaintext → mismo ciphertext, vulnerable a análisis de frecuencia).
+2. **CORS** configurado con `setAllowedOriginPatterns("*")` + `setAllowCredentials(true)` (bypass total desde cualquier origen).
+3. **WebSocket** `/ws/terminal` aceptaba handshake **sin autenticación** — cualquiera con la URL podía abrir terminal SSH al servidor del usuario.
+4. Endpoints `/api/usuarios/{id}/**` **sin verificar ownership**: el usuario A podía leer/modificar/borrar al usuario B cambiando el `{id}`.
+5. `LogService` concatenaba directamente `archivo` y `patron` en `tail`/`grep` — **inyección de comandos shell** (`?archivo=/etc/passwd;rm -rf /`).
+6. `JWT secret` y `CIFRADO_CLAVE` tenían **fallback hardcoded** en `application.properties`. Si la variable de entorno faltaba, el sistema arrancaba con un secreto **público en GitHub**, permitiendo forjar JWTs.
+7. Endpoints como `GET /api/usuarios/admin/todos` y `GET /api/servidores` devolvían la entidad completa, incluyendo `passwordHash` (bcrypt), `passwordCifrada` y `claveSshPrivada` en el JSON.
+
+**Solución** (commit `0c4ae84`):
+
+1. Migración a **`AES/GCM/NoPadding`** con IV aleatorio de 12 bytes prepended al ciphertext y tag de autenticación de 128 bits. Clave derivada con SHA-256. **Compatibilidad backwards**: si el ciphertext no tiene el prefijo `v2:`, se cae al descifrador ECB legacy para no perder credenciales ya guardadas en producción.
+2. CORS con **whitelist concreta** (`https://autodeploy.kruhale.com`, `http://localhost:4200`, `http://localhost:8082`), configurable por `autodeploy.cors.origenes`.
+3. Nuevo `JwtHandshakeInterceptor` que extrae el JWT del query param `?token=...` y lo valida con `JwtUtil`. Frontend modificado para enviar el token en los tres WS (`/ws/terminal`, `/ws/metricas`, `/ws/notificaciones`).
+4. `@PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")` aplicado a los 11 endpoints `/api/usuarios/{id}/**`. SpEL compara el path variable con el `usuarioId` del JWT y permite el bypass legítimo a los ADMIN.
+5. `LogService` valida `archivo` y `patron` con regex estrictas (`^[A-Za-z0-9_./~-]+$` y `^[A-Za-z0-9 ._/:@-]+$`), limita `lineas` a `[1, 5000]` y usa `grep -F` para tratar el patrón como literal.
+6. `@PostConstruct` en `JwtUtil` que aborta el arranque (`IllegalStateException`) si `AUTODEPLOY_JWT_SECRET` no está definida o es menor de 32 bytes. `application.properties` ya no contiene valores por defecto.
+7. `@JsonIgnore` en `Usuario.passwordHash`, `Servidor.passwordCifrada` y `Servidor.claveSshPrivada`. La deserialización no se ve afectada porque ningún endpoint acepta la entidad como `@RequestBody` (todos usan DTOs).
+
+Resultado: los 7 hallazgos quedan cerrados antes de la defensa. La tabla completa con archivo, línea y propuesta está en el cuerpo del commit `0c4ae84` y resumida en `docs/10-conclusiones.md`.
+
+### 8. Co-Authored-By en commits
 **Problema**: Algunas herramientas (Claude, plantillas de PR de GitHub) añaden por defecto un trailer `Co-Authored-By: Claude...`. La regla del proyecto exige sólo `Kruhale` como autor.
 **Solución**: Documentado en `CLAUDE.md` y comprobado manualmente tras cada `git commit` con `git log --format='%an %ae'`. PRs que hayan añadido el trailer accidentalmente se rehacen con `git commit --amend` ANTES de pushear.
 

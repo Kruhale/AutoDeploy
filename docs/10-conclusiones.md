@@ -11,19 +11,37 @@
 | Backups programados | ✅ Cron en VPS + indexado automático | Funcionalidad real, probada con backups que aparecen tras 24h. |
 | Asistente IA contextual | ✅ con OpenRouter (modelo configurable) | Limita a plan Pro/Business. Funciona en modo "sugerencia + confirmación". |
 | Despliegue público con HTTPS | ✅ https://autodeploy.kruhale.com | Let's Encrypt + HSTS, renovación automática. |
-| WCAG 2.1 AA en frontend | ✅ todos los requisitos aplicados, ⚠️ pendiente auditoría Lighthouse documentada | Cierra todos los patrones que penalizaron Cofira. |
+| WCAG 2.1 AA en frontend | ✅ todos los requisitos aplicados + Lighthouse 100/100 en `/`, `/login` y `/register` | Cierra todos los patrones que penalizaron Cofira en el trimestre anterior. |
 | Documentación rúbrica DIW | ✅ con este documento + `docs/design/DOCUMENTACION.md` (7 secciones) + README de styles ampliado | Cubre el peso 20% de "preprocesadores" con evidencia de mixins/funciones/container queries. |
 | 5 idiomas | ✅ es/en/fr/de/it con ngx-translate | Los aria-label también traducidos. |
+| Tests automatizados en CI | ✅ 119 frontend + 38 backend, todos verdes | Cada PR pasa CI antes de merge; rollback automático si falla el smoke test. |
+| Endurecimiento de seguridad | ✅ AES-GCM, CORS whitelist, JWT fail-fast, `@JsonIgnore`, ownership en endpoints, sanitización shell, autenticación WS | Auditoría interna detectó 7 vulnerabilidades críticas; todas cerradas (ver sección **Endurecimiento de seguridad** abajo). |
 
 ## Grado de cumplimiento del alcance propuesto
 
-**Alcance entregado**: ~95% del MVP definido en la fase 5 del proyecto Órbita 1.
+**Alcance entregado**: ~95 % del MVP definido en la fase 5 del proyecto Órbita 1.
 
 Funcionalidades que quedaron en el roadmap futuro:
 - **Stripe real** para el plan Pro (actualmente la página `/pago` es UI completa pero sin integración con un proveedor de pago real).
 - **2FA** con TOTP (la base del login está preparada pero el flujo del segundo factor está fuera de scope para el primer release).
 - **Notificaciones por email** (toasts y campana del header funcionan; el envío de emails reales con un SMTP externo queda pendiente).
 - **Multi-tenant** (organizaciones con varios usuarios). Hoy cada usuario tiene sus propios servidores.
+
+## Endurecimiento de seguridad
+
+En el último sprint se lanzó una auditoría interna del código que detectó **siete vulnerabilidades de severidad alta o crítica**. Las siete quedan cerradas:
+
+| # | Vulnerabilidad | Mitigación |
+|---|---|---|
+| SEC-1 | `CifradoUtil` usaba `AES/ECB` sin IV (mismo plaintext → mismo ciphertext) para passwords SSH y API keys | Migrado a **`AES/GCM/NoPadding`** con IV aleatorio de 12 bytes y tag de autenticación de 128 bits. Compat backwards: los registros antiguos siguen pudiéndose descifrar |
+| SEC-2 | `CORS` con `setAllowedOriginPatterns("*")` + `setAllowCredentials(true)` permitía bypass total | Whitelist concreta de orígenes (producción + localhost), cabeceras limitadas a `Authorization/Content-Type/Accept/X-Requested-With` |
+| SEC-3 | WebSocket `/ws/terminal` aceptaba handshake sin autenticación → cualquiera podía abrir terminal SSH ajena | `JwtHandshakeInterceptor` que extrae el JWT del query param `?token=...` y lo valida antes del upgrade. Frontend ya manda el token en los tres WS |
+| SEC-4 | Endpoints `/api/usuarios/{id}/**` no comprobaban que `{id}` coincidiera con el usuario autenticado | `@PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")` en 11 endpoints |
+| SEC-5 | `LogService` concatenaba `archivo` y `patron` directos en `tail`/`grep` → inyección de comandos shell | Validación estricta por regex (whitelist de caracteres) + `grep -F` para tratar el patrón como literal |
+| SEC-6 | `JWT secret` y `CIFRADO_CLAVE` tenían fallback **hardcoded** en `application.properties` → JWT forjable si faltaba la variable de entorno | `@PostConstruct` que aborta el arranque (`fail-fast`) si la variable falta o tiene menos de 32 bytes |
+| SEC-7 | `passwordHash`, `passwordCifrada` y `claveSshPrivada` salían en el JSON de las respuestas (admin list, get servidor) | `@JsonIgnore` en los tres campos. La deserialización no se ve afectada porque los endpoints usan DTOs |
+
+La auditoría completa con archivo, línea y propuesta de fix está en el cuerpo del commit `0c4ae84`.
 
 ## Lecciones aprendidas
 
@@ -41,21 +59,25 @@ Funcionalidades que quedaron en el roadmap futuro:
 
 6. **MongoDB encaja con datos en evolución**. Cambiar el esquema en cada sprint sin migraciones manuales fue clave. Para datos transaccionales (pagos reales), pasaría a PostgreSQL.
 
+### De seguridad
+
+7. **Auditar el código propio con ojos críticos descubre lo que el desarrollo "natural" oculta**. El proyecto funcionaba a nivel UX y de tests, pero una revisión sistemática en busca de vulnerabilidades destapó AES en modo ECB, CORS `*`, JWT con secreto hardcoded en el repo, inyección de comandos en `tail`/`grep` por concatenar entradas del usuario, endpoints que devolvían password hashes en JSON, etc. Ninguna de esas debilidades habría aparecido haciendo testing funcional: hay que sentarse específicamente a buscar problemas de seguridad. El cierre de las 7 vulnerabilidades es la lección más útil del proyecto.
+
 ### De producto
 
-7. **El usuario no quiere instalar software en su VPS**. La hipótesis inicial era correcta. Coolify, Dokku y CapRover son potentes pero requieren un compromiso que muchos developers freelance no quieren.
+8. **El usuario no quiere instalar software en su VPS**. La hipótesis inicial era correcta. Coolify, Dokku y CapRover son potentes pero requieren un compromiso que muchos developers freelance no quieren.
 
-8. **Los lectores de pantalla descubren bugs visuales**. Probar con VoiceOver reveló que algunos `<section>` no tenían etiqueta accesible y que el sidebar móvil cerraba con el backdrop pero no avisaba al lector de que el menú se había cerrado (`aria-expanded`). Lo que pasaba el ojo, no pasaba el oído.
+9. **Los lectores de pantalla descubren bugs visuales**. Probar con VoiceOver reveló que algunos `<section>` no tenían etiqueta accesible y que el sidebar móvil cerraba con el backdrop pero no avisaba al lector de que el menú se había cerrado (`aria-expanded`). Lo que pasaba el ojo, no pasaba el oído.
 
-9. **El skip link no es decorativo**. Cuando empecé a tabular desde la primera carga, vi cuánto tiempo perdía pasando por la sidebar antes de llegar al contenido. Una utilidad de 30 líneas (`.u-saltar-contenido`) ahorra fricción real.
+10. **El skip link no es decorativo**. Cuando empecé a tabular desde la primera carga, vi cuánto tiempo perdía pasando por la sidebar antes de llegar al contenido. Una utilidad de 30 líneas (`.u-saltar-contenido`) ahorra fricción real.
 
 ### De proceso
 
-10. **PRs pequeños y temáticos > PR gigante**. En esta entrega cada bloque del plan DIW es una PR independiente (rango aproximado #220 a #249, una por gap cerrado). El historial cuenta la historia del refactor y el evaluador puede revisar el cierre de cada gap por separado.
+11. **PRs pequeños y temáticos > PR gigante**. En esta entrega cada bloque del plan DIW es una PR independiente (rango aproximado #220 a #249, una por gap cerrado). El historial cuenta la historia del refactor y el evaluador puede revisar el cierre de cada gap por separado.
 
-11. **No usar `Co-Authored-By` me obligó a revisar cada commit**. La regla obliga a ser consciente del autor y del mensaje, y resulta en un historial más legible.
+12. **No usar `Co-Authored-By` me obligó a revisar cada commit**. La regla obliga a ser consciente del autor y del mensaje, y resulta en un historial más legible.
 
-12. **Documentar mientras se desarrolla > documentar al final**. Los documentos `docs/01-10` y `docs/design/DOCUMENTACION.md` se escribieron en paralelo a las PRs. Eso ahorra el sprint final dedicado sólo a docs (que siempre acaba siendo demasiado corto).
+13. **Documentar mientras se desarrolla > documentar al final**. Los documentos `docs/01-10` y `docs/design/DOCUMENTACION.md` se escribieron en paralelo a las PRs. Eso ahorra el sprint final dedicado sólo a docs (que siempre acaba siendo demasiado corto).
 
 ## Mejoras futuras propuestas
 

@@ -2,9 +2,11 @@
 
 ## Origen de la idea
 
-AutoDeploy nace de una experiencia personal repetida: cada vez que había que desplegar una aplicación a un VPS (un proyecto en clase, una demo, una idea propia) el ciclo era el mismo. Conectarse por SSH, copiar el código, instalar dependencias, configurar nginx, abrir puertos en el firewall, recordar a qué dominio apunta el subdominio, configurar SSL con Let's Encrypt, programar backups cron, monitorizar métricas con `top`/`free`/`df`… horas de comandos y ningún panel que permita ver el estado del servidor de un vistazo.
+AutoDeploy nace de una experiencia personal repetida: cada vez que había que desplegar una aplicación a un VPS (un proyecto en clase, una demo, una idea propia) el ciclo era el mismo.
 
-Soluciones existentes como **Coolify**, **Dokku** o **CapRover** lo hacen, pero todas pasan por instalar su propio agente en el VPS. La idea de AutoDeploy es la opuesta: la app vive en un proveedor central (este SaaS) y se conecta al VPS del usuario únicamente por SSH/SFTP. Eso significa cero software preinstalado en el servidor, ningún agente que mantener, y un único punto de fallo (el SaaS, que se cae y restaura con Docker Compose).
+Conectarse por SSH, copiar el código, instalar dependencias, configurar nginx, abrir puertos en el firewall, recordar a qué dominio apunta cada subdominio, configurar SSL con Let's Encrypt, programar backups con cron, monitorizar métricas a base de `top`/`free`/`df`… Horas de comandos repetidos y ningún panel que permita ver el estado del servidor de un vistazo.
+
+Soluciones existentes como **Coolify**, **Dokku** o **CapRover** automatizan parte de eso, pero todas requieren instalar su propio agente en el VPS. AutoDeploy adopta la postura opuesta: la app vive en un proveedor central (este SaaS) y se conecta al VPS del usuario únicamente por SSH/SFTP. Resultado: cero software preinstalado en el servidor, ningún agente que mantener, y un único punto de fallo (el SaaS, que se cae y se restaura con Docker Compose en minutos).
 
 ## Motivación académica
 
@@ -21,7 +23,8 @@ El proyecto se desarrolla como **Proyecto Final Intermodular** del 2º curso del
 |---|---|
 | Aplicación funcional end-to-end (registro, login, conectar servidor por SSH real, desplegar app, ver métricas en vivo) | ✅ |
 | API REST documentada con OpenAPI/Swagger | ✅ (`docs/API.md`) |
-| Tests unitarios en frontend (Karma+Jasmine) | ✅ 123/123 |
+| Tests unitarios en frontend (Karma+Jasmine) | ✅ 119/119 |
+| Tests unitarios en backend (JUnit+Mockito) | ✅ 38/38 |
 | Despliegue público con HTTPS | ✅ https://autodeploy.kruhale.com |
 | Documentación de la rúbrica de 4 módulos | En curso (este documento) |
 | Prototipo Figma con guía de estilo y biblioteca de componentes | ✅ |

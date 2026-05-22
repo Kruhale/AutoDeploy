@@ -12,7 +12,7 @@ Colecciones principales:
 | Colección | Documento | Relación |
 |---|---|---|
 | `usuarios` | id, nombre, email, password (BCrypt), plan, idioma, fechaRegistro | 1 usuario → N servidores |
-| `servidores` | id, nombre, ip, usuario, passwordCifrada (AES), claveSshPrivadaCifrada, estado, fechaConexion, usuarioId | N:1 con usuario |
+| `servidores` | id, nombre, ip, usuario, passwordCifrada (AES-GCM), claveSshPrivada (AES-GCM), estado, fechaConexion, usuarioId | N:1 con usuario |
 | `despliegues` | id, servidorId, repositorioUrl, stack, fechaDespliegue, estado, logs | N:1 con servidor |
 | `subdominios` | id, servidorId, nombre, registroTipo, registroValor | N:1 con servidor |
 | `backups` | id, servidorId, nombreArchivo, tamano, fechaCreacion, automatico | N:1 con servidor |

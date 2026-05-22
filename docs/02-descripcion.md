@@ -18,7 +18,7 @@ Nada del software de gestión vive en el VPS del usuario: AutoDeploy se conecta 
 ### 1. Onboarding del servidor
 - Formulario que pide IP, usuario, contraseña o clave SSH privada.
 - Validación inmediata: prueba la conexión antes de guardar.
-- Las credenciales se cifran con AES (`AUTODEPLOY_CIFRADO_CLAVE`) antes de persistir en MongoDB.
+- Las credenciales (password SSH y clave privada) se cifran con **AES-GCM** (IV aleatorio + tag de autenticación de 128 bits, clave derivada con SHA-256 desde `AUTODEPLOY_CIFRADO_CLAVE`) antes de persistir en MongoDB.
 
 ### 2. Dashboard
 - Tarjetas con estado y métricas en vivo de cada servidor.

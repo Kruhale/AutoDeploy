@@ -368,7 +368,7 @@ BODY_USER=$(jq -n --arg e demo@autodeploy.dev --arg p TU_CONTRASENA \
 TOKEN_USER=$(curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
   -H "Content-Type: application/json" \
   -d "$BODY_USER" \
-  | jq -r '.data.tokenJwt')
+  | jq -r '.data.token')
 
 # 2. Acceder a endpoint admin sin permisos → 403
 curl -s -o /dev/null -w "HTTP %{http_code}\n" \
@@ -382,7 +382,7 @@ BODY_ADMIN=$(jq -n --arg e admin@autodeploy.dev --arg p TU_CONTRASENA \
 TOKEN_ADMIN=$(curl -s -X POST https://autodeploy.kruhale.com/api/usuarios/login \
   -H "Content-Type: application/json" \
   -d "$BODY_ADMIN" \
-  | jq -r '.data.tokenJwt')
+  | jq -r '.data.token')
 
 # 4. Mismo endpoint con admin → 200
 curl -s -H "Authorization: Bearer $TOKEN_ADMIN" \

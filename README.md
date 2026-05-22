@@ -126,8 +126,18 @@ openssl rand -base64 32   # AUTODEPLOY_CIFRADO_CLAVE
 | Evidencias reales (salidas, capturas) | [`docs/EVIDENCIA.md`](docs/EVIDENCIA.md) |
 | Documentación DIW (7 secciones) | [`docs/design/DOCUMENTACION.md`](docs/design/DOCUMENTACION.md) |
 | Análisis de accesibilidad (8 secciones) | [`docs/accesibilidad/README.md`](docs/accesibilidad/README.md) |
+| Auditoría WCAG con Lighthouse | [`docs/accesibilidad/AUDITORIA.md`](docs/accesibilidad/AUDITORIA.md) |
+| Documentación del Proyecto Final (10 secciones) | [`docs/01-introduccion.md`](docs/01-introduccion.md) → [`docs/10-conclusiones.md`](docs/10-conclusiones.md) |
 | Swagger UI interactivo | `https://autodeploy.kruhale.com/swagger-ui.html` |
 | OpenAPI JSON | `https://autodeploy.kruhale.com/v3/api-docs` |
+
+## Seguridad
+
+Las credenciales SSH y las API keys de OpenRouter se guardan cifradas con **AES-256/GCM/NoPadding** (IV aleatorio + tag de autenticación de 128 bits, clave derivada con SHA-256). El JWT se firma con **HMAC-SHA384** y la app se niega a arrancar si `AUTODEPLOY_JWT_SECRET` o `AUTODEPLOY_CIFRADO_CLAVE` no están definidas o miden menos de 32 bytes (fail-fast).
+
+La capa HTTP usa **CORS con whitelist** (sin `*`), Spring Security con filtros JWT, `@PreAuthorize` con verificación de ownership (`#id == authentication.principal`) en 11 endpoints sensibles, y un `JwtHandshakeInterceptor` que valida el JWT en el query param antes del upgrade WebSocket. Los campos `passwordHash`, `passwordCifrada` y `claveSshPrivada` llevan `@JsonIgnore` para no filtrarse en respuestas API.
+
+Detalle completo en la sección "Endurecimiento de seguridad" de [`docs/10-conclusiones.md`](docs/10-conclusiones.md#endurecimiento-de-seguridad).
 
 ## Desarrollo local
 
@@ -201,7 +211,7 @@ Más detalles en [`docs/DEPLOY.md`](docs/DEPLOY.md#troubleshooting).
 
 ## Licencia
 
-MIT — ver [LICENSE](LICENSE) si existe, o copia estándar de MIT en otro caso.
+MIT. Uso libre con atribución. El texto íntegro se encuentra en el archivo `LICENSE` de la raíz del repositorio.
 
 ## Autor
 

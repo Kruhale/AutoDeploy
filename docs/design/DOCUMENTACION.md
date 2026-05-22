@@ -487,7 +487,7 @@ Pendiente de poblar `docs/design/capturas/` con tomas en 3 páginas representati
 - Reverse proxy nginx (contenedor + host).
 - Imagen Docker publicada en GHCR.
 - 5 idiomas (es / en / fr / de / it) con ngx-translate.
-- 123/123 tests Karma+Jasmine en frontend.
+- 119/119 tests Karma+Jasmine en frontend + 38/38 tests JUnit en backend.
 
 ### 7.2 Despliegue
 

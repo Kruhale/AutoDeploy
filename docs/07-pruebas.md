@@ -2,123 +2,148 @@
 
 ## Metodología
 
-Combinación de **testing manual exploratorio** (durante el desarrollo) + **tests automatizados** (en CI). No se aplica TDD estricto: los tests acompañan a la funcionalidad pero no preceden el código, dado que el alcance del proyecto y el tiempo del sprint lo desaconsejaban.
+Se ha combinado **testing manual exploratorio** durante el desarrollo con **tests automatizados** ejecutados en cada `push` a GitHub. No se aplica **TDD estricto** (escribir el test antes que el código): los tests acompañan a la funcionalidad pero no la preceden, porque el alcance del proyecto y la duración de cada sprint lo desaconsejaban.
 
-## Tipos de pruebas
+Sí se respeta una regla clave: **cualquier corrección de bug ha de incluir un test que reproduzca el caso roto**. Eso evita regresiones y deja constancia escrita del problema.
 
-### 1. Tests unitarios — Frontend (Karma + Jasmine)
+---
 
-Ubicación: `autodeploy/src/**/*.spec.ts`.
+## 1. Tests unitarios — Frontend (Karma + Jasmine)
 
-Cubren:
+**Ubicación**: `autodeploy/src/**/*.spec.ts`.
 
-- **Services** (`idioma.service.spec.ts`, `usuario.service.spec.ts`, `servidor.service.spec.ts`): inicialización, persistencia en localStorage, llamadas HTTP mockeadas.
-- **Components** (`*.spec.ts`): rendering inicial, eventos.
-- **Pipes y guards**: lógica de validación.
+**Total**: **119 tests en 25 specs**. Cobertura sobre las capas más críticas:
 
-Ejecutar:
+| Capa | Specs representativos | Qué prueban |
+|---|---|---|
+| Services | `theme.service.spec`, `auth.service.spec`, `usuario.service.spec`, `servidor.service.spec`, `idioma.service.spec` | Inicialización, persistencia en `localStorage`/`sessionStorage`, llamadas HTTP mockeadas con `HttpTestingController`, signals reactivos |
+| Interceptores | `jwt.interceptor.spec` | Inyección de `Authorization: Bearer` y redirección a `/login` ante 401/403 |
+| Guards | `auth.guard.spec`, `plan-asistente.guard.spec` | Comprobación de sesión y restricción de rutas según plan |
+| Componentes layout | `app-layout.spec`, `sidebar.component.spec`, `footer.spec`, `barra-pie-app.spec`, `header.spec` | Renderizado base, presencia de landmarks, selectores |
+| Componentes shared | `tarjeta-estadistica.spec`, `migas-pan.spec` | Inputs, transiciones de estado |
+| Páginas críticas | `home.spec`, `dashboard.spec`, `login.spec`, `register.spec`, `onboarding.spec`, `nuevo-despliegue.spec`, `logs-terminal.spec`, `gestion-servidor.spec`, `landing-layout.spec`, `app.spec` | Rendering inicial, eventos `(click)`/`(submit)`, validación de formularios |
+
+**Ejecutar**:
 
 ```bash
 cd autodeploy
-npm test -- --watch=false              # ejecución única
-npm test                               # modo watch (TDD local)
-ng test --include='**/idioma.service.spec.ts'  # un único test
+npm run test:unit                                 # 119 tests, Chrome Headless CI
+npm test                                          # modo watch interactivo
+ng test --include='**/theme.service.spec.ts'      # un único spec
 ```
 
-Estado actual: **123 tests SUCCESS** (frontend) tras ampliación con casos reales en specs de `tarjeta-estadistica`, `migas-pan`, `footer`, `header`, `home`, `register`, `onboarding`, `nuevo-despliegue`, `sidebar`, `landing-layout`, `barra-pie-app` (criterios de password, render del DOM, signals iniciales, transiciones de estado).
+**Estado actual**: **119 / 119 SUCCESS**.
 
-### 2. Tests unitarios — Backend (JUnit + Mockito)
+---
 
-Ubicación: `backend/src/test/java/com/autodeploy/`.
+## 2. Tests unitarios — Backend (JUnit 5 + Mockito)
 
-Cubren:
+**Ubicación**: `backend/src/test/java/com/autodeploy/`.
 
-- **CifradoUtilTest**: cifrado / descifrado AES, casos de clave inválida.
-- **UsuarioControllerTest**: registro, login, validaciones, errores y autorización con roles `USUARIO`/`ADMIN`.
-- **UsuarioServiceTest**: lógica de negocio (creación, autenticación, asignación de rol por defecto, cambio de plan).
-- **ServidorControllerTest**: CRUD de servidores con JWT mockeado.
-- **ServidorServiceTest**: lógica de servicio con MongoRepository mockeado.
-- **ReconexionServiceTest**: reconexión automática SSH tras arranque.
+**Total**: **38 tests** sobre las áreas más sensibles:
 
-Ejecutar:
+| Capa | Test class | Qué prueba |
+|---|---|---|
+| Utilidad cripto | `CifradoUtilTest` | Cifrado/descifrado AES-GCM, fallback a ECB legacy, mensajes de error |
+| Servicio negocio | `UsuarioServiceTest` | Registro, login, validaciones, asignación de rol por defecto, cambio de plan |
+| Servicio negocio | `ServidorServiceTest` | CRUD de servidores con `MongoRepository` mockeado, encriptación de credenciales |
+| Servicio negocio | `ReconexionServiceTest` | Reconexión automática SSH tras arranque |
+| Controller | `UsuarioControllerTest` | Endpoints `/api/usuarios/*` con `MockMvc`, autorización por roles `USUARIO`/`ADMIN` y ownership con `@PreAuthorize` |
+| Controller | `ServidorControllerTest` | Endpoints `/api/servidores/*` con `MockMvc`, validación con `@Valid` |
+
+**Ejecutar**:
 
 ```bash
 cd backend
-./mvnw test                           # todos
-./mvnw test -Dtest=JwtUtilTest#deberiaGenerarTokenValido
+./mvnw test                                       # todos los tests
+./mvnw test -Dtest=CifradoUtilTest                # una clase
+./mvnw test -Dtest=UsuarioServiceTest#login_deberiaRetornarLoginResponse_cuandoCredencialesSonCorrectas
 ```
 
-### 3. Tests end-to-end (Playwright) — Exploratorios
+**Estado actual**: **38 / 38 SUCCESS** (Maven Surefire).
 
-Carpeta `tests/e2e/` (excluida de `.gitignore` por `.git/info/exclude` mientras se estabilizan).
+---
 
-Pruebas manuales semi-automatizadas para flujos críticos:
-- Registro + login.
-- Conectar servidor sandbox SSH local (contenedor `linuxserver/openssh-server`).
-- Cambio de tema oscuro/claro.
+## 3. Tests end-to-end (Playwright)
 
-### 4. Smoke tests en producción
+Carpeta `tests/e2e/` (excluida del repo público vía `.git/info/exclude` mientras se estabilizan). Son **exploratorios**, no parte del pipeline obligatorio.
 
-Tras cada deploy, el pipeline `cd.yml` ejecuta:
+Flujos cubiertos:
+
+- Registro + login + redirección al dashboard.
+- Conectar servidor sandbox SSH local (contenedor `linuxserver/openssh-server`) y abrir una terminal interactiva.
+- Cambio de tema oscuro/claro con persistencia tras `reload`.
+
+---
+
+## 4. Smoke tests en producción (CI/CD)
+
+Tras cada deploy, el job `deploy-vps` del workflow `.github/workflows/cd.yml` ejecuta sobre `https://autodeploy.kruhale.com/`:
 
 ```bash
-curl -sf https://autodeploy.kruhale.com/ > /dev/null && echo OK
-curl -sf https://autodeploy.kruhale.com/api/actuator/health | grep '"status":"UP"' && echo OK
+curl -fsSL https://autodeploy.kruhale.com/ > /dev/null            # SPA responde 200
+curl -fsSL https://autodeploy.kruhale.com/api/estado | jq         # estadoGeneral: UP
+curl -fsSL https://autodeploy.kruhale.com/actuator/health         # status: UP
 ```
 
-Si alguna respuesta falla, el deploy se marca como FAILED y se restaura la imagen anterior.
+Si **cualquiera** de las verificaciones falla:
 
-## Cobertura
+1. El deploy se marca como `failure`.
+2. Se ejecuta automáticamente la función `rollback()` del workflow.
+3. `.env` del VPS vuelve al `IMAGE_TAG` anterior y `docker compose up -d` re-despliega esa versión.
+4. Se notifica al autor por email (canal nativo de GitHub Actions).
 
-| Capa | Cobertura aproximada |
+---
+
+## 5. Cobertura
+
+Las cifras son estimaciones a partir de las áreas testeadas (no medidas con JaCoCo/Istanbul, pendiente para un sprint futuro):
+
+| Capa | Cobertura estimada |
 |---|---|
-| Frontend services | 75% |
-| Frontend components | 40% |
-| Backend controllers | 60% |
-| Backend services | 70% |
-| Backend utils (JwtUtil, CifradoUtil) | 95% |
+| Backend — utilidades (`JwtUtil`, `CifradoUtil`) | ~95 % |
+| Backend — services de negocio | ~70 % |
+| Backend — controllers principales | ~60 % |
+| Frontend — services | ~75 % |
+| Frontend — componentes | ~40 % |
 
-No se alcanza el 80% global pedido por la rúbrica DIW en lo referente a frontend porque muchos componentes son pura presentación. Sí se cubren todos los **services** (lógica de negocio) por encima de 70%.
+El **80 % global** que pide la rúbrica DIW no se alcanza en frontend porque muchos componentes son pura presentación y su valor en test unitario es bajo; la prioridad ha sido testear la lógica de negocio (services) y la cadena de seguridad (auth/guard/interceptor), donde sí supera el 70 %.
 
-## Resultados y estadísticas
+---
 
-```
-Chrome Headless 148.0.0.0: Executed 123 of 123 SUCCESS (0.412 secs / 0.398 secs)
-TOTAL: 123 SUCCESS
+## 6. Pruebas de accesibilidad WCAG 2.1 AA
 
-Maven Surefire: Tests run: 24, Failures: 0, Errors: 0, Skipped: 0
-```
+Las **auditorías automatizadas** están documentadas en [`docs/accesibilidad/AUDITORIA.md`](./accesibilidad/AUDITORIA.md), con reports JSON+HTML guardados en `docs/assets/capturas/accesibilidad/`:
 
-## Pruebas de accesibilidad
+- **Lighthouse Accesibilidad**: **100 / 100** en `/`, `/login` y `/register` (auditadas el 2026-05-21).
+- Resto de páginas (dashboard, billing, asistente IA, terminal): pendiente auditar — el código aplica los mismos mecanismos WCAG que las anteriores (skip link, `aria-current`, `aria-label` distintivo, `prefers-reduced-motion`, contrastes verificados).
 
-El refactor DIW (PRs #220 a #248) ya aplicó los mecanismos WCAG 2.1 AA (skip link, `aria-current="page"`, `aria-label` distintivo, `prefers-reduced-motion`, contrastes ajustados, jerarquía semántica). Lo que queda pendiente son las **capturas de auditoría** que documentan el resultado:
+**Pruebas manuales complementarias**:
 
-- **Lighthouse** (Chrome DevTools) sobre 3 páginas (landing, login, dashboard).
-- **WAVE** (extensión Chrome) para listar errores de contraste y semántica.
-- **TAW** (https://www.tawdis.net) sobre la URL pública.
-- **VoiceOver** (macOS) — navegación completa con teclado y lectura.
-- **Cross-browser**: Chrome, Firefox, Safari.
+- **VoiceOver** (macOS Cmd+F5): navegación con teclado por landing, login y dashboard. Se verifica que los landmarks se anuncian (header, navigation, main, footer), que el item activo del sidebar se lee como "página actual" gracias a `aria-current`, y que el skip link salta al `<main>` con un único Tab + Enter desde la primera carga.
+- **Cross-browser**: Chrome 148, Firefox 121, Safari 17 — sin regresiones visuales ni funcionales detectadas.
 
-Las capturas se guardarán en `docs/accesibilidad/capturas/` y los resultados ya están documentados en `docs/accesibilidad/README.md` (8 secciones de Rublicas11).
+El documento [`docs/accesibilidad/README.md`](./accesibilidad/README.md) contiene las 8 secciones formales que pide la rúbrica DIW Órbita 4 (Rublicas11): fundamentos, componente multimedia, auditoría automatizada, análisis de errores, estructura semántica, verificación manual, resultados finales y conclusiones.
 
-## Pruebas manuales realizadas durante el desarrollo
+---
 
-Checklist exploratorio tras cada sprint:
+## 7. Pruebas manuales realizadas durante el desarrollo
+
+Checklist exploratorio repetido al final de cada sprint:
 
 - [x] Registro de usuario con email único y contraseña válida.
 - [x] Login con credenciales válidas e inválidas.
-- [x] Conectar servidor sandbox por SSH con clave privada.
-- [x] Conectar servidor sandbox con contraseña.
-- [x] Abrir terminal interactiva y ejecutar `ls /`.
-- [x] Ver métricas en vivo (CPU, RAM) durante 30 segundos.
-- [x] Programar backup automático a las 03:00.
-- [x] Verificar que aparece el `auto-*.tar.gz` tras un par de horas.
-- [x] Añadir regla de firewall (allow 22/tcp) y comprobar con `ufw status`.
-- [x] Pedir al asistente IA un comando inocuo (`hostname`) y ejecutarlo.
+- [x] Conectar servidor sandbox por SSH con **clave privada**.
+- [x] Conectar servidor sandbox por SSH con **contraseña**.
+- [x] Abrir terminal interactiva y ejecutar `ls /`, `top`, `uname -a`.
+- [x] Ver métricas en vivo (CPU, RAM, disco) durante al menos 30 s.
+- [x] Programar backup automático a las 03:00 y verificar que aparece el `auto-*.tar.gz` tras unas horas.
+- [x] Añadir regla de firewall `allow 22/tcp` y comprobar con `ufw status` desde el panel.
+- [x] Pedir al asistente IA un comando inocuo (`hostname`) y ejecutarlo con confirmación.
 - [x] Cambiar idioma a inglés, francés, alemán, italiano y volver a español.
-- [x] Alternar tema oscuro/claro y comprobar persistencia tras recarga.
-- [x] Logout y re-login.
-- [x] Navegación por teclado (Tab) por landing, login y dashboard.
-- [x] Skip link funciona y salta al `<main>`.
+- [x] Alternar tema oscuro/claro desde el header y comprobar persistencia tras recarga.
+- [x] Logout y re-login con el mismo usuario.
+- [x] Navegación por teclado (Tab + Enter) por landing, login y dashboard sin trampas.
+- [x] Skip link "Saltar al contenido" funciona y salta al `<main id="contenido-principal">`.
 - [x] Móvil: hamburguesa abre/cierra sidebar; backdrop cierra al pulsar.
-- [x] Móvil: viewport 320px, layout no rompe.
+- [x] Móvil (viewport 320 px): el layout no rompe y no aparece overflow horizontal.

@@ -9,7 +9,7 @@ El enlace público al archivo se incluirá en la defensa del proyecto (compartir
 El archivo contiene seis páginas:
 
 1. **Moodboard** — Dirección estética con palabras clave (oscuro, profesional, cálido, técnico) y referencias visuales (Linear, Stripe, Coolify).
-2. **Guía de estilo** — Paleta de color completa con escalas, escala tipográfica (H1–Caption con Outfit), librería de iconos (FontAwesome 6 documentada), sistema de espaciado (`4/8/12/16/24/32/48/64`).
+2. **Guía de estilo** — Paleta de color HSL con escalas semánticas, escala tipográfica de 10 niveles (H1 a caption con Outfit), librería de iconos (FontAwesome 6), sistema de espaciado de 15 niveles (`xxs..8xl`, múltiplos de 4 y 8 px).
 3. **Componentes** — Biblioteca de componentes con todos los estados (default / hover / focus / active / disabled / invalid).
 4. **Mockups** — Pantallas finales con contenido real: bienvenida, login, dashboard, billing, asistente-ia, terminal, onboarding.
 5. **Sitemap** — Diagrama completo de las 27 rutas (públicas, autenticadas, legales).
@@ -36,8 +36,8 @@ Modo claro definido en `.tema-claro { ... }` con overrides sólo en fondos, text
 ## Tipografía
 
 Familias:
-- **Outfit** (Google Fonts) — cuerpo y títulos. Pesos importados: 400/500/600/700/800.
-- **JetBrains Mono** (Google Fonts) — terminales, snippets, código.
+- **Outfit** (Google Fonts) — cuerpo y títulos. Pesos importados: 400, 500, 600, 700, 800, 900 (`--font-weight-normal..black`).
+- **JetBrains Mono** (Google Fonts, fallback Fira Code y Cascadia Code) — terminales, snippets, código monoespaciado.
 
 Escala (`--font-size-*`):
 
@@ -82,13 +82,17 @@ Diseñados en la página "Wireframes" del prototipo Figma (no se exportan a carp
 
 | Componente | Variantes | Estados | Archivo SCSS |
 |---|---|---|---|
-| `.boton` | `--primario/secundario/ghost/peligro` | hover, active, focus-visible, disabled | `03-elements/_buttons.scss` |
-| `.campo` (input/textarea/select) | — | focus, focus-visible, disabled, invalid | `03-elements/_forms.scss` |
-| `.tarjeta-servidor` | `--destacada`, container queries | hover, active, focus-within | `05-components/_tarjeta-servidor.scss` |
-| `.tarjeta-stat` | acento variable | hover, active, focus-within | `05-components/_tarjeta-estadistica.scss` |
-| `.tarjeta-plan` | `--destacado` | hover, active, focus-within | `05-components/_seccion-precios.scss` |
-| `.barra-lateral` | `--abierta/colapsada` | hover, focus-visible, aria-current | `05-components/_barra-lateral.scss` |
-| `.spinner` | `--grande/cyan/verde` | animado | `01-tools/_animaciones.scss` |
+| `.boton` | `--primario`, `--secundario`, `--ghost`, `--peligro` | `:hover`, `:active`, `:focus-visible`, `:disabled` | `03-elements/_buttons.scss` |
+| `.campo` (input/textarea/select) | — | `:focus`, `:focus-visible`, `:disabled`, `:invalid:not(:focus)` | `03-elements/_forms.scss` |
+| `.toggle` (segmented) | `__opcion--activa` | `:hover`, `:focus-visible`, `:disabled` | `03-elements/_forms.scss` |
+| `.interruptor` (switch) | `--activo` | `:focus-visible`, `:disabled` | `03-elements/_forms.scss` |
+| `.tarjeta-servidor` | `--destacada` + container queries (peq/medio/grande) | `:hover`, `:active`, `:focus-within` | `05-components/_tarjeta-servidor.scss` |
+| `.tarjeta-stat` | 5 acentos (`--primario/teal/cyan/exito/advertencia`) + container queries | `:hover`, `:active`, `:focus-within` | `05-components/_tarjeta-estadistica.scss` |
+| `.tarjeta-plan` | `--destacado` + container queries | `:hover`, `:active`, `:focus-within` | `05-components/_seccion-precios.scss` |
+| `.barra-lateral` | `--abierta`, `--colapsada` | `:hover`, `:focus-visible`, `[aria-current="page"]` | `05-components/_barra-lateral.scss` |
+| `.tabla-sitios` | `__fila` interactiva | `:hover`, `:active`, `:focus-within` | `05-components/_tabla-sitios.scss` |
+| `.spinner` | `--grande`, `--cyan`, `--verde` | keyframe `giro-spinner` 0.8 s linear | `01-tools/_animaciones.scss` |
+| `app-galeria-capturas` | reutilizable con input `[capturas]` | container queries (1↔2 columnas) | `05-components/_galeria-capturas.scss` |
 
 ## Referencia completa
 

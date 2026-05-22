@@ -1,20 +1,7 @@
-// Settings (ITCSS): variables del proyecto.
-//
-// Aqui viven todas las CSS Custom Properties: colores, tipografia, espaciado,
-// radios, sombras, transiciones, z-index, layout. Cualquier valor reutilizable
-// que el navegador deba resolver en runtime esta aqui.
-//
-// Las variables Sass de breakpoints ($breakpoint-*) viven aparte en
-// `_css-variables.scss`, porque son tokens de compilacion (no llegan al CSS
-// final) y los mixins de `01-tools/_mixins.scss` los usan para construir las
-// media queries.
-//
-// El bloque `.tema-claro` sobreescribe los tokens cuando el ThemeService
-// alterna el tema. Como `var(--token)` se resuelve en runtime, el navegador
-// toma el ultimo valor en cascada para cada token.
+// Todas las variables CSS del proyecto. El tema claro las sobreescribe al final del archivo.
 
 :root {
-  /* === FONDOS === */
+  /* Fondos: del mas claro al mas oscuro de la web */
   --fondo-normal: hsl(30, 4.65%, 10.78%);
   --fondo-oscuro: hsl(30, 5.56%, 7.06%);
   --fondo-tarjeta: hsl(32, 4.11%, 16.47%);
@@ -23,25 +10,20 @@
   --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
   --negro-cta: hsl(0, 0%, 6.67%);
 
-  /* === ACENTO === */
+  /* Amarillo de marca: el color principal de toda la interfaz */
   --amarillo-normal: hsl(47, 86%, 56%);
   --amarillo-normal-hover: hsl(45, 78%, 48%);
 
-  /* === TEXTOS ===
-   * Contrastes verificados sobre --fondo-tarjeta (L=16%) para WCAG 2.1 AA:
-   *   --texto-claro    L=91% → ratio ~11.6:1 (AAA)
-   *   --texto-medio    L=63% → ratio  ~5.3:1 (AA)
-   *   --texto-apagado  L=60% → ratio  ~4.7:1 (AA, antes 40%/~2.4:1 fallaba)
-   */
+  /* Textos: tres niveles segun la importancia (titulos, parrafos, apagados) */
   --texto-claro: hsl(40, 33.33%, 91.37%);
   --texto-medio: hsl(30, 5.08%, 63.14%);
   --texto-apagado: hsl(33, 5%, 60%);
 
-  /* === BORDES === */
+  /* Bordes finos para separar tarjetas y zonas */
   --borde-normal: hsla(40, 33.33%, 91.37%, 0.08);
   --borde-suave: hsla(40, 33.33%, 91.37%, 0.05);
 
-  /* === ESTADO === */
+  /* Colores de estado: ok, error, aviso, info */
   --verde-normal: hsl(142.09, 70.56%, 45.29%);
   --rojo-normal: hsl(0, 79.17%, 60.59%);
   --rojo-critico: hsl(0, 72.13%, 50.59%);
@@ -50,14 +32,14 @@
   --cyan-normal: hsl(191, 72%, 44%);
   --teal-normal: hsl(168, 60%, 42%);
 
-  /* === TRANSPARENCIAS === */
+  /* Versiones translucidas para fondos suaves (hovers, badges) */
   --amarillo-transparente-008: hsla(47, 86%, 56%, 0.08);
   --amarillo-transparente-030: hsla(47, 86%, 56%, 0.3);
   --cyan-transparente-008: hsla(191, 72%, 44%, 0.08);
   --negro-transparente-020: hsla(0, 0%, 0%, 0.2);
   --negro-transparente-040: hsla(0, 0%, 0%, 0.4);
 
-  /* === TIPOGRAFÍA === */
+  /* Tipografias y tamaños de letra de toda la web */
   --font-primary: 'Outfit', sans-serif;
   --font-secondary: 'Outfit', sans-serif;
   --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
@@ -84,7 +66,7 @@
   --line-height-normal: 1.5;
   --line-height-relaxed: 1.75;
 
-  /* === ESPACIADO === */
+  /* Espaciado: paddings, margins y gaps en una escala de xxs a 8xl */
   --spacing-size-xxs: 0.25rem;
   --spacing-size-xs: 0.375rem;
   --spacing-size-s: 0.5rem;
@@ -101,7 +83,7 @@
   --spacing-size-7xl: 5rem;
   --spacing-size-8xl: 6rem;
 
-  /* === BORDES REDONDEADOS === */
+  /* Esquinas redondeadas: de casi cuadrado a totalmente redondo */
   --radius-xs: 0.125rem;
   --radius-s: 0.25rem;
   --radius-m: 0.5rem;
@@ -112,7 +94,7 @@
   --radius-4xl: 2.5rem;
   --radius-full: 9999px;
 
-  /* === SOMBRAS === */
+  /* Sombras para dar profundidad a tarjetas y modales */
   --shadow-sm: 0 0.0625rem 0.1875rem hsla(0, 0%, 0%, 0.2);
   --shadow-md: 0 0.5rem 1.25rem hsla(0, 0%, 0%, 0.2);
   --shadow-lg: 0 0.5rem 1.5rem hsla(0, 0%, 0%, 0.4);
@@ -120,26 +102,36 @@
   --shadow-hover-amarillo: 0 0.5rem 1.25rem hsla(47, 86%, 56%, 0.06);
   --shadow-hover-cyan: 0 0.5rem 1.25rem hsla(191, 72%, 44%, 0.06);
 
-  /* === TRANSICIONES === */
+  /* Velocidad de las transiciones: rapida, normal o lenta */
   --duration-fast: 150ms;
   --duration-base: 200ms;
   --duration-slow: 300ms;
 
-  /* === Z-INDEX === */
+  /* Velocidad del spinner. Se ralentiza si el usuario activa "reducir movimiento" */
+  --duration-spinner: 0.8s;
+
+  /* Capas: que cosa va por encima de que (sidebar, cabecera, dropdowns, modales, toast) */
   --z-sidebar: 50;
   --z-header: 100;
   --z-dropdown: 200;
   --z-modal: 300;
   --z-toast: 400;
 
-  /* === LAYOUT === */
+  /* Ancho de la barra lateral del panel */
   --sidebar-ancho: 16.25rem;
 
-  /* === FONDO CABECERA (con opacidad para blur) === */
+  /* Fondo de la cabecera con un toque translucido para que se vea el blur */
   --fondo-cabecera: hsla(30, 5.56%, 10%, 0.9);
 }
 
-/* ── MODO CLARO ───────────────────────────────────── */
+/* Cuando el usuario pide reducir movimiento: ralentiza el spinner para no marear */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-spinner: 1.5s;
+  }
+}
+
+/* Tema claro: sobreescribe los colores cuando el ThemeService activa modo claro */
 
 .tema-claro {
   --fondo-normal: hsl(40, 18%, 96%);
@@ -149,11 +141,7 @@
   --fondo-negro-medio: hsl(40, 8%, 93%);
   --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
 
-  /* Contrastes sobre el fondo claro (L=96%):
-   *   --texto-claro    L=12% → ratio ~14.4:1 (AAA)
-   *   --texto-medio    L=38% → ratio  ~5.5:1 (AA, antes ya pasaba)
-   *   --texto-apagado  L=42% → ratio  ~4.6:1 (AA, antes 56%/~3.2:1 fallaba)
-   */
+  /* Textos en modo claro: oscuros para que contrasten sobre el fondo blanco */
   --texto-claro: hsl(30, 12%, 12%);
   --texto-medio: hsl(30, 5%, 38%);
   --texto-apagado: hsl(30, 4%, 42%);

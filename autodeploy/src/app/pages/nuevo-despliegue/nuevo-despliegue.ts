@@ -51,6 +51,7 @@ export class NuevoDespliegue implements OnInit {
       { icono: "fa-solid fa-cube", etiquetaTexto: "", nombre: this.translate.instant("nuevoDespliegue.opciones.ddevNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.ddevDescripcion") },
       { icono: "", etiquetaTexto: "JS", nombre: this.translate.instant("nuevoDespliegue.opciones.nodejsNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.nodejsDescripcion") },
       { icono: "", etiquetaTexto: "PHP", nombre: this.translate.instant("nuevoDespliegue.opciones.phpNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.phpDescripcion") },
+      { icono: "fa-solid fa-globe", etiquetaTexto: "", nombre: this.translate.instant("nuevoDespliegue.opciones.estaticaNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.estaticaDescripcion") },
     ]);
     this.tecnologiaSeleccionada.set(this.translate.instant("nuevoDespliegue.opciones.dockerComposeNombre"));
   }

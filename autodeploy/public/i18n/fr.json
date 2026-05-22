@@ -724,7 +724,9 @@
       "nodejsNombre": "Node.js",
       "nodejsDescripcion": "Moteur JavaScript V8",
       "phpNombre": "PHP",
-      "phpDescripcion": "FPM et Apache/Nginx"
+      "phpDescripcion": "FPM et Apache/Nginx",
+      "estaticaNombre": "Site statique",
+      "estaticaDescripcion": "HTML, CSS et JS sans build"
     },
     "errores": {
       "repositorioRequerido": "L'URL du dépôt est obligatoire pour les déploiements Git.",

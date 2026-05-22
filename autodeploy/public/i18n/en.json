@@ -724,7 +724,9 @@
       "nodejsNombre": "Node.js",
       "nodejsDescripcion": "V8 JavaScript runtime",
       "phpNombre": "PHP",
-      "phpDescripcion": "FPM and Apache/Nginx"
+      "phpDescripcion": "FPM and Apache/Nginx",
+      "estaticaNombre": "Static site",
+      "estaticaDescripcion": "HTML, CSS and JS without build"
     },
     "errores": {
       "repositorioRequerido": "The repository URL is required for Git deployments.",

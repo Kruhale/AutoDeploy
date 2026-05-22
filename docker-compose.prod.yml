@@ -63,6 +63,10 @@ services:
       # Volumen compartido con sandbox-web: aqui caen los despliegues ZIP
       # del usuario `demo` y nginx los sirve por HTTP.
       - sandbox-web-content:/web
+      # Init hooks de s6-overlay: fijan permisos de /web a 1000:1000 al
+      # arrancar (sin esto, el volumen es root:root y SFTP falla con
+      # "No such file" al hacer mkdir).
+      - ./sandbox/custom-cont-init.d:/custom-cont-init.d:ro
     ports:
       - "2223:2222"
     networks:

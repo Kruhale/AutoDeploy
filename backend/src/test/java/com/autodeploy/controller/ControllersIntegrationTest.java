@@ -30,6 +30,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -92,10 +93,13 @@ class ControllersIntegrationTest {
     // === ActividadLog (solo ADMIN) ===
 
     @Test
-    @DisplayName("GET /api/actividad: 403 si no es ADMIN")
-    void actividad_403SiNoAdmin() throws Exception {
+    @DisplayName("GET /api/actividad: 200 con lista vacia si no es ADMIN (el log es global)")
+    void actividad_200VaciaSiNoAdmin() throws Exception {
         mockMvc.perform(get("/api/actividad").with(user(USUARIO).roles("USUARIO")))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data").isArray())
+                .andExpect(jsonPath("$.data.length()").value(0));
     }
 
     @Test
@@ -134,10 +138,12 @@ class ControllersIntegrationTest {
     // === Despliegue ===
 
     @Test
-    @DisplayName("GET /api/despliegues: 403 si no es ADMIN")
-    void despliegues_403SiNoAdmin() throws Exception {
+    @DisplayName("GET /api/despliegues: 200 con los despliegues del usuario (no 403)")
+    void despliegues_200ConDesplieguesDelUsuario() throws Exception {
         mockMvc.perform(get("/api/despliegues").with(user(USUARIO).roles("USUARIO")))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data").isArray());
     }
 
     @Test

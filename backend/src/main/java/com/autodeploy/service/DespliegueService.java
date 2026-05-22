@@ -2,7 +2,9 @@ package com.autodeploy.service;
 
 import com.autodeploy.exception.ResourceNotFoundException;
 import com.autodeploy.model.Despliegue;
+import com.autodeploy.model.Servidor;
 import com.autodeploy.repository.DespliegueRepository;
+import com.autodeploy.repository.ServidorRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,9 +20,32 @@ import java.util.Optional;
 public class DespliegueService {
 
     private final DespliegueRepository despliegueRepository;
+    private final ServidorRepository servidorRepository;
 
-    public DespliegueService(DespliegueRepository despliegueRepository) {
+    public DespliegueService(DespliegueRepository despliegueRepository, ServidorRepository servidorRepository) {
         this.despliegueRepository = despliegueRepository;
+        this.servidorRepository = servidorRepository;
+    }
+
+    // Despliegues del usuario: solo los de SUS servidores.
+    public List<Despliegue> obtenerHistorialPorUsuario(String usuarioId) {
+        List<String> idsDeSusServidores = servidorRepository.findByUsuarioId(usuarioId).stream()
+                .map(Servidor::getId)
+                .toList();
+        if (idsDeSusServidores.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return despliegueRepository.findTop20ByServidorIdInOrderByFechaInicioDesc(idsDeSusServidores);
+    }
+
+    public Page<Despliegue> obtenerHistorialPaginadoPorUsuario(String usuarioId, Pageable pageable) {
+        List<String> idsDeSusServidores = servidorRepository.findByUsuarioId(usuarioId).stream()
+                .map(Servidor::getId)
+                .toList();
+        if (idsDeSusServidores.isEmpty()) {
+            return Page.empty(pageable);
+        }
+        return despliegueRepository.findByServidorIdInOrderByFechaInicioDesc(idsDeSusServidores, pageable);
     }
 
     public Despliegue registrar(String servidorId, String tipo, String url) {

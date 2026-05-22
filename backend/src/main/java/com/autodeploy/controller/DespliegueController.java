@@ -38,15 +38,22 @@ public class DespliegueController {
         this.seguridad = seguridad;
     }
 
-    @Operation(summary = "Historial global (solo ADMIN). Soporta paginacion con ?page=0&size=20")
+    @Operation(summary = "Historial de despliegues. ADMIN ve todos; USUARIO ve solo los de sus servidores. Paginacion con ?page=0&size=20")
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse<?>> obtenerHistorial(Pageable pageable) {
+    public ResponseEntity<ApiResponse<?>> obtenerHistorial(Pageable pageable,
+                                                            org.springframework.security.core.Authentication autenticacion) {
+        boolean esAdmin = seguridad.esAdmin(autenticacion);
+
         if (pageable != null && pageable.isPaged()) {
-            Page<Despliegue> pagina = despliegueService.obtenerHistorialPaginado(pageable);
+            Page<Despliegue> pagina = esAdmin
+                    ? despliegueService.obtenerHistorialPaginado(pageable)
+                    : despliegueService.obtenerHistorialPaginadoPorUsuario(autenticacion.getName(), pageable);
             return ResponseEntity.ok(new ApiResponse<>(true, "OK", pagina));
         }
-        List<Despliegue> lista = despliegueService.obtenerHistorial();
+
+        List<Despliegue> lista = esAdmin
+                ? despliegueService.obtenerHistorial()
+                : despliegueService.obtenerHistorialPorUsuario(autenticacion.getName());
         return ResponseEntity.ok(new ApiResponse<>(true, "OK", lista));
     }
 

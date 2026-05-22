@@ -19,6 +19,11 @@ public interface DespliegueRepository extends MongoRepository<Despliegue, String
 
     Page<Despliegue> findAllByOrderByFechaInicioDesc(Pageable pageable);
 
+    // Para que el usuario vea solo despliegues de SUS servidores.
+    List<Despliegue> findTop20ByServidorIdInOrderByFechaInicioDesc(List<String> servidorIds);
+
+    Page<Despliegue> findByServidorIdInOrderByFechaInicioDesc(List<String> servidorIds, Pageable pageable);
+
     Optional<Despliegue> findByTokenWebhook(String tokenWebhook);
 
     @Query("{ 'estado': ?0 }")

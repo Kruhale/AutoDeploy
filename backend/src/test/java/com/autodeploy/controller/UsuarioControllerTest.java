@@ -16,7 +16,13 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.junit.jupiter.api.AfterEach;
+
+import java.util.List;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,6 +53,26 @@ class UsuarioControllerTest {
     @BeforeEach
     void limpiarBaseDeDatos() {
         usuarioRepository.deleteAll();
+    }
+
+    @AfterEach
+    void limpiarSecurityContext() {
+        SecurityContextHolder.clearContext();
+    }
+
+    private static void autenticarComo(String idUsuario) {
+        SecurityContextHolder.getContext().setAuthentication(
+            new UsernamePasswordAuthenticationToken(idUsuario, null, List.of())
+        );
+    }
+
+    private static void autenticarComoAdmin(String idUsuario) {
+        SecurityContextHolder.getContext().setAuthentication(
+            new UsernamePasswordAuthenticationToken(
+                idUsuario, null,
+                List.of(new SimpleGrantedAuthority("ROLE_ADMIN"))
+            )
+        );
     }
 
     private String registrarUsuarioYObtenerId(String nombre, String email, String password) throws Exception {
@@ -119,8 +145,9 @@ class UsuarioControllerTest {
     @DisplayName("obtener: devuelve 200 con los datos del usuario cuando el id existe")
     void obtener_deberiaDevolver200ConDatosDelUsuario_cuandoIdExiste() throws Exception {
         String idUsuario = registrarUsuarioYObtenerId("Ana Garcia", "ana@correo.com", "clave123");
+        autenticarComo(idUsuario);
 
-        mockMvc.perform(get(URL_USUARIO + idUsuario).with(user(idUsuario)))
+        mockMvc.perform(get(URL_USUARIO + idUsuario))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(idUsuario))
                 .andExpect(jsonPath("$.data.nombre").value("Ana Garcia"));
@@ -131,7 +158,9 @@ class UsuarioControllerTest {
     void obtener_deberiaDevolver404_cuandoIdNoExiste() throws Exception {
         // Como ADMIN para saltarse el @PreAuthorize ownership y poder llegar al
         // service, que es quien lanza NotFoundException -> 404.
-        mockMvc.perform(get(URL_USUARIO + "id-que-no-existe").with(user("admin").roles("ADMIN")))
+        autenticarComoAdmin("admin-id");
+
+        mockMvc.perform(get(URL_USUARIO + "id-que-no-existe"))
                 .andExpect(status().isNotFound());
     }
 
@@ -139,8 +168,9 @@ class UsuarioControllerTest {
     @DisplayName("eliminar: devuelve 204 cuando el usuario existe")
     void eliminar_deberiaDevolver204_cuandoUsuarioExiste() throws Exception {
         String idUsuario = registrarUsuarioYObtenerId("Ana Garcia", "ana@correo.com", "clave123");
+        autenticarComo(idUsuario);
 
-        mockMvc.perform(delete(URL_USUARIO + idUsuario).with(user(idUsuario)))
+        mockMvc.perform(delete(URL_USUARIO + idUsuario))
                 .andExpect(status().isNoContent());
     }
 }

@@ -110,4 +110,82 @@ describe("ServidorService", function() {
     expect(peticion.request.method).toBe("DELETE");
     peticion.flush(null);
   });
+
+  it("cargarYCachear() debe rellenar el signal servidores con la respuesta del backend", function(done) {
+    expect(servicio.servidores().length).toBe(0);
+
+    servicio.cargarYCachear().subscribe(function() {
+      expect(servicio.servidores().length).toBe(1);
+      expect(servicio.servidores()[0].id).toBe("s1");
+      done();
+    });
+
+    const peticion = httpMock.expectOne("/api/servidores");
+    peticion.flush({ success: true, message: "OK", data: [servidorEjemplo] });
+  });
+
+  it("computed cantidadServidores debe reflejar el tamano del signal", function(done) {
+    expect(servicio.cantidadServidores()).toBe(0);
+
+    servicio.cargarYCachear().subscribe(function() {
+      expect(servicio.cantidadServidores()).toBe(1);
+      done();
+    });
+
+    const peticion = httpMock.expectOne("/api/servidores");
+    peticion.flush({ success: true, message: "OK", data: [servidorEjemplo] });
+  });
+
+  it("computed servidoresConectados debe filtrar los que tienen estado=conectado", function(done) {
+    const servidorDesconectado = { ...servidorEjemplo, id: "s2", estado: "desconectado" };
+
+    servicio.cargarYCachear().subscribe(function() {
+      expect(servicio.servidoresConectados().length).toBe(1);
+      expect(servicio.servidoresConectados()[0].id).toBe("s1");
+      done();
+    });
+
+    const peticion = httpMock.expectOne("/api/servidores");
+    peticion.flush({ success: true, message: "OK", data: [servidorEjemplo, servidorDesconectado] });
+  });
+
+  it("registrar() debe anadir el servidor nuevo al cache reactivo", function(done) {
+    const peticionRegistro: PeticionConexionSsh = {
+      nombre: "Nuevo",
+      direccionIp: "1.1.1.1",
+      puertoSsh: 22,
+      usuarioSsh: "root",
+      metodoAutenticacion: "password",
+      password: "secreto",
+      claveSshPrivada: ""
+    };
+
+    expect(servicio.cantidadServidores()).toBe(0);
+
+    servicio.registrar(peticionRegistro).subscribe(function() {
+      expect(servicio.cantidadServidores()).toBe(1);
+      expect(servicio.servidores()[0].id).toBe("s1");
+      done();
+    });
+
+    const peticion = httpMock.expectOne("/api/servidores");
+    peticion.flush({ success: true, message: "OK", data: servidorEjemplo });
+  });
+
+  it("eliminar() debe quitar el servidor del cache reactivo", function(done) {
+    servicio.cargarYCachear().subscribe(function() {
+      expect(servicio.cantidadServidores()).toBe(1);
+
+      servicio.eliminar("s1").subscribe(function() {
+        expect(servicio.cantidadServidores()).toBe(0);
+        done();
+      });
+
+      const peticionBorrado = httpMock.expectOne("/api/servidores/s1");
+      peticionBorrado.flush(null);
+    });
+
+    const peticionCarga = httpMock.expectOne("/api/servidores");
+    peticionCarga.flush({ success: true, message: "OK", data: [servidorEjemplo] });
+  });
 });

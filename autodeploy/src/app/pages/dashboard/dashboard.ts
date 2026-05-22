@@ -205,7 +205,10 @@ export class Dashboard implements OnInit, OnDestroy {
   cargarServidores(): void {
     const componente = this;
 
-    this.servidorService.listar().subscribe({
+    // Usamos cargarYCachear() en vez de listar() para que el signal
+    // `servidores` del servicio se actualice y otros componentes puedan
+    // leerlo (cantidadServidores, servidoresConectados) sin re-pedir.
+    this.servidorService.cargarYCachear().subscribe({
       next: function(servidoresRemotos: ServidorRemoto[]) {
         const servidoresMapeados = servidoresRemotos.map(function(servidorRemoto: ServidorRemoto) {
           const servidorDashboard: ServidorDashboard = {

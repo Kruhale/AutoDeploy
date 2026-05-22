@@ -47,8 +47,8 @@
             } @else {
               <span class="nuevo-despliegue__tech__label">{{ tech.etiquetaTexto }}</span>
             }
-            <h3 class="nuevo-despliegue__tech__nombre">{{ tech.nombre }}</h3>
-            <p class="nuevo-despliegue__tech__desc">{{ tech.descripcion }}</p>
+            <h3 class="nuevo-despliegue__tech__nombre">{{ tech.nombre | translate }}</h3>
+            <p class="nuevo-despliegue__tech__desc">{{ tech.descripcion | translate }}</p>
           </article>
         }
       </section>

@@ -46,14 +46,19 @@ export class NuevoDespliegue implements OnInit {
     private servidorService: ServidorService,
     private translate: TranslateService
   ) {
+    // Guardamos las CLAVES de i18n, no el texto traducido: el HTML aplicara
+    // el pipe `| translate` sobre `tech.nombre` y `tech.descripcion`. Asi
+    // evitamos llamar a translate.instant() aqui, que dispararia antes de
+    // que ngx-translate haya terminado de cargar el JSON y dejaria las
+    // claves crudas visibles en pantalla.
     this.opcionesDeTecnologia.set([
-      { icono: "fa-solid fa-gear", etiquetaTexto: "", nombre: this.translate.instant("nuevoDespliegue.opciones.dockerComposeNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.dockerComposeDescripcion") },
-      { icono: "fa-solid fa-cube", etiquetaTexto: "", nombre: this.translate.instant("nuevoDespliegue.opciones.ddevNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.ddevDescripcion") },
-      { icono: "", etiquetaTexto: "JS", nombre: this.translate.instant("nuevoDespliegue.opciones.nodejsNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.nodejsDescripcion") },
-      { icono: "", etiquetaTexto: "PHP", nombre: this.translate.instant("nuevoDespliegue.opciones.phpNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.phpDescripcion") },
-      { icono: "fa-solid fa-globe", etiquetaTexto: "", nombre: this.translate.instant("nuevoDespliegue.opciones.estaticaNombre"), descripcion: this.translate.instant("nuevoDespliegue.opciones.estaticaDescripcion") },
+      { icono: "fa-solid fa-gear", etiquetaTexto: "", nombre: "nuevoDespliegue.opciones.dockerComposeNombre", descripcion: "nuevoDespliegue.opciones.dockerComposeDescripcion" },
+      { icono: "fa-solid fa-cube", etiquetaTexto: "", nombre: "nuevoDespliegue.opciones.ddevNombre", descripcion: "nuevoDespliegue.opciones.ddevDescripcion" },
+      { icono: "", etiquetaTexto: "JS", nombre: "nuevoDespliegue.opciones.nodejsNombre", descripcion: "nuevoDespliegue.opciones.nodejsDescripcion" },
+      { icono: "", etiquetaTexto: "PHP", nombre: "nuevoDespliegue.opciones.phpNombre", descripcion: "nuevoDespliegue.opciones.phpDescripcion" },
+      { icono: "fa-solid fa-globe", etiquetaTexto: "", nombre: "nuevoDespliegue.opciones.estaticaNombre", descripcion: "nuevoDespliegue.opciones.estaticaDescripcion" },
     ]);
-    this.tecnologiaSeleccionada.set(this.translate.instant("nuevoDespliegue.opciones.dockerComposeNombre"));
+    this.tecnologiaSeleccionada.set("nuevoDespliegue.opciones.dockerComposeNombre");
   }
 
   ngOnInit(): void {

@@ -15,11 +15,13 @@ describe("Dashboard", function() {
   let metricasServiceMock: { conectarTiempoReal: jasmine.Spy; metricasPorServidor: ReturnType<typeof signal> };
 
   beforeEach(async function() {
-    servidorServiceSpy = jasmine.createSpyObj<ServidorService>("ServidorService", ["listar"]);
-    servidorServiceSpy.listar.and.returnValue(of([
+    servidorServiceSpy = jasmine.createSpyObj<ServidorService>("ServidorService", ["listar", "cargarYCachear"]);
+    const servidoresMock = of([
       { id: "s1", nombre: "Test Demo", direccionIp: "1.2.3.4", puertoSsh: 22, usuarioSsh: "root", estado: "conectado" } as ServidorRemoto,
       { id: "s2", nombre: "Server Down", direccionIp: "9.9.9.9", puertoSsh: 22, usuarioSsh: "root", estado: "desconectado" } as ServidorRemoto
-    ]));
+    ]);
+    servidorServiceSpy.listar.and.returnValue(servidoresMock);
+    servidorServiceSpy.cargarYCachear.and.returnValue(servidoresMock);
 
     metricasServiceMock = {
       conectarTiempoReal: jasmine.createSpy("conectarTiempoReal"),
@@ -53,7 +55,7 @@ describe("Dashboard", function() {
   });
 
   it("debe cargar la lista de servidores en ngOnInit", function() {
-    expect(servidorServiceSpy.listar).toHaveBeenCalled();
+    expect(servidorServiceSpy.cargarYCachear).toHaveBeenCalled();
     expect(componente.listaDeServidores().length).toBeGreaterThan(0);
   });
 

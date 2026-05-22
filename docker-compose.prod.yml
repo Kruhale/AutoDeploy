@@ -60,8 +60,30 @@ services:
       PUBLIC_KEY: ${SANDBOX_PUBLIC_KEY}
     volumes:
       - sandbox-config:/config
+      # Volumen compartido con sandbox-web: aqui caen los despliegues ZIP
+      # del usuario `demo` y nginx los sirve por HTTP.
+      - sandbox-web-content:/web
     ports:
       - "2223:2222"
+    networks:
+      - red-interna
+    restart: unless-stopped
+
+  # Sidecar nginx que sirve los archivos estaticos depositados en el sandbox.
+  # El backend de AutoDeploy descomprime los ZIPs del usuario en /web/<app>
+  # dentro de sandbox-ssh (volumen compartido). Este contenedor los publica
+  # por HTTP en el puerto 8084 del host. El nginx-host del VPS hace TLS
+  # termination con Let's Encrypt y proxy_pass al subdominio publico.
+  sandbox-web:
+    image: nginx:alpine
+    container_name: autodeploy-sandbox-web
+    depends_on:
+      - sandbox-ssh
+    volumes:
+      - sandbox-web-content:/usr/share/nginx/html:ro
+      - ./sandbox/nginx-sandbox.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "127.0.0.1:8084:80"
     networks:
       - red-interna
     restart: unless-stopped
@@ -99,3 +121,4 @@ volumes:
   backend-logs:
   nginx-logs:
   sandbox-config:
+  sandbox-web-content:

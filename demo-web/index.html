@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hola desde AutoDeploy &mdash; Web de prueba</title>
+  <meta name="description" content="Web estatica desplegada con AutoDeploy en un VPS Ubuntu de pruebas." />
+  <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+  <main class="contenido">
+    <header class="cabecera">
+      <span class="cabecera__etiqueta">DESPLEGADO POR AUTODEPLOY</span>
+      <h1 class="cabecera__titulo">
+        Hola, soy una web desplegada en tu <span class="acento">VPS Ubuntu</span>.
+      </h1>
+      <p class="cabecera__intro">
+        He llegado aqui desde un ZIP que has subido al panel de AutoDeploy.
+        El backend me ha desempaquetado por SSH y nginx me sirve a traves
+        de un subdominio con HTTPS gestionado por Let&apos;s Encrypt.
+      </p>
+    </header>
+
+    <section class="pasos" aria-labelledby="titulo-pasos">
+      <h2 id="titulo-pasos" class="pasos__titulo">El flujo, en cuatro pasos</h2>
+      <ol class="pasos__lista">
+        <li class="pasos__item">
+          <span class="pasos__numero">01</span>
+          <span class="pasos__texto">Empaquetas tu sitio en un <code>.zip</code> y entras en el panel de AutoDeploy.</span>
+        </li>
+        <li class="pasos__item">
+          <span class="pasos__numero">02</span>
+          <span class="pasos__texto">Eliges &laquo;Subir ZIP&raquo;, defines la ruta destino del VPS y pulsas <em>Desplegar ahora</em>.</span>
+        </li>
+        <li class="pasos__item">
+          <span class="pasos__numero">03</span>
+          <span class="pasos__texto">El backend abre una sesion SSH cifrada y descomprime los archivos en el servidor remoto.</span>
+        </li>
+        <li class="pasos__item">
+          <span class="pasos__numero">04</span>
+          <span class="pasos__texto">Nginx empieza a servir el sitio bajo tu subdominio. Ya esta en linea.</span>
+        </li>
+      </ol>
+    </section>
+
+    <section class="contador" aria-live="polite">
+      <span class="contador__etiqueta">UPTIME DE ESTA PAGINA</span>
+      <p class="contador__valor" id="contador-uptime">00:00:00</p>
+      <p class="contador__nota">Cuenta desde el momento en que tu navegador ha cargado este HTML.</p>
+    </section>
+
+    <section class="meta">
+      <dl class="meta__lista">
+        <div class="meta__pareja">
+          <dt class="meta__clave">Servidor</dt>
+          <dd class="meta__valor">sandbox-ssh (Ubuntu en contenedor Docker)</dd>
+        </div>
+        <div class="meta__pareja">
+          <dt class="meta__clave">Tecnologia</dt>
+          <dd class="meta__valor">HTML + CSS + JS vanilla, sin frameworks</dd>
+        </div>
+        <div class="meta__pareja">
+          <dt class="meta__clave">Servidor web</dt>
+          <dd class="meta__valor">Nginx Alpine (sidecar del sandbox)</dd>
+        </div>
+        <div class="meta__pareja">
+          <dt class="meta__clave">TLS</dt>
+          <dd class="meta__valor">Let&apos;s Encrypt &middot; renovacion automatica</dd>
+        </div>
+      </dl>
+    </section>
+
+    <footer class="pie">
+      <p class="pie__texto">
+        Este sitio existe solo para demostrar el flujo de despliegue de
+        <a class="pie__enlace" href="https://autodeploy.kruhale.com" target="_blank" rel="noopener">AutoDeploy</a>.
+        Codigo del proyecto en
+        <a class="pie__enlace" href="https://github.com/Kruhale/AutoDeploy" target="_blank" rel="noopener">GitHub</a>.
+      </p>
+    </footer>
+  </main>
+
+  <script src="guion.js" defer></script>
+</body>
+</html>

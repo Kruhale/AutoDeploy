@@ -17,6 +17,10 @@ backend/.settings/
 backend/.m2/
 **/.m2/
 
+# Web de demo: el ZIP se genera con `zip -r demo-web.zip demo-web/*`,
+# no se versiona porque es un artefacto.
+/demo-web.zip
+
 # Tests y reportes de cobertura
 coverage/
 playwright-report/

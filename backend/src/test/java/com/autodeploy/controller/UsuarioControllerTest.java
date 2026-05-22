@@ -16,6 +16,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -119,7 +120,7 @@ class UsuarioControllerTest {
     void obtener_deberiaDevolver200ConDatosDelUsuario_cuandoIdExiste() throws Exception {
         String idUsuario = registrarUsuarioYObtenerId("Ana Garcia", "ana@correo.com", "clave123");
 
-        mockMvc.perform(get(URL_USUARIO + idUsuario))
+        mockMvc.perform(get(URL_USUARIO + idUsuario).with(user(idUsuario)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.id").value(idUsuario))
                 .andExpect(jsonPath("$.data.nombre").value("Ana Garcia"));
@@ -128,7 +129,9 @@ class UsuarioControllerTest {
     @Test
     @DisplayName("obtener: devuelve 404 cuando el id no existe")
     void obtener_deberiaDevolver404_cuandoIdNoExiste() throws Exception {
-        mockMvc.perform(get(URL_USUARIO + "id-que-no-existe"))
+        // Como ADMIN para saltarse el @PreAuthorize ownership y poder llegar al
+        // service, que es quien lanza NotFoundException -> 404.
+        mockMvc.perform(get(URL_USUARIO + "id-que-no-existe").with(user("admin").roles("ADMIN")))
                 .andExpect(status().isNotFound());
     }
 
@@ -137,7 +140,7 @@ class UsuarioControllerTest {
     void eliminar_deberiaDevolver204_cuandoUsuarioExiste() throws Exception {
         String idUsuario = registrarUsuarioYObtenerId("Ana Garcia", "ana@correo.com", "clave123");
 
-        mockMvc.perform(delete(URL_USUARIO + idUsuario))
+        mockMvc.perform(delete(URL_USUARIO + idUsuario).with(user(idUsuario)))
                 .andExpect(status().isNoContent());
     }
 }

@@ -35,21 +35,17 @@ public class WebSocketConfig implements WebSocketConfigurer {
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-        // /ws/terminal abre una sesion SSH al servidor del usuario: requiere
-        // autenticacion JWT en el handshake (interceptor rechaza si falta o
-        // es invalido) ademas de validacion de ownership en el handler.
+        // Terminal SSH del servidor: pide JWT en el handshake porque va por aqui datos sensibles
         registry.addHandler(sshWebSocketHandler, "/ws/terminal")
                 .addInterceptors(jwtHandshakeInterceptor)
                 .setAllowedOrigins(ORIGENES_PERMITIDOS);
 
-        // /ws/metricas difunde metricas; requiere JWT para no exponer datos
-        // de servidores ajenos.
+        // Metricas en tiempo real (CPU, RAM, disco): pide JWT para no enseñar datos de otros servidores
         registry.addHandler(metricasWebSocketHandler, "/ws/metricas")
                 .addInterceptors(jwtHandshakeInterceptor)
                 .setAllowedOrigins(ORIGENES_PERMITIDOS);
 
-        // /ws/notificaciones/{usuarioId}: requiere JWT y el handler verifica
-        // que el {usuarioId} del path coincide con el del token.
+        // Notificaciones del usuario: pide JWT y comprueba que el usuarioId de la URL es el mismo del token
         registry.addHandler(notificacionesWebSocketHandler, "/ws/notificaciones/*")
                 .addInterceptors(jwtHandshakeInterceptor)
                 .setAllowedOrigins(ORIGENES_PERMITIDOS);

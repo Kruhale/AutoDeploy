@@ -12,10 +12,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Al arrancar el backend recorre todos los servidores guardados en BBDD,
- * verifica conexión SSH a cada uno y actualiza Servidor.estado. Si el VPS
- * tenía backups automáticos activos, además verifica que el cron sigue
- * instalado en el VPS del usuario y lo reinstala si falta.
+ * Cuando arranca el backend, hace ping SSH a cada servidor para ver si sigue vivo
+ * y reinstala el cron de los backups automaticos si se ha caido.
  */
 @Service
 public class ReconexionService {
@@ -51,10 +49,7 @@ public class ReconexionService {
         logger.info("Reconexion al arrancar completada");
     }
 
-    /**
-     * Hace un ping SSH ejecutando `echo OK`. Actualiza estado y contador de
-     * fallos del servidor en BBDD. Devuelve true si la conexión fue OK.
-     */
+    /** Pinga el servidor por SSH con "echo OK" y actualiza su estado en la BBDD */
     public boolean refrescarEstado(Servidor servidor) {
         try {
             String salida = sshCommandService.ejecutarComando(servidor, "echo OK");
@@ -69,12 +64,8 @@ public class ReconexionService {
     }
 
     /**
-     * Punto de entrada reutilizable: aplica la regla de estado/fallos.
-     * Llamado tanto desde el job al arrancar como desde MonitorMetricasService
-     * tras cada ciclo de recolección.
-     *
-     * - Si el ping fue OK: estado="conectado", contador a 0.
-     * - Si falló: contador++. A partir del 3º fallo, estado="desconectado".
+     * Apunta el resultado de un ping: si va bien, "conectado" y reset del contador.
+     * Si falla, suma 1 al contador y marca "desconectado" al 3er fallo seguido.
      */
     public void anotarPing(Servidor servidor, boolean conexionFunciono) {
         if (conexionFunciono) {
@@ -90,10 +81,7 @@ public class ReconexionService {
         servidorRepository.save(servidor);
     }
 
-    /**
-     * Comprueba si el cron de backup automático sigue en el crontab del VPS
-     * del usuario. Si no está, lo reinstala llamando a BackupService.
-     */
+    /** Mira si el cron del backup automatico sigue en el VPS, y si no lo vuelve a instalar */
     private void verificarCronDeBackup(Servidor servidor) {
         try {
             String crontabRemoto = sshCommandService.ejecutarComando(servidor, "crontab -l 2>/dev/null || true");

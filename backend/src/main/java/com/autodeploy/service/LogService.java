@@ -11,12 +11,10 @@ import java.util.regex.Pattern;
 @Service
 public class LogService {
 
-    // Rutas de log permitidas (whitelist). Solo paths absolutos a /var/log o
-    // ~/.autodeploy/ con caracteres seguros, ningun comodin ni espacios.
+    // Solo dejamos rutas de log seguras (sin espacios ni comodines) para evitar inyecciones
     private static final Pattern RUTA_LOG_VALIDA = Pattern.compile("^[A-Za-z0-9_./~-]+$");
 
-    // Patron de busqueda: alfanumerico, espacios, guiones, puntos, slash,
-    // dos puntos y arroba. Nada de comillas, backticks, $, ;, &, |, > o <.
+    // Solo dejamos patrones de busqueda con caracteres seguros (sin shell, sin tuberias)
     private static final Pattern PATRON_BUSQUEDA_VALIDO = Pattern.compile("^[A-Za-z0-9 ._/:@-]+$");
 
     private final SshCommandService sshCommandService;
@@ -40,9 +38,7 @@ public class LogService {
         validarRutaArchivo(archivo);
         validarPatronBusqueda(patron);
 
-        // Aunque ahora la entrada esta saneada, ejecutamos con grep -F (fixed
-        // string) para tratar el patron como literal y evitar interpretacion
-        // de regex maliciosa por parte de grep.
+        // grep -F trata el patron como texto literal, asi evitamos que se interprete como regex
         String comando = "grep -F " + entrecomillarSeguro(patron) + " " + archivo + " | tail -50";
         String salidaDelComando = sshCommandService.ejecutarComando(servidor, comando);
 
@@ -78,8 +74,7 @@ public class LogService {
     }
 
     private static String entrecomillarSeguro(String texto) {
-        // Tras la validacion no deberia haber comillas simples ni dobles,
-        // pero hacemos doble seguridad envolviendo en comillas simples.
+        // Doble seguridad: aunque la entrada esta validada, envolvemos en comillas simples
         return "'" + texto.replace("'", "'\\''") + "'";
     }
 }

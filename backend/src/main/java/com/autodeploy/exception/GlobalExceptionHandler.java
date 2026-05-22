@@ -24,9 +24,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(respuestaDeError);
     }
 
-    // Spring lanza NoResourceFoundException cuando ninguna ruta de controlador
-    // ni recurso estatico coincide con la URL. Por defecto el handler generico
-    // lo trataba como 500; debe ser 404.
+    // Cuando ninguna ruta coincide con la URL, devolvemos 404 en vez del 500 por defecto
     @ExceptionHandler(NoResourceFoundException.class)
     public ResponseEntity<ErrorResponse> handleNoResourceFound(NoResourceFoundException ex) {
         ErrorResponse respuestaDeError = ErrorResponse.of("ROUTE_NOT_FOUND", "Ruta no encontrada: " + ex.getResourcePath());

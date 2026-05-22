@@ -14,14 +14,8 @@ import java.net.URI;
 import java.util.Map;
 
 /**
- * Interceptor del handshake WebSocket que valida un JWT pasado como query
- * param `?token=...`. Si el token es valido, anota el `usuarioId` y `rol`
- * en los attributes de la sesion para que los handlers puedan verificar
- * ownership y permisos.
- *
- * Se aplica solo a los WS que manejan datos sensibles (terminal SSH).
- * Para metricas y notificaciones, donde el handler ya identifica al
- * usuario via la URL, la prioridad es menor.
+ * Comprueba el JWT que viene en la URL del WebSocket (?token=...) antes de aceptar la conexion.
+ * Si esta bien, guarda el usuarioId y el rol para usarlos luego en el handler.
  */
 @Component
 public class JwtHandshakeInterceptor implements HandshakeInterceptor {
@@ -46,11 +40,8 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
         String consulta = uri.getQuery();
         String tokenJwt = extraerToken(consulta);
 
-        // FASE 1 (compatibilidad): si falta token o es invalido, dejamos
-        // pasar el handshake pero registramos warning. Esto evita romper
-        // el frontend actual que aun no manda el token en el query param.
-        // FASE 2: cambiar este "return true" por "return false" para hacer
-        // la autenticacion obligatoria una vez el frontend mande el token.
+        // De momento dejamos pasar el handshake aunque no haya token (solo loggeamos warning).
+        // Cuando el frontend mande siempre el token, cambiar el "return true" por "return false".
         if (tokenJwt == null || tokenJwt.isBlank()) {
             LOGGER.warn("Handshake WS sin token en query param ({}) — proximamente sera obligatorio", uri.getPath());
             return true;

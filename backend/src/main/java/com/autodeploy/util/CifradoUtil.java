@@ -9,17 +9,9 @@ import java.security.SecureRandom;
 import java.util.Base64;
 
 /**
- * Utilidad de cifrado simétrico para credenciales SSH almacenadas en MongoDB.
- *
- * Se cifra con AES/GCM/NoPadding (AEAD): cada cifrado usa un IV aleatorio
- * de 12 bytes y produce un tag de autenticación de 128 bits. El IV viaja
- * prepended al ciphertext, todo en Base64.
- *
- * Formato del output: prefijo "v2:" + Base64(IV || ciphertext || tag).
- *
- * Compatibilidad: los valores antiguos cifrados con AES/ECB (sin prefijo)
- * se siguen pudiendo descifrar para no perder credenciales ya guardadas.
- * El primer cifrado nuevo que los reemplace los migrará al formato v2.
+ * Cifrado para guardar las credenciales SSH en MongoDB sin que se vean en claro.
+ * Usa AES/GCM (cada cifrado lleva un IV aleatorio y un tag de autenticidad).
+ * Los valores antiguos en AES/ECB siguen pudiendose descifrar para no perder credenciales viejas.
  */
 public class CifradoUtil {
 

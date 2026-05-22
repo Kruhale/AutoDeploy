@@ -34,6 +34,10 @@ describe("BarraPieApp", function() {
   });
 
   it("usa el selector app-barra-pie-app", function() {
-    expect(fixture.componentRef.location.nativeElement.tagName.toLowerCase()).toBe("app-barra-pie-app");
+    // En TestBed.createComponent el host se monta dentro de un wrapper,
+    // asi que verificamos el metadata del decorador en lugar del tagName.
+    const metadata = (BarraPieApp as { ɵcmp?: { selectors?: unknown[][] } }).ɵcmp;
+    const primerSelector = metadata?.selectors?.[0]?.[0];
+    expect(primerSelector).toBe("app-barra-pie-app");
   });
 });

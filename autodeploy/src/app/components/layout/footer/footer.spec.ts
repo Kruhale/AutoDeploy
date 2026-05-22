@@ -41,6 +41,10 @@ describe("Footer", function() {
   });
 
   it("usa el selector app-footer", function() {
-    expect(fixture.componentRef.location.nativeElement.tagName.toLowerCase()).toBe("app-footer");
+    // En TestBed.createComponent el host se monta dentro de un wrapper,
+    // asi que verificamos el metadata del decorador en lugar del tagName.
+    const metadata = (Footer as { ɵcmp?: { selectors?: unknown[][] } }).ɵcmp;
+    const primerSelector = metadata?.selectors?.[0]?.[0];
+    expect(primerSelector).toBe("app-footer");
   });
 });

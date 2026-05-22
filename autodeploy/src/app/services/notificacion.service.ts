@@ -33,7 +33,8 @@ export class NotificacionService {
 	constructor(private http: HttpClient) {}
 
 	conectarWebSocket(usuarioId: string): void {
-		const urlConectada = `${this.wsUrl}/${usuarioId}`;
+		const tokenJwt = sessionStorage.getItem("token") || localStorage.getItem("token") || "";
+		const urlConectada = `${this.wsUrl}/${usuarioId}?token=${encodeURIComponent(tokenJwt)}`;
 		this.webSocketPrincipal = new WebSocket(urlConectada);
 
 		const servicio = this;

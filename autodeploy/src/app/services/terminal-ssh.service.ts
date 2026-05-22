@@ -24,7 +24,9 @@ export class TerminalSshService {
     this.datosRecibidos.next(lineaInicial);
 
     const protocolo = window.location.protocol === "https:" ? "wss:" : "ws:";
-    this.websocket = new WebSocket(protocolo + "//" + window.location.host + "/ws/terminal");
+    const tokenJwt = sessionStorage.getItem("token") || localStorage.getItem("token") || "";
+    const urlSocket = protocolo + "//" + window.location.host + "/ws/terminal?token=" + encodeURIComponent(tokenJwt);
+    this.websocket = new WebSocket(urlSocket);
 
     const servicio = this;
 

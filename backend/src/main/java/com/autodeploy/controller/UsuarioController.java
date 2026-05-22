@@ -59,6 +59,7 @@ public class UsuarioController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<LoginResponse>> obtener(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
         LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
@@ -68,6 +69,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<LoginResponse>> actualizar(
             @PathVariable String id,
             @RequestBody Map<String, String> datos) {
@@ -82,6 +84,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}/plan")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<LoginResponse>> actualizarPlan(
             @PathVariable String id,
             @RequestBody Map<String, String> datos) {
@@ -95,6 +98,7 @@ public class UsuarioController {
     }
 
     @PutMapping("/{id}/cancelar-suscripcion")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<LoginResponse>> cancelarSuscripcion(@PathVariable String id) {
         Usuario usuario = usuarioService.cancelarSuscripcion(id);
         LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
@@ -105,6 +109,7 @@ public class UsuarioController {
 
     @Operation(summary = "Actualizar idioma preferido del usuario")
     @PutMapping("/{id}/idioma")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<LoginResponse>> actualizarIdioma(
             @PathVariable String id,
             @RequestBody Map<String, String> datos) {
@@ -118,6 +123,7 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<Void> eliminar(@PathVariable String id) {
         usuarioService.eliminar(id);
         return ResponseEntity.noContent().build();
@@ -153,12 +159,14 @@ public class UsuarioController {
     public record NuevaClaveRequest(String nombre, String claveCompleta) {}
 
     @GetMapping("/{id}/claves-ssh")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<List<ClaveSshUsuario>>> listarClavesSsh(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuario.getClavesSsh()));
     }
 
     @PostMapping("/{id}/claves-ssh")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<ClaveSshUsuario>> agregarClaveSsh(
             @PathVariable String id,
             @RequestBody NuevaClaveRequest peticion) {
@@ -167,18 +175,21 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{idUsuario}/claves-ssh/{idClave}")
+    @PreAuthorize("hasRole('ADMIN') or #idUsuario == authentication.principal")
     public ResponseEntity<Void> eliminarClaveSsh(@PathVariable String idUsuario, @PathVariable String idClave) {
         usuarioService.eliminarClaveSsh(idUsuario, idClave);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/{id}/notificaciones")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<PreferenciasNotificacion>> obtenerNotificaciones(@PathVariable String id) {
         Usuario usuario = usuarioService.obtenerPorId(id);
         return ResponseEntity.ok(new ApiResponse<>(true, "OK", usuario.getPreferenciasNotificacion()));
     }
 
     @PutMapping("/{id}/notificaciones")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal")
     public ResponseEntity<ApiResponse<PreferenciasNotificacion>> actualizarNotificaciones(
             @PathVariable String id,
             @RequestBody PreferenciasNotificacion preferencias) {

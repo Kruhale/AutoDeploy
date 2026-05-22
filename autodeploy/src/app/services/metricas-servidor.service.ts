@@ -49,7 +49,8 @@ export class MetricasServidorService {
       }
     }
     const protocoloSocket = window.location.protocol === "https:" ? "wss:" : "ws:";
-    const urlSocket = protocoloSocket + "//" + window.location.host + "/ws/metricas";
+    const tokenJwt = sessionStorage.getItem("token") || localStorage.getItem("token") || "";
+    const urlSocket = protocoloSocket + "//" + window.location.host + "/ws/metricas?token=" + encodeURIComponent(tokenJwt);
     this.socketWeb = new WebSocket(urlSocket);
 
     const servicio = this;

@@ -1,5 +1,6 @@
 package com.autodeploy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -19,6 +20,7 @@ public class Usuario {
     private String nombre;
     @Indexed(unique = true)
     private String email;
+    @JsonIgnore
     private String passwordHash;
     private LocalDateTime fechaCreacion;
     private String plan;

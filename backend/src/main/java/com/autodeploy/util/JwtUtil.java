@@ -3,6 +3,7 @@ package com.autodeploy.util;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +15,27 @@ import java.util.Date;
 public class JwtUtil {
 
     private static final long DURACION_MS = 86400000L;
+    private static final int LONGITUD_MINIMA_SECRETO = 32;
 
-    @Value("${autodeploy.jwt.secret:clave-secreta-por-defecto-minimo-32-caracteres-ok}")
+    @Value("${autodeploy.jwt.secret:}")
     private String secreto;
+
+    @PostConstruct
+    void verificarSecreto() {
+        if (secreto == null || secreto.isBlank()) {
+            throw new IllegalStateException(
+                "AUTODEPLOY_JWT_SECRET no esta definida. Configura la variable de entorno "
+                + "(o autodeploy.jwt.secret en application.properties) con al menos "
+                + LONGITUD_MINIMA_SECRETO + " caracteres antes de arrancar."
+            );
+        }
+        if (secreto.getBytes(StandardCharsets.UTF_8).length < LONGITUD_MINIMA_SECRETO) {
+            throw new IllegalStateException(
+                "AUTODEPLOY_JWT_SECRET es demasiado corta (minimo " + LONGITUD_MINIMA_SECRETO
+                + " bytes para HMAC-SHA seguro)."
+            );
+        }
+    }
 
     public String generarToken(String usuarioId, String email) {
         return generarToken(usuarioId, email, "USUARIO");

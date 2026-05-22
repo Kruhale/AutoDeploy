@@ -1,5 +1,6 @@
 package com.autodeploy.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -15,7 +16,9 @@ public class Servidor {
     private int puertoSsh;
     private String usuarioSsh;
     private String metodoAutenticacion;
+    @JsonIgnore
     private String passwordCifrada;
+    @JsonIgnore
     private String claveSshPrivada;
     private String estado;
     private LocalDateTime fechaCreacion;

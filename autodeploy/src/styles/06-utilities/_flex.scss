@@ -1,8 +1,4 @@
-// Utilities · Flex
-//
-// Helpers de Flexbox para casos puntuales. La cascada ITCSS pone esta
-// capa al final, por lo que estas clases ganan al componente sin
-// necesidad de !important.
+// Clases utilidad de flexbox (.u-flex, .u-flex-centro, .u-gap-s, etc) para casos rapidos
 
 .u-flex            { display: flex; }
 .u-flex-centro     { display: flex; align-items: center; justify-content: center; }
@@ -10,8 +6,7 @@
 .u-flex-columna    { display: flex; flex-direction: column; }
 .u-flex-envoltura  { display: flex; flex-wrap: wrap; }
 
-// Hueco entre hijos de un contenedor flex/grid. Acepta los mismos
-// niveles que el sistema de spacing del proyecto.
+// Hueco entre hijos en distintos tamaños
 .u-gap-xs { gap: var(--spacing-size-xs); }
 .u-gap-s  { gap: var(--spacing-size-s); }
 .u-gap-m  { gap: var(--spacing-size-m); }

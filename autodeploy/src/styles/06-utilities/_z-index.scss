@@ -1,7 +1,4 @@
-// Utilities · Z-Index
-//
-// Wrappers sobre los tokens de capa. Evitan que los componentes
-// escriban valores numéricos sueltos.
+// Clases utilidad para usar los z-index del proyecto sin escribir numeros sueltos
 
 .u-z-sidebar   { z-index: var(--z-sidebar); }
 .u-z-header    { z-index: var(--z-header); }

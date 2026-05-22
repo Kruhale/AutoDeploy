@@ -1,8 +1,4 @@
-// Utilities · Display
-//
-// Helpers para forzar el modo de visualización. Útiles cuando hay que
-// alternar layouts sin tocar el componente: por ejemplo, ocultar una
-// columna en móvil sin replicar la regla en cada partial.
+// Clases utilidad para cambiar el display de un elemento sin tocar su componente
 
 @use "../01-tools/mixins" as *;
 
@@ -11,7 +7,7 @@
 .u-en-linea-bloque { display: inline-block; }
 .u-grid            { display: grid; }
 
-// Visibilidad condicional según viewport.
+// Ocultar segun el tamaño de pantalla (movil, tablet, escritorio)
 .u-oculto-movil      { @include movil      { display: none; } }
 .u-oculto-tablet     { @include tablet     { display: none; } }
 .u-oculto-escritorio { @include escritorio { display: none; } }

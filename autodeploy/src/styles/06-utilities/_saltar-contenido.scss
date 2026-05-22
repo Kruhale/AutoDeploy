@@ -1,17 +1,11 @@
-// Utilities · Skip link "Saltar al contenido"
-//
-// Utilidad accesible para el primer elemento que reciben los usuarios
-// de teclado y lectores de pantalla. Permanece oculto visualmente
-// hasta que recibe foco; entonces aparece arriba a la izquierda con
-// z-index alto para sobreponerse al header.
+// Enlace "Saltar al contenido" para accesibilidad: oculto hasta que alguien lo enfoca con el teclado
 
 @use "../01-tools/mixins" as *;
 
 .u-saltar-contenido {
   @include visualmente-oculto;
 
-  // Cuando recibe foco (tab desde el inicio del documento), pasa a
-  // ser un enlace visible que el usuario puede activar con Enter.
+  // Al enfocarlo con el tabulador aparece arriba a la izquierda para poder activarlo con Enter
   &:focus-visible {
     position: fixed;
     top: var(--spacing-size-l);

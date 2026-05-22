@@ -10,19 +10,13 @@ const CLASE_TEMA_CLARO = "tema-claro";
 export class ThemeService {
   private documento = inject(DOCUMENT);
 
-  // Indica si el usuario eligió tema manualmente (true) o si se está
-  // siguiendo automáticamente la preferencia del sistema (false). Sólo
-  // así puede reaccionar a cambios futuros del SO sin pisar la elección
-  // explícita del usuario.
+  // true si el usuario eligió el tema a mano, false si seguimos al sistema
   private eleccionManual = signal<boolean>(this.haGuardado());
 
   temaActual = signal<Tema>(this.temaInicial());
 
   constructor() {
-    // Aplica la clase y persiste sólo si el cambio viene de una elección
-    // manual; al inicializar con la preferencia del sistema no se guarda
-    // para que el usuario pueda volver al modo automático borrando el
-    // localStorage.
+    // Aplica el tema y solo lo guarda si lo cambio el usuario a mano
     effect(() => {
       const tema = this.temaActual();
       this.documento.documentElement.classList.toggle(CLASE_TEMA_CLARO, tema === "claro");
@@ -31,9 +25,7 @@ export class ThemeService {
         try {
           this.almacen()?.setItem(CLAVE_ALMACEN, tema);
         } catch {
-          // Si localStorage está bloqueado (modo incógnito, política de
-          // privacidad) seguimos funcionando: el tema se mantiene sólo
-          // mientras dura la sesión.
+          // Si el localStorage esta bloqueado (modo incognito) el tema solo dura la sesion
         }
       }
     });
@@ -67,9 +59,7 @@ export class ThemeService {
     return ventana.matchMedia("(prefers-color-scheme: light)").matches ? "claro" : "oscuro";
   }
 
-  // Suscribe el servicio al cambio de la preferencia del sistema. Si el
-  // usuario nunca ha pulsado el botón de cambio de tema, la app sigue
-  // automáticamente lo que dicte el sistema operativo.
+  // Escucha si el usuario cambia el tema en el sistema y lo aplica si no ha elegido manualmente
   private escucharSistema(): void {
     const ventana = this.documento.defaultView;
     if (!ventana?.matchMedia) {

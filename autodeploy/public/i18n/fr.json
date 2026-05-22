@@ -605,7 +605,8 @@
     "metricas": {
       "cpu": "Charge CPU",
       "ram": "Mémoire (RAM)",
-      "bandwidth": "Bande passante",
+      "disco": "Utilisation disque",
+      "cargaPrefijo": "Charge",
       "sinDatos": "Aucune donnée pour le moment"
     },
     "subdominios": {

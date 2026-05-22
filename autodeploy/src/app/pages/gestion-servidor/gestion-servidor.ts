@@ -1,9 +1,10 @@
-import { Component, signal, OnInit } from "@angular/core";
+import { Component, signal, computed, Signal, OnInit, OnDestroy } from "@angular/core";
 import { ActivatedRoute, RouterLink } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
 import { TranslateModule } from "@ngx-translate/core";
 import { TarjetaEstadistica } from "../../components/shared/tarjeta-estadistica/tarjeta-estadistica";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
+import { MetricasServidorService, MetricaServidor } from "../../services/metricas-servidor.service";
 
 interface AplicacionHospedada {
   icono: string;
@@ -44,7 +45,7 @@ interface DespliegueApi {
   templateUrl: "./gestion-servidor.html",
   styleUrl: "./gestion-servidor.scss"
 })
-export class GestionServidor implements OnInit {
+export class GestionServidor implements OnInit, OnDestroy {
   servidorId = signal("");
   servidorNombre = signal("—");
   servidorIp = signal("—");
@@ -58,11 +59,71 @@ export class GestionServidor implements OnInit {
   historialSalud = signal<ComprobacionSalud[]>([]);
   listaSubdominios = signal<SubdominioItem[]>([]);
 
+  metricaActual: Signal<MetricaServidor | null>;
+  cpuValor: Signal<string>;
+  ramValor: Signal<string>;
+  discoValor: Signal<string>;
+  porcentajeRam: Signal<number>;
+  sinMetricasTodavia: Signal<boolean>;
+
   constructor(
     private ruta: ActivatedRoute,
     private servidorService: ServidorService,
-    private http: HttpClient
-  ) {}
+    private http: HttpClient,
+    private metricasService: MetricasServidorService
+  ) {
+    const componente = this;
+
+    this.metricaActual = computed(function calcularMetricaActual() {
+      const idActual = componente.servidorId();
+      if (idActual === "") {
+        return null;
+      }
+      const mapaMetricas = componente.metricasService.metricasPorServidor();
+      const metricaEncontrada = mapaMetricas.get(idActual);
+      if (metricaEncontrada === undefined) {
+        return null;
+      }
+      return metricaEncontrada;
+    });
+
+    this.porcentajeRam = computed(function calcularPorcentajeRam() {
+      const metrica = componente.metricaActual();
+      if (metrica === null || metrica.ramTotalMb === 0) {
+        return 0;
+      }
+      const porcentajeCalculado = (metrica.ramUsadaMb / metrica.ramTotalMb) * 100;
+      return Math.round(porcentajeCalculado);
+    });
+
+    this.cpuValor = computed(function calcularCpuValor() {
+      const metrica = componente.metricaActual();
+      if (metrica === null) {
+        return "—";
+      }
+      return metrica.cpuPorcentaje.toFixed(1) + "%";
+    });
+
+    this.ramValor = computed(function calcularRamValor() {
+      const metrica = componente.metricaActual();
+      if (metrica === null) {
+        return "—";
+      }
+      return componente.porcentajeRam() + "%";
+    });
+
+    this.discoValor = computed(function calcularDiscoValor() {
+      const metrica = componente.metricaActual();
+      if (metrica === null) {
+        return "—";
+      }
+      return metrica.discoUsadoPorcentaje + "%";
+    });
+
+    this.sinMetricasTodavia = computed(function calcularSinDatos() {
+      return componente.metricaActual() === null;
+    });
+  }
 
   ngOnInit(): void {
     const idDesdeRuta = this.ruta.snapshot.paramMap.get("id");
@@ -88,6 +149,13 @@ export class GestionServidor implements OnInit {
         componente.cargarAplicaciones(idDesdeRuta);
       }
     });
+
+    this.metricasService.cargarUltimaMetrica(idDesdeRuta);
+    this.metricasService.conectarTiempoReal();
+  }
+
+  ngOnDestroy(): void {
+    this.metricasService.desconectar();
   }
 
   cargarAplicaciones(idServidor: string): void {

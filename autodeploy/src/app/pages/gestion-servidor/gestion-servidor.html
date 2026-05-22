@@ -38,25 +38,28 @@
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
       [etiqueta]="'gestionServidor.metricas.cpu' | translate"
-      valor="—"
+      [valor]="cpuValor()"
+      [barraProgreso]="metricaActual()?.cpuPorcentaje || 0"
       icono="fa-solid fa-microchip"
-      [subtexto]="'gestionServidor.metricas.sinDatos' | translate"
+      [subtexto]="sinMetricasTodavia() ? ('gestionServidor.metricas.sinDatos' | translate) : (('gestionServidor.metricas.cargaPrefijo' | translate) + ' ' + (metricaActual()?.cargaPromedio?.toFixed(2) || '0.00'))"
       variante="primario">
     </app-tarjeta-estadistica>
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
       [etiqueta]="'gestionServidor.metricas.ram' | translate"
-      valor="—"
+      [valor]="ramValor()"
+      [barraProgreso]="porcentajeRam()"
       icono="fa-solid fa-memory"
-      [subtexto]="'gestionServidor.metricas.sinDatos' | translate"
+      [subtexto]="sinMetricasTodavia() ? ('gestionServidor.metricas.sinDatos' | translate) : (metricaActual()?.ramUsadaMb + ' / ' + metricaActual()?.ramTotalMb + ' MB')"
       variante="exito">
     </app-tarjeta-estadistica>
     <app-tarjeta-estadistica
       class="gestion-servidor__metricas__item"
-      [etiqueta]="'gestionServidor.metricas.bandwidth' | translate"
-      valor="—"
-      icono="fa-solid fa-wifi"
-      [subtexto]="'gestionServidor.metricas.sinDatos' | translate"
+      [etiqueta]="'gestionServidor.metricas.disco' | translate"
+      [valor]="discoValor()"
+      [barraProgreso]="metricaActual()?.discoUsadoPorcentaje || 0"
+      icono="fa-solid fa-hard-drive"
+      [subtexto]="sinMetricasTodavia() ? ('gestionServidor.metricas.sinDatos' | translate) : (metricaActual()?.discoUsadoGb + ' / ' + metricaActual()?.discoTotalGb + ' GB')"
       variante="primario">
     </app-tarjeta-estadistica>
   </section>

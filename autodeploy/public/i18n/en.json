@@ -605,7 +605,8 @@
     "metricas": {
       "cpu": "CPU load",
       "ram": "Memory (RAM)",
-      "bandwidth": "Bandwidth",
+      "disco": "Disk usage",
+      "cargaPrefijo": "Load",
       "sinDatos": "No data yet"
     },
     "subdominios": {

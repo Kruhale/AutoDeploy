@@ -605,7 +605,8 @@
     "metricas": {
       "cpu": "CPU-Last",
       "ram": "Speicher (RAM)",
-      "bandwidth": "Bandbreite",
+      "disco": "Festplattennutzung",
+      "cargaPrefijo": "Last",
       "sinDatos": "Noch keine Daten"
     },
     "subdominios": {

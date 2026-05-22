@@ -605,7 +605,8 @@
     "metricas": {
       "cpu": "Carga de CPU",
       "ram": "Memoria (RAM)",
-      "bandwidth": "Ancho de banda",
+      "disco": "Uso de disco",
+      "cargaPrefijo": "Carga",
       "sinDatos": "Sin datos todavía"
     },
     "subdominios": {

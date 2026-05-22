@@ -25,7 +25,11 @@ export const jwtInterceptor: HttpInterceptorFn = (peticion, siguiente) => {
 
   return siguiente(peticionConToken).pipe(
     catchError(function(errorRecibido: HttpErrorResponse) {
-      const tokenInvalido = errorRecibido.status === 401 || errorRecibido.status === 403;
+      // 401 = no autenticado (token invalido o ausente) -> sesion expirada
+      // 403 = autenticado pero sin permisos para ESTE recurso (ej. endpoint
+      // que requiere ADMIN). No es sesion expirada, asi que dejamos que el
+      // componente lo maneje sin tirar al usuario al login.
+      const tokenInvalido = errorRecibido.status === 401;
       if (tokenInvalido && !esRutaPublica) {
         sessionStorage.removeItem("token");
         sessionStorage.removeItem("usuarioId");

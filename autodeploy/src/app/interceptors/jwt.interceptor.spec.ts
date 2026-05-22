@@ -94,14 +94,15 @@ describe("jwtInterceptor", function() {
     peticion.flush({}, { status: 401, statusText: "Unauthorized" });
   });
 
-  it("ante 403 debe redirigir igual que 401", function(done) {
-    sessionStorage.setItem("token", "viejo");
+  it("ante 403 NO debe redirigir (es falta de permisos, no sesion expirada)", function(done) {
+    sessionStorage.setItem("token", "valido");
 
     http.get("/api/servidores").subscribe({
       next: () => done.fail("no debería pasar"),
       error: function(error: HttpErrorResponse) {
         expect(error.status).toBe(403);
-        expect(routerNavigateSpy).toHaveBeenCalled();
+        expect(routerNavigateSpy).not.toHaveBeenCalled();
+        expect(sessionStorage.getItem("token")).toBe("valido");
         done();
       }
     });

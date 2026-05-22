@@ -83,7 +83,7 @@ public class CifradoUtil {
             byte[] textoDescifrado = descifrador.doFinal(textoCifradoConTag);
             return new String(textoDescifrado, StandardCharsets.UTF_8);
         } catch (Exception excepcion) {
-            throw new RuntimeException("Error al descifrar (GCM)", excepcion);
+            throw new RuntimeException("Error al descifrar", excepcion);
         }
     }
 
@@ -98,7 +98,7 @@ public class CifradoUtil {
             byte[] textoDescifrado = cifrador.doFinal(Base64.getDecoder().decode(textoCifrado));
             return new String(textoDescifrado, StandardCharsets.UTF_8);
         } catch (Exception excepcion) {
-            throw new RuntimeException("Error al descifrar (legacy ECB)", excepcion);
+            throw new RuntimeException("Error al descifrar", excepcion);
         }
     }
 

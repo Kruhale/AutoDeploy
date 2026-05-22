@@ -96,7 +96,7 @@ class UsuarioServiceTest {
     void login_deberiaRetornarLoginResponse_cuandoCredencialesSonCorrectas() {
         when(usuarioRepository.findByEmail("ana@correo.com")).thenReturn(Optional.of(usuarioExistente));
         when(passwordEncoder.matches("clave123", "hashDeLaClave")).thenReturn(true);
-        when(jwtUtil.generarToken(anyString(), anyString())).thenReturn("token-de-prueba");
+        when(jwtUtil.generarToken(anyString(), anyString(), anyString())).thenReturn("token-de-prueba");
 
         LoginResponse respuesta = usuarioService.login(peticionLoginValida);
 

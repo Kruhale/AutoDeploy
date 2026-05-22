@@ -184,8 +184,8 @@
 
     &__cabecera {
       border-bottom: 1px solid var(--borde-normal);
-      padding-top: 0;
-      padding-bottom: var(--spacing-size-m);
+      padding-top: var(--spacing-size-l);
+      padding-bottom: var(--spacing-size-l);
 
       @media (max-width: 960px) {
         display: none;

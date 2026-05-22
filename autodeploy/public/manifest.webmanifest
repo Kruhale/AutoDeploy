@@ -1,0 +1,18 @@
+{
+  "name": "AutoDeploy",
+  "short_name": "AutoDeploy",
+  "description": "Panel SaaS de despliegue y gestión de VPS",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1c1b18",
+  "theme_color": "#1c1b18",
+  "lang": "es",
+  "scope": "/",
+  "icons": [
+    { "src": "logo-128.webp", "sizes": "128x128", "type": "image/webp", "purpose": "any" },
+    { "src": "logo-180.webp", "sizes": "180x180", "type": "image/webp", "purpose": "any" },
+    { "src": "logo-512.webp", "sizes": "512x512", "type": "image/webp", "purpose": "any" },
+    { "src": "logo-180.png", "sizes": "180x180", "type": "image/png", "purpose": "any" },
+    { "src": "logo-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

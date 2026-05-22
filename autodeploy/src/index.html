@@ -2,15 +2,30 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>AutoDeployService</title>
+  <title>AutoDeploy · Panel de despliegue para VPS</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/png" href="logo.png">
-  <link rel="apple-touch-icon" href="logo.png">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <meta name="description" content="AutoDeploy es un panel SaaS para desplegar, gestionar y monitorizar tus VPS desde el navegador. Backups, firewall, DNS, SSL, métricas en vivo y asistente IA.">
+  <meta name="theme-color" content="#1c1b18">
+  <meta name="color-scheme" content="dark light">
+
+  <link rel="icon" type="image/webp" href="logo-128.webp">
+  <link rel="icon" type="image/png" sizes="180x180" href="logo-180.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="logo-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+
+  <link rel="preload" as="font" type="font/woff2" href="fonts/outfit-400.woff2" crossorigin>
+  <link rel="preload" as="font" type="font/woff2" href="fonts/outfit-600.woff2" crossorigin>
+  <link rel="preload" as="image" type="image/webp" href="logo-128.webp" fetchpriority="high">
+
+  <link rel="preload" href="fontawesome/css/fontawesome.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="fontawesome/css/solid.min.css"        as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <link rel="preload" href="fontawesome/css/brands.min.css"       as="style" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript>
+    <link rel="stylesheet" href="fontawesome/css/fontawesome.min.css">
+    <link rel="stylesheet" href="fontawesome/css/solid.min.css">
+    <link rel="stylesheet" href="fontawesome/css/brands.min.css">
+  </noscript>
 </head>
 <body>
   <app-root></app-root>

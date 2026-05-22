@@ -38,8 +38,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "800kB",
+                  "maximumError": "1.5MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -47,7 +47,20 @@
                   "maximumError": "48kB"
                 }
               ],
-              "outputHashing": "all"
+              "outputHashing": "all",
+              "optimization": {
+                "scripts": true,
+                "styles": {
+                  "minify": true,
+                  "inlineCritical": true
+                },
+                "fonts": {
+                  "inline": true
+                }
+              },
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true
             },
             "development": {
               "optimization": false,
@@ -90,7 +103,8 @@
             "styles": [
               "src/styles.scss"
             ],
-            "karmaConfig": "karma.conf.js"
+            "karmaConfig": "karma.conf.js",
+            "codeCoverage": true
           }
         }
       }

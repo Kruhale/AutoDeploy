@@ -140,10 +140,12 @@ class ControllersIntegrationTest {
     @Test
     @DisplayName("GET /api/despliegues: 200 con los despliegues del usuario (no 403)")
     void despliegues_200ConDesplieguesDelUsuario() throws Exception {
+        // El endpoint devuelve Page (Spring inyecta Pageable por defecto),
+        // asi que $.data.content es el array, no $.data directamente.
         mockMvc.perform(get("/api/despliegues").with(user(USUARIO).roles("USUARIO")))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data").isArray());
+                .andExpect(jsonPath("$.data.content").isArray());
     }
 
     @Test

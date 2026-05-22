@@ -1159,6 +1159,7 @@
     "pieEdicion": "Terminal issue 2026.05"
   },
   "terminalSsh": {
+    "tituloAccesible": "SSH terminal for server {{servidor}}",
     "ariaCerrar": "Close",
     "volverDashboard": "Back to dashboard"
   },

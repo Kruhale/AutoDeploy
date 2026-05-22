@@ -50,17 +50,12 @@ export class MetricasServidorService {
     }
     const protocoloSocket = window.location.protocol === "https:" ? "wss:" : "ws:";
     const urlSocket = protocoloSocket + "//" + window.location.host + "/ws/metricas";
-    console.log("Metricas WS: conectando a", urlSocket);
     this.socketWeb = new WebSocket(urlSocket);
 
     const servicio = this;
-    this.socketWeb.addEventListener("open", function manejarAperturaSocket() {
-      console.log("Metricas WS: conectado");
-    });
     this.socketWeb.addEventListener("message", function manejarMensajeSocket(evento: MessageEvent) {
       try {
         const metricaRecibida = JSON.parse(evento.data) as MetricaServidor;
-        console.log("Metricas WS: metrica recibida para", metricaRecibida.servidorId);
         servicio.actualizarMetricaEnMapa(metricaRecibida);
       } catch (errorParse) {
         console.warn("Error parseando metrica desde WebSocket:", errorParse);

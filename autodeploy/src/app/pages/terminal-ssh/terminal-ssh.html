@@ -1,4 +1,5 @@
-<section class="terminal-ssh">
+<section class="terminal-ssh" [attr.aria-labelledby]="'terminal-ssh-titulo'">
+  <h1 class="u-solo-lectores-pantalla" id="terminal-ssh-titulo">{{ "terminalSsh.tituloAccesible" | translate:{ servidor: nombreServidor() } }}</h1>
   <header class="terminal-ssh__barra">
     <section class="terminal-ssh__semaforo">
       <a class="terminal-ssh__punto terminal-ssh__punto--rojo" routerLink="/app/dashboard" [title]="'terminalSsh.ariaCerrar' | translate"></a>

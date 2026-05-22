@@ -540,24 +540,23 @@
     align-items: center;
     gap: var(--spacing-size-xs);
   }
-}
 
-// ───── Botón Pagar ─────
+  // ───── Botón Pagar ─────
+  &__boton-pagar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-size-s);
+    width: 100%;
+    padding: 0.875rem;
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
 
-.pago__boton-pagar {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-size-s);
-  width: 100%;
-  padding: 0.875rem;
-  font-size: var(--font-size-md);
-  font-weight: var(--font-weight-bold);
-
-  &:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-    transform: none;
+    &:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+    }
   }
 }
 

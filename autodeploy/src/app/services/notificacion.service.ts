@@ -36,22 +36,15 @@ export class NotificacionService {
 		const urlConectada = `${this.wsUrl}/${usuarioId}`;
 		this.webSocketPrincipal = new WebSocket(urlConectada);
 
-		this.webSocketPrincipal.onopen = () => {
-			console.log("WebSocket conectado para notificaciones");
-		};
-
-		this.webSocketPrincipal.onmessage = (evento) => {
+		const servicio = this;
+		this.webSocketPrincipal.onmessage = function manejarMensajeNotificacion(evento) {
 			const notificacionRecibida: Notificacion = JSON.parse(evento.data);
-			this.notificacionRecibida.next(notificacionRecibida);
-			this.agregarNotificacionLocal(notificacionRecibida);
+			servicio.notificacionRecibida.next(notificacionRecibida);
+			servicio.agregarNotificacionLocal(notificacionRecibida);
 		};
 
-		this.webSocketPrincipal.onerror = (error) => {
+		this.webSocketPrincipal.onerror = function manejarErrorNotificacion(error) {
 			console.error("Error en WebSocket de notificaciones:", error);
-		};
-
-		this.webSocketPrincipal.onclose = () => {
-			console.log("WebSocket desconectado");
 		};
 	}
 

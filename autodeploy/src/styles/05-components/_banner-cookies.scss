@@ -1,3 +1,4 @@
+// Banner flotante de cookies que aparece fijo en la parte de abajo
 .banner-cookies {
   position: fixed;
   bottom: 1.5rem;
@@ -16,12 +17,14 @@
   box-shadow: var(--shadow-lg);
   z-index: var(--z-toast);
 
+  // Texto explicativo del banner (la frase sobre las cookies)
   &__texto {
     font-size: var(--font-size-md);
     color: var(--texto-medio);
     line-height: var(--line-height-normal);
   }
 
+  // Enlace dentro del texto (ej: "ver politica de cookies") en amarillo
   &__enlace {
     color: var(--amarillo-normal);
     font-weight: var(--font-weight-medium);
@@ -39,12 +42,14 @@
     }
   }
 
+  // Zona donde van los dos botones (aceptar / rechazar)
   &__acciones {
     display: flex;
     gap: var(--spacing-size-m);
     flex-shrink: 0;
   }
 
+  // Boton del banner: comparte forma y al pulsarlo hace un mini "pop"
   &__boton {
     padding: 0.4375rem var(--spacing-size-xl);
     font-size: var(--font-size-md);
@@ -63,6 +68,7 @@
       outline-offset: 2px;
     }
 
+    // Variante "aceptar": fondo amarillo
     &--primario {
       background-color: var(--amarillo-normal);
       color: var(--fondo-oscuro);
@@ -72,6 +78,7 @@
       }
     }
 
+    // Variante "rechazar": transparente con borde fino
     &--secundario {
       background-color: transparent;
       color: var(--texto-medio);
@@ -85,6 +92,7 @@
   }
 }
 
+// Banner de cookies en movil: apila el texto y los botones en vertical
 @media (max-width: 576px) {
   .banner-cookies {
     flex-direction: column;

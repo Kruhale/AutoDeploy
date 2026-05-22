@@ -79,7 +79,9 @@
   border-radius: 50%;
   background-color: var(--verde-normal);
   box-shadow: 0 0 0 0 hsla(142, 70%, 45%, 0.55);
-  animation: latido-metrica 1.6s ease-out infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: latido-metrica 1.6s ease-out infinite;
+  }
 }
 
 .panel-metricas__mensaje-vacio {

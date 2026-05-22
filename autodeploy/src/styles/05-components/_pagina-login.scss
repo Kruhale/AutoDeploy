@@ -11,7 +11,7 @@
     grid-template-columns: minmax(0, 1fr);
   }
 
-  // ───── Panel izquierdo (editorial brand side) ─────
+  // Panel izquierdo con la marca AutoDeploy, logo y mensaje de bienvenida
   &__panel-marca {
     position: relative;
     display: flex;
@@ -202,11 +202,13 @@
       height: 0.4rem;
       border-radius: 50%;
       background-color: var(--amarillo-normal);
-      animation: login-respirar 2.4s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: login-respirar 2.4s ease-in-out infinite;
+      }
     }
   }
 
-  // ───── Panel derecho (formulario) ─────
+  // Panel derecho con el formulario de inicio de sesion (email + contraseña)
   &__panel-formulario {
     position: relative;
     display: flex;
@@ -317,7 +319,9 @@
       height: 0.45rem;
       border-radius: 50%;
       background-color: var(--rojo-normal);
-      animation: login-respirar 1.8s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: login-respirar 1.8s ease-in-out infinite;
+      }
     }
   }
 

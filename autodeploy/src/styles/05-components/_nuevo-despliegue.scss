@@ -263,7 +263,7 @@
   }
 }
 
-// Zona de subida ZIP --------------------------------------------------------
+// Zona grande de arrastrar y soltar para subir un ZIP del proyecto
 
 .zona-zip {
   display: flex;
@@ -361,7 +361,7 @@
   }
 }
 
-// Barra de progreso ---------------------------------------------------------
+// Barra de progreso que se rellena mientras sube el ZIP
 
 .barra-progreso {
   display: grid;

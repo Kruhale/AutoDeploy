@@ -1,5 +1,5 @@
 .pagina-backups {
-  // ───── Card "Automatic backups" ─────
+  // Tarjeta de "copias automaticas" con el interruptor para activarlas
   &__auto {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -71,7 +71,7 @@
     }
   }
 
-  // ───── Interruptor ─────
+  // Interruptor tipo toggle para encender/apagar las copias automaticas
   &__interruptor {
     position: relative;
     display: inline-flex;
@@ -120,7 +120,7 @@
     }
   }
 
-  // ───── Lista de snapshots ─────
+  // Lista de copias de seguridad ya guardadas, ordenadas por fecha
   &__lista {
     display: flex;
     flex-direction: column;
@@ -269,7 +269,9 @@
       border-color: var(--amarillo-transparente-030);
 
       .pagina-backups__badge__punto {
-        animation: pagina-backups-respirar 1.6s ease-in-out infinite;
+        @media (prefers-reduced-motion: no-preference) {
+          animation: pagina-backups-respirar 1.6s ease-in-out infinite;
+        }
       }
     }
 

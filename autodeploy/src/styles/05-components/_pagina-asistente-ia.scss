@@ -17,7 +17,7 @@
     padding: var(--spacing-size-m);
   }
 
-  // ───── Cabecera ─────
+  // Cabecera del asistente con titulo, selector de modelo y boton de configuracion
   &__cabecera {
     display: flex;
     justify-content: space-between;
@@ -60,7 +60,9 @@
       height: 0.45rem;
       border-radius: 50%;
       background-color: var(--amarillo-normal);
-      animation: editorial-respirar 2.4s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: editorial-respirar 2.4s ease-in-out infinite;
+      }
     }
   }
 
@@ -218,7 +220,7 @@
     }
   }
 
-  // ───── Aviso API key faltante ─────
+  // Aviso amarillo grande que aparece cuando aun no se ha configurado la API key de OpenRouter
   &__aviso {
     display: flex;
     align-items: center;
@@ -255,7 +257,7 @@
     }
   }
 
-  // ───── Área de conversación ─────
+  // Caja con scroll donde van apareciendo los mensajes del chat con la IA
   &__conversacion {
     display: flex;
     flex-direction: column;
@@ -280,7 +282,7 @@
     }
   }
 
-  // ───── Empty state / bienvenida ─────
+  // Pantalla de bienvenida con ejemplos de preguntas, cuando aun no has hablado con la IA
   &__bienvenida {
     display: flex;
     flex-direction: column;
@@ -305,7 +307,9 @@
       border: 1px solid var(--amarillo-transparente-030);
       font-size: 2rem;
       color: var(--amarillo-normal);
-      animation: asistente-halo-respirar 3s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: asistente-halo-respirar 3s ease-in-out infinite;
+      }
     }
 
     &__titulo {
@@ -394,7 +398,7 @@
     }
   }
 
-  // ───── Mensajes ─────
+  // Cada mensaje del chat (tu pregunta o la respuesta de la IA) con su avatar y contenido
   &__mensaje {
     display: flex;
     align-items: flex-start;
@@ -490,14 +494,15 @@
       height: 0.5rem;
       background-color: var(--amarillo-normal);
       border-radius: var(--radius-full);
-      animation: asistente-punto-rebote 1.2s ease-in-out infinite;
-
+      @media (prefers-reduced-motion: no-preference) {
+        animation: asistente-punto-rebote 1.2s ease-in-out infinite;
+      }
       &:nth-child(2) { animation-delay: 0.15s; }
       &:nth-child(3) { animation-delay: 0.3s; }
     }
   }
 
-  // ───── Área de entrada ─────
+  // Zona de abajo con el input para escribir y el boton de enviar al asistente
   &__error {
     display: flex;
     align-items: center;
@@ -608,7 +613,7 @@
   }
 }
 
-// ───── Tarjeta de comando propuesto (bloque BEM separado) ─────
+// Tarjeta que muestra un comando SSH que la IA propone ejecutar, con boton de confirmar
 
 .tarjeta-comando {
   display: flex;
@@ -800,7 +805,7 @@
   }
 }
 
-// ───── Overlay de configuración (bloque BEM separado) ─────
+// Ventana modal de ajustes del asistente (API key, modelo, instrucciones del sistema)
 
 .overlay-config {
   display: flex;
@@ -1008,7 +1013,7 @@
   }
 }
 
-// ───── Keyframes propios del asistente ─────
+// Animaciones que solo se usan en el chat del asistente
 
 @keyframes asistente-mensaje-entrar {
   from { opacity: 0; transform: translateY(0.75rem); }

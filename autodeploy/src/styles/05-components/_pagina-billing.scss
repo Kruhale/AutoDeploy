@@ -5,7 +5,7 @@
   width: 100%;
   animation: billing-entrar 620ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  // ───── Hero asimétrico ─────
+  // Cabecera de billing con titulo a la izquierda y CTA a la derecha
   &__cabecera {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -42,7 +42,9 @@
       height: 0.45rem;
       border-radius: 50%;
       background-color: var(--amarillo-normal);
-      animation: billing-respirar 2.4s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: billing-respirar 2.4s ease-in-out infinite;
+      }
     }
   }
 
@@ -130,7 +132,7 @@
     }
   }
 
-  // ───── Plan card asimétrico ─────
+  // Tarjeta grande del plan actual (gratuito / pro) con su precio y caracteristicas
   &__plan {
     position: relative;
     display: grid;
@@ -341,7 +343,7 @@
     }
   }
 
-  // ───── Cabeceras de sección ─────
+  // Cabecera de cada bloque dentro de billing (numerito, titulo, descripcion)
   &__seccion {
     display: flex;
     flex-direction: column;
@@ -426,7 +428,7 @@
     }
   }
 
-  // ───── Uso (3 barras de progreso editoriales) ─────
+  // Las 3 barras de progreso del uso del plan (servidores, dominios, almacenamiento)
   &__uso {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -510,7 +512,7 @@
     }
   }
 
-  // ───── Método de pago + mensaje ─────
+  // Mensaje informativo del metodo de pago actual (ej: "no tienes tarjeta guardada")
   &__mensaje {
     display: inline-flex;
     align-items: center;
@@ -529,7 +531,9 @@
       height: 0.45rem;
       border-radius: 50%;
       background-color: var(--amarillo-normal);
-      animation: billing-respirar 1.8s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: billing-respirar 1.8s ease-in-out infinite;
+      }
     }
   }
 
@@ -695,7 +699,7 @@
     }
   }
 
-  // ───── Invoices (empty + tabla) ─────
+  // Estado vacio de la tabla de facturas (cuando aun no hay ninguna)
   &__vacio-invoices {
     display: grid;
     grid-template-columns: auto minmax(0, 1fr);
@@ -880,7 +884,7 @@
     }
   }
 
-  // ───── Pie editorial ─────
+  // Pie de la pagina de billing con codigo de referencia y separador
   &__pie {
     display: flex;
     align-items: center;

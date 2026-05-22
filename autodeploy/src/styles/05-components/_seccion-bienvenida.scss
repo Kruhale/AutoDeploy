@@ -19,7 +19,7 @@
     gap: 1.75rem;
   }
 
-  // ───── Etiqueta (sello editorial con punto pulsante) ─────
+  // Sello pequeño arriba del titulo, con un puntito amarillo que va latiendo
   &__etiqueta {
     display: inline-flex;
     align-items: center;
@@ -36,7 +36,9 @@
       background-color: var(--amarillo-normal);
       border-radius: 50%;
       flex-shrink: 0;
-      animation: latido 2.5s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: latido 2.5s ease-in-out infinite;
+      }
     }
 
     &__texto {
@@ -50,13 +52,9 @@
     }
   }
 
-  // ───── Título y descripción (editorial tipo magazine) ─────
+  // Titulo principal de la home. El tamaño escala solo entre movil y escritorio
   &__titulo {
     font-family: var(--font-secondary);
-    // Tipografía fluida generada por la función fluido(): escala entre
-    // 2.5rem y 4.5rem según el viewport (30rem→80rem). El clamp() final
-    // sustituye al pareja `clamp()` manual + @media de 960px que había
-    // antes.
     font-size: fluido(2.5rem, 4.5rem);
     font-weight: var(--font-weight-bold);
     line-height: 0.95;
@@ -72,7 +70,7 @@
     letter-spacing: -0.005em;
   }
 
-  // ───── Botones (pill con flecha animada) ─────
+  // Botones de llamada a la accion: el primario es amarillo, el secundario tiene borde
   &__botones {
     display: flex;
     gap: 0.85rem;
@@ -151,7 +149,7 @@
     }
   }
 
-  // ───── Tecnologías (fila monocromática con hover sutil) ─────
+  // Fila de iconos con las tecnologias del stack. En gris hasta que pasas por encima
   &__tecnologias {
     display: flex;
     gap: 1.4rem;
@@ -175,7 +173,7 @@
     }
   }
 
-  // ───── Terminal (pieza centrada con sombra tintada) ─────
+  // Terminal falsa que aparece al lado del titulo, con sus tres puntitos de macOS y comandos animados
   &__terminal {
     position: relative;
     border: 1px solid var(--borde-normal);
@@ -276,7 +274,7 @@
   }
 }
 
-// Keyframe local — el resto de animaciones vive en 01-tools/_animaciones.scss
+// Animacion de "respirar" del puntito amarillo de la etiqueta
 @keyframes bienvenida-respirar {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%      { opacity: 0.5; transform: scale(0.78); }

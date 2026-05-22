@@ -10,7 +10,7 @@
     grid-template-rows: auto auto;
   }
 
-  // ───── Panel izquierdo (formulario) ─────
+  // Panel izquierdo con el formulario de registro (nombre, email, contraseña)
   &__panel-formulario {
     position: relative;
     display: flex;
@@ -122,7 +122,9 @@
       height: 0.45rem;
       border-radius: 50%;
       background-color: var(--rojo-normal);
-      animation: registro-respirar 1.8s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: registro-respirar 1.8s ease-in-out infinite;
+      }
     }
   }
 
@@ -305,7 +307,7 @@
     }
   }
 
-  // ───── Panel derecho (brand side) ─────
+  // Panel derecho con la marca AutoDeploy y mensaje de bienvenida
   &__panel-marca {
     position: relative;
     display: flex;
@@ -485,7 +487,9 @@
       height: 0.4rem;
       border-radius: 50%;
       background-color: var(--verde-normal);
-      animation: registro-respirar 2.4s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: registro-respirar 2.4s ease-in-out infinite;
+      }
     }
   }
 

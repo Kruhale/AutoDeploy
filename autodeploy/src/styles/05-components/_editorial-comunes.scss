@@ -1,6 +1,4 @@
-// LENGUAJE EDITORIAL COMPARTIDO
-// Clases globales reutilizables para todas las páginas internas.
-// Heredan el mismo estilo que cuenta/billing/dashboard.
+// Estilos compartidos por todas las paginas internas (cuenta, billing, dashboard, etc)
 
 .editorial {
   display: flex;
@@ -9,7 +7,7 @@
   width: 100%;
   animation: editorial-entrar 620ms cubic-bezier(0.16, 1, 0.3, 1);
 
-  // ───── Hero asimétrico con sello + título + CTA opcional ─────
+  // Cabecera grande de la pagina: titulo a la izquierda y boton de accion a la derecha
   &__cabecera {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -50,8 +48,9 @@
       height: 0.45rem;
       border-radius: 50%;
       background-color: var(--amarillo-normal);
-      animation: editorial-respirar 2.4s ease-in-out infinite;
-
+      @media (prefers-reduced-motion: no-preference) {
+        animation: editorial-respirar 2.4s ease-in-out infinite;
+      }
       &--verde   { background-color: var(--verde-normal); }
       &--cyan    { background-color: var(--cyan-normal); }
       &--rojo    { background-color: var(--rojo-normal); }
@@ -82,7 +81,7 @@
     max-width: 48rem;
   }
 
-  // ───── CTA principal (pill amarillo con icono + texto) ─────
+  // Boton de accion principal de la pagina: pill amarillo grande con icono y dos lineas de texto
   &__cta-principal {
     display: inline-flex;
     align-items: center;
@@ -151,7 +150,7 @@
     }
   }
 
-  // ───── Cabecera de sección (número + título + descripción + acción) ─────
+  // Cada bloque/seccion de la pagina con su numerito, titulo, descripcion y boton de accion
   &__bloque {
     display: flex;
     flex-direction: column;
@@ -255,7 +254,7 @@
     }
   }
 
-  // ───── Botones ─────
+  // Boton secundario "fantasma": transparente con borde, se rellena suave al pasar por encima
   &__boton-ghost {
     display: inline-flex;
     align-items: center;
@@ -299,7 +298,7 @@
     }
   }
 
-  // ───── Empty state editorial ─────
+  // Mensaje que se muestra cuando no hay nada que enseñar (ej: "todavia no tienes servidores")
   &__vacio {
     display: flex;
     flex-direction: column;
@@ -340,7 +339,7 @@
     }
   }
 
-  // ───── Pie editorial ─────
+  // Pie de pagina con un codigo de referencia, texto y separador con degradado
   &__pie {
     display: flex;
     align-items: center;
@@ -376,7 +375,7 @@
   }
 }
 
-// Animaciones locales — el resto está en 01-tools/_animaciones.scss
+// Animaciones que solo se usan en estos bloques editoriales
 @keyframes editorial-entrar {
   from { opacity: 0; transform: translateY(0.6rem); }
   to   { opacity: 1; transform: translateY(0); }

@@ -1,7 +1,7 @@
-// Estilos específicos de Networking. Usa también .editorial-* compartido.
+// Estilos especificos de la pagina de networking (dominios, DNS, SSL)
 
 .pagina-networking {
-  // ───── Formulario flotante para añadir dominio ─────
+  // Formulario flotante para añadir un dominio nuevo
   &__formulario {
     display: flex;
     flex-direction: column;
@@ -88,7 +88,7 @@
     }
   }
 
-  // ───── Lista de dominios ─────
+  // Lista de los dominios añadidos con su estado de DNS y SSL
   &__lista {
     display: flex;
     flex-direction: column;
@@ -230,7 +230,7 @@
     color: var(--texto-medio);
   }
 
-  // ───── Mensaje flotante ─────
+  // Mensaje tipo toast que aparece abajo a la derecha para confirmar acciones
   &__mensaje {
     display: inline-flex;
     align-items: center;
@@ -249,11 +249,13 @@
       height: 0.45rem;
       border-radius: 50%;
       background-color: var(--amarillo-normal);
-      animation: editorial-respirar 1.8s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: editorial-respirar 1.8s ease-in-out infinite;
+      }
     }
   }
 
-  // ───── Acciones rápidas ─────
+  // Botones de acciones rapidas: añadir DNS, ver SSL, gestionar redirecciones
   &__acciones {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -346,7 +348,7 @@
     }
   }
 
-  // ───── Modal DNS / Redirects ─────
+  // Ventana modal donde se gestionan los registros DNS y las redirecciones
   &__modal {
     position: fixed;
     inset: 0;
@@ -437,7 +439,7 @@
     }
   }
 
-  // ───── DNS / redirects ─────
+  // Tabla con los registros DNS y las redirecciones del dominio
   &__dns-fila {
     display: grid;
     grid-template-columns: 4.5rem minmax(0, 1fr);

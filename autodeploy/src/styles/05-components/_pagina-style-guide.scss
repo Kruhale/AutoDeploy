@@ -39,7 +39,7 @@
     color: var(--texto-medio);
   }
 
-  // Índice flotante ---------------------------------------------------------
+  // Indice lateral que se queda fijo al hacer scroll por la guia de estilos
   &__indice {
     position: sticky;
     top: var(--spacing-size-2xl);
@@ -72,7 +72,7 @@
     }
   }
 
-  // Bloques de sección ------------------------------------------------------
+  // Cada bloque de la guia (colores, tipografia, botones...) apilados en vertical
   &__seccion {
     @include flex-columna;
     gap: var(--spacing-size-3xl);
@@ -122,7 +122,7 @@
     }
   }
 
-  // Listas y galerías comunes ----------------------------------------------
+  // Cuadricula que muestra varias muestras (colores, iconos...) en horizontal
   &__galeria {
     display: flex;
     flex-wrap: wrap;
@@ -196,7 +196,7 @@
     flex-shrink: 0;
   }
 
-  // Espaciado --------------------------------------------------------------
+  // Lista con las muestras de espaciado (xxs, xs, s...) en barras horizontales
   &__lista-espaciado {
     list-style: none;
     @include flex-columna;
@@ -225,7 +225,7 @@
     flex-shrink: 0;
   }
 
-  // Formularios -----------------------------------------------------------
+  // Formulario de ejemplo para mostrar como se ven los inputs, selects y textareas
   &__formulario {
     @include flex-columna;
     gap: var(--spacing-size-3xl);
@@ -250,14 +250,14 @@
     margin-bottom: var(--spacing-size-m);
   }
 
-  // Galería de tarjetas (container queries en vivo) -----------------------
+  // Galeria de tarjetas para enseñar como cambian de tamaño segun el ancho del contenedor
   &__galeria-tarjetas {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
     gap: var(--spacing-size-2xl);
   }
 
-  // Demo animaciones ------------------------------------------------------
+  // Caja de demostracion donde se ven las animaciones en accion
   &__demo-animacion {
     padding: var(--spacing-size-l) var(--spacing-size-2xl);
     background: rgba(245, 214, 35, 0.08);
@@ -291,8 +291,7 @@
   }
 }
 
-// Modificadores de tipografía (cada token, su clase). Se usan para evitar
-// inline styles dentro de las muestras del style guide.
+// Variantes de tamaño de letra (5xl, 4xl, ...) para mostrar cada token en la guia
 .pagina-style-guide__muestra-tipo--5xl {
   font-size: var(--font-size-5xl);
   font-weight: var(--font-weight-bold);
@@ -339,7 +338,7 @@
   font-size: var(--font-size-xs);
 }
 
-// Modificadores de peso de fuente
+// Variantes de grosor de fuente (400 normal, 500 medium, etc) para la guia
 .pagina-style-guide__muestra-peso--400 {
   font-weight: var(--font-weight-normal);
 }
@@ -364,7 +363,7 @@
   font-weight: var(--font-weight-black);
 }
 
-// Modificadores de muestra de color de fondo (swatch)
+// Cuadraditos con cada color de fondo del proyecto
 .pagina-style-guide__muestra--fondo-normal {
   background-color: var(--fondo-normal);
 }
@@ -433,7 +432,7 @@
   background-color: var(--teal-normal);
 }
 
-// Modificadores de muestra de espaciado (ancho)
+// Barras horizontales con cada token de espaciado en su tamaño real
 .pagina-style-guide__muestra-espaciado--xxs {
   width: var(--spacing-size-xxs);
 }

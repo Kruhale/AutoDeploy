@@ -90,7 +90,7 @@
     }
   }
 
-  // ───── Panel izquierdo ─────
+  // Panel izquierdo con la ilustracion visual de "te quedas con el plan gratuito"
   &__visual {
     position: relative;
     flex: 1.15;
@@ -228,7 +228,7 @@
     }
   }
 
-  // ───── Panel derecho ─────
+  // Panel derecho donde el usuario decide: confirmar gratis o pasarse a Pro
   &__decision {
     flex: 1;
     display: flex;
@@ -292,7 +292,7 @@
     max-width: 28rem;
   }
 
-  // ───── Pasos ─────
+  // Lista de los pasos siguientes (que va a poder hacer) si confirma el plan gratuito
   &__pasos {
     display: flex;
     flex-direction: column;
@@ -334,7 +334,7 @@
     }
   }
 
-  // ───── Pérdidas ─────
+  // Lista de las cosas que pierde al no pillar el plan Pro (un poco de FOMO)
   &__perdidas {
     display: flex;
     flex-direction: column;
@@ -374,7 +374,7 @@
     }
   }
 
-  // ───── Acciones ─────
+  // Botones finales: "confirmar gratis" o "mejor paso a Pro"
   &__acciones {
     display: flex;
     align-items: stretch;

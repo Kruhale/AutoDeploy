@@ -148,7 +148,9 @@ app-cuenta {
   background-color: var(--amarillo-normal);
   text-indent: -9999px;
   overflow: hidden;
-  animation: cuenta-respirar 2.6s ease-in-out infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-respirar 2.6s ease-in-out infinite;
+  }
 }
 
 .cuenta__hero__fecha-edicion {
@@ -217,7 +219,9 @@ app-cuenta {
   border: 1px solid currentColor;
   opacity: 0.16;
   pointer-events: none;
-  animation: cuenta-pulso-halo 3.6s ease-in-out infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-pulso-halo 3.6s ease-in-out infinite;
+  }
 }
 
 .cuenta__avatar__halo--secundario {
@@ -243,7 +247,9 @@ app-cuenta {
   background-color: var(--verde-normal);
   border: 3px solid var(--fondo-normal);
   box-shadow: 0 0 0 1px hsla(142, 70%, 45%, 0.45);
-  animation: cuenta-respirar 2.4s ease-in-out infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-respirar 2.4s ease-in-out infinite;
+  }
 }
 
 .cuenta__credenciales {
@@ -322,7 +328,9 @@ app-cuenta {
   color: var(--amarillo-normal);
   font-weight: var(--font-weight-extrabold);
   transform-origin: center;
-  animation: cuenta-girar-estrella 9s linear infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-girar-estrella 9s linear infinite;
+  }
 }
 
 .cuenta__hero__titulo__plan {
@@ -349,8 +357,10 @@ app-cuenta {
 .cuenta__hero__marquee__pista {
   display: inline-flex;
   gap: 4rem;
-  animation: cuenta-marquee 38s linear infinite;
   white-space: nowrap;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-marquee 38s linear infinite;
+  }
 }
 
 .cuenta__hero__marquee__texto {
@@ -763,7 +773,9 @@ app-cuenta {
   height: 0.4rem;
   border-radius: 50%;
   background-color: currentColor;
-  animation: cuenta-respirar 1.8s ease-in-out infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-respirar 1.8s ease-in-out infinite;
+  }
 }
 
 /* =====================================================
@@ -857,7 +869,9 @@ app-cuenta {
 
 .cuenta__nodo-plan--activo .cuenta__nodo-plan__bullet__nucleo {
   background-color: var(--amarillo-normal);
-  animation: cuenta-respirar 2.4s ease-in-out infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-respirar 2.4s ease-in-out infinite;
+  }
 }
 
 .cuenta__nodo-plan__nombre {
@@ -1596,7 +1610,9 @@ app-cuenta {
 }
 
 .cuenta__boton-salida--cargando .cuenta__boton-salida__icono {
-  animation: cuenta-temblor 220ms ease-in-out infinite;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-temblor 220ms ease-in-out infinite;
+  }
 }
 
 /* =====================================================

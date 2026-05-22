@@ -38,7 +38,7 @@
     box-shadow: var(--shadow-lg);
   }
 
-  // ───── Logo con micro-versión flotante ─────
+  // Logo de AutoDeploy en la cabecera de la barra lateral
   &__logo {
     position: relative;
     display: flex;
@@ -65,7 +65,7 @@
     }
   }
 
-  // ───── Navegación con secciones numeradas ─────
+  // Menu principal de navegacion con sus secciones numeradas
   &__navegacion {
     display: flex;
     flex-direction: column;
@@ -114,7 +114,7 @@
     gap: 0.1rem;
   }
 
-  // ───── Enlaces (línea izquierda creciente + chevron derecha) ─────
+  // Cada enlace del menu, con una linea amarilla a la izquierda y flechita a la derecha en hover
   &__enlace {
     position: relative;
     display: flex;
@@ -168,11 +168,7 @@
       outline-offset: -2px;
     }
 
-    // El estado "página activa" se aplica tanto por la clase BEM
-    // --activo (puesta por routerLinkActive de Angular) como por el
-    // atributo aria-current="page", que es el que leen los lectores
-    // de pantalla. Ambos selectores se mantienen para que la regla
-    // funcione aunque sólo se use uno de los dos enfoques.
+    // Pagina activa: o por la clase --activo o por el atributo aria-current (para lectores de pantalla)
     &--activo,
     &[aria-current="page"] {
       color: var(--amarillo-normal);
@@ -186,7 +182,9 @@
       .barra-lateral__enlace__indicador {
         opacity: 1;
         transform: scale(1);
-        animation: latido-indicador-sidebar 2.4s ease-in-out infinite;
+        @media (prefers-reduced-motion: no-preference) {
+          animation: latido-indicador-sidebar 2.4s ease-in-out infinite;
+        }
       }
     }
 
@@ -232,7 +230,7 @@
     text-transform: uppercase;
   }
 
-  // ───── Zona inferior (collapse + user card) ─────
+  // Zona de abajo de la barra: tarjeta del usuario y boton de colapsar
   &__inferior {
     display: flex;
     flex-direction: column;
@@ -350,7 +348,9 @@
         border-radius: 50%;
         background-color: var(--verde-normal);
         border: 2px solid var(--fondo-normal);
-        animation: latido-indicador-sidebar 2.4s ease-in-out infinite;
+        @media (prefers-reduced-motion: no-preference) {
+          animation: latido-indicador-sidebar 2.4s ease-in-out infinite;
+        }
       }
     }
 
@@ -391,7 +391,7 @@
     }
   }
 
-  // ───── Modificador: colapsada ─────
+  // Variante de la barra cuando esta colapsada (solo iconos, sin texto)
   &--colapsada {
     width: 4.5rem;
 
@@ -449,7 +449,7 @@
     }
   }
 
-  // ───── Modificador: abierta (mobile) ─────
+  // Variante de la barra cuando esta abierta sobre el contenido en movil
   &--abierta {
     @include movil {
       transform: translateX(0);

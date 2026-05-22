@@ -53,12 +53,8 @@
   }
 }
 
-// Tarjeta de plan (editorial con price gigante) ---------------------------
-//
-// Container query: la tarjeta de plan también aparece en distintos anchos
-// (grid de precios en landing, billing plan actual en panel, listado de
-// comparativas). Cuando el contenedor es estrecho, el precio gigante
-// reduce su tamaño para que quepa sin desbordamientos.
+// Tarjeta de un plan de precios con el precio gigante en grande.
+// Se adapta al ancho del contenedor donde aparece (landing, panel de billing, etc)
 
 .tarjeta-plan {
   container-type: inline-size;
@@ -136,7 +132,9 @@
       height: 0.35rem;
       border-radius: 50%;
       background-color: var(--fondo-oscuro);
-      animation: bienvenida-respirar 2s ease-in-out infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: bienvenida-respirar 2s ease-in-out infinite;
+      }
     }
   }
 

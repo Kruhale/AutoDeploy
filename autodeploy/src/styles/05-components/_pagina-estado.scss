@@ -94,8 +94,9 @@
       width: 0.75rem;
       height: 0.75rem;
       border-radius: 50%;
-      animation: estado-latido 2s ease-in-out infinite;
-
+      @media (prefers-reduced-motion: no-preference) {
+        animation: estado-latido 2s ease-in-out infinite;
+      }
       &--up {
         background-color: var(--verde-normal);
         box-shadow: 0 0 8px hsla(142, 70%, 45%, 0.5);
@@ -190,7 +191,9 @@
       border: 3px solid var(--borde-normal);
       border-top-color: var(--amarillo-normal);
       border-radius: 50%;
-      animation: estado-girar 0.9s linear infinite;
+      @media (prefers-reduced-motion: no-preference) {
+        animation: estado-girar 0.9s linear infinite;
+      }
     }
   }
 }

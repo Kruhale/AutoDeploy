@@ -1,15 +1,5 @@
-// Tarjeta de servidor. Estructura BEM:
-//   .tarjeta-servidor               · bloque raíz
-//   .tarjeta-servidor__cabecera     · elementos
-//   .tarjeta-servidor--variante     · modificadores
-// Estados :hover y :focus-within definidos al final del bloque, usando las
-// variables --*-hover / --shadow-* de 00-settings/_variables.scss.
-//
-// Container queries:
-// Se declara container-type para que el ancho del propio bloque condicione
-// la disposición de los elementos internos. Así la misma tarjeta se ve
-// distinta en una sidebar estrecha (~280px) que en un grid amplio (~360px)
-// o en un panel detalle (>600px) sin depender de breakpoints del viewport.
+// Tarjeta que representa un servidor VPS en el panel.
+// Se adapta sola al ancho de su contenedor (sidebar, dashboard o modal de detalle).
 
 @use "../01-tools/mixins" as *;
 
@@ -150,7 +140,7 @@
     }
   }
 
-  // Estados interactivos del bloque raíz
+  // Estados al pasar el raton por encima o enfocar la tarjeta entera
   &:hover {
     transform: translateY(-0.125rem);
     box-shadow: var(--shadow-hover-amarillo);
@@ -167,16 +157,13 @@
     outline-offset: 2px;
   }
 
-  // En contenedores muy estrechos (sidebar plegado, columna lateral
-  // <28rem), la IP es información secundaria y se oculta para dejar
-  // espacio al nombre y al indicador.
+  // En contenedores estrechos (ej: sidebar plegado) escondemos la IP para dejar sitio al nombre
   @include contenedor-pequeno {
     &__ip { display: none; }
     &__metricas { gap: var(--spacing-size-xs); }
   }
 
-  // En contenedores anchos (panel detalle, modal expandido) las dos
-  // métricas pasan a fila para aprovechar el espacio.
+  // En contenedores anchos ponemos las dos metricas (CPU y RAM) en fila
   @include contenedor-grande {
     &__metricas {
       display: grid;

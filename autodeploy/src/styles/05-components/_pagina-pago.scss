@@ -80,7 +80,7 @@
     }
   }
 
-  // ───── Columna izquierda ─────
+  // Columna izquierda con el resumen del plan a pagar y la tarjeta de credito en vista previa
   &__columna-izquierda {
     display: flex;
     flex-direction: column;
@@ -131,7 +131,7 @@
     }
   }
 
-  // ───── Columna derecha (formulario) ─────
+  // Columna derecha con el formulario para rellenar los datos de la tarjeta
   &__columna-derecha {
     display: flex;
     flex-direction: column;
@@ -171,7 +171,7 @@
     }
   }
 
-  // ───── CVV tooltip ─────
+  // Tooltip que explica donde encontrar el CVV de la tarjeta cuando pasas por el iconito
   &__cvv-info {
     position: relative;
     display: inline-flex;
@@ -203,7 +203,7 @@
     transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  // ───── Seguridad ─────
+  // Caja de informacion sobre la seguridad del pago (SSL, encriptado, etc) para dar confianza
   &__info-seguridad {
     display: flex;
     align-items: center;
@@ -225,7 +225,7 @@
     }
   }
 
-  // ───── Spinner ─────
+  // Ruedita giratoria que aparece mientras se procesa el pago
   &__spinner {
     display: inline-block;
     width: 1rem;
@@ -233,10 +233,12 @@
     border: 2px solid hsla(0, 0%, 0%, 0.2);
     border-top-color: var(--fondo-oscuro);
     border-radius: 50%;
-    animation: girar 0.7s linear infinite;
+    @media (prefers-reduced-motion: no-preference) {
+      animation: girar 0.7s linear infinite;
+    }
   }
 
-  // ───── Estados de resultado ─────
+  // Mensaje final del pago: verde si fue ok, rojo si fallo
   &__resultado {
     display: flex;
     flex-direction: column;
@@ -288,7 +290,7 @@
   }
 }
 
-// ───── Tarjeta preview (bloque BEM separado) ─────
+// Vista previa de la tarjeta de credito que se va rellenando segun escribes en el formulario
 
 .tarjeta-preview {
   position: relative;
@@ -460,7 +462,7 @@
   }
 }
 
-// ───── Campo de formulario reutilizable (usado en pago) ─────
+// Campo de formulario reutilizable con etiqueta, input y mensaje de error
 
 .campo {
   display: flex;
@@ -541,7 +543,7 @@
     gap: var(--spacing-size-xs);
   }
 
-  // ───── Botón Pagar ─────
+  // Boton final "pagar" con el precio dentro, en amarillo bien grande
   &__boton-pagar {
     display: flex;
     align-items: center;

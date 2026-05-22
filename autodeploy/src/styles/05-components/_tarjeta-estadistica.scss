@@ -1,7 +1,4 @@
-// Container queries: la tarjeta de estadística aparece en el grid del
-// dashboard (~280px), en el panel principal (~360px) y a veces en el
-// modal de detalle (>500px). Adaptar la jerarquía interna al ancho del
-// contenedor evita tener que duplicar la regla por viewport.
+// Tarjeta de estadistica (CPU, RAM, etc) que se adapta al ancho de su contenedor
 
 @use "../01-tools/mixins" as *;
 
@@ -86,8 +83,7 @@
     &--cyan        { color: var(--verde-normal); }
   }
 
-  // Estado interactivo: hover ligero, foco visible para accesibilidad,
-  // active para feedback táctil al pulsar.
+  // Hover, foco visible y pulsacion: feedback al interactuar con la tarjeta
   &:hover {
     transform: translateY(-0.125rem);
     box-shadow: var(--shadow-hover-amarillo);
@@ -104,15 +100,13 @@
     outline-offset: 2px;
   }
 
-  // En contenedores estrechos la barra de progreso ocupa toda la
-  // anchura y el subtexto pasa debajo del valor para no apretar.
+  // En contenedores estrechos la barra de progreso ocupa todo el ancho
   @include contenedor-pequeno {
     &__cabecera { flex-wrap: wrap; gap: var(--spacing-size-xs); }
     &__valor    { font-size: 1.5rem; }
   }
 
-  // En contenedores anchos el valor crece y la barra de progreso se
-  // alinea a la derecha del valor para una lectura más rápida.
+  // En contenedores anchos el valor crece y la barra se va a la derecha
   @include contenedor-grande {
     &__valor    { font-size: 2.25rem; }
     &__cabecera { gap: var(--spacing-size-m); }

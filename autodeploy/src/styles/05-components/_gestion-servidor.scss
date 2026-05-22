@@ -187,7 +187,9 @@
       color: var(--verde-normal);
 
       .gestion-servidor__badge__punto {
-        animation: pulso-estado 2s ease-out infinite;
+        @media (prefers-reduced-motion: no-preference) {
+          animation: pulso-estado 2s ease-out infinite;
+        }
       }
     }
 

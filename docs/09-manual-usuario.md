@@ -2,6 +2,8 @@
 
 ## Empezar
 
+![Pagina de inicio publica de AutoDeploy con la propuesta de valor y el boton Empezar gratis](./assets/capturas/18-web-home.png)
+
 1. Visitar **https://autodeploy.kruhale.com**.
 2. Pulsar **"Empezar gratis"** en la cabecera (móvil: abrir hamburguesa primero).
 3. Completar el formulario de registro con email y contraseña (mínimo 8 caracteres).
@@ -23,6 +25,8 @@
 > AutoDeploy nunca guarda credenciales en texto plano. La clave de cifrado vive en el servidor del SaaS y nunca se expone al frontend.
 
 ## Panel principal (Dashboard)
+
+![Dashboard principal con la tarjeta del servidor conectado, metricas de CPU/RAM/disco y acciones rapidas](./assets/capturas/21-dashboard-logueado.png)
 
 `/app/dashboard` muestra:
 

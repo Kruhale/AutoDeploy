@@ -1,0 +1,120 @@
+// Visor de actividad "diario de a bordo": sin caja, rail de hora en mono,
+// nivel como punto+etiqueta y filetes entre entradas. Selectores planos.
+
+.visor-eventos {
+  display: flex;
+  flex-direction: column;
+}
+
+.visor-eventos__cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+  padding: 0.55rem 0.25rem; /* 9px 4px */
+  border-top: 1px solid var(--borde-normal);
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.visor-eventos__titulo {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.visor-eventos__titulo::before {
+  content: "— ";
+  color: var(--amarillo-normal);
+}
+
+.visor-eventos__actualizado {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
+
+.visor-eventos__cargando {
+  padding: var(--spacing-size-2xl) 0.25rem;
+}
+
+.visor-eventos__lista {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
+
+.visor-eventos__entrada {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-size-l);
+  padding: 0.6rem 0.25rem; /* 10px 4px */
+  border-bottom: 1px solid var(--borde-suave);
+  transition: background-color 180ms ease-out;
+}
+
+.visor-eventos__entrada:hover {
+  background-color: hsla(40, 20%, 92%, 0.03);
+}
+
+.tema-claro .visor-eventos__entrada:hover {
+  background-color: hsla(230, 14%, 13%, 0.04);
+}
+
+// Rail rojo de 2px: marca los errores sin banar la fila entera
+.visor-eventos__entrada--error::before {
+  content: "";
+  position: absolute;
+  top: 0.35rem; /* 6px */
+  bottom: 0.35rem;
+  left: -0.65rem; /* 10px, cuelga fuera de la columna de texto */
+  width: 2px;
+  background-color: var(--rojo-normal);
+}
+
+.visor-eventos__hora {
+  min-width: 4.5rem; /* 72px */
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem; /* 12px */
+  color: var(--texto-apagado);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.visor-eventos__nivel {
+  width: 4.5rem; /* 72px */
+  flex-shrink: 0;
+}
+
+.visor-eventos__mensaje {
+  font-family: var(--font-mono);
+  font-size: 0.78rem; /* 12px */
+  letter-spacing: 0.01em;
+  color: var(--texto-medio);
+  line-height: 1.45;
+  min-width: 0;
+}
+
+.visor-eventos__mensaje--destacado {
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+}
+
+@media (max-width: 640px) {
+  .visor-eventos__entrada {
+    flex-wrap: wrap;
+    row-gap: 0.3rem; /* 5px */
+  }
+
+  // Con el padding de pagina reducido en movil el rail no puede colgar tanto
+  .visor-eventos__entrada--error::before {
+    left: -0.35rem; /* 6px */
+  }
+}

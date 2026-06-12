@@ -1,0 +1,149 @@
+<section class="pagina-backups editorial">
+
+  <header class="editorial__cabecera">
+    <section class="editorial__cabecera__izquierda">
+      <p class="editorial__sello">
+        <span class="editorial__sello__punto" [class.editorial__sello__punto--verde]="backupsAutomaticos()" aria-hidden="true"></span>
+        {{ "backups.selloPrefijo" | translate }}{{ backupsAutomaticos() ? ("backups.estadoAutomatico" | translate) : ("backups.estadoManual" | translate) }}
+      </p>
+      <h1 class="editorial__titulo">{{ "backups.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "backups.subtitulo" | translate }}</p>
+    </section>
+    <button class="editorial__cta-principal" type="button" (click)="crearBackup()" [disabled]="creandoBackup() || !servidorSeleccionadoId()">
+      <span class="editorial__cta-principal__icono" aria-hidden="true">
+        <i class="fa-solid fa-plus"></i>
+      </span>
+      <span class="editorial__cta-principal__texto">
+        <span class="editorial__cta-principal__principal">{{ creandoBackup() ? ("backups.creando" | translate) : ("backups.crear" | translate) }}</span>
+        <span class="editorial__cta-principal__secundario">{{ "backups.ctaSecundario" | translate }}</span>
+      </span>
+    </button>
+  </header>
+
+  @if (listaServidores().length > 1) {
+    <section class="pagina-backups__selector-servidor">
+      <label class="pagina-backups__selector-servidor__etiqueta" for="selector-servidor-backups">{{ "backups.selectorServidor" | translate }}</label>
+      <select class="pagina-backups__selector-servidor__select" id="selector-servidor-backups" [value]="servidorSeleccionadoId()" (change)="cambiarServidor($any($event.target).value)">
+        @for (servidor of listaServidores(); track servidor.id) {
+          <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
+        }
+      </select>
+    </section>
+  }
+
+  @if (mensajeError()) {
+    <p class="pagina-backups__alerta" role="alert">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> {{ mensajeError() }}
+    </p>
+  }
+
+  <section class="pagina-backups__auto">
+    <section class="pagina-backups__auto__info">
+      <span class="pagina-backups__auto__icono" aria-hidden="true">
+        <i class="fa-solid fa-clock-rotate-left"></i>
+      </span>
+      <section class="pagina-backups__auto__texto">
+        <span class="pagina-backups__auto__titulo" id="backups-auto-titulo">{{ "backups.autoTitulo" | translate }}</span>
+        <span class="pagina-backups__auto__detalle">{{ "backups.autoDetalle" | translate: { hora: horaBackupAutomatico() } }}</span>
+      </section>
+    </section>
+    <button class="pagina-backups__interruptor"
+            type="button"
+            [class.pagina-backups__interruptor--activo]="backupsAutomaticos()"
+            [disabled]="guardandoAutoBackup() || !servidorSeleccionadoId()"
+            (click)="alternarBackupsAutomaticos()"
+            aria-labelledby="backups-auto-titulo"
+            [attr.aria-pressed]="backupsAutomaticos()">
+      <span class="pagina-backups__interruptor__circulo" aria-hidden="true"></span>
+    </button>
+  </section>
+
+  @if (mensajeExito()) {
+    <p class="pagina-backups__alerta pagina-backups__alerta--ok" role="status">
+      <i class="fa-solid fa-circle-check" aria-hidden="true"></i> {{ mensajeExito() }}
+    </p>
+  }
+
+  <section class="editorial__bloque">
+    <header class="editorial__bloque__cabecera">
+      <span class="editorial__bloque__indice">01</span>
+      <section class="editorial__bloque__texto">
+        <h2 class="editorial__bloque__titulo">{{ "backups.snapshotsTitulo" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "backups.snapshotsDescripcion" | translate }}</p>
+      </section>
+    </header>
+
+    @if (listaDeBackups().length === 0) {
+      <section class="editorial__vacio">
+        <span class="editorial__vacio__icono" aria-hidden="true">
+          <i class="fa-solid fa-hard-drive"></i>
+        </span>
+        <p class="editorial__vacio__titulo">{{ "backups.vacioTitulo" | translate }}</p>
+        <p class="editorial__vacio__detalle">{{ "backups.vacioDetalle" | translate }}</p>
+      </section>
+    } @else {
+      <section class="pagina-backups__lista">
+        @for (backup of listaDeBackups(); track backup.id) {
+          <article class="pagina-backups__item">
+            <section class="pagina-backups__item__identidad">
+              <span class="pagina-backups__item__icono" [class.pagina-backups__item__icono--auto]="backup.tipo === 'auto'" aria-hidden="true">
+                @if (backup.tipo === "auto") {
+                  <i class="fa-solid fa-clock"></i>
+                } @else {
+                  <i class="fa-solid fa-hand"></i>
+                }
+              </span>
+              <section class="pagina-backups__item__info">
+                <span class="pagina-backups__item__fecha">{{ backup.fechaCreacion | date:"medium" }}</span>
+                <span class="pagina-backups__item__meta">
+                  <span>{{ backup.tamano || ("comun.guion" | translate) }}</span>
+                  <span class="pagina-backups__item__separador" aria-hidden="true">·</span>
+                  <span class="pagina-backups__item__tipo">{{ "backups.tipo." + backup.tipo | translate }}</span>
+                </span>
+              </section>
+            </section>
+
+            <span class="editorial__estado"
+                  [class.editorial__estado--verde]="backup.estado === 'completado'"
+                  [class.editorial__estado--rojo]="backup.estado === 'fallido'"
+                  [class.editorial__estado--ambar]="backup.estado === 'en_progreso'"
+                  [class.editorial__estado--vivo]="backup.estado === 'en_progreso'">
+              <span class="editorial__estado__punto" aria-hidden="true"></span>
+              {{ "backups.estado." + backup.estado | translate }}
+            </span>
+
+            <section class="pagina-backups__item__acciones">
+              <button class="pagina-backups__accion pagina-backups__accion--primaria" type="button" (click)="solicitarRestaurarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'">
+                <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                <span>{{ "backups.restore" | translate }}</span>
+              </button>
+              <button class="pagina-backups__accion pagina-backups__accion--peligro" type="button" (click)="solicitarEliminarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'" [attr.aria-label]="'backups.eliminar' | translate">
+                <i class="fa-solid fa-trash" aria-hidden="true"></i>
+              </button>
+            </section>
+          </article>
+        }
+      </section>
+    }
+  </section>
+
+  @if (idBackupParaEliminar()) {
+    <app-dialogo-confirmacion
+      titulo="backups.dialogoEliminar.titulo"
+      mensaje="backups.dialogoEliminar.mensaje"
+      textoConfirmar="backups.dialogoEliminar.confirmar"
+      [peligro]="true"
+      (confirmar)="confirmarEliminarBackup()"
+      (cancelar)="cancelarDialogoBackup()"></app-dialogo-confirmacion>
+  }
+
+  @if (idBackupParaRestaurar()) {
+    <app-dialogo-confirmacion
+      titulo="backups.dialogoRestaurar.titulo"
+      mensaje="backups.dialogoRestaurar.mensaje"
+      textoConfirmar="backups.dialogoRestaurar.confirmar"
+      (confirmar)="confirmarRestaurarBackup()"
+      (cancelar)="cancelarDialogoBackup()"></app-dialogo-confirmacion>
+  }
+
+</section>

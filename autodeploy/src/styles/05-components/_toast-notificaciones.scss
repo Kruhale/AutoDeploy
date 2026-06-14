@@ -1,0 +1,113 @@
+// Toasts editoriales: eco efimero del registro de avisos. Rail de color por
+// tipo, sin glow ni iconos gigantes. Los estilos viven aqui (globales) y el
+// scss del componente queda vacio para que no ganen los scoped.
+
+.contenedor-toasts {
+  position: fixed;
+  right: var(--spacing-size-l);
+  bottom: var(--spacing-size-l);
+  z-index: var(--z-toast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-m);
+  max-width: 24rem; /* 384px */
+  pointer-events: none;
+}
+
+.toast {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-size-m);
+  padding: var(--spacing-size-m) var(--spacing-size-l);
+  background-color: var(--fondo-oscuro);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-l);
+  pointer-events: auto;
+}
+
+// Rail de 2px con margen vertical para no chocar con el radio de la caja
+.toast::before {
+  content: "";
+  position: absolute;
+  top: 0.5rem; /* 8px */
+  bottom: 0.5rem;
+  left: 0;
+  width: 2px;
+  background-color: var(--texto-apagado);
+}
+
+.toast--rojo::before {
+  background-color: var(--rojo-normal);
+}
+
+.toast--verde::before {
+  background-color: var(--verde-normal);
+}
+
+.toast--naranja::before {
+  background-color: var(--naranja-normal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .toast {
+    animation: toast-entrar 240ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+.toast__contenido {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast__titulo {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+}
+
+.toast__descripcion {
+  margin-top: 0.15rem; /* 2px */
+  font-size: var(--font-size-sm);
+  color: var(--texto-medio);
+  line-height: 1.4;
+}
+
+.toast__cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.6rem; /* 26px */
+  height: 1.6rem;
+  flex-shrink: 0;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-s);
+  color: var(--texto-apagado);
+  font-size: 0.75rem; /* 12px */
+  cursor: pointer;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast__cerrar:hover {
+  color: var(--texto-claro);
+}
+
+.toast__cerrar:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .contenedor-toasts {
+    right: var(--spacing-size-m);
+    left: var(--spacing-size-m);
+    bottom: var(--spacing-size-m);
+    max-width: none;
+  }
+}
+
+@keyframes toast-entrar {
+  from { opacity: 0; transform: translateX(0.75rem); }
+  to   { opacity: 1; transform: translateX(0); }
+}

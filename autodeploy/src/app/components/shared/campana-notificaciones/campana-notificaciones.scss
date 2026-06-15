@@ -1,0 +1,5 @@
+// El aspecto vive en 05-components/_campana-notificaciones.scss para
+// compartir el lenguaje editorial y que no ganen los estilos scoped.
+:host {
+	display: block;
+}

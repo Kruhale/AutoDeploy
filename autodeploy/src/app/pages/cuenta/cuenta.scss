@@ -1,0 +1,7 @@
+// Estilos en `src/styles/05-components/_pagina-cuenta.scss` (global).
+//
+// Se movieron al global el 2026-05-22 para alinear esta página con el
+// patrón ITCSS del resto del proyecto y bajar el bundle inicial. El
+// bloque local `:host { display: block; }` se convirtió en
+// `app-cuenta { ... }` en el global, que afecta al host element del
+// componente sin necesidad de ViewEncapsulation local.

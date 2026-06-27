@@ -1,0 +1,28 @@
+<section class="galeria-capturas" [attr.aria-label]="ariaTitulo">
+  <ul class="galeria-capturas__lista" role="list">
+    @for (captura of capturas; track captura.src) {
+      <li class="galeria-capturas__item">
+        <figure class="galeria-capturas__figura">
+          <picture>
+            @if (captura.srcMovil) {
+              <source media="(max-width: 48rem)" [srcset]="captura.srcMovil" type="image/webp">
+            }
+            <source [srcset]="captura.src" type="image/webp">
+            <img class="galeria-capturas__imagen"
+                 [src]="captura.fallback || captura.src"
+                 [alt]="captura.alt"
+                 [width]="captura.ancho"
+                 [height]="captura.alto"
+                 loading="lazy"
+                 decoding="async">
+          </picture>
+          <figcaption class="galeria-capturas__caption">{{ captura.titulo }}</figcaption>
+        </figure>
+      </li>
+    } @empty {
+      <li class="galeria-capturas__placeholder" aria-hidden="true">
+        Aún no hay capturas. Añade entradas al input <code>capturas</code> para mostrarlas.
+      </li>
+    }
+  </ul>
+</section>

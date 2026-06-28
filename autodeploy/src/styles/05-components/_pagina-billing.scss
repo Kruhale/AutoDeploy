@@ -1,0 +1,282 @@
+// Facturacion "Libro de cuentas": el marco editorial viene del sistema
+// compartido; aqui vive lo propio — el bloque-contrato del plan, la nota de
+// metodo de pago, las columnas del ledger de facturas y el pie con codigo.
+
+// ---------------------------------------------------------------------------
+// Contrato en vigor: doble filete arriba, clausulas con guion, precio tabular
+
+.pagina-billing__contrato {
+  display: flex;
+  flex-direction: column;
+  border-top: 2px solid var(--texto-claro);
+  border-bottom: 1px solid var(--borde-normal);
+}
+
+.pagina-billing__contrato__cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+  padding: 0.7rem 0.25rem; /* 11px 4px */
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.pagina-billing__contrato__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-billing__contrato__etiqueta::before {
+  content: "— ";
+  color: var(--amarillo-normal);
+}
+
+.pagina-billing__contrato__numero {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagina-billing__contrato__cuerpo {
+  display: flex;
+  align-items: stretch;
+  gap: var(--spacing-size-3xl);
+  padding: var(--spacing-size-2xl) 0.25rem;
+}
+
+.pagina-billing__contrato__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-m);
+}
+
+.pagina-billing__contrato__nombre {
+  font-family: var(--font-secondary);
+  font-size: 2.4rem; /* 38px */
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--texto-claro);
+}
+
+.pagina-billing__contrato__descripcion {
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+  max-width: 34rem;
+  line-height: var(--line-height-normal);
+}
+
+.pagina-billing__contrato__clausulas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem; /* 7px */
+  margin-top: var(--spacing-size-s);
+  list-style: none;
+}
+
+.pagina-billing__contrato__clausula {
+  font-size: var(--font-size-sm);
+  color: var(--texto-medio);
+}
+
+.pagina-billing__contrato__clausula::before {
+  content: "— ";
+  color: var(--amarillo-normal);
+}
+
+.pagina-billing__contrato__precio {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--spacing-size-xl);
+  padding-left: var(--spacing-size-3xl);
+  border-left: 1px solid var(--borde-suave);
+  text-align: right;
+}
+
+.pagina-billing__contrato__importe {
+  font-family: var(--font-mono);
+  font-size: 3.4rem; /* 54px */
+  font-weight: var(--font-weight-normal);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--texto-claro);
+  font-variant-numeric: tabular-nums;
+  border-bottom: 2px solid var(--amarillo-normal);
+  padding-bottom: 0.5rem; /* 8px */
+}
+
+.pagina-billing__contrato__importe__moneda {
+  font-size: 1.4rem; /* 22px */
+  color: var(--texto-medio);
+  margin-right: 0.2rem; /* 3px */
+}
+
+.pagina-billing__contrato__importe__periodo {
+  font-size: 0.85rem; /* 14px */
+  color: var(--texto-apagado);
+  margin-left: 0.3rem; /* 5px */
+}
+
+.pagina-billing__contrato__renovacion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem; /* 5px */
+}
+
+.pagina-billing__contrato__renovacion__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.6rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.pagina-billing__contrato__renovacion__fecha {
+  font-family: var(--font-mono);
+  font-size: 0.95rem; /* 15px */
+  letter-spacing: 0.08em;
+  color: var(--texto-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagina-billing__contrato__renovacion__detalle {
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+}
+
+@media (max-width: 880px) {
+  .pagina-billing__contrato__cuerpo {
+    flex-direction: column;
+  }
+
+  .pagina-billing__contrato__precio {
+    padding-left: 0;
+    padding-top: var(--spacing-size-xl);
+    border-left: none;
+    border-top: 1px solid var(--borde-suave);
+    text-align: left;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Nota de metodo de pago (aviso "en preparacion")
+
+.pagina-billing__nota {
+  margin-bottom: var(--spacing-size-l);
+  font-family: var(--font-mono);
+  font-size: 0.7rem; /* 11px */
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amarillo-normal);
+}
+
+.pagina-billing__nota::before {
+  content: "— ";
+}
+
+// ---------------------------------------------------------------------------
+// Ledger de facturas: anchos de columna y boton de descarga
+
+.pagina-billing__col-fecha {
+  width: 6.5rem; /* 104px */
+  flex-shrink: 0;
+}
+
+.pagina-billing__col-importe {
+  width: 5.5rem; /* 88px */
+  flex-shrink: 0;
+}
+
+.pagina-billing__col-estado {
+  width: 7rem; /* 112px */
+  flex-shrink: 0;
+}
+
+.pagina-billing__col-accion {
+  width: 2rem; /* 32px */
+  flex-shrink: 0;
+}
+
+.pagina-billing__descarga {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.75rem; /* 28px */
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-s);
+  color: var(--texto-apagado);
+  font-size: 0.75rem; /* 12px */
+  cursor: pointer;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-billing__descarga:hover:not(:disabled) {
+  color: var(--amarillo-normal);
+}
+
+.pagina-billing__descarga:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
+}
+
+.pagina-billing__descarga:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+// ---------------------------------------------------------------------------
+// Pie con codigo de referencia
+
+.pagina-billing__pie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-size-l);
+  padding-top: var(--spacing-size-xl);
+  border-top: 1px solid var(--borde-suave);
+  flex-wrap: wrap;
+}
+
+.pagina-billing__pie__codigo {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagina-billing__pie__separador {
+  width: 2rem; /* 32px */
+  height: 1px;
+  background-color: var(--borde-normal);
+}
+
+.pagina-billing__pie__texto {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  text-align: center;
+}
+
+.pagina-billing__pie__edicion {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}

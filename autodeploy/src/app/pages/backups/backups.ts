@@ -1,4 +1,4 @@
-import { Component, signal, OnInit } from "@angular/core";
+import { Component, signal, OnInit, OnDestroy } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
@@ -20,7 +20,7 @@ interface BackupApi {
   templateUrl: "./backups.html",
   styleUrl: "./backups.scss"
 })
-export class Backups implements OnInit {
+export class Backups implements OnInit, OnDestroy {
   listaDeBackups = signal<BackupApi[]>([]);
   listaServidores = signal<ServidorRemoto[]>([]);
   servidorSeleccionadoId = signal<string>("");
@@ -44,10 +44,14 @@ export class Backups implements OnInit {
     this.cargarServidores();
   }
 
+  ngOnDestroy(): void {
+    this.detenerRefresco();
+  }
+
   private cargarServidores(): void {
     const componente = this;
     this.servidorService.listar().subscribe({
-      next: function(servidores) {
+      next: function (servidores) {
         componente.listaServidores.set(servidores);
         if (servidores.length > 0) {
           componente.servidorSeleccionadoId.set(servidores[0].id);
@@ -57,7 +61,7 @@ export class Backups implements OnInit {
           componente.cargando.set(false);
         }
       },
-      error: function() {
+      error: function () {
         componente.cargando.set(false);
       }
     });
@@ -72,12 +76,12 @@ export class Backups implements OnInit {
   private cargarEstadoAutoBackup(servidorId: string): void {
     const componente = this;
     this.http.get<any>("/api/backups/auto/" + servidorId).subscribe({
-      next: function(respuesta: any) {
+      next: function (respuesta: any) {
         const datos = respuesta && respuesta.data ? respuesta.data : { activado: false, hora: "03:00" };
         componente.backupsAutomaticos.set(!!datos.activado);
         componente.horaBackupAutomatico.set(datos.hora || "03:00");
       },
-      error: function() {
+      error: function () {
         componente.backupsAutomaticos.set(false);
       }
     });
@@ -91,45 +95,57 @@ export class Backups implements OnInit {
     this.guardandoAutoBackup.set(true);
     const componente = this;
 
-    this.http.put("/api/backups/auto/" + servidorId, {
-      activado: nuevoEstado,
-      hora: this.horaBackupAutomatico()
-    }).subscribe({
-      next: function() {
-        componente.backupsAutomaticos.set(nuevoEstado);
-        componente.guardandoAutoBackup.set(false);
-        if (nuevoEstado) {
-          componente.mensajeExito.set(componente.translate.instant("backups.mensajes.cronInstalado", { hora: componente.horaBackupAutomatico() }));
-        } else {
-          componente.mensajeExito.set(componente.translate.instant("backups.mensajes.autoDeshabilitado"));
+    this.http
+      .put("/api/backups/auto/" + servidorId, {
+        activado: nuevoEstado,
+        hora: this.horaBackupAutomatico()
+      })
+      .subscribe({
+        next: function () {
+          componente.backupsAutomaticos.set(nuevoEstado);
+          componente.guardandoAutoBackup.set(false);
+          if (nuevoEstado) {
+            componente.mensajeExito.set(
+              componente.translate.instant("backups.mensajes.cronInstalado", {
+                hora: componente.horaBackupAutomatico()
+              })
+            );
+          } else {
+            componente.mensajeExito.set(componente.translate.instant("backups.mensajes.autoDeshabilitado"));
+          }
+          setTimeout(function () {
+            componente.mensajeExito.set("");
+          }, 4000);
+        },
+        error: function () {
+          componente.guardandoAutoBackup.set(false);
+          const claveError = nuevoEstado ? "backups.mensajes.errorCronInstalar" : "backups.mensajes.errorCronEliminar";
+          componente.mensajeError.set(componente.translate.instant(claveError));
+          setTimeout(function () {
+            componente.mensajeError.set("");
+          }, 4000);
         }
-        setTimeout(function() { componente.mensajeExito.set(""); }, 4000);
-      },
-      error: function() {
-        componente.guardandoAutoBackup.set(false);
-        const claveError = nuevoEstado ? "backups.mensajes.errorCronInstalar" : "backups.mensajes.errorCronEliminar";
-        componente.mensajeError.set(componente.translate.instant(claveError));
-        setTimeout(function() { componente.mensajeError.set(""); }, 4000);
-      }
-    });
+      });
   }
 
   private cargarBackups(servidorId: string): void {
     this.cargando.set(true);
     const componente = this;
     this.http.get<any>("/api/backups/servidor/" + servidorId).subscribe({
-      next: function(respuesta: any) {
-        const backups: BackupApi[] = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
+      next: function (respuesta: any) {
+        const backups: BackupApi[] = Array.isArray(respuesta) ? respuesta : respuesta && Array.isArray(respuesta.data) ? respuesta.data : [];
         componente.listaDeBackups.set(backups);
         componente.cargando.set(false);
-        const algunoEnProgreso = backups.some(function(b) { return b.estado === "en_progreso"; });
+        const algunoEnProgreso = backups.some(function (b) {
+          return b.estado === "en_progreso";
+        });
         if (algunoEnProgreso) {
           componente.programarRefresco(servidorId);
         } else {
           componente.detenerRefresco();
         }
       },
-      error: function() {
+      error: function () {
         componente.listaDeBackups.set([]);
         componente.cargando.set(false);
       }
@@ -139,7 +155,7 @@ export class Backups implements OnInit {
   private programarRefresco(servidorId: string): void {
     if (this.temporizadorRefresco) return;
     const componente = this;
-    this.temporizadorRefresco = setInterval(function() {
+    this.temporizadorRefresco = setInterval(function () {
       componente.cargarBackups(servidorId);
     }, 4000);
   }
@@ -158,14 +174,16 @@ export class Backups implements OnInit {
     this.creandoBackup.set(true);
     const componente = this;
     this.http.post("/api/backups", { servidorId: servidorId, tipo: "manual" }).subscribe({
-      next: function() {
+      next: function () {
         componente.creandoBackup.set(false);
         componente.cargarBackups(servidorId);
       },
-      error: function() {
+      error: function () {
         componente.creandoBackup.set(false);
         componente.mensajeError.set(componente.translate.instant("backups.mensajes.errorIniciar"));
-        setTimeout(function() { componente.mensajeError.set(""); }, 3000);
+        setTimeout(function () {
+          componente.mensajeError.set("");
+        }, 3000);
       }
     });
   }
@@ -174,12 +192,14 @@ export class Backups implements OnInit {
     const componente = this;
     const servidorId = this.servidorSeleccionadoId();
     this.http.delete("/api/backups/" + idBackup).subscribe({
-      next: function() {
+      next: function () {
         componente.cargarBackups(servidorId);
       },
-      error: function() {
+      error: function () {
         componente.mensajeError.set(componente.translate.instant("backups.mensajes.errorEliminar"));
-        setTimeout(function() { componente.mensajeError.set(""); }, 3000);
+        setTimeout(function () {
+          componente.mensajeError.set("");
+        }, 3000);
       }
     });
   }
@@ -192,18 +212,20 @@ export class Backups implements OnInit {
     const servidorId = this.servidorSeleccionadoId();
 
     this.http.post("/api/backups/" + idBackup + "/restaurar", {}).subscribe({
-      next: function() {
+      next: function () {
         componente.mensajeExito.set(componente.translate.instant("backups.mensajes.restoreIniciado"));
-        setTimeout(function() {
+        setTimeout(function () {
           componente.mensajeExito.set("");
           componente.cargarBackups(servidorId);
         }, 3000);
       },
-      error: function(error) {
+      error: function (error) {
         const mensajePorDefecto = componente.translate.instant("backups.mensajes.errorRestaurar");
         const detalle = error && error.error && error.error.message ? error.error.message : mensajePorDefecto;
         componente.mensajeError.set(detalle);
-        setTimeout(function() { componente.mensajeError.set(""); }, 4000);
+        setTimeout(function () {
+          componente.mensajeError.set("");
+        }, 4000);
       }
     });
   }

@@ -1,4 +1,5 @@
-import { Component, ElementRef, OnInit, ViewChild, signal, computed } from "@angular/core";
+import { Component, ElementRef, OnInit, OnDestroy, ViewChild, signal, computed } from "@angular/core";
+import { Subscription } from "rxjs";
 import { FormsModule } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AsistenteIaService, MensajeChat, ConfiguracionAsistente } from "../../services/asistente-ia.service";
@@ -21,18 +22,29 @@ interface ModeloEntrada {
   templateUrl: "./asistente-ia.html",
   styleUrl: "./asistente-ia.scss"
 })
-export class AsistenteIa implements OnInit {
-
+export class AsistenteIa implements OnInit, OnDestroy {
   @ViewChild("contenedorMensajes") contenedorMensajes!: ElementRef<HTMLElement>;
   @ViewChild("areaEntrada") areaEntrada!: ElementRef<HTMLTextAreaElement>;
 
   sugerencias = computed<SugerenciaEntrada[]>(() => {
     this.versionTraducciones();
     return [
-      { icono: "fa-solid fa-hard-drive", texto: this.translate.instant("asistenteIa.sugerencias.disco") },
-      { icono: "fa-solid fa-microchip", texto: this.translate.instant("asistenteIa.sugerencias.ram") },
-      { icono: "fa-solid fa-arrows-rotate", texto: this.translate.instant("asistenteIa.sugerencias.nginx") },
-      { icono: "fa-solid fa-list-check", texto: this.translate.instant("asistenteIa.sugerencias.cpu") }
+      {
+        icono: "fa-solid fa-hard-drive",
+        texto: this.translate.instant("asistenteIa.sugerencias.disco")
+      },
+      {
+        icono: "fa-solid fa-microchip",
+        texto: this.translate.instant("asistenteIa.sugerencias.ram")
+      },
+      {
+        icono: "fa-solid fa-arrows-rotate",
+        texto: this.translate.instant("asistenteIa.sugerencias.nginx")
+      },
+      {
+        icono: "fa-solid fa-list-check",
+        texto: this.translate.instant("asistenteIa.sugerencias.cpu")
+      }
     ];
   });
 
@@ -41,13 +53,23 @@ export class AsistenteIa implements OnInit {
     return [
       { id: "openai/gpt-4o-mini", nombre: this.translate.instant("asistenteIa.modelos.gpt4oMini") },
       { id: "openai/gpt-4o", nombre: this.translate.instant("asistenteIa.modelos.gpt4o") },
-      { id: "anthropic/claude-3.5-sonnet", nombre: this.translate.instant("asistenteIa.modelos.claudeSonnet") },
-      { id: "google/gemini-2.0-flash-exp:free", nombre: this.translate.instant("asistenteIa.modelos.geminiFlash") },
-      { id: "meta-llama/llama-3.3-70b-instruct:free", nombre: this.translate.instant("asistenteIa.modelos.llama") }
+      {
+        id: "anthropic/claude-3.5-sonnet",
+        nombre: this.translate.instant("asistenteIa.modelos.claudeSonnet")
+      },
+      {
+        id: "google/gemini-2.0-flash-exp:free",
+        nombre: this.translate.instant("asistenteIa.modelos.geminiFlash")
+      },
+      {
+        id: "meta-llama/llama-3.3-70b-instruct:free",
+        nombre: this.translate.instant("asistenteIa.modelos.llama")
+      }
     ];
   });
 
   private versionTraducciones = signal<number>(0);
+  private suscripcionIdioma: Subscription;
 
   listaServidores = signal<ServidorRemoto[]>([]);
   servidorSeleccionadoId = signal<string>("");
@@ -64,7 +86,7 @@ export class AsistenteIa implements OnInit {
   servidorSeleccionado = computed<ServidorRemoto | null>(() => {
     const idActual = this.servidorSeleccionadoId();
     const lista = this.listaServidores();
-    const servidorEncontrado = lista.find(function(servidor) {
+    const servidorEncontrado = lista.find(function (servidor) {
       return servidor.id === idActual;
     });
     return servidorEncontrado || null;
@@ -82,8 +104,10 @@ export class AsistenteIa implements OnInit {
     private translate: TranslateService
   ) {
     const componente = this;
-    this.translate.onLangChange.subscribe(function() {
-      componente.versionTraducciones.update(function(valor) { return valor + 1; });
+    this.suscripcionIdioma = this.translate.onLangChange.subscribe(function () {
+      componente.versionTraducciones.update(function (valor) {
+        return valor + 1;
+      });
     });
   }
 
@@ -92,11 +116,15 @@ export class AsistenteIa implements OnInit {
     this.cargarConfiguracion();
   }
 
+  ngOnDestroy(): void {
+    this.suscripcionIdioma.unsubscribe();
+  }
+
   private cargarServidores(): void {
     const componente = this;
 
     this.servidorService.listar().subscribe({
-      next: function(servidores: ServidorRemoto[]) {
+      next: function (servidores: ServidorRemoto[]) {
         componente.listaServidores.set(servidores);
         if (servidores.length > 0 && !componente.servidorSeleccionadoId()) {
           componente.servidorSeleccionadoId.set(servidores[0].id);
@@ -142,7 +170,11 @@ export class AsistenteIa implements OnInit {
     const textoComandos = this.comandosEnEdicion();
     const listaComandos = this.parsearComandosDesdeTexto(textoComandos);
 
-    const datosPeticion: { apiKey?: string; modeloPreferido: string; comandosAutoAprobados: string[] } = {
+    const datosPeticion: {
+      apiKey?: string;
+      modeloPreferido: string;
+      comandosAutoAprobados: string[];
+    } = {
       modeloPreferido: textoModelo,
       comandosAutoAprobados: listaComandos
     };
@@ -166,15 +198,19 @@ export class AsistenteIa implements OnInit {
   private parsearComandosDesdeTexto(texto: string): string[] {
     const lineasSeparadas = texto.split("\n");
     const comandosLimpios = lineasSeparadas
-      .map(function(linea) { return linea.trim(); })
-      .filter(function(linea) { return linea.length > 0; });
+      .map(function (linea) {
+        return linea.trim();
+      })
+      .filter(function (linea) {
+        return linea.length > 0;
+      });
     return comandosLimpios;
   }
 
   usarSugerencia(textoSugerencia: string): void {
     this.mensajeEnEdicion.set(textoSugerencia);
     const componente = this;
-    setTimeout(function() {
+    setTimeout(function () {
       if (componente.areaEntrada) {
         componente.areaEntrada.nativeElement.focus();
       }
@@ -220,7 +256,7 @@ export class AsistenteIa implements OnInit {
         razonamiento: respuestaIa.razonamiento || undefined,
         requiereConfirmacion: respuestaIa.requiereConfirmacion,
         salidaComando: tieneSalidaAutoEjecutada ? respuestaIa.salidaComandoAutoEjecutado! : undefined,
-        estadoComando: tieneSalidaAutoEjecutada ? "ejecutado" : (tieneComando ? "pendiente" : undefined)
+        estadoComando: tieneSalidaAutoEjecutada ? "ejecutado" : tieneComando ? "pendiente" : undefined
       };
 
       this.asistenteService.agregarMensaje(mensajeRespuesta);
@@ -276,7 +312,7 @@ export class AsistenteIa implements OnInit {
   }
 
   private actualizarMensajeEnHistorial(indice: number, cambios: Partial<MensajeChat>): void {
-    this.asistenteService.historialMensajes.update(function(historial) {
+    this.asistenteService.historialMensajes.update(function (historial) {
       const copia = [...historial];
       copia[indice] = { ...copia[indice], ...cambios };
       return copia;
@@ -289,7 +325,7 @@ export class AsistenteIa implements OnInit {
 
   private desplazarAlFinal(): void {
     const componente = this;
-    setTimeout(function() {
+    setTimeout(function () {
       if (componente.contenedorMensajes) {
         const elemento = componente.contenedorMensajes.nativeElement;
         elemento.scrollTop = elemento.scrollHeight;

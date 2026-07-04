@@ -1,4 +1,5 @@
-import { Component, signal, computed, Signal, HostListener, ElementRef } from "@angular/core";
+import { Component, signal, computed, Signal, HostListener, ElementRef, OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
 import { Router, RouterLink } from "@angular/router";
 import { UpperCasePipe, DatePipe } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -32,7 +33,7 @@ const DIAS_REFERENCIA_ANIVERSARIO = 365;
   templateUrl: "./cuenta.html",
   styleUrl: "./cuenta.scss"
 })
-export class Cuenta {
+export class Cuenta implements OnDestroy {
   readonly planes = PLANES;
   readonly anioActual = new Date().getFullYear();
   readonly letrasIndiceVertical = ["Y", "O", "U", "R"];
@@ -66,16 +67,21 @@ export class Cuenta {
   textoMarqueePlan: Signal<string>;
 
   private temporizadorSalida: ReturnType<typeof setTimeout> | null = null;
+  private suscripcionIdioma: Subscription;
 
-  suscripcionCancelada = computed(function(this: Cuenta) {
-    return !!this.usuarioService.fechaFinSuscripcion();
-  }.bind(this));
+  suscripcionCancelada = computed(
+    function (this: Cuenta) {
+      return !!this.usuarioService.fechaFinSuscripcion();
+    }.bind(this)
+  );
 
-  fechaFinFormateada = computed(function(this: Cuenta) {
-    const fecha = this.usuarioService.fechaFinSuscripcion();
-    if (!fecha) return null;
-    return new Date(fecha);
-  }.bind(this));
+  fechaFinFormateada = computed(
+    function (this: Cuenta) {
+      const fecha = this.usuarioService.fechaFinSuscripcion();
+      if (!fecha) return null;
+      return new Date(fecha);
+    }.bind(this)
+  );
 
   constructor(
     readonly authService: AuthService,
@@ -93,59 +99,59 @@ export class Cuenta {
 
     const componente = this;
 
-    this.translate.onLangChange.subscribe(function() {
-      componente.versionIdioma.update(function(v) { return v + 1; });
+    this.suscripcionIdioma = this.translate.onLangChange.subscribe(function () {
+      componente.versionIdioma.update(function (v) {
+        return v + 1;
+      });
     });
 
-    this.inicialDelNombre = computed(function() {
+    this.inicialDelNombre = computed(function () {
       const nombre = componente.usuarioService.nombre();
       if (!nombre) return "?";
       return nombre.charAt(0).toUpperCase();
     });
 
-    this.detallePlanActual = computed(function() {
+    this.detallePlanActual = computed(function () {
       const idActual = componente.planService.planActual();
-      const encontrado = PLANES.find(function(p) { return p.id === idActual; });
+      const encontrado = PLANES.find(function (p) {
+        return p.id === idActual;
+      });
       return encontrado || PLANES[0];
     });
 
-    this.fechaCreacionCuenta = computed(function() {
+    this.fechaCreacionCuenta = computed(function () {
       return componente.extraerFechaCreacionDelId();
     });
 
-    this.diasComoMiembro = computed(function() {
+    this.diasComoMiembro = computed(function () {
       const fechaCreacion = componente.fechaCreacionCuenta();
       if (!fechaCreacion) return 0;
       const milisDesdeCreacion = Date.now() - fechaCreacion.getTime();
       return Math.max(0, Math.floor(milisDesdeCreacion / (SEGUNDOS_POR_DIA * 1000)));
     });
 
-    this.progresoAniversarioPorcentaje = computed(function() {
+    this.progresoAniversarioPorcentaje = computed(function () {
       const dias = componente.diasComoMiembro();
       const porcentajeCrudo = (dias / DIAS_REFERENCIA_ANIVERSARIO) * 100;
       return Math.min(100, Math.max(2, porcentajeCrudo));
     });
 
-    this.resumenDeCuenta = computed(function(): FilaResumen[] {
+    this.resumenDeCuenta = computed(function (): FilaResumen[] {
       componente.versionIdioma();
       const plan = componente.detallePlanActual();
       const valorStatus = componente.suscripcionCancelada()
         ? componente.translate.instant("cuenta.resumen.pendingCancellation")
-        : (plan.id === "free"
-            ? componente.translate.instant("cuenta.resumen.freeTier")
-            : componente.translate.instant("cuenta.resumen.active"));
-      const valorServers = plan.limiteServidores === null
-        ? componente.translate.instant("cuenta.resumen.unlimited")
-        : String(plan.limiteServidores);
-      const valorIa = plan.asistentIa
-        ? componente.translate.instant("cuenta.resumen.enabled")
-        : componente.translate.instant("cuenta.resumen.disabled");
+        : plan.id === "free"
+          ? componente.translate.instant("cuenta.resumen.freeTier")
+          : componente.translate.instant("cuenta.resumen.active");
+      const valorServers = plan.limiteServidores === null ? componente.translate.instant("cuenta.resumen.unlimited") : String(plan.limiteServidores);
+      const valorIa = plan.asistentIa ? componente.translate.instant("cuenta.resumen.enabled") : componente.translate.instant("cuenta.resumen.disabled");
       const valorSoporte = plan.soporte.charAt(0).toUpperCase() + plan.soporte.slice(1);
       return [
         {
           etiqueta: componente.translate.instant("cuenta.resumen.status"),
           valor: valorStatus,
-          estado: componente.suscripcionCancelada() ? "aviso" : (plan.id === "free" ? "neutro" : "activo")
+          estado: componente.suscripcionCancelada() ? "aviso" : plan.id === "free" ? "neutro" : "activo"
         },
         {
           etiqueta: componente.translate.instant("cuenta.resumen.servers"),
@@ -165,13 +171,13 @@ export class Cuenta {
       ];
     });
 
-    this.idTruncado = computed(function() {
+    this.idTruncado = computed(function () {
       const idCompleto = componente.usuarioService.usuarioId();
       if (!idCompleto || idCompleto.length < 8) return "";
       return idCompleto.substring(0, 6) + "···" + idCompleto.substring(idCompleto.length - 4);
     });
 
-    this.textoMarqueePlan = computed(function() {
+    this.textoMarqueePlan = computed(function () {
       componente.versionIdioma();
       const plan = componente.detallePlanActual();
       const palabras: string[] = [];
@@ -188,6 +194,10 @@ export class Cuenta {
       if (plan.id === "business") palabras.push(componente.translate.instant("cuenta.marquee.enterpriseGrade"));
       return palabras.join("   ·   ");
     });
+  }
+
+  ngOnDestroy(): void {
+    this.suscripcionIdioma.unsubscribe();
   }
 
   @HostListener("mousemove", ["$event"])
@@ -241,7 +251,7 @@ export class Cuenta {
     } finally {
       this.guardando.set(false);
       const componente = this;
-      setTimeout(function() {
+      setTimeout(function () {
         componente.mensajeGuardado.set("");
       }, 2400);
     }
@@ -256,7 +266,7 @@ export class Cuenta {
     this.cancelarSalida();
     this.progresoSalidaActivo.set(true);
     const componente = this;
-    this.temporizadorSalida = setTimeout(function() {
+    this.temporizadorSalida = setTimeout(function () {
       componente.cerrarSesion();
     }, DURACION_HOLD_SALIDA_MS);
   }
@@ -296,7 +306,11 @@ export class Cuenta {
     try {
       const claveGuardada = await this.usuarioService.agregarClaveSsh(nombre, contenido);
       const fechaTexto = claveGuardada.fechaCreacion
-        ? new Date(claveGuardada.fechaCreacion).toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" })
+        ? new Date(claveGuardada.fechaCreacion).toLocaleDateString("en", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric"
+          })
         : new Date().toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" });
       const nueva: ClaveSsh = {
         id: claveGuardada.id,
@@ -304,32 +318,49 @@ export class Cuenta {
         huella: claveGuardada.huella,
         fechaCreacion: fechaTexto
       };
-      this.listaDeClavesSsh.update(function(actual) { return [...actual, nueva]; });
+      this.listaDeClavesSsh.update(function (actual) {
+        return [...actual, nueva];
+      });
       this.cancelarFormularioClave();
     } catch (error) {
       this.mensajeGuardado.set(this.translate.instant("comun.error"));
       const componente = this;
-      setTimeout(function() { componente.mensajeGuardado.set(""); }, 2500);
+      setTimeout(function () {
+        componente.mensajeGuardado.set("");
+      }, 2500);
     }
   }
 
   async eliminarClaveSsh(idClave: string): Promise<void> {
     try {
       await this.usuarioService.eliminarClaveSsh(idClave);
-      this.listaDeClavesSsh.update(function(actual) {
-        return actual.filter(function(c) { return c.id !== idClave; });
+      this.listaDeClavesSsh.update(function (actual) {
+        return actual.filter(function (c) {
+          return c.id !== idClave;
+        });
       });
     } catch (error) {
       this.mensajeGuardado.set(this.translate.instant("comun.error"));
       const componente = this;
-      setTimeout(function() { componente.mensajeGuardado.set(""); }, 2500);
+      setTimeout(function () {
+        componente.mensajeGuardado.set("");
+      }, 2500);
     }
   }
 
   async alternarNotificacion(tipo: "email" | "criticas" | "despliegues"): Promise<void> {
-    if (tipo === "email") this.notificacionesEmail.update(function(v) { return !v; });
-    if (tipo === "criticas") this.notificacionesAlertasCriticas.update(function(v) { return !v; });
-    if (tipo === "despliegues") this.notificacionesDespliegues.update(function(v) { return !v; });
+    if (tipo === "email")
+      this.notificacionesEmail.update(function (v) {
+        return !v;
+      });
+    if (tipo === "criticas")
+      this.notificacionesAlertasCriticas.update(function (v) {
+        return !v;
+      });
+    if (tipo === "despliegues")
+      this.notificacionesDespliegues.update(function (v) {
+        return !v;
+      });
 
     const preferencias = {
       email: this.notificacionesEmail(),
@@ -348,9 +379,13 @@ export class Cuenta {
 
     try {
       const claves = await this.usuarioService.listarClavesSsh();
-      const adaptadas: ClaveSsh[] = (claves || []).map(function(c) {
+      const adaptadas: ClaveSsh[] = (claves || []).map(function (c) {
         const fechaTexto = c.fechaCreacion
-          ? new Date(c.fechaCreacion).toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" })
+          ? new Date(c.fechaCreacion).toLocaleDateString("en", {
+              day: "2-digit",
+              month: "short",
+              year: "numeric"
+            })
           : "—";
         return { id: c.id, nombre: c.nombre, huella: c.huella, fechaCreacion: fechaTexto };
       });

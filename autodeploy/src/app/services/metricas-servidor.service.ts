@@ -21,11 +21,11 @@ export interface MetricaServidor {
 
 @Injectable({ providedIn: "root" })
 export class MetricasServidorService {
-
   metricasPorServidor = signal<Map<string, MetricaServidor>>(new Map());
 
   private socketWeb: WebSocket | null = null;
   private intervaloReconexion: number | null = null;
+  private desconectadoManualmente = false;
 
   constructor(private clienteHttp: HttpClient) {}
 
@@ -48,6 +48,7 @@ export class MetricasServidorService {
         return;
       }
     }
+    this.desconectadoManualmente = false;
     const protocoloSocket = window.location.protocol === "https:" ? "wss:" : "ws:";
     const tokenJwt = sessionStorage.getItem("token") || localStorage.getItem("token") || "";
     const urlSocket = protocoloSocket + "//" + window.location.host + "/ws/metricas?token=" + encodeURIComponent(tokenJwt);
@@ -75,6 +76,7 @@ export class MetricasServidorService {
   }
 
   desconectar(): void {
+    this.desconectadoManualmente = true;
     if (this.intervaloReconexion !== null) {
       window.clearTimeout(this.intervaloReconexion);
       this.intervaloReconexion = null;
@@ -101,6 +103,9 @@ export class MetricasServidorService {
   }
 
   private programarReconexion(): void {
+    if (this.desconectadoManualmente) {
+      return;
+    }
     if (this.intervaloReconexion !== null) {
       return;
     }

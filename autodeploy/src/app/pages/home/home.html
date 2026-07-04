@@ -1,74 +1,115 @@
-<main class="landing">
+<main class="landing" cursorPersonalizado>
 
-  <!-- HERO: anima en carga (no necesita scroll) -->
+  <!-- HERO: red 3D de servidores + titular gigante -->
   <section class="seccion-bienvenida">
+    <section class="seccion-bienvenida__lienzo" aria-hidden="true" #lienzoHero></section>
+    <section class="seccion-bienvenida__brillo" aria-hidden="true"></section>
+
     <section class="seccion-bienvenida__contenido">
-      <section class="seccion-bienvenida__etiqueta animar animar--subir animar--retraso-0">
-        <span class="seccion-bienvenida__etiqueta__punto"></span>
-        <span class="seccion-bienvenida__etiqueta__texto">{{ 'home.hero.etiqueta' | translate }}</span>
-      </section>
+      <header class="seccion-bienvenida__intro">
+        <span class="seccion-bienvenida__etiqueta animar animar--subir animar--retraso-0">
+          <span class="seccion-bienvenida__etiqueta__punto"></span>
+          <span class="seccion-bienvenida__etiqueta__texto">{{ 'home.hero.etiqueta' | translate }}</span>
+        </span>
 
-      <h1 class="seccion-bienvenida__titulo animar animar--subir animar--retraso-100">
-        {{ 'home.hero.titulo' | translate }}
-      </h1>
+        <h1 class="seccion-bienvenida__titulo animar animar--subir animar--retraso-100">
+          {{ 'home.hero.titulo' | translate }}
+        </h1>
 
-      <p class="seccion-bienvenida__descripcion animar animar--subir animar--retraso-200">
-        {{ 'home.hero.descripcion' | translate }}
-      </p>
+        <p class="seccion-bienvenida__descripcion animar animar--subir animar--retraso-200">
+          {{ 'home.hero.descripcion' | translate }}
+        </p>
 
-      <section class="seccion-bienvenida__botones animar animar--subir animar--retraso-300">
-        <a class="seccion-bienvenida__boton--primario" [routerLink]="rutaEmpezar()">
-          {{ 'home.hero.ctaPrimario' | translate }}
-          <i class="fa-solid fa-arrow-right"></i>
-        </a>
-        <a class="seccion-bienvenida__boton--secundario" href="#how-it-works">{{ 'home.hero.ctaSecundario' | translate }}</a>
-      </section>
+        <nav class="seccion-bienvenida__acciones animar animar--subir animar--retraso-300">
+          <a class="seccion-bienvenida__boton seccion-bienvenida__boton--primario" botonMagnetico [routerLink]="rutaEmpezar()">
+            {{ 'home.hero.ctaPrimario' | translate }}
+            <i class="fa-solid fa-arrow-right"></i>
+          </a>
+          <a class="seccion-bienvenida__boton seccion-bienvenida__boton--fantasma" botonMagnetico href="#how-it-works">
+            {{ 'home.hero.ctaSecundario' | translate }}
+          </a>
+        </nav>
+      </header>
 
-      <section class="seccion-bienvenida__tecnologias animar animar--subir animar--retraso-400">
-        <span class="seccion-bienvenida__tecnologia"><i class="fa-brands fa-docker"></i></span>
-        <span class="seccion-bienvenida__tecnologia"><i class="fa-brands fa-node-js"></i></span>
-        <span class="seccion-bienvenida__tecnologia"><i class="fa-brands fa-python"></i></span>
-        <span class="seccion-bienvenida__tecnologia"><i class="fa-brands fa-linux"></i></span>
-        <span class="seccion-bienvenida__tecnologia"><i class="fa-brands fa-github"></i></span>
-      </section>
+      <aside
+        class="seccion-bienvenida__terminal animar animar--derecha animar--retraso-150"
+        #terminalHero
+        role="button"
+        tabindex="0"
+        aria-label="Reejecutar la demostración de despliegue"
+        (click)="reejecutarTerminal()"
+        (keydown.enter)="reejecutarTerminal()"
+      >
+        <section class="seccion-bienvenida__terminal__barra">
+          <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--rojo"></span>
+          <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--naranja"></span>
+          <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--verde"></span>
+          <span class="seccion-bienvenida__terminal__titulo">{{ 'home.hero.terminal.titulo' | translate }}</span>
+          <span class="seccion-bienvenida__terminal__reejecutar" aria-hidden="true">▶ ejecutar</span>
+        </section>
+        <section class="seccion-bienvenida__terminal__cuerpo">
+          <p class="seccion-bienvenida__terminal__linea">
+            <span class="seccion-bienvenida__terminal__prompt">$</span>
+            <span class="seccion-bienvenida__terminal__comando">autodeploy connect vps-prod-01</span>
+          </p>
+          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
+            &nbsp;&nbsp;{{ 'home.hero.terminal.linea1' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
+          </p>
+          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
+            &nbsp;&nbsp;{{ 'home.hero.terminal.linea2' | translate }}
+          </p>
+          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--vacia">&nbsp;</p>
+          <p class="seccion-bienvenida__terminal__linea">
+            <span class="seccion-bienvenida__terminal__prompt">$</span>
+            <span class="seccion-bienvenida__terminal__comando">autodeploy deploy --app my-site</span>
+          </p>
+          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
+            &nbsp;&nbsp;{{ 'home.hero.terminal.linea3' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
+          </p>
+          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
+            &nbsp;&nbsp;{{ 'home.hero.terminal.linea4' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
+          </p>
+          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
+            &nbsp;&nbsp;{{ 'home.hero.terminal.linea5' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
+          </p>
+          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--vacia">&nbsp;</p>
+          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
+            &nbsp;&nbsp;<span class="seccion-bienvenida__terminal__url-resultado">{{ 'home.hero.terminal.urlFinal' | translate }}</span>
+          </p>
+        </section>
+      </aside>
     </section>
 
-    <section class="seccion-bienvenida__terminal animar animar--derecha animar--retraso-150">
-      <section class="seccion-bienvenida__terminal__barra">
-        <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--rojo"></span>
-        <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--naranja"></span>
-        <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--verde"></span>
-        <span class="seccion-bienvenida__terminal__titulo">{{ 'home.hero.terminal.titulo' | translate }}</span>
+    <a class="seccion-bienvenida__scroll" href="#features" aria-label="Bajar a características">
+      <span class="seccion-bienvenida__scroll__texto">scroll</span>
+      <span class="seccion-bienvenida__scroll__linea"></span>
+    </a>
+  </section>
+
+  <!-- CINTA INFINITA DE TECNOLOGIAS -->
+  <section class="cinta-tecnologias" aria-hidden="true">
+    <section class="cinta-tecnologias__pista">
+      <section class="cinta-tecnologias__grupo">
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-docker cinta-tecnologias__item__icono"></i>Docker</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-node-js cinta-tecnologias__item__icono"></i>Node.js</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-python cinta-tecnologias__item__icono"></i>Python</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-linux cinta-tecnologias__item__icono"></i>Linux</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-java cinta-tecnologias__item__icono"></i>Java</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-github cinta-tecnologias__item__icono"></i>GitHub</span>
+        <span class="cinta-tecnologias__item"><i class="fa-solid fa-server cinta-tecnologias__item__icono"></i>nginx</span>
+        <span class="cinta-tecnologias__item"><i class="fa-solid fa-database cinta-tecnologias__item__icono"></i>MongoDB</span>
+        <span class="cinta-tecnologias__item"><i class="fa-solid fa-terminal cinta-tecnologias__item__icono"></i>SSH</span>
       </section>
-      <section class="seccion-bienvenida__terminal__cuerpo">
-        <p class="seccion-bienvenida__terminal__linea">
-          <span class="seccion-bienvenida__terminal__prompt">$</span>
-          <span class="seccion-bienvenida__terminal__comando">autodeploy connect vps-prod-01</span>
-        </p>
-        <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;{{ 'home.hero.terminal.linea1' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
-        </p>
-        <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;{{ 'home.hero.terminal.linea2' | translate }}
-        </p>
-        <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--vacia">&nbsp;</p>
-        <p class="seccion-bienvenida__terminal__linea">
-          <span class="seccion-bienvenida__terminal__prompt">$</span>
-          <span class="seccion-bienvenida__terminal__comando">autodeploy deploy --app my-site</span>
-        </p>
-        <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;{{ 'home.hero.terminal.linea3' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
-        </p>
-        <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;{{ 'home.hero.terminal.linea4' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
-        </p>
-        <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;{{ 'home.hero.terminal.linea5' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
-        </p>
-        <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--vacia">&nbsp;</p>
-        <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-          &nbsp;&nbsp;<span class="seccion-bienvenida__terminal__url-resultado">{{ 'home.hero.terminal.urlFinal' | translate }}</span>
-        </p>
+      <section class="cinta-tecnologias__grupo">
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-docker cinta-tecnologias__item__icono"></i>Docker</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-node-js cinta-tecnologias__item__icono"></i>Node.js</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-python cinta-tecnologias__item__icono"></i>Python</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-linux cinta-tecnologias__item__icono"></i>Linux</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-java cinta-tecnologias__item__icono"></i>Java</span>
+        <span class="cinta-tecnologias__item"><i class="fa-brands fa-github cinta-tecnologias__item__icono"></i>GitHub</span>
+        <span class="cinta-tecnologias__item"><i class="fa-solid fa-server cinta-tecnologias__item__icono"></i>nginx</span>
+        <span class="cinta-tecnologias__item"><i class="fa-solid fa-database cinta-tecnologias__item__icono"></i>MongoDB</span>
+        <span class="cinta-tecnologias__item"><i class="fa-solid fa-terminal cinta-tecnologias__item__icono"></i>SSH</span>
       </section>
     </section>
   </section>
@@ -76,6 +117,7 @@
   <!-- FUNCIONALIDADES -->
   <section class="seccion-funcionalidades" id="features">
     <section class="seccion-funcionalidades__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
+      <span class="seccion-funcionalidades__eyebrow">01</span>
       <h2 class="seccion-funcionalidades__titulo">{{ 'home.funcionalidades.titulo' | translate }}</h2>
       <p class="seccion-funcionalidades__descripcion">{{ 'home.funcionalidades.descripcion' | translate }}</p>
     </section>
@@ -117,13 +159,35 @@
     </section>
   </section>
 
+  <!-- STATS -->
+  <section class="seccion-stats" [scrollReveal]="'arriba'" [retraso]="0">
+    <article class="seccion-stats__item">
+      <span class="seccion-stats__numero" [contadorAnimado]="2400" sufijo="+">0</span>
+      <span class="seccion-stats__etiqueta">Despliegues automatizados</span>
+    </article>
+    <article class="seccion-stats__item">
+      <span class="seccion-stats__numero" [contadorAnimado]="99.9" [decimales]="1" sufijo="%">0</span>
+      <span class="seccion-stats__etiqueta">Uptime medio</span>
+    </article>
+    <article class="seccion-stats__item">
+      <span class="seccion-stats__numero" [contadorAnimado]="6">0</span>
+      <span class="seccion-stats__etiqueta">Servicios monitorizados</span>
+    </article>
+    <article class="seccion-stats__item">
+      <span class="seccion-stats__numero" [contadorAnimado]="5">0</span>
+      <span class="seccion-stats__etiqueta">Idiomas soportados</span>
+    </article>
+  </section>
+
   <!-- HOW IT WORKS -->
   <section class="workflow" id="how-it-works">
     <section class="workflow__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
+      <span class="workflow__eyebrow">02</span>
       <h2 class="workflow__titulo">{{ 'home.comoFunciona.titulo' | translate }}</h2>
       <p class="workflow__descripcion">{{ 'home.comoFunciona.descripcion' | translate }}</p>
     </section>
 
+    <section class="workflow__cuerpo">
     <section class="workflow__pasos">
       <section class="workflow__paso" [scrollReveal]="'izquierda'" [retraso]="0">
         <span class="workflow__paso__numero">01</span>
@@ -149,11 +213,32 @@
         </section>
       </section>
     </section>
+
+      <aside class="workflow__panel" [scrollReveal]="'derecha'" [retraso]="100">
+        <section class="workflow__panel__barra">
+          <span class="workflow__panel__punto workflow__panel__punto--rojo"></span>
+          <span class="workflow__panel__punto workflow__panel__punto--naranja"></span>
+          <span class="workflow__panel__punto workflow__panel__punto--verde"></span>
+          <span class="workflow__panel__titulo">despliegue.log</span>
+        </section>
+        <section class="workflow__panel__cuerpo">
+          <p class="workflow__panel__linea"><span class="workflow__panel__marca">▸</span> git clone proyecto.git</p>
+          <p class="workflow__panel__linea workflow__panel__linea--ok">✓ Repositorio clonado</p>
+          <p class="workflow__panel__linea"><span class="workflow__panel__marca">▸</span> Instalando dependencias</p>
+          <p class="workflow__panel__linea workflow__panel__linea--ok">✓ Dependencias listas</p>
+          <p class="workflow__panel__linea"><span class="workflow__panel__marca">▸</span> Configurando nginx + SSL</p>
+          <p class="workflow__panel__linea workflow__panel__linea--ok">✓ HTTPS activo · Let's Encrypt</p>
+          <p class="workflow__panel__linea"><span class="workflow__panel__marca">▸</span> Publicando</p>
+          <p class="workflow__panel__linea"><span class="workflow__panel__ruta">https://mi-app.autodeploy.sh</span></p>
+        </section>
+      </aside>
+    </section>
   </section>
 
   <!-- PRICING -->
   <section class="seccion-precios" id="pricing">
     <section class="seccion-precios__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
+      <span class="seccion-precios__eyebrow">03</span>
       <h2 class="seccion-precios__titulo">{{ 'home.precios.titulo' | translate }}</h2>
       <p class="seccion-precios__descripcion">{{ 'home.precios.descripcion' | translate }}</p>
     </section>

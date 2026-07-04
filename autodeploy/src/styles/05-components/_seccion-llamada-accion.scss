@@ -2,88 +2,132 @@
 @use "../01-tools/funciones" as *;
 
 .seccion-llamada-accion {
-  padding: token-espacio(3xl) 0 token-espacio(6xl);
+  padding: clamp(4rem, 10vh, 7rem) 0;
+  background-color: hsl(35, 20%, 5%);
 
   &__contenedor {
-    @include flex-entre;
-    gap: token-espacio(5xl);
-    padding: token-espacio(5xl);
-    background: token-color(fondo-tarjeta);
-    border: 1px solid token-color(borde-normal);
-    border-radius: token-radio(l);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: token-espacio(4xl);
+    padding: clamp(4rem, 10vh, 7rem) token-espacio(5xl);
+    background:
+      radial-gradient(80% 60% at 50% 45%, hsla(47, 86%, 56%, 0.16), transparent 65%),
+      radial-gradient(55% 45% at 50% 100%, hsla(47, 86%, 56%, 0.07), transparent 70%),
+      hsl(35, 20%, 5%);
+    border: 1px solid var(--borde-normal);
+    border-radius: token-radio(4xl);
+    overflow: hidden;
+    isolation: isolate;
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background-image: radial-gradient(hsla(40, 33%, 91%, 0.045) 1px, transparent 1px);
+      background-size: 2rem 2rem;
+      mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black, transparent 88%);
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto 0;
+      height: 1px;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, hsla(47, 86%, 56%, 0.55), transparent);
+    }
 
     @include movil {
-      flex-direction: column;
-      align-items: flex-start;
+      padding: token-espacio(5xl) token-espacio(3xl);
       gap: token-espacio(3xl);
-      padding: token-espacio(3xl);
     }
   }
 
   &__texto {
-    @include flex-columna;
-    gap: token-espacio(m);
-    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: token-espacio(2xl);
+    text-align: center;
+    max-width: 44rem;
   }
 
   &__titulo {
     font-family: var(--font-secondary);
-    font-size: fluido(1.5rem, 2rem);
-    font-weight: var(--font-weight-bold);
-    letter-spacing: -0.75px;
-    color: token-color(texto-claro);
-    line-height: var(--line-height-tight);
+    font-size: clamp(2.5rem, 6vw, 4.25rem);
+    font-weight: var(--font-weight-extrabold);
+    line-height: 0.95;
+    letter-spacing: -0.04em;
+    text-wrap: balance;
+    background-image: linear-gradient(
+      170deg,
+      var(--texto-claro) 0%,
+      var(--texto-claro) 50%,
+      hsl(47, 90%, 70%) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
   }
 
   &__descripcion {
-    font-size: var(--font-size-md);
+    font-size: clamp(1rem, 1.2vw, 1.15rem);
     line-height: var(--line-height-relaxed);
-    color: token-color(texto-medio);
-    max-width: 28rem;
+    color: var(--texto-medio);
+    max-width: 32rem;
+    letter-spacing: -0.005em;
   }
 
   &__botones {
     display: flex;
+    justify-content: center;
     gap: token-espacio(l);
-    flex-shrink: 0;
   }
 
   &__boton {
     &--primario {
-      display: flex;
+      display: inline-flex;
       align-items: center;
-      padding: token-espacio(ml) token-espacio(3xl);
-      background-color: token-color(amarillo-normal);
-      color: token-color(fondo-oscuro);
-      font-size: var(--font-size-md);
+      justify-content: center;
+      padding: 1.1rem 2.75rem;
+      background-color: var(--amarillo-normal);
+      color: hsl(0, 0%, 6%);
+      font-family: var(--font-secondary);
+      font-size: var(--font-size-base);
       font-weight: var(--font-weight-bold);
-      border-radius: token-radio(l);
-      @include transicion(background-color, transform);
+      letter-spacing: -0.01em;
+      border-radius: token-radio(full);
+      box-shadow:
+        0 1rem 3rem hsla(47, 86%, 56%, 0.4),
+        inset 0 1px 0 hsla(0, 0%, 100%, 0.3);
+      transition:
+        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+        background-color 0.3s ease;
 
-      &:hover  { background-color: token-color(amarillo-normal-hover); }
-      &:active { transform: scale(0.98); }
-      &:focus-visible {
-        outline: 2px solid token-color(amarillo-normal);
-        outline-offset: 2px;
+      &:hover {
+        transform: translateY(-2px);
+        background-color: var(--amarillo-normal-hover);
+        box-shadow:
+          0 1.5rem 4rem hsla(47, 86%, 56%, 0.55),
+          inset 0 1px 0 hsla(0, 0%, 100%, 0.3);
       }
-    }
 
-    &--secundario {
-      display: flex;
-      align-items: center;
-      padding: token-espacio(ml) token-espacio(3xl);
-      background: transparent;
-      border: 1px solid token-color(borde-normal);
-      border-radius: token-radio(l);
-      color: token-color(texto-claro);
-      font-size: var(--font-size-md);
-      font-weight: var(--font-weight-bold);
-      @include transicion(border-color, background-color);
+      &:active {
+        transform: translateY(0) scale(0.98);
+      }
 
-      &:hover { border-color: rgba(240, 236, 226, 0.25); }
       &:focus-visible {
-        outline: 2px solid token-color(amarillo-normal);
-        outline-offset: 2px;
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: 4px;
+      }
+
+      @include movimiento-reducido {
+        transition: background-color 0.3s ease;
       }
     }
   }

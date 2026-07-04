@@ -27,7 +27,10 @@
 
 // 05 · Components — bloques BEM concretos. Orden: marketing → app → páginas.
 @use "styles/05-components/seccion-bienvenida";
+@use "styles/05-components/cinta-tecnologias";
+@use "styles/05-components/cursor-personalizado";
 @use "styles/05-components/seccion-funcionalidades";
+@use "styles/05-components/seccion-stats";
 @use "styles/05-components/workflow";
 @use "styles/05-components/seccion-llamada-accion";
 @use "styles/05-components/seccion-precios";

@@ -1,0 +1,37 @@
+.cursor-personalizado {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 1.75rem;   /* 28px */
+  height: 1.75rem;  /* 28px */
+  border: 1.5px solid hsl(47, 86%, 56%);
+  border-radius: 50%;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  mix-blend-mode: difference;
+  opacity: 1;
+  transition: width 0.25s ease, height 0.25s ease, background-color 0.25s ease, opacity 0.25s ease;
+}
+
+.cursor-personalizado--activo {
+  width: 3rem;   /* 48px */
+  height: 3rem;  /* 48px */
+  background-color: hsla(47, 86%, 56%, 0.15);
+}
+
+body.cursor-personalizado-activo {
+  cursor: none;
+}
+
+body.cursor-personalizado-activo a {
+  cursor: none;
+}
+
+body.cursor-personalizado-activo button {
+  cursor: none;
+}
+
+body.cursor-personalizado-activo [role="button"] {
+  cursor: none;
+}

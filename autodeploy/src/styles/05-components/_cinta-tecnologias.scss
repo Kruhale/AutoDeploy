@@ -1,0 +1,65 @@
+// Cinta horizontal en bucle infinito con el stack de tecnologias. La pista tiene
+// dos grupos identicos y se desplaza hasta -50%, asi el bucle es imperceptible.
+.cinta-tecnologias {
+  position: relative;
+  padding: clamp(2.25rem, 5vh, 3.75rem) 0;
+  border-top: 1px solid var(--borde-suave);
+  border-bottom: 1px solid var(--borde-suave);
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, black 12%, black 88%, transparent);
+}
+
+.cinta-tecnologias__pista {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cinta-tecnologias__pista {
+    animation: desplazar-cinta 34s linear infinite;
+  }
+}
+
+.cinta-tecnologias:hover .cinta-tecnologias__pista {
+  animation-play-state: paused;
+}
+
+.cinta-tecnologias__grupo {
+  display: flex;
+  align-items: center;
+  gap: clamp(2.5rem, 5vw, 4.5rem);
+  padding-right: clamp(2.5rem, 5vw, 4.5rem);
+  flex-shrink: 0;
+}
+
+.cinta-tecnologias__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  font-family: var(--font-mono);
+  font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.02em;
+  color: var(--texto-apagado);
+  white-space: nowrap;
+  transition: color 0.3s ease;
+}
+
+.cinta-tecnologias__item:hover {
+  color: var(--amarillo-normal);
+}
+
+.cinta-tecnologias__item__icono {
+  font-size: 1.3em;
+}
+
+@keyframes desplazar-cinta {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}

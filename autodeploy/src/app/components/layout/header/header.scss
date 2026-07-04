@@ -6,9 +6,9 @@
   justify-content: space-between;
   height: 3.5rem;
   padding: 0 0.65rem 0 1.5rem;
-  background: var(--fondo-cabecera);
+  background: hsla(0, 0%, 6%, 0.55);
   backdrop-filter: blur(14px);
-  border: 1px solid var(--borde-normal);
+  border: 1px solid hsla(47, 86%, 56%, 0.13);
   border-radius: var(--radius-full);
   position: sticky;
   top: 1rem;

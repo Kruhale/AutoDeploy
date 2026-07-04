@@ -1,37 +1,64 @@
 @use "../01-tools/mixins" as *;
 
+@property --angulo-borde-beam {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes girar-borde-beam {
+  to { --angulo-borde-beam: 360deg; }
+}
+
+@keyframes pulso-badge {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.35; transform: scale(0.75); }
+}
+
 .seccion-precios {
-  padding: 6rem 0 5rem;
+  padding: clamp(3.5rem, 8vh, 5.5rem) 0;
+  background-color: hsl(35, 20%, 5%);
+  border-top: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, hsla(47, 86%, 56%, 0.18), transparent) 1;
 
   &__cabecera {
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    align-items: flex-start;
+    gap: var(--spacing-size-l);
     max-width: 42rem;
-    margin-bottom: 3.5rem;
+    margin-bottom: var(--spacing-size-6xl);
+  }
 
-    &::before {
-      content: "03 · TIERS";
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.22em;
-      color: var(--texto-apagado);
-      text-transform: uppercase;
-      padding: 0.15rem 0.55rem;
-      border: 1px solid var(--borde-normal);
-      border-radius: var(--radius-full);
-      align-self: flex-start;
-      margin-bottom: 0.5rem;
+  &__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem; /* 12px */
+    font-family: var(--font-mono);
+    font-size: 0.75rem; /* 12px */
+    font-weight: var(--font-weight-bold);
+    color: var(--amarillo-normal);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 2rem; /* 32px */
+      height: 1px;
+      background-color: var(--amarillo-normal);
+      opacity: 0.4;
     }
   }
 
   &__titulo {
     font-family: var(--font-secondary);
-    font-size: clamp(2.25rem, 4.5vw, 3.5rem);
+    font-size: clamp(2.5rem, 6vw, 4.25rem);
     font-weight: var(--font-weight-bold);
     color: var(--texto-claro);
     letter-spacing: -0.045em;
-    line-height: 0.98;
+    line-height: 0.95;
+    text-wrap: balance;
   }
 
   &__descripcion {
@@ -43,18 +70,15 @@
   &__cuadricula {
     display: grid;
     grid-template-columns: 1fr 1.18fr 1fr;
-    gap: 1.25rem;
-    align-items: stretch;
+    gap: 1.5rem;
+    align-items: center;
 
-    @media (max-width: 960px) {
+    @include tablet {
       grid-template-columns: 1fr;
-      gap: 1rem;
+      gap: var(--spacing-size-3xl);
     }
   }
 }
-
-// Tarjeta de un plan de precios con el precio gigante en grande.
-// Se adapta al ancho del contenedor donde aparece (landing, panel de billing, etc)
 
 .tarjeta-plan {
   container-type: inline-size;
@@ -64,67 +88,116 @@
   display: flex;
   flex-direction: column;
   gap: 1.75rem;
-  padding: 1.85rem;
-  background-color: hsla(40, 33.33%, 91.37%, 0.015);
+  padding: 2rem;
+  background-color: hsla(0, 0%, 5%, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-2xl);
-  transition:
-    border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-    background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-    transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: var(--radius-3xl);
+  box-shadow:
+    0 1.5rem 3rem hsla(0, 0%, 0%, 0.45),
+    inset 0 1px 0 hsla(0, 0%, 100%, 0.04);
+  @include transicion(transform, border-color, box-shadow);
 
   &:hover {
+    transform: translateY(-6px);
     border-color: hsla(40, 33.33%, 91.37%, 0.18);
-    background-color: hsla(40, 33.33%, 91.37%, 0.03);
-    transform: translateY(-2px);
+    box-shadow:
+      0 2.25rem 4.5rem hsla(0, 0%, 0%, 0.55),
+      inset 0 1px 0 hsla(0, 0%, 100%, 0.06);
   }
 
   &:active {
-    transform: translateY(-1px);
+    transform: translateY(-3px);
   }
 
-  &:focus-within {
-    outline: 2px solid var(--amarillo-normal);
-    outline-offset: 2px;
-  }
+  @include foco-visible;
 
   &--destacado {
-    border-color: hsla(47, 86%, 56%, 0.36);
-    background: linear-gradient(180deg, hsla(47, 86%, 56%, 0.05), transparent 65%);
-    padding-top: 2.5rem;
+    border-color: hsla(47, 86%, 56%, 0.28);
+    background-color: hsla(0, 0%, 5%, 0.72);
+    background-image: linear-gradient(160deg, hsla(47, 86%, 56%, 0.07) 0%, transparent 55%);
+    box-shadow:
+      0 2rem 4rem hsla(0, 0%, 0%, 0.5),
+      0 0 0 1px hsla(47, 86%, 56%, 0.12),
+      0 0 4.5rem hsla(47, 86%, 56%, 0.22),
+      inset 0 1px 0 hsla(0, 0%, 100%, 0.06);
+    padding-top: 2.75rem;
+    margin-block: -1rem;
+    transform: scale(1.04);
+
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      padding: 1px;
+      border-radius: inherit;
+      background: conic-gradient(
+        from var(--angulo-borde-beam) at 50% 50%,
+        transparent 0%,
+        transparent 70%,
+        hsla(47, 86%, 56%, 0.95) 83%,
+        hsla(47, 86%, 56%, 0.35) 90%,
+        transparent 100%
+      );
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      z-index: 1;
+
+      @include movimiento-permitido {
+        animation: girar-borde-beam 4s linear infinite;
+      }
+    }
 
     &:hover {
-      border-color: var(--amarillo-normal);
-      background: linear-gradient(180deg, hsla(47, 86%, 56%, 0.08), transparent 65%);
+      transform: translateY(-6px) scale(1.05);
+      border-color: hsla(47, 86%, 56%, 0.5);
+      box-shadow:
+        0 2.75rem 5.5rem hsla(0, 0%, 0%, 0.6),
+        0 0 0 1px hsla(47, 86%, 56%, 0.28),
+        0 0 5.5rem hsla(47, 86%, 56%, 0.26),
+        inset 0 1px 0 hsla(0, 0%, 100%, 0.08);
     }
 
     .tarjeta-plan__precio__numero {
       color: var(--amarillo-normal);
     }
 
-    @media (max-width: 960px) {
-      padding-top: 2.5rem;
+    .tarjeta-plan__item__check {
+      color: var(--amarillo-normal);
+      border-color: hsla(47, 86%, 56%, 0.45);
+      background-color: hsla(47, 86%, 56%, 0.1);
+    }
+
+    @include tablet {
+      margin-block: 0;
+      transform: none;
     }
   }
 
   &__badge {
     position: absolute;
-    top: -0.7rem;
-    left: 1.85rem;
+    top: -0.65rem;
+    left: 2rem;
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
     background-color: var(--amarillo-normal);
     color: var(--fondo-oscuro);
     font-family: var(--font-mono);
-    font-size: 0.6rem;
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     text-transform: uppercase;
     letter-spacing: 0.22em;
-    padding: 0.3rem 0.7rem;
+    padding: 0.3rem 0.75rem;
     border-radius: var(--radius-full);
     white-space: nowrap;
-    box-shadow: 0 0.4rem 1rem hsla(47, 86%, 56%, 0.25);
+    box-shadow:
+      0 0.3rem 1rem hsla(47, 86%, 56%, 0.4),
+      0 0 0 4px hsla(47, 86%, 56%, 0.1);
+    z-index: 2;
 
     &::before {
       content: "";
@@ -132,8 +205,9 @@
       height: 0.35rem;
       border-radius: 50%;
       background-color: var(--fondo-oscuro);
-      @media (prefers-reduced-motion: no-preference) {
-        animation: bienvenida-respirar 2s ease-in-out infinite;
+
+      @include movimiento-permitido {
+        animation: pulso-badge 2s ease-in-out infinite;
       }
     }
   }
@@ -141,14 +215,14 @@
   &__cabecera {
     display: flex;
     flex-direction: column;
-    gap: 0.65rem;
+    gap: var(--spacing-size-m);
     padding-bottom: 1.25rem;
     border-bottom: 1px solid var(--borde-suave);
   }
 
   &__nombre {
     font-family: var(--font-mono);
-    font-size: 0.65rem;
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-bold);
     color: var(--texto-apagado);
     text-transform: uppercase;
@@ -158,16 +232,16 @@
   &__precio {
     display: flex;
     align-items: baseline;
-    gap: 0.2rem;
-    margin-top: 0.2rem;
+    gap: 0.25rem;
+    margin-top: 0.25rem;
 
     &__numero {
       font-family: var(--font-secondary);
-      font-size: clamp(2.75rem, 5vw, 3.75rem);
-      font-weight: var(--font-weight-semibold);
+      font-size: clamp(2.5rem, 6vw, 3.5rem);
+      font-weight: var(--font-weight-black);
       color: var(--texto-claro);
       line-height: 1;
-      letter-spacing: -0.045em;
+      letter-spacing: -0.05em;
       font-variant-numeric: tabular-nums;
     }
 
@@ -180,11 +254,11 @@
   }
 
   &__descripcion {
-    font-size: 0.875rem;
+    font-size: var(--font-size-md);
     color: var(--texto-medio);
-    line-height: 1.55;
+    line-height: var(--line-height-normal);
     letter-spacing: -0.005em;
-    margin-top: 0.4rem;
+    margin-top: 0.25rem;
   }
 
   &__lista {
@@ -197,8 +271,8 @@
     display: flex;
     align-items: center;
     gap: 0.85rem;
-    padding: 0.65rem 0;
-    font-size: 0.875rem;
+    padding: 0.625rem 0;
+    font-size: var(--font-size-md);
     color: var(--texto-claro);
     letter-spacing: -0.005em;
     border-bottom: 1px solid var(--borde-suave);
@@ -209,37 +283,35 @@
 
     &--inactivo {
       color: var(--texto-apagado);
-      text-decoration: line-through;
-      text-decoration-thickness: 1px;
-      text-decoration-color: var(--borde-normal);
+      opacity: 0.45;
     }
 
     &__check {
-      color: var(--amarillo-normal);
-      font-size: 0.65rem;
-      width: 1rem;
-      height: 1rem;
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid hsla(47, 86%, 56%, 0.4);
+      width: 1.1rem;
+      height: 1.1rem;
       border-radius: 50%;
-      background-color: hsla(47, 86%, 56%, 0.08);
-      flex-shrink: 0;
+      border: 1px solid hsla(142, 70%, 45%, 0.4);
+      background-color: hsla(142, 70%, 45%, 0.08);
+      color: var(--verde-normal);
+      font-size: 0.55rem;
     }
 
     &__xmark {
-      color: var(--texto-apagado);
-      font-size: 0.65rem;
-      width: 1rem;
-      height: 1rem;
+      flex-shrink: 0;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid var(--borde-normal);
+      width: 1.1rem;
+      height: 1.1rem;
       border-radius: 50%;
-      flex-shrink: 0;
-      opacity: 0.6;
+      border: 1px solid var(--borde-suave);
+      color: var(--texto-apagado);
+      font-size: 0.55rem;
+      opacity: 0.45;
     }
   }
 
@@ -251,29 +323,34 @@
     margin-top: auto;
     font-family: var(--font-secondary);
     letter-spacing: -0.005em;
+    position: relative;
+    z-index: 2;
 
     &--actual {
       cursor: not-allowed;
-      opacity: 0.55;
+      opacity: 0.5;
       pointer-events: none;
     }
   }
 
-  // En contenedores estrechos (sidebar de comparativa, modal lateral)
-  // el precio gigante reduce su tamaño y las features se compactan.
   @include contenedor-pequeno {
     padding: 1.25rem;
     gap: 1.25rem;
 
-    &__precio__numero { font-size: 2.25rem; }
-    &__periodo        { font-size: 0.6875rem; }
+    &__precio__numero {
+      font-size: 2.25rem;
+    }
+
+    &__precio__periodo {
+      font-size: 0.6875rem;
+    }
   }
 
-  // En contenedores anchos (comparativa de planes en página dedicada)
-  // el precio se vuelve más imponente para acentuar la jerarquía.
   @include contenedor-grande {
     padding: 2.5rem 2.25rem;
 
-    &__precio__numero { font-size: 4.5rem; }
+    &__precio__numero {
+      font-size: 4.5rem;
+    }
   }
 }

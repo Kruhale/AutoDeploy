@@ -1,7 +1,7 @@
 @use "../../../../styles/00-settings/css-variables" as *;
 
 .pie {
-  background-color: var(--fondo-oscuro);
+  background-color: hsl(35, 18%, 5%);
   padding: 0 var(--spacing-size-7xl);
 }
 
@@ -9,7 +9,7 @@
   height: 1px;
   border: 0;
   margin: 0;
-  background: var(--borde-normal);
+  background: linear-gradient(90deg, transparent, hsla(47, 86%, 56%, 0.35), transparent);
 }
 
 .pie__contenido {

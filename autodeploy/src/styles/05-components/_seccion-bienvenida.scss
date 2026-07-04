@@ -1,281 +1,437 @@
 @use "../01-tools/funciones" as *;
 
-.seccion-bienvenida {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.95fr);
-  align-items: center;
-  gap: 5rem;
-  padding: 4rem 0 5rem;
+// La home es siempre oscura (inmersiva), aunque el usuario tenga el tema claro
+// activado. Redeclaramos aqui la paleta oscura sobre el contenedor de la landing
+// para que no la pise `.tema-claro` del <html>.
+.landing {
+  --fondo-home: hsl(0, 0%, 3.9%);
+  --fondo-home-tarjeta: hsl(32, 6%, 11%);
+  --texto-claro: hsl(40, 33%, 93%);
+  --texto-medio: hsl(30, 6%, 66%);
+  --texto-apagado: hsl(33, 5%, 52%);
+  --borde-normal: hsla(40, 33%, 91%, 0.09);
+  --borde-suave: hsla(40, 33%, 91%, 0.05);
 
-  @media (max-width: 960px) {
+  position: relative;
+  background-color: var(--fondo-home);
+  color: var(--texto-claro);
+  overflow-x: hidden;
+}
+
+// Grano de pelicula fijo sobre toda la home: le quita la sensacion de plano
+// digital y le da textura tipo impreso, muy sutil.
+.landing::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  opacity: 0.045;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23r)'/%3E%3C/svg%3E");
+}
+
+.seccion-bienvenida {
+  position: relative;
+  min-height: 100vh;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(6rem, 12vh, 9rem) 0 clamp(3rem, 6vh, 5rem);
+  isolation: isolate;
+}
+
+// Lienzo donde Three.js monta la red de servidores 3D. Va detras de todo.
+.seccion-bienvenida__lienzo {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+// Halo de luz amarilla que nace arriba a la izquierda y tiñe la escena.
+.seccion-bienvenida__brillo {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 48% at 16% 8%, hsla(47, 86%, 56%, 0.2), transparent 60%),
+    radial-gradient(45% 40% at 84% 90%, hsla(191, 72%, 44%, 0.1), transparent 60%),
+    radial-gradient(125% 125% at 50% 42%, transparent 52%, hsla(0, 0%, 0%, 0.55) 100%);
+}
+
+// Trama de puntos muy sutil para dar textura tecnica al fondo negro.
+.seccion-bienvenida::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image: radial-gradient(hsla(40, 33%, 91%, 0.04) 1px, transparent 1px);
+  background-size: 2.5rem 2.5rem;
+  mask-image: radial-gradient(80% 70% at 50% 40%, black, transparent 85%);
+}
+
+.seccion-bienvenida__contenido {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.9fr);
+  align-items: center;
+  gap: clamp(2.5rem, 6vw, 5.5rem);
+  width: 100%;
+}
+
+@media (max-width: 960px) {
+  .seccion-bienvenida__contenido {
     grid-template-columns: minmax(0, 1fr);
     gap: 2.75rem;
-    padding: 2.5rem 0 3rem;
-  }
-
-  &__contenido {
-    display: flex;
-    flex-direction: column;
-    gap: 1.75rem;
-  }
-
-  // Sello pequeño arriba del titulo, con un puntito amarillo que va latiendo
-  &__etiqueta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.4rem 0.9rem 0.4rem 0.65rem;
-    background-color: transparent;
-    border: 1px solid var(--borde-normal);
-    border-radius: var(--radius-full);
-    width: fit-content;
-
-    &__punto {
-      width: 0.4rem;
-      height: 0.4rem;
-      background-color: var(--amarillo-normal);
-      border-radius: 50%;
-      flex-shrink: 0;
-      @media (prefers-reduced-motion: no-preference) {
-        animation: latido 2.5s ease-in-out infinite;
-      }
-    }
-
-    &__texto {
-      font-family: var(--font-mono);
-      font-size: 0.625rem;
-      font-weight: var(--font-weight-bold);
-      color: var(--texto-medio);
-      white-space: nowrap;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-    }
-  }
-
-  // Titulo principal de la home. El tamaño escala solo entre movil y escritorio
-  &__titulo {
-    font-family: var(--font-secondary);
-    font-size: fluido(2.5rem, 4.5rem);
-    font-weight: var(--font-weight-bold);
-    line-height: 0.95;
-    letter-spacing: -0.045em;
-    color: var(--texto-claro);
-  }
-
-  &__descripcion {
-    font-size: fluido(0.95rem, 1.125rem);
-    line-height: 1.65;
-    color: var(--texto-medio);
-    max-width: 32rem;
-    letter-spacing: -0.005em;
-  }
-
-  // Botones de llamada a la accion: el primario es amarillo, el secundario tiene borde
-  &__botones {
-    display: flex;
-    gap: 0.85rem;
-    flex-wrap: wrap;
-    margin-top: 0.5rem;
-  }
-
-  &__boton {
-    &--primario {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.9rem 1.5rem 0.9rem 1.75rem;
-      background-color: var(--amarillo-normal);
-      color: var(--fondo-oscuro);
-      font-family: var(--font-secondary);
-      font-size: 0.95rem;
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: -0.01em;
-      border-radius: var(--radius-full);
-      transition:
-        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-
-      &:hover {
-        background-color: var(--amarillo-normal-hover);
-        transform: translateY(-1px);
-        gap: 0.95rem;
-        box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
-      }
-
-      &:active {
-        transform: scale(0.98);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--amarillo-normal);
-        outline-offset: 3px;
-      }
-    }
-
-    &--secundario {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.9rem 1.5rem;
-      background: transparent;
-      border: 1px solid var(--borde-normal);
-      border-radius: var(--radius-full);
-      color: var(--texto-claro);
-      font-family: var(--font-secondary);
-      font-size: 0.95rem;
-      font-weight: var(--font-weight-medium);
-      letter-spacing: -0.01em;
-      transition:
-        border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-
-      &:hover {
-        border-color: hsla(40, 33.33%, 91.37%, 0.26);
-        background-color: rgba(240, 236, 226, 0.03);
-        transform: translateY(-1px);
-      }
-
-      &:active {
-        transform: scale(0.98);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--amarillo-normal);
-        outline-offset: 3px;
-      }
-    }
-  }
-
-  // Fila de iconos con las tecnologias del stack. En gris hasta que pasas por encima
-  &__tecnologias {
-    display: flex;
-    gap: 1.4rem;
-    padding-top: 1rem;
-    margin-top: 0.5rem;
-    border-top: 1px dashed var(--borde-suave);
-  }
-
-  &__tecnologia {
-    font-size: 1.2rem;
-    color: var(--texto-apagado);
-    transition:
-      color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-
-    &:hover,
-    &:focus-visible {
-      color: var(--amarillo-normal);
-      transform: translateY(-2px);
-      outline: none;
-    }
-  }
-
-  // Terminal falsa que aparece al lado del titulo, con sus tres puntitos de macOS y comandos animados
-  &__terminal {
-    position: relative;
-    border: 1px solid var(--borde-normal);
-    border-radius: var(--radius-2xl);
-    overflow: hidden;
-    background-color: var(--fondo-negro);
-    box-shadow:
-      0 1.25rem 3rem hsla(0, 0%, 0%, 0.35),
-      inset 0 1px 0 hsla(0, 0%, 100%, 0.04);
-
-    @media (max-width: 960px) {
-      width: 100%;
-    }
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(80% 60% at 50% 0%, hsla(47, 86%, 56%, 0.04), transparent 70%);
-      pointer-events: none;
-    }
-
-    &__barra {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.85rem 1.1rem;
-      background: rgba(240, 236, 226, 0.025);
-      border-bottom: 1px solid var(--borde-suave);
-    }
-
-    &__punto {
-      width: 0.625rem;
-      height: 0.625rem;
-      border-radius: 50%;
-
-      &--rojo    { background-color: rgba(217, 64, 53, 0.7); }
-      &--naranja { background-color: rgba(224, 123, 32, 0.65); }
-      &--verde   { background-color: rgba(61, 155, 106, 0.65); }
-    }
-
-    &__titulo {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.12em;
-      color: var(--texto-apagado);
-      margin-left: 0.8rem;
-    }
-
-    &__cuerpo {
-      padding: 1.35rem 1.4rem 1.65rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    &__linea {
-      font-family: var(--font-mono);
-      font-size: 0.825rem;
-      line-height: 1.85;
-      color: var(--texto-medio);
-      opacity: 0;
-      animation: entrar-abajo 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
-      &--resultado { color: var(--texto-apagado); }
-      &--vacia     { height: 0.5rem; }
-
-      &:nth-child(1)  { animation-delay: 0.35s; }
-      &:nth-child(2)  { animation-delay: 0.75s; }
-      &:nth-child(3)  { animation-delay: 1.05s; }
-      &:nth-child(4)  { animation-delay: 1.15s; }
-      &:nth-child(5)  { animation-delay: 1.50s; }
-      &:nth-child(6)  { animation-delay: 1.85s; }
-      &:nth-child(7)  { animation-delay: 2.15s; }
-      &:nth-child(8)  { animation-delay: 2.45s; }
-      &:nth-child(9)  { animation-delay: 2.55s; }
-      &:nth-child(10) { animation-delay: 2.85s; }
-    }
-
-    &__prompt {
-      color: var(--amarillo-normal);
-      margin-right: 0.65rem;
-      font-weight: var(--font-weight-semibold);
-    }
-
-    &__comando {
-      color: var(--texto-claro);
-    }
-
-    &__exito {
-      color: var(--verde-normal);
-      font-weight: var(--font-weight-semibold);
-    }
-
-    &__url-resultado {
-      color: var(--amarillo-normal);
-      font-weight: var(--font-weight-semibold);
-    }
   }
 }
 
-// Animacion de "respirar" del puntito amarillo de la etiqueta
-@keyframes bienvenida-respirar {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.5; transform: scale(0.78); }
+.seccion-bienvenida__intro {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.75rem;
+}
+
+// Sello superior con un puntito amarillo que late.
+.seccion-bienvenida__etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.45rem 0.95rem 0.45rem 0.7rem;
+  background-color: hsla(40, 33%, 91%, 0.03);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-full);
+  backdrop-filter: blur(6px);
+}
+
+.seccion-bienvenida__etiqueta__punto {
+  width: 0.45rem;
+  height: 0.45rem;
+  background-color: var(--amarillo-normal);
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0.75rem hsla(47, 86%, 56%, 0.9);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .seccion-bienvenida__etiqueta__punto {
+    animation: latido-punto 2.4s ease-in-out infinite;
+  }
+}
+
+.seccion-bienvenida__etiqueta__texto {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-bold);
+  color: var(--texto-medio);
+  white-space: nowrap;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+// Titular gigante con degradado del blanco cremita al amarillo de marca.
+.seccion-bienvenida__titulo {
+  font-family: var(--font-secondary);
+  font-size: clamp(3rem, 9vw, 7.5rem);
+  font-weight: var(--font-weight-black);
+  line-height: 0.9;
+  letter-spacing: -0.055em;
+  background-image: linear-gradient(
+    168deg,
+    var(--texto-claro) 0%,
+    var(--texto-claro) 46%,
+    hsl(47, 92%, 68%) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  text-wrap: balance;
+  filter: drop-shadow(0 0.5rem 2.5rem hsla(47, 86%, 56%, 0.12));
+}
+
+.seccion-bienvenida__descripcion {
+  font-size: clamp(1rem, 1.3vw, 1.2rem);
+  line-height: 1.65;
+  color: var(--texto-medio);
+  max-width: 34rem;
+  letter-spacing: -0.005em;
+}
+
+.seccion-bienvenida__acciones {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  margin-top: 0.4rem;
+}
+
+.seccion-bienvenida__boton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  font-family: var(--font-secondary);
+  font-size: 1rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.01em;
+  border-radius: var(--radius-full);
+  transition:
+    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    gap 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+}
+
+.seccion-bienvenida__boton--primario {
+  padding: 1rem 1.6rem 1rem 1.85rem;
+  background-color: var(--amarillo-normal);
+  color: hsl(0, 0%, 6%);
+  box-shadow:
+    0 0.75rem 2rem hsla(47, 86%, 56%, 0.28),
+    inset 0 1px 0 hsla(0, 0%, 100%, 0.35);
+}
+
+.seccion-bienvenida__boton--primario:hover {
+  transform: translateY(-2px);
+  gap: 0.95rem;
+  box-shadow:
+    0 1rem 2.75rem hsla(47, 86%, 56%, 0.45),
+    inset 0 1px 0 hsla(0, 0%, 100%, 0.35);
+}
+
+.seccion-bienvenida__boton--primario:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.seccion-bienvenida__boton--primario:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 4px;
+}
+
+.seccion-bienvenida__boton--fantasma {
+  padding: 1rem 1.6rem;
+  background-color: hsla(40, 33%, 91%, 0.02);
+  border: 1px solid var(--borde-normal);
+  color: var(--texto-claro);
+  backdrop-filter: blur(6px);
+}
+
+.seccion-bienvenida__boton--fantasma:hover {
+  transform: translateY(-2px);
+  border-color: hsla(47, 86%, 56%, 0.45);
+  background-color: hsla(47, 86%, 56%, 0.06);
+}
+
+.seccion-bienvenida__boton--fantasma:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 4px;
+}
+
+// Terminal falsa flotante estilo "glass" con brillo amarillo por arriba.
+.seccion-bienvenida__terminal {
+  position: relative;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-2xl);
+  overflow: hidden;
+  background-color: hsla(0, 0%, 4%, 0.72);
+  backdrop-filter: blur(12px);
+  box-shadow:
+    0 2rem 4rem hsla(0, 0%, 0%, 0.55),
+    0 0 0 1px hsla(40, 33%, 91%, 0.02),
+    inset 0 1px 0 hsla(0, 0%, 100%, 0.05);
+  cursor: pointer;
+  transition:
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.seccion-bienvenida__terminal:hover {
+  border-color: hsla(47, 86%, 56%, 0.4);
+  box-shadow:
+    0 2rem 4.5rem hsla(0, 0%, 0%, 0.6),
+    0 0 2.5rem hsla(47, 86%, 56%, 0.14),
+    inset 0 1px 0 hsla(0, 0%, 100%, 0.06);
+}
+
+.seccion-bienvenida__terminal:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 4px;
+}
+
+.seccion-bienvenida__terminal__reejecutar {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  opacity: 0;
+  transition:
+    opacity 0.3s ease,
+    color 0.3s ease;
+}
+
+.seccion-bienvenida__terminal:hover .seccion-bienvenida__terminal__reejecutar {
+  opacity: 1;
+  color: var(--amarillo-normal);
+}
+
+.seccion-bienvenida__terminal:focus-visible .seccion-bienvenida__terminal__reejecutar {
+  opacity: 1;
+  color: var(--amarillo-normal);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .seccion-bienvenida__terminal {
+    animation: flotar-terminal 7s ease-in-out infinite;
+  }
+}
+
+.seccion-bienvenida__terminal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(90% 55% at 50% 0%, hsla(47, 86%, 56%, 0.07), transparent 70%);
+}
+
+.seccion-bienvenida__terminal__barra {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.85rem 1.1rem;
+  background: hsla(40, 33%, 91%, 0.025);
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.seccion-bienvenida__terminal__punto {
+  width: 0.6875rem;
+  height: 0.6875rem;
+  border-radius: 50%;
+}
+
+.seccion-bienvenida__terminal__punto--rojo {
+  background-color: hsla(2, 68%, 53%, 0.75);
+}
+
+.seccion-bienvenida__terminal__punto--naranja {
+  background-color: hsla(28, 75%, 50%, 0.7);
+}
+
+.seccion-bienvenida__terminal__punto--verde {
+  background-color: hsla(145, 45%, 42%, 0.7);
+}
+
+.seccion-bienvenida__terminal__titulo {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  color: var(--texto-apagado);
+  margin-left: 0.8rem;
+}
+
+.seccion-bienvenida__terminal__cuerpo {
+  padding: 1.4rem 1.5rem 1.75rem;
+  position: relative;
+  z-index: 1;
+}
+
+.seccion-bienvenida__terminal__linea {
+  font-family: var(--font-mono);
+  font-size: 0.8375rem;
+  line-height: 1.9;
+  color: var(--texto-medio);
+  opacity: 0;
+  animation: entrar-abajo 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.seccion-bienvenida__terminal__linea--resultado {
+  color: var(--texto-apagado);
+}
+
+.seccion-bienvenida__terminal__linea--vacia {
+  height: 0.5rem;
+}
+
+.seccion-bienvenida__terminal__linea:nth-child(1) { animation-delay: 0.4s; }
+.seccion-bienvenida__terminal__linea:nth-child(2) { animation-delay: 0.75s; }
+.seccion-bienvenida__terminal__linea:nth-child(3) { animation-delay: 1.05s; }
+.seccion-bienvenida__terminal__linea:nth-child(4) { animation-delay: 1.2s; }
+.seccion-bienvenida__terminal__linea:nth-child(5) { animation-delay: 1.55s; }
+.seccion-bienvenida__terminal__linea:nth-child(6) { animation-delay: 1.9s; }
+.seccion-bienvenida__terminal__linea:nth-child(7) { animation-delay: 2.2s; }
+.seccion-bienvenida__terminal__linea:nth-child(8) { animation-delay: 2.5s; }
+.seccion-bienvenida__terminal__linea:nth-child(9) { animation-delay: 2.6s; }
+.seccion-bienvenida__terminal__linea:nth-child(10) { animation-delay: 2.9s; }
+
+.seccion-bienvenida__terminal__prompt {
+  color: var(--amarillo-normal);
+  margin-right: 0.65rem;
+  font-weight: var(--font-weight-semibold);
+}
+
+.seccion-bienvenida__terminal__comando {
+  color: var(--texto-claro);
+}
+
+.seccion-bienvenida__terminal__exito {
+  color: var(--verde-normal);
+  font-weight: var(--font-weight-semibold);
+}
+
+.seccion-bienvenida__terminal__url-resultado {
+  color: var(--amarillo-normal);
+  font-weight: var(--font-weight-semibold);
+}
+
+// Indicador de scroll al pie del hero.
+.seccion-bienvenida__scroll {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  color: var(--texto-apagado);
+}
+
+.seccion-bienvenida__scroll__texto {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.seccion-bienvenida__scroll__linea {
+  width: 1px;
+  height: 2.75rem;
+  background: linear-gradient(to bottom, var(--amarillo-normal), transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .seccion-bienvenida__scroll__linea {
+    animation: bajar-scroll 2s ease-in-out infinite;
+    transform-origin: top;
+  }
+}
+
+@keyframes latido-punto {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0.75rem hsla(47, 86%, 56%, 0.9); }
+  50% { transform: scale(0.7); box-shadow: 0 0 0.35rem hsla(47, 86%, 56%, 0.5); }
+}
+
+@keyframes flotar-terminal {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-0.75rem); }
+}
+
+@keyframes bajar-scroll {
+  0% { transform: scaleY(0); opacity: 0; }
+  40% { transform: scaleY(1); opacity: 1; }
+  100% { transform: scaleY(1) translateY(0.5rem); opacity: 0; }
 }

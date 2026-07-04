@@ -709,7 +709,7 @@
       "tlsOn": "TLS aktiv",
       "tlsOff": "TLS deaktiviert",
       "sslTitulo": "SSL Let's Encrypt",
-      "sslDescripcion": "Firewall aktiviert",
+      "sslDescripcion": "Verwaltetes Zertifikat, automatisch erneuert",
       "targetServer": "Zielserver",
       "applicationPort": "Anwendungs-Port",
       "applicationPortPlaceholder": "3000",

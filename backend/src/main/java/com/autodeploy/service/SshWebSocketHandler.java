@@ -1,5 +1,6 @@
 package com.autodeploy.service;
 
+import com.autodeploy.config.JwtHandshakeInterceptor;
 import com.autodeploy.model.Servidor;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +51,8 @@ public class SshWebSocketHandler extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession sesionWs, TextMessage mensaje) throws Exception {
         WebSocketSession sesionSegura = obtenerSesionSegura(sesionWs);
         JsonNode json = objectMapper.readTree(mensaje.getPayload());
-        String tipo = json.get("tipo").asText();
+        // Usar path() en vez de get() para evitar NPE si el campo "tipo" no existe
+        String tipo = json.path("tipo").asText("");
 
         if ("connect".equals(tipo)) {
             manejarConexion(sesionSegura, json);
@@ -72,14 +74,30 @@ public class SshWebSocketHandler extends TextWebSocketHandler {
     }
 
     private void manejarConexion(WebSocketSession sesionWs, JsonNode json) {
+        // Verificar que el interceptor puso un usuarioId valido (token autenticado)
+        String usuarioIdAutenticado = (String) sesionWs.getAttributes().get(JwtHandshakeInterceptor.ATTR_USUARIO_ID);
+        if (usuarioIdAutenticado == null || usuarioIdAutenticado.isBlank()) {
+            try {
+                sesionWs.close(CloseStatus.POLICY_VIOLATION);
+            } catch (IOException errorCierre) {
+                log.debug("Error cerrando sesion no autenticada", errorCierre);
+            }
+            return;
+        }
+
+        String servidorId = json.path("servidorId").asText("");
+
+        // Variables locales para poder cerrarlas en el catch si no llegaron a guardarse en attributes
+        SshClient clienteSsh = null;
+        ClientSession sesionSsh = null;
         try {
-            String servidorId = json.get("servidorId").asText();
-            Servidor servidor = servidorService.obtenerPorId(servidorId);
+            // IDOR: verificar propiedad del servidor antes de conectar
+            Servidor servidor = servidorService.obtenerDelUsuario(servidorId, usuarioIdAutenticado);
 
-            SshClient cliente = SshClient.setUpDefaultClient();
-            cliente.start();
+            clienteSsh = SshClient.setUpDefaultClient();
+            clienteSsh.start();
 
-            ClientSession sesionSsh = cliente.connect(
+            sesionSsh = clienteSsh.connect(
                     servidor.getUsuarioSsh(),
                     servidor.getDireccionIp(),
                     servidor.getPuertoSsh()
@@ -112,7 +130,8 @@ public class SshWebSocketHandler extends TextWebSocketHandler {
             OutputStream flujoSalida = canalShell.getInvertedIn();
             InputStream flujoEntrada = canalShell.getInvertedOut();
 
-            sesionWs.getAttributes().put(ATTR_SSH_CLIENT, cliente);
+            // Guardar en attributes: a partir de aqui afterConnectionClosed se encarga del cierre
+            sesionWs.getAttributes().put(ATTR_SSH_CLIENT, clienteSsh);
             sesionWs.getAttributes().put(ATTR_SSH_SESSION, sesionSsh);
             sesionWs.getAttributes().put(ATTR_SSH_CHANNEL, canalShell);
             sesionWs.getAttributes().put(ATTR_OUTPUT_STREAM, flujoSalida);
@@ -146,6 +165,13 @@ public class SshWebSocketHandler extends TextWebSocketHandler {
 
         } catch (Exception excepcion) {
             log.error("Error al conectar SSH: {}", excepcion.getMessage());
+
+            // Cerrar recursos que NO llegaron a guardarse en attributes (fuga de recursos)
+            boolean clienteGuardado = sesionWs.getAttributes().containsKey(ATTR_SSH_CLIENT);
+            if (!clienteGuardado) {
+                cerrarRecursosSsh(sesionSsh, clienteSsh);
+            }
+
             try {
                 String mensajeLegible = traducirErrorConexion(excepcion);
                 String mensajeError = objectMapper.writeValueAsString(
@@ -155,6 +181,19 @@ public class SshWebSocketHandler extends TextWebSocketHandler {
             } catch (IOException ioExcepcion) {
                 log.error("Error al enviar mensaje de error", ioExcepcion);
             }
+        }
+    }
+
+    private void cerrarRecursosSsh(ClientSession sesion, SshClient cliente) {
+        if (sesion != null) {
+            try {
+                sesion.close();
+            } catch (Exception ignorado) {
+                // best effort
+            }
+        }
+        if (cliente != null) {
+            cliente.stop();
         }
     }
 

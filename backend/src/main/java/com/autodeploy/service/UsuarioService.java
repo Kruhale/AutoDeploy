@@ -14,15 +14,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class UsuarioService {
+
+    private static final int MAX_INTENTOS_LOGIN = 5;
+    private static final long VENTANA_RATE_LIMIT_MS = 900_000L; // 15 minutos
 
     private final UsuarioRepository usuarioRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final NotificacionRepository notificacionRepository;
     private final ConfiguracionAsistenteIaRepository configuracionAsistenteRepository;
+
+    // Contador simple en memoria: email -> [intentosFallidos, timestampPrimerFallo]
+    private final ConcurrentHashMap<String, long[]> contadorIntentos = new ConcurrentHashMap<>();
 
     public UsuarioService(
             UsuarioRepository usuarioRepository,
@@ -51,16 +59,54 @@ public class UsuarioService {
     }
 
     public LoginResponse login(LoginRequest peticion) {
-        Usuario usuario = usuarioRepository.findByEmail(peticion.email())
-                .orElseThrow(() -> new BadRequestException("Email o password incorrectos"));
+        verificarRateLimit(peticion.email());
 
-        boolean passwordCorrecta = passwordEncoder.matches(peticion.password(), usuario.getPasswordHash());
-        if (!passwordCorrecta) {
+        Optional<Usuario> posibleUsuario = usuarioRepository.findByEmail(peticion.email());
+        if (posibleUsuario.isEmpty()) {
+            registrarFalloDeLogin(peticion.email());
             throw new BadRequestException("Email o password incorrectos");
         }
 
+        Usuario usuario = posibleUsuario.get();
+        boolean passwordCorrecta = passwordEncoder.matches(peticion.password(), usuario.getPasswordHash());
+        if (!passwordCorrecta) {
+            registrarFalloDeLogin(peticion.email());
+            throw new BadRequestException("Email o password incorrectos");
+        }
+
+        contadorIntentos.remove(peticion.email());
         String tokenJwt = jwtUtil.generarToken(usuario.getId(), usuario.getEmail(), usuario.getRol());
         return construirLoginResponse(usuario, tokenJwt);
+    }
+
+    private void verificarRateLimit(String email) {
+        long[] estado = contadorIntentos.get(email);
+        if (estado == null) {
+            return;
+        }
+
+        long ahora = System.currentTimeMillis();
+        boolean ventanaVigente = (ahora - estado[1]) < VENTANA_RATE_LIMIT_MS;
+        boolean superaLimite = estado[0] >= MAX_INTENTOS_LOGIN;
+
+        if (ventanaVigente && superaLimite) {
+            throw new BadRequestException("Email o password incorrectos");
+        }
+        if (!ventanaVigente) {
+            contadorIntentos.remove(email);
+        }
+    }
+
+    private void registrarFalloDeLogin(String email) {
+        long ahora = System.currentTimeMillis();
+        contadorIntentos.compute(email, (k, estadoActual) -> {
+            boolean sinEstado = estadoActual == null;
+            boolean ventanaExpirada = !sinEstado && (ahora - estadoActual[1]) >= VENTANA_RATE_LIMIT_MS;
+            if (sinEstado || ventanaExpirada) {
+                return new long[]{1, ahora};
+            }
+            return new long[]{estadoActual[0] + 1, estadoActual[1]};
+        });
     }
 
     public Usuario obtenerPorId(String id) {

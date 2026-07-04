@@ -36,14 +36,10 @@ public class HealthMonitorService {
     private HealthCheck comprobarServidor(Servidor servidor) {
         long tiempoInicio = System.currentTimeMillis();
 
-        try {
-            Socket socket = new Socket();
+        try (Socket socket = new Socket()) {
             socket.connect(new InetSocketAddress(servidor.getDireccionIp(), servidor.getPuertoSsh()), 5000);
-            socket.close();
-
             long tiempoRespuesta = System.currentTimeMillis() - tiempoInicio;
             return new HealthCheck(servidor.getId(), servidor.getNombre(), "online", tiempoRespuesta, "Conexion exitosa");
-
         } catch (Exception excepcion) {
             long tiempoRespuesta = System.currentTimeMillis() - tiempoInicio;
             return new HealthCheck(servidor.getId(), servidor.getNombre(), "offline", tiempoRespuesta, excepcion.getMessage());

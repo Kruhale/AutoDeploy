@@ -14,7 +14,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.security.KeyPair;
 import java.util.stream.Stream;
 import java.util.concurrent.TimeUnit;
@@ -29,12 +28,11 @@ public class SftpUploadService {
         SshClient cliente = SshClient.setUpDefaultClient();
         cliente.start();
 
-        try {
-            ClientSession sesion = cliente.connect(
-                    servidor.getUsuarioSsh(),
-                    servidor.getDireccionIp(),
-                    servidor.getPuertoSsh()
-            ).verify(15, TimeUnit.SECONDS).getSession();
+        try (ClientSession sesion = cliente.connect(
+                servidor.getUsuarioSsh(),
+                servidor.getDireccionIp(),
+                servidor.getPuertoSsh()
+        ).verify(15, TimeUnit.SECONDS).getSession()) {
 
             autenticarSesion(sesion, servidor);
             sesion.auth().verify(15, TimeUnit.SECONDS);
@@ -44,8 +42,6 @@ public class SftpUploadService {
                 crearDirectorioRemoto(clienteSftp, rutaRemota);
                 subirArbolDeArchivos(clienteSftp, carpetaLocal, rutaRemota);
             }
-
-            sesion.close();
         } catch (Exception excepcion) {
             throw new RuntimeException("Error al subir carpeta SFTP a " + servidor.getDireccionIp() + ": " + excepcion.getMessage(), excepcion);
         } finally {
@@ -78,9 +74,8 @@ public class SftpUploadService {
     }
 
     private void subirArchivo(SftpClient clienteSftp, Path archivoLocal, String rutaRemota) throws IOException {
-        byte[] bytesDelArchivo = Files.readAllBytes(archivoLocal);
         try (OutputStream salidaRemota = clienteSftp.write(rutaRemota)) {
-            salidaRemota.write(bytesDelArchivo);
+            Files.copy(archivoLocal, salidaRemota);
         }
     }
 
@@ -99,14 +94,15 @@ public class SftpUploadService {
         } else if ("key".equals(servidor.getMetodoAutenticacion())) {
             String clavePrivadaDescifrada = CifradoUtil.descifrar(servidor.getClaveSshPrivada(), claveCifrado);
             Path archivoTemporal = Files.createTempFile("ssh_key_", ".pem");
-            Files.writeString(archivoTemporal, clavePrivadaDescifrada);
-
-            FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);
-            for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {
-                sesion.addPublicKeyIdentity(parClaves);
+            try {
+                Files.writeString(archivoTemporal, clavePrivadaDescifrada);
+                FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);
+                for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {
+                    sesion.addPublicKeyIdentity(parClaves);
+                }
+            } finally {
+                Files.deleteIfExists(archivoTemporal);
             }
-
-            Files.deleteIfExists(archivoTemporal);
         }
     }
 }

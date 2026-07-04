@@ -71,7 +71,7 @@ class AsistenteIaServiceTest {
         when(usuarioRepository.findById("u-2")).thenReturn(Optional.of(usuarioFree));
 
         assertThatThrownBy(() -> asistenteIaService.procesarMensaje(
-                new MensajeChatRequest("u-2", "srv-1", "hola", null)))
+                new MensajeChatRequest("u-2", "srv-1", "hola", null), "u-2"))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("Pro y Business");
     }
@@ -82,7 +82,7 @@ class AsistenteIaServiceTest {
         when(usuarioRepository.findById("u-x")).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> asistenteIaService.procesarMensaje(
-                new MensajeChatRequest("u-x", "srv-1", "hola", null)))
+                new MensajeChatRequest("u-x", "srv-1", "hola", null), "u-x"))
                 .isInstanceOf(ResourceNotFoundException.class);
     }
 
@@ -93,7 +93,7 @@ class AsistenteIaServiceTest {
         when(configuracionService.obtenerApiKeyDescifrada("u-1")).thenReturn(null);
 
         assertThatThrownBy(() -> asistenteIaService.procesarMensaje(
-                new MensajeChatRequest("u-1", "srv-1", "hola", null)))
+                new MensajeChatRequest("u-1", "srv-1", "hola", null), "u-1"))
                 .isInstanceOf(BadRequestException.class)
                 .hasMessageContaining("API key");
     }
@@ -108,7 +108,7 @@ class AsistenteIaServiceTest {
         when(openRouterClient.enviarConversacion(any(), any(), any(), any(), any()))
                 .thenReturn("{\"respuesta\":\"Hola humano\",\"comandoPropuesto\":\"\",\"razonamiento\":\"\"}");
 
-        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "hola", null));
+        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "hola", null), "u-1");
 
         assertThat(resp.respuesta()).isEqualTo("Hola humano");
         assertThat(resp.comandoPropuesto()).isEmpty();
@@ -126,7 +126,7 @@ class AsistenteIaServiceTest {
                 .thenReturn("{\"respuesta\":\"Voy a reiniciar nginx\",\"comandoPropuesto\":\"sudo systemctl restart nginx\",\"razonamiento\":\"el usuario lo pidio\"}");
         when(configuracionService.estaAutoAprobado(anyString(), any())).thenReturn(false);
 
-        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "reinicia nginx", null));
+        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "reinicia nginx", null), "u-1");
 
         assertThat(resp.requiereConfirmacion()).isTrue();
         assertThat(resp.comandoPropuesto()).isEqualTo("sudo systemctl restart nginx");
@@ -144,7 +144,7 @@ class AsistenteIaServiceTest {
         when(configuracionService.estaAutoAprobado(anyString(), any())).thenReturn(true);
         when(sshCommandService.ejecutarComando(servidor, "uptime")).thenReturn(" 12:00:01 up 3 days");
 
-        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "uptime", null));
+        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "uptime", null), "u-1");
 
         assertThat(resp.requiereConfirmacion()).isFalse();
         assertThat(resp.salidaComandoAutoEjecutado()).contains("up 3 days");
@@ -160,7 +160,7 @@ class AsistenteIaServiceTest {
         when(openRouterClient.enviarConversacion(any(), any(), any(), any(), any()))
                 .thenReturn("texto pelado sin JSON");
 
-        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "?", null));
+        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "?", null), "u-1");
 
         assertThat(resp.respuesta()).isEqualTo("texto pelado sin JSON");
         assertThat(resp.comandoPropuesto()).isEmpty();
@@ -176,7 +176,7 @@ class AsistenteIaServiceTest {
         when(openRouterClient.enviarConversacion(any(), any(), any(), any(), any()))
                 .thenReturn("```json\n{\"respuesta\":\"hola\",\"comandoPropuesto\":\"\",\"razonamiento\":\"\"}\n```");
 
-        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "hola", null));
+        RespuestaChatIa resp = asistenteIaService.procesarMensaje(new MensajeChatRequest("u-1", "srv-1", "hola", null), "u-1");
 
         assertThat(resp.respuesta()).isEqualTo("hola");
     }

@@ -20,6 +20,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class NotificacionesWebSocketHandler extends TextWebSocketHandler {
 
     private static final Logger log = LoggerFactory.getLogger(NotificacionesWebSocketHandler.class);
+    // Misma clave que usa JwtHandshakeInterceptor para guardar el userId del token
     private static final String ATTR_USUARIO_ID = "usuarioId";
 
     private final ObjectMapper objectMapper;
@@ -31,20 +32,25 @@ public class NotificacionesWebSocketHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionEstablished(WebSocketSession sesionWs) {
-        String usuarioId = extraerUsuarioId(sesionWs);
-        if (usuarioId == null) {
-            log.warn("Conexion WS notificaciones sin usuarioId, cerrando");
-            try {
-                sesionWs.close(CloseStatus.BAD_DATA);
-            } catch (Exception ignorado) {
-                // Cierre best-effort, sin propagar
-            }
+        String usuarioIdDelPath = extraerUsuarioId(sesionWs);
+
+        if (usuarioIdDelPath == null) {
+            log.warn("Conexion WS notificaciones sin usuarioId en el path, cerrando");
+            cerrarSesion(sesionWs, CloseStatus.BAD_DATA);
             return;
         }
 
-        sesionWs.getAttributes().put(ATTR_USUARIO_ID, usuarioId);
-        sesionesPorUsuario.computeIfAbsent(usuarioId, k -> new CopyOnWriteArraySet<>()).add(sesionWs);
-        log.info("Cliente conectado a notificaciones para usuario {}: {}", usuarioId, sesionWs.getId());
+        // IDOR: comparar el userId del path con el userId del token (puesto por el interceptor)
+        String usuarioIdDelToken = (String) sesionWs.getAttributes().get(ATTR_USUARIO_ID);
+        if (!usuarioIdDelPath.equals(usuarioIdDelToken)) {
+            log.warn("Conexion WS notificaciones rechazada: userId del path '{}' no coincide con el token", usuarioIdDelPath);
+            cerrarSesion(sesionWs, CloseStatus.POLICY_VIOLATION);
+            return;
+        }
+
+        sesionWs.getAttributes().put(ATTR_USUARIO_ID, usuarioIdDelPath);
+        sesionesPorUsuario.computeIfAbsent(usuarioIdDelPath, k -> new CopyOnWriteArraySet<>()).add(sesionWs);
+        log.info("Cliente conectado a notificaciones para usuario {}: {}", usuarioIdDelPath, sesionWs.getId());
     }
 
     @Override
@@ -88,6 +94,14 @@ public class NotificacionesWebSocketHandler extends TextWebSocketHandler {
             } catch (Exception excepcion) {
                 log.debug("No se pudo enviar notificacion a {}: {}", sesion.getId(), excepcion.getMessage());
             }
+        }
+    }
+
+    private void cerrarSesion(WebSocketSession sesionWs, CloseStatus estado) {
+        try {
+            sesionWs.close(estado);
+        } catch (Exception ignorado) {
+            // Cierre best-effort, sin propagar
         }
     }
 

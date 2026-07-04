@@ -4,6 +4,8 @@ import com.autodeploy.model.Backup;
 import com.autodeploy.model.Servidor;
 import com.autodeploy.repository.BackupRepository;
 import com.autodeploy.repository.ServidorRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class BackupService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(BackupService.class);
     private static final String RUTA_BACKUPS = "$HOME/.autodeploy/backups";
     private static final String RUTA_SCRIPT_REMOTO = "$HOME/.autodeploy/backup.sh";
     private static final String MARCA_CRON = "autodeploy-backup";
@@ -117,7 +120,8 @@ public class BackupService {
             try {
                 Servidor servidor = servidorService.obtenerPorId(backup.getServidorId());
                 sshCommandService.ejecutarComando(servidor, "rm -f " + backup.getRutaArchivo());
-            } catch (Exception ignorado) {
+            } catch (Exception excepcion) {
+                LOGGER.warn("No se pudo borrar archivo remoto del backup {}: {}", idBackup, excepcion.getMessage());
             }
         }
 
@@ -176,7 +180,8 @@ public class BackupService {
         for (Servidor servidor : servidoresConAutoActivo) {
             try {
                 escanearServidor(servidor);
-            } catch (Exception ignorado) {
+            } catch (Exception excepcion) {
+                LOGGER.warn("Error al escanear backups en servidor {}: {}", servidor.getId(), excepcion.getMessage());
             }
         }
     }

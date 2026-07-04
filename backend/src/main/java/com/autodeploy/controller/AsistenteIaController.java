@@ -41,7 +41,9 @@ public class AsistenteIaController {
         if (peticion.servidorId() != null && !peticion.servidorId().isBlank()) {
             verificarPropietarioDeServidor(peticion.servidorId(), autenticacion);
         }
-        RespuestaChatIa respuesta = asistenteIaService.procesarMensaje(peticion);
+        // Usar siempre el userId del token, nunca el del body, para evitar IDOR
+        String usuarioIdAutenticado = autenticacion.getName();
+        RespuestaChatIa respuesta = asistenteIaService.procesarMensaje(peticion, usuarioIdAutenticado);
         ApiResponse<RespuestaChatIa> cuerpo = new ApiResponse<>(true, "Respuesta generada", respuesta);
         return ResponseEntity.ok(cuerpo);
     }

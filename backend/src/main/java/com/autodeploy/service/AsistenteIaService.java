@@ -52,15 +52,19 @@ public class AsistenteIaService {
         this.objectMapper = new ObjectMapper();
     }
 
-    public RespuestaChatIa procesarMensaje(MensajeChatRequest peticion) {
-        validarPlanDelUsuario(peticion.usuarioId());
+    /**
+     * @param usuarioIdAutenticado ID del usuario extraido del JWT (autenticacion.getName()),
+     *                             NO del body de la peticion, para evitar IDOR.
+     */
+    public RespuestaChatIa procesarMensaje(MensajeChatRequest peticion, String usuarioIdAutenticado) {
+        validarPlanDelUsuario(usuarioIdAutenticado);
 
-        String apiKeyDescifrada = configuracionService.obtenerApiKeyDescifrada(peticion.usuarioId());
+        String apiKeyDescifrada = configuracionService.obtenerApiKeyDescifrada(usuarioIdAutenticado);
         if (apiKeyDescifrada == null) {
             throw new BadRequestException("No has configurado tu API key de OpenRouter. Ve a la configuracion del asistente.");
         }
 
-        ConfiguracionAsistenteIa configuracion = configuracionService.obtenerOCrear(peticion.usuarioId());
+        ConfiguracionAsistenteIa configuracion = configuracionService.obtenerOCrear(usuarioIdAutenticado);
         Servidor servidorObjetivo = servidorService.obtenerPorId(peticion.servidorId());
 
         String contextoServidor = construirContextoServidor(servidorObjetivo);

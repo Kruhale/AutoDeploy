@@ -111,7 +111,6 @@ public class NetworkingService {
             configuracion.append("}\n\n");
         }
 
-        String contenido = configuracion.toString().replace("\"", "\\\"").replace("$", "\\$");
         String comando = "mkdir -p $HOME/.autodeploy && cat > " + RUTA_REDIRECTS + " << 'REDIRECTSEOF'\n" + configuracion.toString() + "\nREDIRECTSEOF";
 
         try {

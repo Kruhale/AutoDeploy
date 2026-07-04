@@ -47,9 +47,11 @@ class NotificacionesWebSocketHandlerTest {
     }
 
     @Test
-    @DisplayName("afterConnectionEstablished: registra la sesion cuando la URI termina en /usuario-1")
+    @DisplayName("afterConnectionEstablished: registra la sesion cuando el userId del path coincide con el del token")
     void registraConUsuarioIdValido() throws Exception {
         when(sesion.getUri()).thenReturn(URI.create("ws://localhost/ws/notificaciones/usuario-1"));
+        // Simular lo que el interceptor JWT pone en los atributos de la sesion
+        atributos.put("usuarioId", "usuario-1");
 
         handler.afterConnectionEstablished(sesion);
 
@@ -87,6 +89,18 @@ class NotificacionesWebSocketHandlerTest {
     }
 
     @Test
+    @DisplayName("afterConnectionEstablished: rechaza si el userId del path no coincide con el del token (IDOR)")
+    void cierraSiIdMismatch() throws Exception {
+        when(sesion.getUri()).thenReturn(URI.create("ws://localhost/ws/notificaciones/usuario-victima"));
+        // El token pertenece a otro usuario
+        atributos.put("usuarioId", "usuario-atacante");
+
+        handler.afterConnectionEstablished(sesion);
+
+        verify(sesion).close(CloseStatus.POLICY_VIOLATION);
+    }
+
+    @Test
     @DisplayName("notificarUsuario: no envia si no hay sesiones para ese usuario")
     void notificarUsuario_sinSesiones() throws Exception {
         NotificacionDTO dto = new NotificacionDTO("n-1", "info", "T", "D", false, LocalDateTime.now());
@@ -100,6 +114,7 @@ class NotificacionesWebSocketHandlerTest {
     @DisplayName("notificarUsuario: envia TextMessage al WebSocket cuando la sesion esta abierta")
     void notificarUsuario_envia() throws Exception {
         when(sesion.getUri()).thenReturn(URI.create("ws://localhost/ws/notificaciones/usuario-1"));
+        atributos.put("usuarioId", "usuario-1");
         when(sesion.isOpen()).thenReturn(true);
         handler.afterConnectionEstablished(sesion);
 
@@ -113,6 +128,7 @@ class NotificacionesWebSocketHandlerTest {
     @DisplayName("notificarUsuario: ignora sesiones cerradas")
     void notificarUsuario_ignoraCerradas() throws Exception {
         when(sesion.getUri()).thenReturn(URI.create("ws://localhost/ws/notificaciones/usuario-1"));
+        atributos.put("usuarioId", "usuario-1");
         when(sesion.isOpen()).thenReturn(false);
         handler.afterConnectionEstablished(sesion);
 
@@ -126,9 +142,9 @@ class NotificacionesWebSocketHandlerTest {
     @DisplayName("afterConnectionClosed: limpia la sesion del mapa interno")
     void afterConnectionClosed_limpia() throws Exception {
         when(sesion.getUri()).thenReturn(URI.create("ws://localhost/ws/notificaciones/usuario-1"));
+        atributos.put("usuarioId", "usuario-1");
         when(sesion.isOpen()).thenReturn(true);
         handler.afterConnectionEstablished(sesion);
-        // atributos["usuarioId"] = "usuario-1" lo puso afterConnectionEstablished
 
         handler.afterConnectionClosed(sesion, CloseStatus.NORMAL);
 

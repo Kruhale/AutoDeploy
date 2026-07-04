@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
-import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.server.HandshakeInterceptor;
@@ -40,16 +39,14 @@ public class JwtHandshakeInterceptor implements HandshakeInterceptor {
         String consulta = uri.getQuery();
         String tokenJwt = extraerToken(consulta);
 
-        // De momento dejamos pasar el handshake aunque no haya token (solo loggeamos warning).
-        // Cuando el frontend mande siempre el token, cambiar el "return true" por "return false".
         if (tokenJwt == null || tokenJwt.isBlank()) {
-            LOGGER.warn("Handshake WS sin token en query param ({}) — proximamente sera obligatorio", uri.getPath());
-            return true;
+            LOGGER.warn("Handshake WS rechazado: falta el token en la query ({})", uri.getPath());
+            return false;
         }
 
         if (!jwtUtil.esValido(tokenJwt)) {
-            LOGGER.warn("Handshake WS con token JWT invalido ({}) — proximamente sera rechazado", uri.getPath());
-            return true;
+            LOGGER.warn("Handshake WS rechazado: token JWT invalido ({})", uri.getPath());
+            return false;
         }
 
         String usuarioId = jwtUtil.extraerUsuarioId(tokenJwt);

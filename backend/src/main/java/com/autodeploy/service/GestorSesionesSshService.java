@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -65,13 +66,12 @@ public class GestorSesionesSshService {
             throw new RuntimeException("No hay sesion SSH disponible para el servidor " + servidorId);
         }
         try {
-            ChannelExec canalEjecucion = sesionViva.createExecChannel(comando);
-            canalEjecucion.open().verify(TIMEOUT_COMANDO_SEGUNDOS, TimeUnit.SECONDS);
-
-            String salidaComando = leerSalida(canalEjecucion.getInvertedOut());
-
-            canalEjecucion.close();
-            return salidaComando;
+            try (ChannelExec canalEjecucion = sesionViva.createExecChannel(comando)) {
+                canalEjecucion.setErr(OutputStream.nullOutputStream());
+                canalEjecucion.open().verify(TIMEOUT_COMANDO_SEGUNDOS, TimeUnit.SECONDS);
+                String salidaComando = leerSalida(canalEjecucion.getInvertedOut());
+                return salidaComando;
+            }
         } catch (Exception excepcionEjecucion) {
             LOGGER.warn("Fallo al ejecutar sobre sesion {}: {}", servidorId, excepcionEjecucion.getMessage());
             descartarSesion(servidorId);
@@ -106,10 +106,17 @@ public class GestorSesionesSshService {
             return sesionCacheada;
         }
 
-        descartarSesion(servidorId);
+        sesionesActivas.remove(servidorId, sesionCacheada);
+
         ClientSession sesionNueva = abrirSesionNueva(servidorId);
-        if (sesionNueva != null) {
-            sesionesActivas.put(servidorId, sesionNueva);
+        if (sesionNueva == null) {
+            return null;
+        }
+
+        ClientSession sesionExistenteEnRace = sesionesActivas.putIfAbsent(servidorId, sesionNueva);
+        if (sesionExistenteEnRace != null) {
+            cerrarSilencioso(sesionNueva);
+            return sesionExistenteEnRace;
         }
         return sesionNueva;
     }
@@ -152,12 +159,15 @@ public class GestorSesionesSshService {
         if ("key".equals(servidor.getMetodoAutenticacion())) {
             String clavePrivadaDescifrada = servidorService.descifrarClaveSsh(servidor);
             Path archivoTemporal = Files.createTempFile("ssh_key_", ".pem");
-            Files.writeString(archivoTemporal, clavePrivadaDescifrada);
-            FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);
-            for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {
-                sesion.addPublicKeyIdentity(parClaves);
+            try {
+                Files.writeString(archivoTemporal, clavePrivadaDescifrada);
+                FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);
+                for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {
+                    sesion.addPublicKeyIdentity(parClaves);
+                }
+            } finally {
+                Files.deleteIfExists(archivoTemporal);
             }
-            Files.deleteIfExists(archivoTemporal);
         }
     }
 
@@ -170,6 +180,17 @@ public class GestorSesionesSshService {
             sesionDescartada.close();
         } catch (Exception excepcionCierre) {
             LOGGER.debug("No se pudo cerrar sesion descartada: {}", excepcionCierre.getMessage());
+        }
+    }
+
+    private void cerrarSilencioso(ClientSession sesion) {
+        if (sesion == null) {
+            return;
+        }
+        try {
+            sesion.close();
+        } catch (Exception excepcionCierre) {
+            LOGGER.debug("Sesion SSH cerrada durante resolucion de race condition: {}", excepcionCierre.getMessage());
         }
     }
 

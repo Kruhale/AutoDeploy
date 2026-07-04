@@ -59,6 +59,9 @@ public class NginxService {
 
     public List<String> listarVirtualHosts(Servidor servidor) {
         String salidaListado = sshCommandService.ejecutarComando(servidor, "ls /etc/nginx/sites-enabled/");
+        if (salidaListado == null || salidaListado.isBlank()) {
+            return List.of();
+        }
         String[] nombresDeHosts = salidaListado.trim().split("\\s+");
         List<String> listaDeVirtualHosts = Arrays.asList(nombresDeHosts);
         return listaDeVirtualHosts;

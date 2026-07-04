@@ -41,27 +41,27 @@ class JwtHandshakeInterceptorTest {
     }
 
     @Test
-    @DisplayName("Sin query string: deja pasar pero no setea atributos")
-    void sinQuery_dejaPasarSinAtributos() {
+    @DisplayName("Sin query string: rechaza el handshake y no setea atributos")
+    void sinQuery_rechazaHandshake() {
         when(peticion.getURI()).thenReturn(URI.create("ws://localhost/ws/terminal"));
 
         Map<String, Object> atributos = new HashMap<>();
         boolean resultado = interceptor.beforeHandshake(peticion, respuesta, handler, atributos);
 
-        assertThat(resultado).isTrue();
+        assertThat(resultado).isFalse();
         assertThat(atributos).isEmpty();
     }
 
     @Test
-    @DisplayName("Token JWT invalido en query: deja pasar pero no setea atributos")
-    void tokenInvalido_dejaPasarSinAtributos() {
+    @DisplayName("Token JWT invalido en query: rechaza el handshake y no setea atributos")
+    void tokenInvalido_rechazaHandshake() {
         when(peticion.getURI()).thenReturn(URI.create("ws://localhost/ws/terminal?token=roto"));
         when(jwtUtil.esValido("roto")).thenReturn(false);
 
         Map<String, Object> atributos = new HashMap<>();
         boolean resultado = interceptor.beforeHandshake(peticion, respuesta, handler, atributos);
 
-        assertThat(resultado).isTrue();
+        assertThat(resultado).isFalse();
         assertThat(atributos).isEmpty();
     }
 

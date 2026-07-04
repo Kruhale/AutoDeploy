@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,25 +28,21 @@ public class SshCommandService {
         SshClient cliente = SshClient.setUpDefaultClient();
         cliente.start();
 
-        try {
-            ClientSession sesionSsh = cliente.connect(
-                    servidor.getUsuarioSsh(),
-                    servidor.getDireccionIp(),
-                    servidor.getPuertoSsh()
-            ).verify(15, TimeUnit.SECONDS).getSession();
+        try (ClientSession sesionSsh = cliente.connect(
+                servidor.getUsuarioSsh(),
+                servidor.getDireccionIp(),
+                servidor.getPuertoSsh()
+        ).verify(15, TimeUnit.SECONDS).getSession()) {
 
             autenticarSesion(sesionSsh, servidor);
             sesionSsh.auth().verify(15, TimeUnit.SECONDS);
 
-            ChannelExec canalEjecucion = sesionSsh.createExecChannel(comando);
-            canalEjecucion.open().verify(10, TimeUnit.SECONDS);
-
-            String salidaDelComando = leerFlujoCompleto(canalEjecucion.getInvertedOut());
-
-            canalEjecucion.close();
-            sesionSsh.close();
-
-            return salidaDelComando;
+            try (ChannelExec canalEjecucion = sesionSsh.createExecChannel(comando)) {
+                canalEjecucion.setErr(OutputStream.nullOutputStream());
+                canalEjecucion.open().verify(10, TimeUnit.SECONDS);
+                String salidaDelComando = leerFlujoCompleto(canalEjecucion.getInvertedOut());
+                return salidaDelComando;
+            }
         } catch (Exception excepcion) {
             throw new RuntimeException("Error al ejecutar comando SSH en " + servidor.getDireccionIp() + ": " + excepcion.getMessage(), excepcion);
         } finally {
@@ -60,14 +57,15 @@ public class SshCommandService {
         } else if ("key".equals(servidor.getMetodoAutenticacion())) {
             String clavePrivadaDescifrada = CifradoUtil.descifrar(servidor.getClaveSshPrivada(), claveCifrado);
             Path archivoTemporal = Files.createTempFile("ssh_key_", ".pem");
-            Files.writeString(archivoTemporal, clavePrivadaDescifrada);
-
-            FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);
-            for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {
-                sesionSsh.addPublicKeyIdentity(parClaves);
+            try {
+                Files.writeString(archivoTemporal, clavePrivadaDescifrada);
+                FileKeyPairProvider proveedorClaves = new FileKeyPairProvider(archivoTemporal);
+                for (KeyPair parClaves : proveedorClaves.loadKeys(null)) {
+                    sesionSsh.addPublicKeyIdentity(parClaves);
+                }
+            } finally {
+                Files.deleteIfExists(archivoTemporal);
             }
-
-            Files.deleteIfExists(archivoTemporal);
         }
     }
 

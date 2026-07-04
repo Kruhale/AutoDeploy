@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import java.util.List;
 
 public record MensajeChatRequest(
-    @NotBlank(message = "El usuarioId no puede estar vacio")
+    // usuarioId del body ya no se usa para autorizacion (se usa autenticacion.getName() del token)
     String usuarioId,
 
     @NotBlank(message = "El servidorId no puede estar vacio")

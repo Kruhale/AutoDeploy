@@ -139,9 +139,9 @@ openssl rand -base64 32   # AUTODEPLOY_CIFRADO_CLAVE
 
 ## Seguridad
 
-Las credenciales SSH y las API keys de OpenRouter se guardan cifradas con **AES-256/GCM/NoPadding** (IV aleatorio + tag de autenticación de 128 bits, clave derivada con SHA-256). El JWT se firma con **HMAC-SHA384** y la app se niega a arrancar si `AUTODEPLOY_JWT_SECRET` o `AUTODEPLOY_CIFRADO_CLAVE` no están definidas o miden menos de 32 bytes (fail-fast).
+Las credenciales SSH y las API keys de OpenRouter se guardan cifradas con **AES-256/GCM/NoPadding** (IV aleatorio + tag de autenticación de 128 bits, clave derivada con SHA-256). El JWT se firma con **HMAC-SHA** (HS512 con el secreto recomendado de 48 bytes) y la app se niega a arrancar si `AUTODEPLOY_JWT_SECRET` o `AUTODEPLOY_CIFRADO_CLAVE` no están definidas o miden menos de 32 bytes (fail-fast).
 
-La capa HTTP usa **CORS con whitelist** (sin `*`), Spring Security con filtros JWT, `@PreAuthorize` con verificación de ownership (`#id == authentication.principal`) en 11 endpoints sensibles, y un `JwtHandshakeInterceptor` que valida el JWT en el query param antes del upgrade WebSocket. Los campos `passwordHash`, `passwordCifrada` y `claveSshPrivada` llevan `@JsonIgnore` para no filtrarse en respuestas API.
+La capa HTTP usa **CORS con whitelist** (sin `*`), Spring Security con filtros JWT, `@PreAuthorize` con verificación de ownership (`#id == authentication.name`) en 11 endpoints sensibles, y un `JwtHandshakeInterceptor` que valida el JWT en el query param antes del upgrade WebSocket. Los campos `passwordHash`, `passwordCifrada` y `claveSshPrivada` llevan `@JsonIgnore` para no filtrarse en respuestas API.
 
 Detalle completo en la sección "Endurecimiento de seguridad" de [`docs/10-conclusiones.md`](docs/10-conclusiones.md#endurecimiento-de-seguridad).
 

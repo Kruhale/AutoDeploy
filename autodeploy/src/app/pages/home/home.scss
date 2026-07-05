@@ -1,8 +1,2 @@
-.landing {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  padding: 2.5rem 2rem 0;
-  max-width: 76rem;
-  margin: 0 auto;
-}
+// Los estilos de la landing viven en src/styles/05-components/ (capa ITCSS
+// global) porque el header/footer comparten la paleta editorial de .landing.

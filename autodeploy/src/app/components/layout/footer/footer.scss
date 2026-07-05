@@ -1,7 +1,7 @@
 @use "../../../../styles/00-settings/css-variables" as *;
 
 .pie {
-  background-color: hsl(35, 18%, 5%);
+  background-color: hsl(230, 8%, 5%);
   padding: 0 var(--spacing-size-7xl);
 }
 
@@ -9,7 +9,7 @@
   height: 1px;
   border: 0;
   margin: 0;
-  background: linear-gradient(90deg, transparent, hsla(47, 86%, 56%, 0.35), transparent);
+  background: linear-gradient(90deg, transparent, hsla(42, 62%, 62%, 0.3), transparent);
 }
 
 .pie__contenido {
@@ -28,7 +28,7 @@
   font-family: var(--font-secondary);
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
-  color: var(--texto-claro);
+  color: hsl(40, 20%, 92%);
   margin-bottom: var(--spacing-size-s);
 }
 
@@ -107,13 +107,15 @@
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background-color: var(--fondo-tarjeta);
+  background-color: transparent;
+  border: 1px solid hsla(40, 20%, 92%, 0.14);
   color: var(--texto-apagado);
-  transition: color var(--duration-base) ease;
+  transition: color var(--duration-base) ease, border-color var(--duration-base) ease;
 }
 
 .pie__inferior__red:hover {
-  color: var(--texto-claro);
+  color: hsl(42, 62%, 62%);
+  border-color: hsla(42, 62%, 62%, 0.5);
 }
 
 @media (max-width: $breakpoint-lg) {

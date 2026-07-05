@@ -1,340 +1,202 @@
-<main class="landing" cursorPersonalizado>
+<main class="landing">
 
-  <!-- HERO: red 3D de servidores + titular gigante -->
-  <section class="seccion-bienvenida">
-    <section class="seccion-bienvenida__lienzo" aria-hidden="true" #lienzoHero></section>
-    <section class="seccion-bienvenida__brillo" aria-hidden="true"></section>
+  <!-- Escena 3D persistente: fija detras de todo, la camara viaja con el scroll -->
+  <section class="landing__lienzo" aria-hidden="true" #lienzoFondo></section>
 
-    <section class="seccion-bienvenida__contenido">
-      <header class="seccion-bienvenida__intro">
-        <span class="seccion-bienvenida__etiqueta animar animar--subir animar--retraso-0">
-          <span class="seccion-bienvenida__etiqueta__punto"></span>
-          <span class="seccion-bienvenida__etiqueta__texto">{{ 'home.hero.etiqueta' | translate }}</span>
+  <!-- PORTADA -->
+  <section class="portada">
+    <header class="portada__contenido">
+      <p class="portada__sello">— 00 · {{ 'home.hero.etiqueta' | translate }}</p>
+
+      <h1 class="portada__titulo" #tituloPortada>
+        <span class="portada__titulo__linea">
+          <span class="portada__titulo__texto">{{ 'home.hero.tituloLinea1' | translate }}</span>
         </span>
+        <span class="portada__titulo__linea">
+          <span class="portada__titulo__texto portada__titulo__texto--acento">{{ 'home.hero.tituloLinea2' | translate }}</span>
+        </span>
+      </h1>
 
-        <h1 class="seccion-bienvenida__titulo animar animar--subir animar--retraso-100">
-          {{ 'home.hero.titulo' | translate }}
-        </h1>
+      <p class="portada__descripcion">{{ 'home.hero.descripcion' | translate }}</p>
 
-        <p class="seccion-bienvenida__descripcion animar animar--subir animar--retraso-200">
-          {{ 'home.hero.descripcion' | translate }}
-        </p>
+      <nav class="portada__acciones">
+        <a class="portada__cta" botonMagnetico [routerLink]="rutaEmpezar()">
+          <span class="portada__cta__texto">{{ 'home.hero.ctaPrimario' | translate }}</span>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+        <a class="portada__enlace" href="#como-funciona">{{ 'home.hero.ctaSecundario' | translate }}</a>
+      </nav>
+    </header>
 
-        <nav class="seccion-bienvenida__acciones animar animar--subir animar--retraso-300">
-          <a class="seccion-bienvenida__boton seccion-bienvenida__boton--primario" botonMagnetico [routerLink]="rutaEmpezar()">
-            {{ 'home.hero.ctaPrimario' | translate }}
-            <i class="fa-solid fa-arrow-right"></i>
-          </a>
-          <a class="seccion-bienvenida__boton seccion-bienvenida__boton--fantasma" botonMagnetico href="#how-it-works">
-            {{ 'home.hero.ctaSecundario' | translate }}
-          </a>
-        </nav>
-      </header>
+    <!-- Columna de metadatos tecnicos: contrapeso tipografico del lado derecho -->
+    <aside class="portada__metadatos" aria-hidden="true">
+      <span class="portada__metadatos__linea"></span>
+      <p class="portada__metadatos__texto">UBUNTU 24.04 · DOCKER · NGINX · SSL AUTO · SSH</p>
+    </aside>
 
-      <aside
-        class="seccion-bienvenida__terminal animar animar--derecha animar--retraso-150"
-        #terminalHero
-        role="button"
-        tabindex="0"
-        aria-label="Reejecutar la demostración de despliegue"
-        (click)="reejecutarTerminal()"
-        (keydown.enter)="reejecutarTerminal()"
-      >
-        <section class="seccion-bienvenida__terminal__barra">
-          <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--rojo"></span>
-          <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--naranja"></span>
-          <span class="seccion-bienvenida__terminal__punto seccion-bienvenida__terminal__punto--verde"></span>
-          <span class="seccion-bienvenida__terminal__titulo">{{ 'home.hero.terminal.titulo' | translate }}</span>
-          <span class="seccion-bienvenida__terminal__reejecutar" aria-hidden="true">▶ ejecutar</span>
-        </section>
-        <section class="seccion-bienvenida__terminal__cuerpo">
-          <p class="seccion-bienvenida__terminal__linea">
-            <span class="seccion-bienvenida__terminal__prompt">$</span>
-            <span class="seccion-bienvenida__terminal__comando">autodeploy connect vps-prod-01</span>
-          </p>
-          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-            &nbsp;&nbsp;{{ 'home.hero.terminal.linea1' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
-          </p>
-          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-            &nbsp;&nbsp;{{ 'home.hero.terminal.linea2' | translate }}
-          </p>
-          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--vacia">&nbsp;</p>
-          <p class="seccion-bienvenida__terminal__linea">
-            <span class="seccion-bienvenida__terminal__prompt">$</span>
-            <span class="seccion-bienvenida__terminal__comando">autodeploy deploy --app my-site</span>
-          </p>
-          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-            &nbsp;&nbsp;{{ 'home.hero.terminal.linea3' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
-          </p>
-          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-            &nbsp;&nbsp;{{ 'home.hero.terminal.linea4' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
-          </p>
-          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-            &nbsp;&nbsp;{{ 'home.hero.terminal.linea5' | translate }} <span class="seccion-bienvenida__terminal__exito">{{ 'home.hero.terminal.exito' | translate }}</span>
-          </p>
-          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--vacia">&nbsp;</p>
-          <p class="seccion-bienvenida__terminal__linea seccion-bienvenida__terminal__linea--resultado">
-            &nbsp;&nbsp;<span class="seccion-bienvenida__terminal__url-resultado">{{ 'home.hero.terminal.urlFinal' | translate }}</span>
-          </p>
-        </section>
-      </aside>
-    </section>
-
-    <a class="seccion-bienvenida__scroll" href="#features" aria-label="Bajar a características">
-      <span class="seccion-bienvenida__scroll__texto">scroll</span>
-      <span class="seccion-bienvenida__scroll__linea"></span>
-    </a>
+    <p class="portada__scroll" aria-hidden="true">
+      <span class="portada__scroll__texto">scroll</span>
+      <span class="portada__scroll__linea"></span>
+    </p>
   </section>
 
-  <!-- CINTA INFINITA DE TECNOLOGIAS -->
-  <section class="cinta-tecnologias" aria-hidden="true">
-    <section class="cinta-tecnologias__pista">
-      <section class="cinta-tecnologias__grupo">
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-docker cinta-tecnologias__item__icono"></i>Docker</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-node-js cinta-tecnologias__item__icono"></i>Node.js</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-python cinta-tecnologias__item__icono"></i>Python</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-linux cinta-tecnologias__item__icono"></i>Linux</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-java cinta-tecnologias__item__icono"></i>Java</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-github cinta-tecnologias__item__icono"></i>GitHub</span>
-        <span class="cinta-tecnologias__item"><i class="fa-solid fa-server cinta-tecnologias__item__icono"></i>nginx</span>
-        <span class="cinta-tecnologias__item"><i class="fa-solid fa-database cinta-tecnologias__item__icono"></i>MongoDB</span>
-        <span class="cinta-tecnologias__item"><i class="fa-solid fa-terminal cinta-tecnologias__item__icono"></i>SSH</span>
-      </section>
-      <section class="cinta-tecnologias__grupo">
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-docker cinta-tecnologias__item__icono"></i>Docker</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-node-js cinta-tecnologias__item__icono"></i>Node.js</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-python cinta-tecnologias__item__icono"></i>Python</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-linux cinta-tecnologias__item__icono"></i>Linux</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-java cinta-tecnologias__item__icono"></i>Java</span>
-        <span class="cinta-tecnologias__item"><i class="fa-brands fa-github cinta-tecnologias__item__icono"></i>GitHub</span>
-        <span class="cinta-tecnologias__item"><i class="fa-solid fa-server cinta-tecnologias__item__icono"></i>nginx</span>
-        <span class="cinta-tecnologias__item"><i class="fa-solid fa-database cinta-tecnologias__item__icono"></i>MongoDB</span>
-        <span class="cinta-tecnologias__item"><i class="fa-solid fa-terminal cinta-tecnologias__item__icono"></i>SSH</span>
-      </section>
-    </section>
+  <!-- 01 · MANIFIESTO -->
+  <section class="manifiesto" id="manifiesto">
+    <p class="manifiesto__eyebrow">— 01 · {{ 'home.funcionalidades.titulo' | translate }}</p>
+    <p class="manifiesto__texto" #textoManifiesto>{{ 'home.manifiesto.texto' | translate }}</p>
   </section>
 
-  <!-- FUNCIONALIDADES -->
-  <section class="seccion-funcionalidades" id="features">
-    <section class="seccion-funcionalidades__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
-      <span class="seccion-funcionalidades__eyebrow">01</span>
-      <h2 class="seccion-funcionalidades__titulo">{{ 'home.funcionalidades.titulo' | translate }}</h2>
-      <p class="seccion-funcionalidades__descripcion">{{ 'home.funcionalidades.descripcion' | translate }}</p>
-    </section>
+  <!-- 02 · COMO FUNCIONA -->
+  <section class="proceso" id="como-funciona">
+    <header class="proceso__cabecera">
+      <p class="proceso__eyebrow">— 02 · {{ 'home.comoFunciona.titulo' | translate }}</p>
+      <h2 class="proceso__titulo">{{ 'home.comoFunciona.descripcion' | translate }}</h2>
+    </header>
 
-    <section class="seccion-funcionalidades__contenido">
-      <article class="seccion-funcionalidades__item seccion-funcionalidades__item--destacado" [scrollReveal]="'arriba'" [retraso]="0">
-        <section class="seccion-funcionalidades__item__icono">
-          <i class="fa-solid fa-display"></i>
+    <ol class="proceso__pasos">
+      <li class="proceso__paso">
+        <span class="proceso__paso__numero">01</span>
+        <section class="proceso__paso__contenido">
+          <h3 class="proceso__paso__titulo">{{ 'home.comoFunciona.paso1.titulo' | translate }}</h3>
+          <p class="proceso__paso__descripcion">{{ 'home.comoFunciona.paso1.descripcion' | translate }}</p>
         </section>
-        <h3 class="seccion-funcionalidades__item__titulo">{{ 'home.funcionalidades.item1.titulo' | translate }}</h3>
-        <p class="seccion-funcionalidades__item__descripcion">{{ 'home.funcionalidades.item1.descripcion' | translate }}</p>
+      </li>
+      <li class="proceso__paso">
+        <span class="proceso__paso__numero">02</span>
+        <section class="proceso__paso__contenido">
+          <h3 class="proceso__paso__titulo">{{ 'home.comoFunciona.paso2.titulo' | translate }}</h3>
+          <p class="proceso__paso__descripcion">{{ 'home.comoFunciona.paso2.descripcion' | translate }}</p>
+        </section>
+      </li>
+      <li class="proceso__paso">
+        <span class="proceso__paso__numero">03</span>
+        <section class="proceso__paso__contenido">
+          <h3 class="proceso__paso__titulo">{{ 'home.comoFunciona.paso3.titulo' | translate }}</h3>
+          <p class="proceso__paso__descripcion">{{ 'home.comoFunciona.paso3.descripcion' | translate }}</p>
+        </section>
+      </li>
+    </ol>
+  </section>
+
+  <!-- 03 · CAPACIDADES -->
+  <section class="capacidades" id="features">
+    <p class="capacidades__eyebrow">— 03 · {{ 'home.funcionalidades.titulo' | translate }}</p>
+
+    <ul class="capacidades__lista">
+      <li class="capacidades__fila">
+        <span class="capacidades__fila__numero">01</span>
+        <h3 class="capacidades__fila__titulo">{{ 'home.funcionalidades.item1.titulo' | translate }}</h3>
+        <p class="capacidades__fila__descripcion">{{ 'home.funcionalidades.item1.descripcion' | translate }}</p>
+      </li>
+      <li class="capacidades__fila">
+        <span class="capacidades__fila__numero">02</span>
+        <h3 class="capacidades__fila__titulo">{{ 'home.funcionalidades.item2.titulo' | translate }}</h3>
+        <p class="capacidades__fila__descripcion">{{ 'home.funcionalidades.item2.descripcion' | translate }}</p>
+      </li>
+      <li class="capacidades__fila">
+        <span class="capacidades__fila__numero">03</span>
+        <h3 class="capacidades__fila__titulo">{{ 'home.funcionalidades.item3.titulo' | translate }}</h3>
+        <p class="capacidades__fila__descripcion">{{ 'home.funcionalidades.item3.descripcion' | translate }}</p>
+      </li>
+      <li class="capacidades__fila">
+        <span class="capacidades__fila__numero">04</span>
+        <h3 class="capacidades__fila__titulo">{{ 'home.funcionalidades.item4.titulo' | translate }}</h3>
+        <p class="capacidades__fila__descripcion">{{ 'home.funcionalidades.item4.descripcion' | translate }}</p>
+      </li>
+    </ul>
+  </section>
+
+  <!-- 04 · CIFRAS -->
+  <section class="cifras">
+    <p class="cifras__eyebrow">— 04 · {{ 'home.stats.eyebrow' | translate }}</p>
+
+    <section class="cifras__lista">
+      <article class="cifras__item">
+        <span class="cifras__numero" [contadorAnimado]="2400" sufijo="+">0</span>
+        <span class="cifras__etiqueta">{{ 'home.stats.despliegues' | translate }}</span>
       </article>
-
-      <section class="seccion-funcionalidades__fila">
-        <article class="seccion-funcionalidades__item" [scrollReveal]="'arriba'" [retraso]="100">
-          <section class="seccion-funcionalidades__item__icono seccion-funcionalidades__item__icono--cyan">
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-          </section>
-          <h3 class="seccion-funcionalidades__item__titulo">{{ 'home.funcionalidades.item2.titulo' | translate }}</h3>
-          <p class="seccion-funcionalidades__item__descripcion">{{ 'home.funcionalidades.item2.descripcion' | translate }}</p>
-        </article>
-
-        <article class="seccion-funcionalidades__item" [scrollReveal]="'arriba'" [retraso]="200">
-          <section class="seccion-funcionalidades__item__icono seccion-funcionalidades__item__icono--amarillo">
-            <i class="fa-solid fa-lock"></i>
-          </section>
-          <h3 class="seccion-funcionalidades__item__titulo">{{ 'home.funcionalidades.item3.titulo' | translate }}</h3>
-          <p class="seccion-funcionalidades__item__descripcion">{{ 'home.funcionalidades.item3.descripcion' | translate }}</p>
-        </article>
-      </section>
-
-      <article class="seccion-funcionalidades__item seccion-funcionalidades__item--destacado" [scrollReveal]="'arriba'" [retraso]="100">
-        <section class="seccion-funcionalidades__item__icono seccion-funcionalidades__item__icono--teal">
-          <i class="fa-solid fa-robot"></i>
-        </section>
-        <h3 class="seccion-funcionalidades__item__titulo">{{ 'home.funcionalidades.item4.titulo' | translate }}</h3>
-        <p class="seccion-funcionalidades__item__descripcion">{{ 'home.funcionalidades.item4.descripcion' | translate }}</p>
+      <article class="cifras__item">
+        <span class="cifras__numero" [contadorAnimado]="99.9" [decimales]="1" sufijo="%">0</span>
+        <span class="cifras__etiqueta">{{ 'home.stats.uptime' | translate }}</span>
+      </article>
+      <article class="cifras__item">
+        <span class="cifras__numero" [contadorAnimado]="6">0</span>
+        <span class="cifras__etiqueta">{{ 'home.stats.servicios' | translate }}</span>
       </article>
     </section>
   </section>
 
-  <!-- STATS -->
-  <section class="seccion-stats" [scrollReveal]="'arriba'" [retraso]="0">
-    <article class="seccion-stats__item">
-      <span class="seccion-stats__numero" [contadorAnimado]="2400" sufijo="+">0</span>
-      <span class="seccion-stats__etiqueta">Despliegues automatizados</span>
-    </article>
-    <article class="seccion-stats__item">
-      <span class="seccion-stats__numero" [contadorAnimado]="99.9" [decimales]="1" sufijo="%">0</span>
-      <span class="seccion-stats__etiqueta">Uptime medio</span>
-    </article>
-    <article class="seccion-stats__item">
-      <span class="seccion-stats__numero" [contadorAnimado]="6">0</span>
-      <span class="seccion-stats__etiqueta">Servicios monitorizados</span>
-    </article>
-    <article class="seccion-stats__item">
-      <span class="seccion-stats__numero" [contadorAnimado]="5">0</span>
-      <span class="seccion-stats__etiqueta">Idiomas soportados</span>
-    </article>
-  </section>
+  <!-- 05 · PLANES -->
+  <section class="planes" id="pricing">
+    <header class="planes__cabecera">
+      <p class="planes__eyebrow">— 05 · {{ 'home.precios.titulo' | translate }}</p>
+      <h2 class="planes__titulo">{{ 'home.precios.descripcion' | translate }}</h2>
+    </header>
 
-  <!-- HOW IT WORKS -->
-  <section class="workflow" id="how-it-works">
-    <section class="workflow__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
-      <span class="workflow__eyebrow">02</span>
-      <h2 class="workflow__titulo">{{ 'home.comoFunciona.titulo' | translate }}</h2>
-      <p class="workflow__descripcion">{{ 'home.comoFunciona.descripcion' | translate }}</p>
-    </section>
+    <section class="planes__columnas">
 
-    <section class="workflow__cuerpo">
-    <section class="workflow__pasos">
-      <section class="workflow__paso" [scrollReveal]="'izquierda'" [retraso]="0">
-        <span class="workflow__paso__numero">01</span>
-        <section class="workflow__paso__contenido">
-          <h3 class="workflow__paso__titulo">{{ 'home.comoFunciona.paso1.titulo' | translate }}</h3>
-          <p class="workflow__paso__descripcion">{{ 'home.comoFunciona.paso1.descripcion' | translate }}</p>
-        </section>
-      </section>
-
-      <section class="workflow__paso" [scrollReveal]="'izquierda'" [retraso]="120">
-        <span class="workflow__paso__numero">02</span>
-        <section class="workflow__paso__contenido">
-          <h3 class="workflow__paso__titulo">{{ 'home.comoFunciona.paso2.titulo' | translate }}</h3>
-          <p class="workflow__paso__descripcion">{{ 'home.comoFunciona.paso2.descripcion' | translate }}</p>
-        </section>
-      </section>
-
-      <section class="workflow__paso" [scrollReveal]="'izquierda'" [retraso]="240">
-        <span class="workflow__paso__numero">03</span>
-        <section class="workflow__paso__contenido">
-          <h3 class="workflow__paso__titulo">{{ 'home.comoFunciona.paso3.titulo' | translate }}</h3>
-          <p class="workflow__paso__descripcion">{{ 'home.comoFunciona.paso3.descripcion' | translate }}</p>
-        </section>
-      </section>
-    </section>
-
-      <aside class="workflow__panel" [scrollReveal]="'derecha'" [retraso]="100">
-        <section class="workflow__panel__barra">
-          <span class="workflow__panel__punto workflow__panel__punto--rojo"></span>
-          <span class="workflow__panel__punto workflow__panel__punto--naranja"></span>
-          <span class="workflow__panel__punto workflow__panel__punto--verde"></span>
-          <span class="workflow__panel__titulo">despliegue.log</span>
-        </section>
-        <section class="workflow__panel__cuerpo">
-          <p class="workflow__panel__linea"><span class="workflow__panel__marca">▸</span> git clone proyecto.git</p>
-          <p class="workflow__panel__linea workflow__panel__linea--ok">✓ Repositorio clonado</p>
-          <p class="workflow__panel__linea"><span class="workflow__panel__marca">▸</span> Instalando dependencias</p>
-          <p class="workflow__panel__linea workflow__panel__linea--ok">✓ Dependencias listas</p>
-          <p class="workflow__panel__linea"><span class="workflow__panel__marca">▸</span> Configurando nginx + SSL</p>
-          <p class="workflow__panel__linea workflow__panel__linea--ok">✓ HTTPS activo · Let's Encrypt</p>
-          <p class="workflow__panel__linea"><span class="workflow__panel__marca">▸</span> Publicando</p>
-          <p class="workflow__panel__linea"><span class="workflow__panel__ruta">https://mi-app.autodeploy.sh</span></p>
-        </section>
-      </aside>
-    </section>
-  </section>
-
-  <!-- PRICING -->
-  <section class="seccion-precios" id="pricing">
-    <section class="seccion-precios__cabecera" [scrollReveal]="'arriba'" [retraso]="0">
-      <span class="seccion-precios__eyebrow">03</span>
-      <h2 class="seccion-precios__titulo">{{ 'home.precios.titulo' | translate }}</h2>
-      <p class="seccion-precios__descripcion">{{ 'home.precios.descripcion' | translate }}</p>
-    </section>
-
-    <section class="seccion-precios__cuadricula">
-
-      <article class="tarjeta-plan" [scrollReveal]="'escala'" [retraso]="0">
-        <section class="tarjeta-plan__cabecera">
-          <span class="tarjeta-plan__nombre">{{ 'home.precios.free.nombre' | translate }}</span>
-          <section class="tarjeta-plan__precio">
-            <span class="tarjeta-plan__precio__numero">{{ 'home.precios.free.precio' | translate }}</span>
-            <span class="tarjeta-plan__precio__periodo">{{ 'home.precios.periodo' | translate }}</span>
-          </section>
-          <p class="tarjeta-plan__descripcion">{{ 'home.precios.free.descripcion' | translate }}</p>
-        </section>
-        <ul class="tarjeta-plan__lista">
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.free.features.servidores' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.free.features.despliegues' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.free.features.monitorizacion' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.free.features.soporte' | translate }}</li>
-          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>{{ 'home.precios.free.features.ia' | translate }}</li>
-          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>{{ 'home.precios.free.features.dominios' | translate }}</li>
-          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>{{ 'home.precios.free.features.equipo' | translate }}</li>
+      <article class="planes__plan">
+        <p class="planes__plan__nombre">{{ 'home.precios.free.nombre' | translate }}</p>
+        <p class="planes__plan__precio">{{ 'home.precios.free.precio' | translate }}<span class="planes__plan__periodo">{{ 'home.precios.periodo' | translate }}</span></p>
+        <p class="planes__plan__descripcion">{{ 'home.precios.free.descripcion' | translate }}</p>
+        <ul class="planes__plan__lista">
+          <li class="planes__plan__item">{{ 'home.precios.free.features.servidores' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.free.features.despliegues' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.free.features.monitorizacion' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.free.features.soporte' | translate }}</li>
         </ul>
         @if (planActivo() === "free") {
-          <button class="boton--ghost tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+          <button class="planes__plan__cta planes__plan__cta--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
         } @else {
-          <a class="boton--ghost tarjeta-plan__boton" [routerLink]="rutaEmpezar()">{{ 'home.precios.free.cta' | translate }}</a>
+          <a class="planes__plan__cta" [routerLink]="rutaEmpezar()">{{ 'home.precios.free.cta' | translate }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
         }
       </article>
 
-      <article class="tarjeta-plan tarjeta-plan--destacado" [scrollReveal]="'escala'" [retraso]="100">
-        <span class="tarjeta-plan__badge">{{ 'home.precios.pro.badge' | translate }}</span>
-        <section class="tarjeta-plan__cabecera">
-          <span class="tarjeta-plan__nombre">{{ 'home.precios.pro.nombre' | translate }}</span>
-          <section class="tarjeta-plan__precio">
-            <span class="tarjeta-plan__precio__numero">{{ 'home.precios.pro.precio' | translate }}</span>
-            <span class="tarjeta-plan__precio__periodo">{{ 'home.precios.periodo' | translate }}</span>
-          </section>
-          <p class="tarjeta-plan__descripcion">{{ 'home.precios.pro.descripcion' | translate }}</p>
-        </section>
-        <ul class="tarjeta-plan__lista">
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.servidores' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.despliegues' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.monitorizacion' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.soporte' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.ia' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.pro.features.dominios' | translate }}</li>
-          <li class="tarjeta-plan__item tarjeta-plan__item--inactivo"><i class="fa-solid fa-xmark tarjeta-plan__item__xmark"></i>{{ 'home.precios.pro.features.equipo' | translate }}</li>
+      <article class="planes__plan planes__plan--destacado">
+        <p class="planes__plan__nombre">{{ 'home.precios.pro.nombre' | translate }} <span class="planes__plan__badge">{{ 'home.precios.pro.badge' | translate }}</span></p>
+        <p class="planes__plan__precio">{{ 'home.precios.pro.precio' | translate }}<span class="planes__plan__periodo">{{ 'home.precios.periodo' | translate }}</span></p>
+        <p class="planes__plan__descripcion">{{ 'home.precios.pro.descripcion' | translate }}</p>
+        <ul class="planes__plan__lista">
+          <li class="planes__plan__item">{{ 'home.precios.pro.features.servidores' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.pro.features.despliegues' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.pro.features.ia' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.pro.features.dominios' | translate }}</li>
         </ul>
         @if (planActivo() === "pro") {
-          <button class="boton--primario tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+          <button class="planes__plan__cta planes__plan__cta--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
         } @else {
-          <a class="boton--primario tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'pro' }">{{ 'home.precios.pro.cta' | translate }}</a>
+          <a class="planes__plan__cta" routerLink="/app/pago" [queryParams]="{ plan: 'pro' }">{{ 'home.precios.pro.cta' | translate }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
         }
       </article>
 
-      <article class="tarjeta-plan" [scrollReveal]="'escala'" [retraso]="200">
-        <section class="tarjeta-plan__cabecera">
-          <span class="tarjeta-plan__nombre">{{ 'home.precios.business.nombre' | translate }}</span>
-          <section class="tarjeta-plan__precio">
-            <span class="tarjeta-plan__precio__numero">{{ 'home.precios.business.precio' | translate }}</span>
-            <span class="tarjeta-plan__precio__periodo">{{ 'home.precios.periodo' | translate }}</span>
-          </section>
-          <p class="tarjeta-plan__descripcion">{{ 'home.precios.business.descripcion' | translate }}</p>
-        </section>
-        <ul class="tarjeta-plan__lista">
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.servidores' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.despliegues' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.monitorizacion' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.soporte' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.ia' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.dominios' | translate }}</li>
-          <li class="tarjeta-plan__item"><i class="fa-solid fa-check tarjeta-plan__item__check"></i>{{ 'home.precios.business.features.equipo' | translate }}</li>
+      <article class="planes__plan">
+        <p class="planes__plan__nombre">{{ 'home.precios.business.nombre' | translate }}</p>
+        <p class="planes__plan__precio">{{ 'home.precios.business.precio' | translate }}<span class="planes__plan__periodo">{{ 'home.precios.periodo' | translate }}</span></p>
+        <p class="planes__plan__descripcion">{{ 'home.precios.business.descripcion' | translate }}</p>
+        <ul class="planes__plan__lista">
+          <li class="planes__plan__item">{{ 'home.precios.business.features.servidores' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.business.features.despliegues' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.business.features.ia' | translate }}</li>
+          <li class="planes__plan__item">{{ 'home.precios.business.features.equipo' | translate }}</li>
         </ul>
         @if (planActivo() === "business") {
-          <button class="boton--ghost tarjeta-plan__boton tarjeta-plan__boton--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
+          <button class="planes__plan__cta planes__plan__cta--actual" type="button" disabled>{{ 'home.precios.planActual' | translate }}</button>
         } @else {
-          <a class="boton--ghost tarjeta-plan__boton" routerLink="/app/pago" [queryParams]="{ plan: 'business' }">{{ 'home.precios.business.cta' | translate }}</a>
+          <a class="planes__plan__cta" routerLink="/app/pago" [queryParams]="{ plan: 'business' }">{{ 'home.precios.business.cta' | translate }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
         }
       </article>
 
     </section>
   </section>
 
-  <!-- CTA -->
-  <section class="seccion-llamada-accion" [scrollReveal]="'arriba'" [retraso]="0">
-    <section class="seccion-llamada-accion__contenedor">
-      <section class="seccion-llamada-accion__texto">
-        <h2 class="seccion-llamada-accion__titulo">{{ 'home.cta.titulo' | translate }}</h2>
-        <p class="seccion-llamada-accion__descripcion">{{ 'home.cta.descripcion' | translate }}</p>
-      </section>
-      <section class="seccion-llamada-accion__botones">
-        <a class="seccion-llamada-accion__boton--primario" [routerLink]="rutaEmpezar()">{{ 'home.cta.boton' | translate }}</a>
-      </section>
-    </section>
+  <!-- CIERRE -->
+  <section class="cierre">
+    <h2 class="cierre__titulo">{{ 'home.cta.titulo' | translate }}</h2>
+    <p class="cierre__descripcion">{{ 'home.cta.descripcion' | translate }}</p>
+    <a class="cierre__cta" botonMagnetico [routerLink]="rutaEmpezar()">
+      <span class="cierre__cta__texto">{{ 'home.cta.boton' | translate }}</span>
+      <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+    </a>
   </section>
 
 </main>

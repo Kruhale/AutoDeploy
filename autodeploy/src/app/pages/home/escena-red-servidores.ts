@@ -1,15 +1,22 @@
 import * as THREE from "three";
 
-const NUMERO_DE_NODOS = 150;
-const RANGO_DE_DISTRIBUCION = 300;
-const UMBRAL_DE_CONEXION = 120;
-const COLOR_AMARILLO_MARCA = 0xf0c419;
-const COLOR_CYAN_ACENTO = 0x1ab8c8;
-const FRACCION_NODOS_CYAN = 0.2;
-const VELOCIDAD_ROTACION_Y = 0.0003;
-const VELOCIDAD_ROTACION_X = 0.00015;
-const FACTOR_LERP_PARALLAX = 0.04;
-const INTENSIDAD_PARALLAX = 80;
+const NUMERO_DE_NODOS = 170;
+const RANGO_DE_DISTRIBUCION = 320;
+const UMBRAL_DE_CONEXION = 110;
+// Paleta editorial: puntos casi blancos y un puñado ámbar muy contenido.
+const COLOR_TINTA_NODOS = 0xd8d2c4;
+const COLOR_ACENTO_AMBAR = 0xe8b84b;
+const FRACCION_NODOS_ACENTO = 0.14;
+const VELOCIDAD_ROTACION_Y = 0.00016;
+const VELOCIDAD_ROTACION_X = 0.00007;
+const FACTOR_LERP_PARALLAX = 0.03;
+const INTENSIDAD_PARALLAX = 40;
+// Viaje de camara conducido por el scroll de toda la landing (estilo igloo.inc):
+// la camara se acerca y orbita la estructura mientras el usuario baja.
+const DISTANCIA_CAMARA_INICIO = 470;
+const DISTANCIA_CAMARA_FINAL = 340;
+const GIRO_TOTAL_DEL_VIAJE = 2.2;
+const FACTOR_LERP_VIAJE = 0.06;
 
 export class EscenaRedServidores {
   private readonly contenedorDeEscena: HTMLElement;
@@ -24,6 +31,8 @@ export class EscenaRedServidores {
   private texturaDeGlow: THREE.CanvasTexture | null = null;
   private idDelFrameAnimacion: number = 0;
   private intensidadDeResaltado = 0;
+  private progresoDelViaje = 0;
+  private progresoSuavizado = 0;
   private posicionRatonNormalizada = { x: 0, y: 0 };
   private objetivoDeParallaxActual = { x: 0, y: 0 };
   private esModoReducido: boolean = false;
@@ -101,7 +110,7 @@ export class EscenaRedServidores {
   private crearEscena(): void {
     this.escena = new THREE.Scene();
     // Negro para que la niebla coincida con el fondo CSS casi negro del contenedor
-    this.escena.fog = new THREE.FogExp2(0x000000, 0.0012);
+    this.escena.fog = new THREE.FogExp2(0x08090c, 0.0007);
   }
 
   private crearCamara(): void {
@@ -110,7 +119,7 @@ export class EscenaRedServidores {
     const relacionDeAspecto = anchoDelContenedor / altoDelContenedor;
 
     this.camara = new THREE.PerspectiveCamera(60, relacionDeAspecto, 1, 2000);
-    this.camara.position.z = 500;
+    this.camara.position.z = DISTANCIA_CAMARA_INICIO;
   }
 
   private generarTexturaDeGlow(): THREE.CanvasTexture {
@@ -153,12 +162,12 @@ export class EscenaRedServidores {
 
   private generarColoresDeNodos(cantidadDeNodos: number): Float32Array {
     const arrayDeColores = new Float32Array(cantidadDeNodos * 3);
-    const colorAmarillo = new THREE.Color(COLOR_AMARILLO_MARCA);
-    const colorCyan = new THREE.Color(COLOR_CYAN_ACENTO);
+    const colorTinta = new THREE.Color(COLOR_TINTA_NODOS);
+    const colorAcento = new THREE.Color(COLOR_ACENTO_AMBAR);
 
     for (let indice = 0; indice < cantidadDeNodos; indice++) {
-      const esNodoCyan = Math.random() < FRACCION_NODOS_CYAN;
-      const colorDelNodo = esNodoCyan ? colorCyan : colorAmarillo;
+      const esNodoDeAcento = Math.random() < FRACCION_NODOS_ACENTO;
+      const colorDelNodo = esNodoDeAcento ? colorAcento : colorTinta;
 
       arrayDeColores[indice * 3] = colorDelNodo.r;
       arrayDeColores[indice * 3 + 1] = colorDelNodo.g;
@@ -215,7 +224,7 @@ export class EscenaRedServidores {
     this.geometriaDeNodos.setAttribute("color", new THREE.Float32BufferAttribute(coloresDeNodos, 3));
 
     this.materialDeNodos = new THREE.PointsMaterial({
-      size: 5,
+      size: 9,
       sizeAttenuation: true,
       vertexColors: true,
       map: this.texturaDeGlow,
@@ -233,8 +242,8 @@ export class EscenaRedServidores {
     this.geometriaDeLineas.setAttribute("position", new THREE.Float32BufferAttribute(verticesDeConexiones, 3));
 
     this.materialDeLineas = new THREE.LineBasicMaterial({
-      color: COLOR_AMARILLO_MARCA,
-      opacity: 0.1,
+      color: COLOR_TINTA_NODOS,
+      opacity: 0.16,
       transparent: true,
       blending: THREE.AdditiveBlending,
       depthWrite: false
@@ -261,10 +270,22 @@ export class EscenaRedServidores {
     this.renderer.render(this.escena, this.camara);
   }
 
+  // El scroll de la landing (0 → 1) fija el destino del viaje; el bucle lo
+  // suaviza con lerp para que la camara nunca de tirones aunque el scroll si.
+  establecerProgreso(progreso: number): void {
+    this.progresoDelViaje = Math.min(Math.max(progreso, 0), 1);
+  }
+
   private actualizarParallax(): void {
     if (!this.camara) {
       return;
     }
+
+    const diferenciaDeViaje = this.progresoDelViaje - this.progresoSuavizado;
+    this.progresoSuavizado += diferenciaDeViaje * FACTOR_LERP_VIAJE;
+
+    const distanciaActual = DISTANCIA_CAMARA_INICIO + (DISTANCIA_CAMARA_FINAL - DISTANCIA_CAMARA_INICIO) * this.progresoSuavizado;
+    const anguloDeOrbita = this.progresoSuavizado * GIRO_TOTAL_DEL_VIAJE;
 
     const xObjetivo = this.posicionRatonNormalizada.x * INTENSIDAD_PARALLAX;
     const yObjetivo = this.posicionRatonNormalizada.y * INTENSIDAD_PARALLAX;
@@ -275,8 +296,9 @@ export class EscenaRedServidores {
     this.objetivoDeParallaxActual.x += diferenciaPosicionX * FACTOR_LERP_PARALLAX;
     this.objetivoDeParallaxActual.y += diferenciaPosicionY * FACTOR_LERP_PARALLAX;
 
-    this.camara.position.x = this.objetivoDeParallaxActual.x;
-    this.camara.position.y = this.objetivoDeParallaxActual.y;
+    this.camara.position.x = Math.sin(anguloDeOrbita) * distanciaActual + this.objetivoDeParallaxActual.x;
+    this.camara.position.y = this.objetivoDeParallaxActual.y + this.progresoSuavizado * 60;
+    this.camara.position.z = Math.cos(anguloDeOrbita) * distanciaActual;
     this.camara.lookAt(0, 0, 0);
   }
 

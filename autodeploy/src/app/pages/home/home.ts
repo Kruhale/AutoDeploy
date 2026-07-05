@@ -4,9 +4,7 @@ import { TranslateModule } from "@ngx-translate/core";
 import Lenis from "lenis";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollRevealDirective } from "../../directives/scroll-reveal.directive";
 import { ContadorAnimadoDirective } from "../../directives/contador-animado.directive";
-import { CursorPersonalizadoDirective } from "../../directives/cursor-personalizado.directive";
 import { BotonMagneticoDirective } from "../../directives/boton-magnetico.directive";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
@@ -14,18 +12,19 @@ import { EscenaRedServidores } from "./escena-red-servidores";
 
 @Component({
   selector: "app-home",
-  imports: [RouterLink, ScrollRevealDirective, ContadorAnimadoDirective, CursorPersonalizadoDirective, BotonMagneticoDirective, TranslateModule],
+  imports: [RouterLink, ContadorAnimadoDirective, BotonMagneticoDirective, TranslateModule],
   templateUrl: "./home.html",
   styleUrl: "./home.scss"
 })
 export class Home implements AfterViewInit, OnDestroy {
-  @ViewChild("lienzoHero") lienzoHero!: ElementRef<HTMLElement>;
-  @ViewChild("terminalHero") terminalHero!: ElementRef<HTMLElement>;
+  @ViewChild("lienzoFondo") lienzoFondo!: ElementRef<HTMLElement>;
+  @ViewChild("tituloPortada") tituloPortada!: ElementRef<HTMLElement>;
+  @ViewChild("textoManifiesto") textoManifiesto!: ElementRef<HTMLElement>;
 
   rutaEmpezar: Signal<string>;
   planActivo: Signal<string>;
 
-  private escenaHero: EscenaRedServidores | null = null;
+  private escenaDeFondo: EscenaRedServidores | null = null;
   private scrollSuave: Lenis | null = null;
   private idAnimacionScroll = 0;
   private movimientoScrollActivo = false;
@@ -49,16 +48,16 @@ export class Home implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.escenaHero = new EscenaRedServidores(this.lienzoHero.nativeElement);
-    this.escenaHero.iniciar();
+    this.escenaDeFondo = new EscenaRedServidores(this.lienzoFondo.nativeElement);
+    this.escenaDeFondo.iniciar();
     this.iniciarScrollSuave();
     this.iniciarMovimientoScroll();
   }
 
   ngOnDestroy(): void {
-    if (this.escenaHero !== null) {
-      this.escenaHero.destruir();
-      this.escenaHero = null;
+    if (this.escenaDeFondo !== null) {
+      this.escenaDeFondo.destruir();
+      this.escenaDeFondo = null;
     }
     if (this.scrollSuave !== null) {
       cancelAnimationFrame(this.idAnimacionScroll);
@@ -74,34 +73,13 @@ export class Home implements AfterViewInit, OnDestroy {
     }
   }
 
-  reejecutarTerminal(): void {
-    if (this.escenaHero !== null) {
-      this.escenaHero.resaltar();
-    }
-
-    const prefiereMenosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefiereMenosMovimiento) {
-      return;
-    }
-
-    const cuerpoTerminal = this.terminalHero.nativeElement;
-    const lineasTerminal = cuerpoTerminal.querySelectorAll(".seccion-bienvenida__terminal__linea");
-
-    lineasTerminal.forEach(function (nodo) {
-      const linea = nodo as HTMLElement;
-      linea.style.animation = "none";
-      void linea.offsetWidth;
-      linea.style.animation = "";
-    });
-  }
-
   private iniciarScrollSuave(): void {
     const prefiereMenosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (prefiereMenosMovimiento) {
       return;
     }
 
-    this.scrollSuave = new Lenis({ duration: 1.1, smoothWheel: true });
+    this.scrollSuave = new Lenis({ duration: 1.15, smoothWheel: true });
 
     const componente = this;
 
@@ -117,52 +95,131 @@ export class Home implements AfterViewInit, OnDestroy {
 
   private iniciarMovimientoScroll(): void {
     const prefiereMenosMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (prefiereMenosMovimiento || this.scrollSuave === null) {
+    if (prefiereMenosMovimiento) {
       return;
     }
 
     gsap.registerPlugin(ScrollTrigger);
     this.movimientoScrollActivo = true;
 
-    this.scrollSuave.on("scroll", function () {
-      ScrollTrigger.update();
+    if (this.scrollSuave !== null) {
+      this.scrollSuave.on("scroll", function () {
+        ScrollTrigger.update();
+      });
+    }
+
+    this.crearViajeDeCamara();
+    this.ocultarHeaderAlBajar();
+    this.revelarTituloDePortada();
+    this.revelarManifiestoPorPalabras();
+    this.revelarBloquesAlScroll();
+
+    ScrollTrigger.refresh();
+  }
+
+  // El scroll completo de la landing (0 → 1) conduce la camara de la escena 3D:
+  // es lo que convierte la pagina en un viaje continuo en vez de bloques sueltos.
+  private crearViajeDeCamara(): void {
+    const componente = this;
+
+    ScrollTrigger.create({
+      trigger: ".landing",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: true,
+      onUpdate: function (disparador) {
+        if (componente.escenaDeFondo !== null) {
+          componente.escenaDeFondo.establecerProgreso(disparador.progress);
+        }
+      }
+    });
+  }
+
+  // El header se esconde al bajar y reaparece al subir: los titulares
+  // monumentales nunca chocan con el, y la pagina gana pantalla completa.
+  private ocultarHeaderAlBajar(): void {
+    const barraDeCabecera = document.querySelector(".cabecera");
+    if (barraDeCabecera === null) {
+      return;
+    }
+
+    ScrollTrigger.create({
+      start: "top top",
+      end: "max",
+      onUpdate: function (disparador) {
+        const estaBajando = disparador.direction === 1;
+        const haPasadoElHero = disparador.scroll() > 400;
+        barraDeCabecera.classList.toggle("cabecera--oculta", estaBajando && haPasadoElHero);
+      }
+    });
+  }
+
+  private revelarTituloDePortada(): void {
+    const lineasDelTitulo = this.tituloPortada.nativeElement.querySelectorAll(".portada__titulo__texto");
+
+    gsap.from(lineasDelTitulo, {
+      yPercent: 110,
+      duration: 1.2,
+      ease: "power4.out",
+      stagger: 0.14,
+      delay: 0.25
     });
 
-    gsap.to(this.lienzoHero.nativeElement, {
-      yPercent: 20,
+    gsap.from(".portada__sello, .portada__descripcion, .portada__acciones", {
+      opacity: 0,
+      y: 24,
+      duration: 1,
+      ease: "power3.out",
+      stagger: 0.12,
+      delay: 0.75
+    });
+  }
+
+  // Divide el manifiesto en palabras y las enciende una a una atadas al scroll
+  // (scrub): el parrafo se "lee solo" mientras el usuario baja.
+  private revelarManifiestoPorPalabras(): void {
+    const parrafoDelManifiesto = this.textoManifiesto.nativeElement;
+    const textoCompleto = parrafoDelManifiesto.textContent || "";
+    const palabrasDelTexto = textoCompleto.trim().split(/\s+/);
+
+    parrafoDelManifiesto.textContent = "";
+
+    palabrasDelTexto.forEach(function (palabra) {
+      const nodoDePalabra = document.createElement("span");
+      nodoDePalabra.className = "manifiesto__palabra";
+      nodoDePalabra.textContent = palabra + " ";
+      parrafoDelManifiesto.appendChild(nodoDePalabra);
+    });
+
+    gsap.to(".manifiesto__palabra", {
+      opacity: 1,
+      stagger: 0.06,
       ease: "none",
       scrollTrigger: {
-        trigger: ".seccion-bienvenida",
-        start: "top top",
-        end: "bottom top",
+        trigger: ".manifiesto",
+        start: "top 75%",
+        end: "bottom 55%",
         scrub: true
       }
     });
+  }
 
-    gsap.to(".seccion-bienvenida__brillo", {
-      yPercent: 30,
-      ease: "none",
-      scrollTrigger: {
-        trigger: ".seccion-bienvenida",
-        start: "top top",
-        end: "bottom top",
-        scrub: true
-      }
-    });
+  private revelarBloquesAlScroll(): void {
+    const bloquesConReveal = gsap.utils.toArray<HTMLElement>(
+      ".proceso__paso, .capacidades__fila, .cifras__item, .planes__plan, .cierre__titulo, .cierre__descripcion, .cierre__cta, .proceso__cabecera, .planes__cabecera"
+    );
 
-    const numerosDelWorkflow = gsap.utils.toArray<HTMLElement>(".workflow__paso__numero");
-    numerosDelWorkflow.forEach(function (numero) {
-      gsap.from(numero, {
-        scale: 1.4,
+    bloquesConReveal.forEach(function (bloque) {
+      gsap.from(bloque, {
+        opacity: 0,
+        y: 44,
+        duration: 0.9,
         ease: "power3.out",
-        duration: 0.8,
         scrollTrigger: {
-          trigger: numero,
+          trigger: bloque,
           start: "top 88%"
         }
       });
     });
-
-    ScrollTrigger.refresh();
   }
 }

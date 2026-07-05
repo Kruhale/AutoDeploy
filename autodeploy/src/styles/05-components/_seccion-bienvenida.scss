@@ -1,437 +1,333 @@
-@use "../01-tools/funciones" as *;
-
-// La home es siempre oscura (inmersiva), aunque el usuario tenga el tema claro
-// activado. Redeclaramos aqui la paleta oscura sobre el contenedor de la landing
-// para que no la pise `.tema-claro` del <html>.
+// Landing editorial oscura: fondo casi negro sereno, tipografia monumental,
+// lineas de 1px como unica decoracion y UNA escena 3D fija detras de todo
+// cuya camara conduce el scroll (viaje continuo, no secciones apiladas).
 .landing {
-  --fondo-home: hsl(0, 0%, 3.9%);
-  --fondo-home-tarjeta: hsl(32, 6%, 11%);
-  --texto-claro: hsl(40, 33%, 93%);
-  --texto-medio: hsl(30, 6%, 66%);
-  --texto-apagado: hsl(33, 5%, 52%);
-  --borde-normal: hsla(40, 33%, 91%, 0.09);
-  --borde-suave: hsla(40, 33%, 91%, 0.05);
+  --fondo-editorial: hsl(230, 8%, 4%);
+  --tinta: hsl(40, 20%, 92%);
+  --tinta-suave: hsl(40, 6%, 60%);
+  --tinta-apagada: hsl(40, 4%, 42%);
+  --acento: hsl(42, 62%, 62%);
+  --linea: hsla(40, 20%, 92%, 0.09);
+
+  // Alias para que header/footer globales dentro de la home hereden la paleta.
+  --texto-claro: var(--tinta);
+  --texto-medio: var(--tinta-suave);
+  --texto-apagado: var(--tinta-apagada);
+  --borde-normal: var(--linea);
+  --borde-suave: hsla(40, 20%, 92%, 0.05);
 
   position: relative;
-  background-color: var(--fondo-home);
-  color: var(--texto-claro);
-  overflow-x: hidden;
+  // OJO: sin background-color aqui — un fondo opaco en .landing pintaria por
+  // encima del canvas (hijo con z-index negativo). El fondo vive en ::before.
+  color: var(--tinta);
+  overflow-x: clip;
 }
 
-// Grano de pelicula fijo sobre toda la home: le quita la sensacion de plano
-// digital y le da textura tipo impreso, muy sutil.
+// Fondo que cubre toda la ventana: los laterales nunca ensenian el color del body.
+.landing::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+  background-color: var(--fondo-editorial);
+}
+
+// Escena 3D persistente detras de TODO el recorrido de la landing.
+.landing__lienzo {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+}
+
+// Velo radial: oscurece los bordes para que el texto siempre respire encima.
 .landing::after {
   content: "";
   position: fixed;
   inset: 0;
-  z-index: 3;
+  z-index: -1;
   pointer-events: none;
-  opacity: 0.045;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='r'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23r)'/%3E%3C/svg%3E");
+  background: radial-gradient(120% 120% at 50% 40%, transparent 55%, hsla(230, 8%, 2%, 0.55) 100%);
 }
 
-.seccion-bienvenida {
+// ------------------------------------------------- HEADER SOBRE LA LANDING
+// Estos overrides viven aqui (capa global) porque header.scss esta encapsulado
+// por Angular y un selector body:has() no funcionaria dentro del componente.
+
+// Fondo denso: los titulares monumentales pasan por debajo del header y con
+// poca opacidad se veian cortados/emborronados.
+body:has(.landing) .cabecera {
+  background: linear-gradient(hsla(230, 8%, 4%, 0.92), hsla(230, 8%, 4%, 0.78));
+  border-color: hsla(40, 20%, 92%, 0.1);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body:has(.landing) .cabecera__logo__texto {
+  color: hsl(40, 20%, 92%);
+}
+
+// CTA del header alineado al lenguaje outline ambar de la landing.
+body:has(.landing) .cabecera__boton-app {
+  background-color: transparent;
+  border: 1px solid hsl(42, 62%, 62%);
+  color: hsl(42, 62%, 62%);
+}
+
+body:has(.landing) .cabecera__boton-app:hover {
+  background-color: hsl(42, 62%, 62%);
+  color: hsl(230, 8%, 6%);
+  box-shadow: none;
+}
+
+// El header se esconde al bajar y reaparece al subir (estilo igloo.inc).
+body:has(.landing) .cabecera.cabecera--oculta {
+  transform: translateY(calc(-100% - 1.25rem));
+}
+
+// ---------------------------------------------------------------- PORTADA
+
+.portada {
   position: relative;
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: clamp(6rem, 12vh, 9rem) 0 clamp(3rem, 6vh, 5rem);
-  isolation: isolate;
-}
-
-// Lienzo donde Three.js monta la red de servidores 3D. Va detras de todo.
-.seccion-bienvenida__lienzo {
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
-}
-
-// Halo de luz amarilla que nace arriba a la izquierda y tiñe la escena.
-.seccion-bienvenida__brillo {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background:
-    radial-gradient(58% 48% at 16% 8%, hsla(47, 86%, 56%, 0.2), transparent 60%),
-    radial-gradient(45% 40% at 84% 90%, hsla(191, 72%, 44%, 0.1), transparent 60%),
-    radial-gradient(125% 125% at 50% 42%, transparent 52%, hsla(0, 0%, 0%, 0.55) 100%);
-}
-
-// Trama de puntos muy sutil para dar textura tecnica al fondo negro.
-.seccion-bienvenida::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  background-image: radial-gradient(hsla(40, 33%, 91%, 0.04) 1px, transparent 1px);
-  background-size: 2.5rem 2.5rem;
-  mask-image: radial-gradient(80% 70% at 50% 40%, black, transparent 85%);
-}
-
-.seccion-bienvenida__contenido {
-  display: grid;
-  grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.9fr);
-  align-items: center;
-  gap: clamp(2.5rem, 6vw, 5.5rem);
+  padding: clamp(6rem, 14vh, 10rem) clamp(1.5rem, 6vw, 7rem) clamp(4rem, 8vh, 6rem);
+  max-width: 100rem;
+  margin: 0 auto;
   width: 100%;
 }
 
-@media (max-width: 960px) {
-  .seccion-bienvenida__contenido {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 2.75rem;
-  }
-}
-
-.seccion-bienvenida__intro {
+.portada__contenido {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1.75rem;
+  gap: clamp(1.5rem, 3vh, 2.5rem);
 }
 
-// Sello superior con un puntito amarillo que late.
-.seccion-bienvenida__etiqueta {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  padding: 0.45rem 0.95rem 0.45rem 0.7rem;
-  background-color: hsla(40, 33%, 91%, 0.03);
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-full);
-  backdrop-filter: blur(6px);
-}
-
-.seccion-bienvenida__etiqueta__punto {
-  width: 0.45rem;
-  height: 0.45rem;
-  background-color: var(--amarillo-normal);
-  border-radius: 50%;
-  flex-shrink: 0;
-  box-shadow: 0 0 0.75rem hsla(47, 86%, 56%, 0.9);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .seccion-bienvenida__etiqueta__punto {
-    animation: latido-punto 2.4s ease-in-out infinite;
-  }
-}
-
-.seccion-bienvenida__etiqueta__texto {
+.portada__sello {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: var(--font-weight-bold);
-  color: var(--texto-medio);
-  white-space: nowrap;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.32em;
   text-transform: uppercase;
+  color: var(--tinta-apagada);
 }
 
-// Titular gigante con degradado del blanco cremita al amarillo de marca.
-.seccion-bienvenida__titulo {
+.portada__titulo {
   font-family: var(--font-secondary);
-  font-size: clamp(3rem, 9vw, 7.5rem);
-  font-weight: var(--font-weight-black);
-  line-height: 0.9;
-  letter-spacing: -0.055em;
-  background-image: linear-gradient(
-    168deg,
-    var(--texto-claro) 0%,
-    var(--texto-claro) 46%,
-    hsl(47, 92%, 68%) 100%
-  );
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  text-wrap: balance;
-  filter: drop-shadow(0 0.5rem 2.5rem hsla(47, 86%, 56%, 0.12));
-}
-
-.seccion-bienvenida__descripcion {
-  font-size: clamp(1rem, 1.3vw, 1.2rem);
-  line-height: 1.65;
-  color: var(--texto-medio);
-  max-width: 34rem;
-  letter-spacing: -0.005em;
-}
-
-.seccion-bienvenida__acciones {
+  font-size: clamp(3.5rem, 10.5vw, 9.5rem);
+  font-weight: var(--font-weight-bold);
+  line-height: 0.92;
+  letter-spacing: -0.05em;
+  color: var(--tinta);
   display: flex;
-  gap: 0.9rem;
-  flex-wrap: wrap;
-  margin-top: 0.4rem;
+  flex-direction: column;
 }
 
-.seccion-bienvenida__boton {
+// Cada linea vive en una "mascara": GSAP la sube desde abajo al cargar.
+.portada__titulo__linea {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+}
+
+.portada__titulo__texto {
+  display: inline-block;
+  will-change: transform;
+}
+
+.portada__titulo__texto--acento {
+  color: var(--acento);
+  font-weight: var(--font-weight-light);
+  font-style: italic;
+}
+
+.portada__descripcion {
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--tinta-suave);
+  max-width: 32rem;
+}
+
+.portada__acciones {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+  margin-top: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.portada__cta {
   display: inline-flex;
   align-items: center;
-  gap: 0.65rem;
-  font-family: var(--font-secondary);
-  font-size: 1rem;
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: -0.01em;
+  gap: 0.85rem;
+  padding: 1.05rem 2rem;
+  border: 1px solid var(--acento);
   border-radius: var(--radius-full);
-  transition:
-    transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    gap 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-    background-color 0.3s ease,
-    border-color 0.3s ease;
+  color: var(--acento);
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.02em;
+  transition: background-color 0.35s ease, color 0.35s ease, gap 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.seccion-bienvenida__boton--primario {
-  padding: 1rem 1.6rem 1rem 1.85rem;
-  background-color: var(--amarillo-normal);
-  color: hsl(0, 0%, 6%);
-  box-shadow:
-    0 0.75rem 2rem hsla(47, 86%, 56%, 0.28),
-    inset 0 1px 0 hsla(0, 0%, 100%, 0.35);
+.portada__cta:hover {
+  background-color: var(--acento);
+  color: hsl(230, 8%, 6%);
+  gap: 1.15rem;
 }
 
-.seccion-bienvenida__boton--primario:hover {
-  transform: translateY(-2px);
-  gap: 0.95rem;
-  box-shadow:
-    0 1rem 2.75rem hsla(47, 86%, 56%, 0.45),
-    inset 0 1px 0 hsla(0, 0%, 100%, 0.35);
-}
-
-.seccion-bienvenida__boton--primario:active {
-  transform: translateY(0) scale(0.98);
-}
-
-.seccion-bienvenida__boton--primario:focus-visible {
-  outline: 2px solid var(--amarillo-normal);
+.portada__cta:focus-visible {
+  outline: 2px solid var(--acento);
   outline-offset: 4px;
 }
 
-.seccion-bienvenida__boton--fantasma {
-  padding: 1rem 1.6rem;
-  background-color: hsla(40, 33%, 91%, 0.02);
-  border: 1px solid var(--borde-normal);
-  color: var(--texto-claro);
-  backdrop-filter: blur(6px);
-}
-
-.seccion-bienvenida__boton--fantasma:hover {
-  transform: translateY(-2px);
-  border-color: hsla(47, 86%, 56%, 0.45);
-  background-color: hsla(47, 86%, 56%, 0.06);
-}
-
-.seccion-bienvenida__boton--fantasma:focus-visible {
-  outline: 2px solid var(--amarillo-normal);
-  outline-offset: 4px;
-}
-
-// Terminal falsa flotante estilo "glass" con brillo amarillo por arriba.
-.seccion-bienvenida__terminal {
+.portada__enlace {
   position: relative;
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-2xl);
-  overflow: hidden;
-  background-color: hsla(0, 0%, 4%, 0.72);
-  backdrop-filter: blur(12px);
-  box-shadow:
-    0 2rem 4rem hsla(0, 0%, 0%, 0.55),
-    0 0 0 1px hsla(40, 33%, 91%, 0.02),
-    inset 0 1px 0 hsla(0, 0%, 100%, 0.05);
-  cursor: pointer;
-  transition:
-    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  color: var(--tinta-suave);
+  font-size: 0.95rem;
+  letter-spacing: 0.02em;
+  transition: color 0.3s ease;
 }
 
-.seccion-bienvenida__terminal:hover {
-  border-color: hsla(47, 86%, 56%, 0.4);
-  box-shadow:
-    0 2rem 4.5rem hsla(0, 0%, 0%, 0.6),
-    0 0 2.5rem hsla(47, 86%, 56%, 0.14),
-    inset 0 1px 0 hsla(0, 0%, 100%, 0.06);
-}
-
-.seccion-bienvenida__terminal:focus-visible {
-  outline: 2px solid var(--amarillo-normal);
-  outline-offset: 4px;
-}
-
-.seccion-bienvenida__terminal__reejecutar {
-  margin-left: auto;
-  font-family: var(--font-mono);
-  font-size: 0.5625rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--texto-apagado);
-  opacity: 0;
-  transition:
-    opacity 0.3s ease,
-    color 0.3s ease;
-}
-
-.seccion-bienvenida__terminal:hover .seccion-bienvenida__terminal__reejecutar {
-  opacity: 1;
-  color: var(--amarillo-normal);
-}
-
-.seccion-bienvenida__terminal:focus-visible .seccion-bienvenida__terminal__reejecutar {
-  opacity: 1;
-  color: var(--amarillo-normal);
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .seccion-bienvenida__terminal {
-    animation: flotar-terminal 7s ease-in-out infinite;
-  }
-}
-
-.seccion-bienvenida__terminal::after {
+// Subrayado que se dibuja de izquierda a derecha al pasar el raton.
+.portada__enlace::after {
   content: "";
   position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(90% 55% at 50% 0%, hsla(47, 86%, 56%, 0.07), transparent 70%);
+  left: 0;
+  bottom: -0.35rem;
+  width: 100%;
+  height: 1px;
+  background-color: var(--tinta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.seccion-bienvenida__terminal__barra {
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
-  padding: 0.85rem 1.1rem;
-  background: hsla(40, 33%, 91%, 0.025);
-  border-bottom: 1px solid var(--borde-suave);
+.portada__enlace:hover {
+  color: var(--tinta);
 }
 
-.seccion-bienvenida__terminal__punto {
-  width: 0.6875rem;
-  height: 0.6875rem;
-  border-radius: 50%;
+.portada__enlace:hover::after {
+  transform: scaleX(1);
 }
 
-.seccion-bienvenida__terminal__punto--rojo {
-  background-color: hsla(2, 68%, 53%, 0.75);
-}
-
-.seccion-bienvenida__terminal__punto--naranja {
-  background-color: hsla(28, 75%, 50%, 0.7);
-}
-
-.seccion-bienvenida__terminal__punto--verde {
-  background-color: hsla(145, 45%, 42%, 0.7);
-}
-
-.seccion-bienvenida__terminal__titulo {
-  font-family: var(--font-mono);
-  font-size: 0.6875rem;
-  letter-spacing: 0.14em;
-  color: var(--texto-apagado);
-  margin-left: 0.8rem;
-}
-
-.seccion-bienvenida__terminal__cuerpo {
-  padding: 1.4rem 1.5rem 1.75rem;
-  position: relative;
-  z-index: 1;
-}
-
-.seccion-bienvenida__terminal__linea {
-  font-family: var(--font-mono);
-  font-size: 0.8375rem;
-  line-height: 1.9;
-  color: var(--texto-medio);
-  opacity: 0;
-  animation: entrar-abajo 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.seccion-bienvenida__terminal__linea--resultado {
-  color: var(--texto-apagado);
-}
-
-.seccion-bienvenida__terminal__linea--vacia {
-  height: 0.5rem;
-}
-
-.seccion-bienvenida__terminal__linea:nth-child(1) { animation-delay: 0.4s; }
-.seccion-bienvenida__terminal__linea:nth-child(2) { animation-delay: 0.75s; }
-.seccion-bienvenida__terminal__linea:nth-child(3) { animation-delay: 1.05s; }
-.seccion-bienvenida__terminal__linea:nth-child(4) { animation-delay: 1.2s; }
-.seccion-bienvenida__terminal__linea:nth-child(5) { animation-delay: 1.55s; }
-.seccion-bienvenida__terminal__linea:nth-child(6) { animation-delay: 1.9s; }
-.seccion-bienvenida__terminal__linea:nth-child(7) { animation-delay: 2.2s; }
-.seccion-bienvenida__terminal__linea:nth-child(8) { animation-delay: 2.5s; }
-.seccion-bienvenida__terminal__linea:nth-child(9) { animation-delay: 2.6s; }
-.seccion-bienvenida__terminal__linea:nth-child(10) { animation-delay: 2.9s; }
-
-.seccion-bienvenida__terminal__prompt {
-  color: var(--amarillo-normal);
-  margin-right: 0.65rem;
-  font-weight: var(--font-weight-semibold);
-}
-
-.seccion-bienvenida__terminal__comando {
-  color: var(--texto-claro);
-}
-
-.seccion-bienvenida__terminal__exito {
-  color: var(--verde-normal);
-  font-weight: var(--font-weight-semibold);
-}
-
-.seccion-bienvenida__terminal__url-resultado {
-  color: var(--amarillo-normal);
-  font-weight: var(--font-weight-semibold);
-}
-
-// Indicador de scroll al pie del hero.
-.seccion-bienvenida__scroll {
+// Metadatos tecnicos verticales al borde derecho del hero: dan contrapeso
+// tipografico a la mitad derecha sin competir con el titular.
+.portada__metadatos {
   position: absolute;
-  bottom: 1.75rem;
+  right: clamp(1.5rem, 4vw, 4rem);
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.25rem;
+  writing-mode: vertical-rl;
+}
+
+.portada__metadatos__linea {
+  width: 1px;
+  height: 4rem;
+  background: linear-gradient(to bottom, transparent, var(--tinta-apagada));
+}
+
+.portada__metadatos__texto {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  color: var(--tinta-apagada);
+  white-space: nowrap;
+}
+
+@media (max-width: 960px) {
+  .portada__metadatos {
+    display: none;
+  }
+}
+
+.portada__scroll {
+  position: absolute;
+  bottom: 2rem;
   left: 50%;
   transform: translateX(-50%);
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.6rem;
-  color: var(--texto-apagado);
+  gap: 0.65rem;
+  color: var(--tinta-apagada);
 }
 
-.seccion-bienvenida__scroll__texto {
+.portada__scroll__texto {
   font-family: var(--font-mono);
   font-size: 0.5625rem;
-  letter-spacing: 0.32em;
+  letter-spacing: 0.34em;
   text-transform: uppercase;
 }
 
-.seccion-bienvenida__scroll__linea {
+.portada__scroll__linea {
   width: 1px;
-  height: 2.75rem;
-  background: linear-gradient(to bottom, var(--amarillo-normal), transparent);
+  height: 3rem;
+  background: linear-gradient(to bottom, var(--tinta-suave), transparent);
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  .seccion-bienvenida__scroll__linea {
-    animation: bajar-scroll 2s ease-in-out infinite;
+  .portada__scroll__linea {
+    animation: portada-bajar-scroll 2.2s ease-in-out infinite;
     transform-origin: top;
   }
 }
 
-@keyframes latido-punto {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0.75rem hsla(47, 86%, 56%, 0.9); }
-  50% { transform: scale(0.7); box-shadow: 0 0 0.35rem hsla(47, 86%, 56%, 0.5); }
-}
-
-@keyframes flotar-terminal {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-0.75rem); }
-}
-
-@keyframes bajar-scroll {
+@keyframes portada-bajar-scroll {
   0% { transform: scaleY(0); opacity: 0; }
   40% { transform: scaleY(1); opacity: 1; }
   100% { transform: scaleY(1) translateY(0.5rem); opacity: 0; }
+}
+
+// ------------------------------------------------------------- MANIFIESTO
+
+.manifiesto {
+  padding: clamp(8rem, 22vh, 15rem) clamp(1.5rem, 6vw, 7rem);
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+.manifiesto__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  margin-bottom: clamp(2rem, 5vh, 3.5rem);
+}
+
+.manifiesto__texto {
+  font-family: var(--font-secondary);
+  font-size: clamp(1.75rem, 3.6vw, 3.25rem);
+  font-weight: var(--font-weight-medium);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: var(--tinta);
+  max-width: 62rem;
+  text-wrap: balance;
+}
+
+// Cada palabra empieza apagada; GSAP las enciende al ritmo del scroll.
+.manifiesto__palabra {
+  opacity: 0.16;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .manifiesto__palabra {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 720px) {
+  .portada__titulo {
+    font-size: clamp(2.75rem, 13vw, 4.5rem);
+  }
 }

@@ -92,6 +92,38 @@
   }
 }
 
+// Sobre la landing editorial el banner adopta su lenguaje: oscuro, borde de
+// 1px y botones outline — la tarjeta clara del tema rompia el universo visual.
+body:has(.landing) .banner-cookies {
+  background-color: hsl(230, 8%, 7%);
+  border-color: hsla(40, 20%, 92%, 0.12);
+  box-shadow: 0 1.5rem 3rem hsla(0, 0%, 0%, 0.5);
+
+  .banner-cookies__texto {
+    color: hsl(40, 6%, 62%);
+  }
+
+  .banner-cookies__enlace {
+    color: hsl(42, 62%, 62%);
+  }
+
+  .banner-cookies__boton--primario {
+    background-color: transparent;
+    border: 1px solid hsl(42, 62%, 62%);
+    color: hsl(42, 62%, 62%);
+
+    &:hover {
+      background-color: hsl(42, 62%, 62%);
+      color: hsl(230, 8%, 6%);
+    }
+  }
+
+  .banner-cookies__boton--secundario {
+    color: hsl(40, 6%, 62%);
+    border-color: hsla(40, 20%, 92%, 0.14);
+  }
+}
+
 // Banner de cookies en movil: apila el texto y los botones en vertical
 @media (max-width: 576px) {
   .banner-cookies {

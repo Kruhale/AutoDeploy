@@ -214,7 +214,9 @@
         "linea4": "Configurazione Nginx…",
         "linea5": "SSL attivo (Let's Encrypt)",
         "urlFinal": "→ https://my-site.com online"
-      }
+      },
+      "tituloLinea1": "Il tuo server.",
+      "tituloLinea2": "Senza terminale."
     },
     "funcionalidades": {
       "titulo": "Cosa ottieni",
@@ -308,6 +310,15 @@
       "titulo": "Pronto a semplificare la tua infrastruttura?",
       "descripcion": "Unisciti a centinaia di sviluppatori che hanno lasciato il terminale alle spalle. Inizia gratis e scala oggi stesso.",
       "boton": "Inizia gratis ora"
+    },
+    "manifiesto": {
+      "texto": "AutoDeploy trasforma un VPS vuoto in una piattaforma di deploy completa. Ti connetti via SSH, carichi il codice e la tua app è online con HTTPS in pochi minuti. Senza script fragili, senza DevOps, senza paura di rompere nulla."
+    },
+    "stats": {
+      "eyebrow": "In numeri",
+      "despliegues": "Deploy automatizzati",
+      "uptime": "Uptime medio",
+      "servicios": "Servizi monitorati"
     }
   },
   "manifiestoPrecios": {

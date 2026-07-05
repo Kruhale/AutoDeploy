@@ -1,134 +1,54 @@
-@use "../01-tools/mixins" as *;
-@use "../01-tools/funciones" as *;
+// Cierre: un titular enorme centrado y un unico CTA. Nada mas.
+.cierre {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
+  text-align: center;
+  padding: clamp(9rem, 26vh, 16rem) clamp(1.5rem, 6vw, 7rem);
+  max-width: 100rem;
+  margin: 0 auto;
+}
 
-.seccion-llamada-accion {
-  padding: clamp(4rem, 10vh, 7rem) 0;
-  background-color: hsl(35, 20%, 5%);
+.cierre__titulo {
+  font-family: var(--font-secondary);
+  font-size: clamp(3rem, 8.5vw, 7.5rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.045em;
+  line-height: 0.95;
+  color: var(--tinta);
+  text-wrap: balance;
+}
 
-  &__contenedor {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: token-espacio(4xl);
-    padding: clamp(4rem, 10vh, 7rem) token-espacio(5xl);
-    background:
-      radial-gradient(80% 60% at 50% 45%, hsla(47, 86%, 56%, 0.16), transparent 65%),
-      radial-gradient(55% 45% at 50% 100%, hsla(47, 86%, 56%, 0.07), transparent 70%),
-      hsl(35, 20%, 5%);
-    border: 1px solid var(--borde-normal);
-    border-radius: token-radio(4xl);
-    overflow: hidden;
-    isolation: isolate;
+.cierre__descripcion {
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--tinta-suave);
+  max-width: 32rem;
+}
 
-    &::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      z-index: -1;
-      pointer-events: none;
-      background-image: radial-gradient(hsla(40, 33%, 91%, 0.045) 1px, transparent 1px);
-      background-size: 2rem 2rem;
-      mask-image: radial-gradient(ellipse 85% 80% at 50% 50%, black, transparent 88%);
-    }
+.cierre__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  padding: 1.2rem 2.6rem;
+  border: 1px solid var(--acento);
+  border-radius: var(--radius-full);
+  color: var(--acento);
+  font-family: var(--font-secondary);
+  font-size: 1.05rem;
+  font-weight: var(--font-weight-semibold);
+  transition: background-color 0.35s ease, color 0.35s ease, gap 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
 
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0 0 auto 0;
-      height: 1px;
-      pointer-events: none;
-      background: linear-gradient(90deg, transparent, hsla(47, 86%, 56%, 0.55), transparent);
-    }
+.cierre__cta:hover {
+  background-color: var(--acento);
+  color: hsl(230, 8%, 6%);
+  gap: 1.2rem;
+}
 
-    @include movil {
-      padding: token-espacio(5xl) token-espacio(3xl);
-      gap: token-espacio(3xl);
-    }
-  }
-
-  &__texto {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: token-espacio(2xl);
-    text-align: center;
-    max-width: 44rem;
-  }
-
-  &__titulo {
-    font-family: var(--font-secondary);
-    font-size: clamp(2.5rem, 6vw, 4.25rem);
-    font-weight: var(--font-weight-extrabold);
-    line-height: 0.95;
-    letter-spacing: -0.04em;
-    text-wrap: balance;
-    background-image: linear-gradient(
-      170deg,
-      var(--texto-claro) 0%,
-      var(--texto-claro) 50%,
-      hsl(47, 90%, 70%) 100%
-    );
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-
-  &__descripcion {
-    font-size: clamp(1rem, 1.2vw, 1.15rem);
-    line-height: var(--line-height-relaxed);
-    color: var(--texto-medio);
-    max-width: 32rem;
-    letter-spacing: -0.005em;
-  }
-
-  &__botones {
-    display: flex;
-    justify-content: center;
-    gap: token-espacio(l);
-  }
-
-  &__boton {
-    &--primario {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.1rem 2.75rem;
-      background-color: var(--amarillo-normal);
-      color: hsl(0, 0%, 6%);
-      font-family: var(--font-secondary);
-      font-size: var(--font-size-base);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: -0.01em;
-      border-radius: token-radio(full);
-      box-shadow:
-        0 1rem 3rem hsla(47, 86%, 56%, 0.4),
-        inset 0 1px 0 hsla(0, 0%, 100%, 0.3);
-      transition:
-        transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
-        background-color 0.3s ease;
-
-      &:hover {
-        transform: translateY(-2px);
-        background-color: var(--amarillo-normal-hover);
-        box-shadow:
-          0 1.5rem 4rem hsla(47, 86%, 56%, 0.55),
-          inset 0 1px 0 hsla(0, 0%, 100%, 0.3);
-      }
-
-      &:active {
-        transform: translateY(0) scale(0.98);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--amarillo-normal);
-        outline-offset: 4px;
-      }
-
-      @include movimiento-reducido {
-        transition: background-color 0.3s ease;
-      }
-    }
-  }
+.cierre__cta:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
 }

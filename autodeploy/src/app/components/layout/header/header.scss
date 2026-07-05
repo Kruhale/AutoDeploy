@@ -1,20 +1,31 @@
 @use "../../../../styles/00-settings/css-variables" as *;
 
+/* Barra editorial full-width: sin pildora, sin sombras — solo una linea de
+   1px abajo y un velo denso para que los titulares no la atraviesen. */
 .cabecera {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 3.5rem;
-  padding: 0 0.65rem 0 1.5rem;
-  background: hsla(0, 0%, 6%, 0.55);
+  gap: var(--spacing-size-2xl);
+  height: 4.25rem;
+  padding: 0 clamp(1.5rem, 6vw, 7rem);
+  background: linear-gradient(hsla(230, 8%, 4%, 0.92), hsla(230, 8%, 4%, 0.72));
   backdrop-filter: blur(14px);
-  border: 1px solid hsla(47, 86%, 56%, 0.13);
-  border-radius: var(--radius-full);
+  border-bottom: 1px solid hsla(40, 20%, 92%, 0.08);
   position: sticky;
-  top: 1rem;
+  top: 0;
   z-index: var(--z-header);
-  margin: 1rem 2rem 0;
-  box-shadow: 0 0.625rem 1.75rem hsla(0, 0%, 0%, 0.25), inset 0 1px 0 hsla(0, 0%, 100%, 0.04);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Oculta al bajar, reaparece al subir (lo alterna home.ts con el scroll). */
+.cabecera--oculta {
+  transform: translateY(-100%);
+}
+
+:host-context(.tema-claro) .cabecera {
+  background: linear-gradient(hsla(40, 30%, 95%, 0.94), hsla(40, 30%, 95%, 0.8));
+  border-bottom-color: hsla(230, 14%, 13%, 0.12);
 }
 
 .cabecera__logo {
@@ -42,18 +53,24 @@
   color: var(--amarillo-normal);
 }
 
+:host-context(.tema-claro) .cabecera__logo__texto--acento {
+  color: hsl(38, 78%, 36%);
+}
+
 .cabecera__navegacion__lista {
   display: flex;
   gap: var(--spacing-size-3xl);
 }
 
+/* Enlaces en mono uppercase: el mismo lenguaje que los eyebrows "— 01". */
 .cabecera__enlace {
   position: relative;
-  font-family: var(--font-secondary);
-  font-size: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
   font-weight: var(--font-weight-medium);
   color: var(--texto-medio);
-  letter-spacing: -0.005em;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
   padding: 0.25rem 0;
   white-space: nowrap;
   transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
@@ -66,7 +83,7 @@
   right: 100%;
   bottom: -0.15rem;
   height: 1px;
-  background-color: var(--amarillo-normal);
+  background-color: currentColor;
   transition: right var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -85,20 +102,27 @@
   flex-shrink: 0;
 }
 
+/* CTA outline ambar, coherente con los botones de la landing. */
 .cabecera__boton-app {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  padding: 0.55rem 1rem 0.55rem 1.1rem;
-  background-color: var(--amarillo-normal);
-  color: var(--fondo-oscuro);
+  padding: 0.55rem 1.15rem;
+  background-color: transparent;
+  border: 1px solid hsl(42, 62%, 62%);
+  color: hsl(42, 62%, 62%);
   font-family: var(--font-secondary);
   font-size: 0.85rem;
   font-weight: var(--font-weight-semibold);
-  letter-spacing: -0.005em;
+  letter-spacing: 0.01em;
   border-radius: var(--radius-full);
   white-space: nowrap;
-  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+:host-context(.tema-claro) .cabecera__boton-app {
+  border-color: hsl(38, 78%, 36%);
+  color: hsl(38, 78%, 36%);
 }
 
 .cabecera__boton-app::after {
@@ -109,10 +133,14 @@
 }
 
 .cabecera__boton-app:hover {
-  background-color: var(--amarillo-normal-hover);
-  transform: translateY(-1px);
+  background-color: hsl(42, 62%, 62%);
+  color: hsl(230, 8%, 6%);
   gap: 0.65rem;
-  box-shadow: 0 0.5rem 1rem hsla(47, 86%, 56%, 0.22);
+}
+
+:host-context(.tema-claro) .cabecera__boton-app:hover {
+  background-color: hsl(38, 78%, 36%);
+  color: hsl(40, 30%, 96%);
 }
 
 .cabecera__boton-app:hover::after {
@@ -521,7 +549,6 @@
 
 @media (max-width: $breakpoint-lg) {
   .cabecera {
-    margin: 1rem 1rem 0;
     padding: 0 1.25rem;
   }
 
@@ -537,7 +564,6 @@
 
 @media (max-width: $breakpoint-md) {
   .cabecera {
-    margin: 0.75rem 0.75rem 0;
     padding: 0 1.1rem;
     gap: var(--spacing-size-s);
   }

@@ -28,6 +28,7 @@ export class Home implements AfterViewInit, OnDestroy {
   private scrollSuave: Lenis | null = null;
   private idAnimacionScroll = 0;
   private movimientoScrollActivo = false;
+  private observadorDeTema: MutationObserver | null = null;
 
   constructor(
     private authService: AuthService,
@@ -50,6 +51,7 @@ export class Home implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.escenaDeFondo = new EscenaRedServidores(this.lienzoFondo.nativeElement);
     this.escenaDeFondo.iniciar();
+    this.sincronizarTemaDeEscena();
     this.iniciarScrollSuave();
     this.iniciarMovimientoScroll();
   }
@@ -64,6 +66,10 @@ export class Home implements AfterViewInit, OnDestroy {
       this.scrollSuave.destroy();
       this.scrollSuave = null;
     }
+    if (this.observadorDeTema !== null) {
+      this.observadorDeTema.disconnect();
+      this.observadorDeTema = null;
+    }
     if (this.movimientoScrollActivo) {
       const disparadores = ScrollTrigger.getAll();
       disparadores.forEach(function (disparador) {
@@ -71,6 +77,25 @@ export class Home implements AfterViewInit, OnDestroy {
       });
       this.movimientoScrollActivo = false;
     }
+  }
+
+  // La escena 3D adopta la paleta del tema activo y reacciona en vivo al
+  // toggle (la clase .tema-claro vive en <html>, fuera de Angular).
+  private sincronizarTemaDeEscena(): void {
+    const componente = this;
+    const raizDelDocumento = document.documentElement;
+
+    function aplicarTemaActual(): void {
+      if (componente.escenaDeFondo !== null) {
+        const estaEnClaro = raizDelDocumento.classList.contains("tema-claro");
+        componente.escenaDeFondo.establecerTema(estaEnClaro);
+      }
+    }
+
+    aplicarTemaActual();
+
+    this.observadorDeTema = new MutationObserver(aplicarTemaActual);
+    this.observadorDeTema.observe(raizDelDocumento, { attributes: true, attributeFilter: ["class"] });
   }
 
   private iniciarScrollSuave(): void {

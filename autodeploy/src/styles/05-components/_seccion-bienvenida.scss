@@ -51,6 +51,24 @@
   background: radial-gradient(120% 120% at 50% 40%, transparent 55%, hsla(230, 8%, 2%, 0.55) 100%);
 }
 
+// ------------------------------------------------ TEMA CLARO: PAPEL EDITORIAL
+// Misma composicion, paleta invertida: tinta oscura sobre papel calido y el
+// acento ambar mas profundo para mantener contraste AA sobre fondo claro.
+html.tema-claro .landing {
+  --fondo-editorial: hsl(40, 30%, 95%);
+  --tinta: hsl(230, 14%, 13%);
+  --tinta-suave: hsl(230, 7%, 38%);
+  --tinta-apagada: hsl(230, 5%, 54%);
+  --acento: hsl(38, 78%, 36%);
+  --linea: hsla(230, 14%, 13%, 0.14);
+  --borde-suave: hsla(230, 14%, 13%, 0.07);
+}
+
+// Vineta calida en claro, mucho mas suave que la oscura.
+html.tema-claro .landing::after {
+  background: radial-gradient(120% 120% at 50% 40%, transparent 60%, hsla(40, 30%, 85%, 0.55) 100%);
+}
+
 // ------------------------------------------------- HEADER SOBRE LA LANDING
 // Estos overrides viven aqui (capa global) porque header.scss esta encapsulado
 // por Angular y un selector body:has() no funcionaria dentro del componente.
@@ -83,6 +101,75 @@ body:has(.landing) .cabecera__boton-app:hover {
 // El header se esconde al bajar y reaparece al subir (estilo igloo.inc).
 body:has(.landing) .cabecera.cabecera--oculta {
   transform: translateY(calc(-100% - 1.25rem));
+}
+
+// Versiones claras del header sobre la landing.
+html.tema-claro body:has(.landing) .cabecera {
+  background: linear-gradient(hsla(40, 30%, 95%, 0.94), hsla(40, 30%, 95%, 0.8));
+  border-color: hsla(230, 14%, 13%, 0.12);
+}
+
+html.tema-claro body:has(.landing) .cabecera__logo__texto {
+  color: hsl(230, 14%, 13%);
+}
+
+html.tema-claro body:has(.landing) .cabecera__boton-app {
+  border-color: hsl(38, 78%, 36%);
+  color: hsl(38, 78%, 36%);
+}
+
+html.tema-claro body:has(.landing) .cabecera__boton-app:hover {
+  background-color: hsl(38, 78%, 36%);
+  color: hsl(40, 30%, 96%);
+}
+
+// Los CTA rellenos en hover cambian a texto papel cuando el fondo es claro.
+html.tema-claro .portada__cta:hover,
+html.tema-claro .cierre__cta:hover {
+  color: hsl(40, 30%, 96%);
+}
+
+// Banner de cookies en papel.
+html.tema-claro body:has(.landing) .banner-cookies {
+  background-color: hsl(40, 28%, 92%);
+  border-color: hsla(230, 14%, 13%, 0.14);
+  box-shadow: 0 1.5rem 3rem hsla(230, 14%, 13%, 0.12);
+
+  .banner-cookies__texto {
+    color: hsl(230, 7%, 38%);
+  }
+
+  .banner-cookies__enlace,
+  .banner-cookies__boton--primario {
+    color: hsl(38, 78%, 36%);
+  }
+
+  .banner-cookies__boton--primario {
+    border-color: hsl(38, 78%, 36%);
+
+    &:hover {
+      background-color: hsl(38, 78%, 36%);
+      color: hsl(40, 30%, 96%);
+    }
+  }
+
+  .banner-cookies__boton--secundario {
+    color: hsl(230, 7%, 38%);
+    border-color: hsla(230, 14%, 13%, 0.16);
+  }
+}
+
+// Footer en papel (el componente esta encapsulado; override global).
+html.tema-claro body:has(.landing) .pie {
+  background-color: hsl(40, 26%, 90%);
+}
+
+html.tema-claro body:has(.landing) .pie__marca__nombre {
+  color: hsl(230, 14%, 13%);
+}
+
+html.tema-claro body:has(.landing) .pie__inferior__red {
+  border-color: hsla(230, 14%, 13%, 0.16);
 }
 
 // ---------------------------------------------------------------- PORTADA

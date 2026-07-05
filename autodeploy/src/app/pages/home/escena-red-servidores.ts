@@ -4,8 +4,13 @@ const NUMERO_DE_NODOS = 170;
 const RANGO_DE_DISTRIBUCION = 320;
 const UMBRAL_DE_CONEXION = 110;
 // Paleta editorial: puntos casi blancos y un puñado ámbar muy contenido.
+// En tema claro se invierte: tinta oscura y ámbar profundo sobre papel.
 const COLOR_TINTA_NODOS = 0xd8d2c4;
 const COLOR_ACENTO_AMBAR = 0xe8b84b;
+const COLOR_TINTA_NODOS_CLARO = 0x2c2e38;
+const COLOR_ACENTO_AMBAR_CLARO = 0xa3741c;
+const COLOR_NIEBLA_OSCURO = 0x08090c;
+const COLOR_NIEBLA_CLARO = 0xf2efe6;
 const FRACCION_NODOS_ACENTO = 0.14;
 const VELOCIDAD_ROTACION_Y = 0.00016;
 const VELOCIDAD_ROTACION_X = 0.00007;
@@ -33,6 +38,8 @@ export class EscenaRedServidores {
   private intensidadDeResaltado = 0;
   private progresoDelViaje = 0;
   private progresoSuavizado = 0;
+  private nodosDeAcento: boolean[] = [];
+  private esTemaClaro = false;
   private posicionRatonNormalizada = { x: 0, y: 0 };
   private objetivoDeParallaxActual = { x: 0, y: 0 };
   private esModoReducido: boolean = false;
@@ -162,11 +169,14 @@ export class EscenaRedServidores {
 
   private generarColoresDeNodos(cantidadDeNodos: number): Float32Array {
     const arrayDeColores = new Float32Array(cantidadDeNodos * 3);
-    const colorTinta = new THREE.Color(COLOR_TINTA_NODOS);
-    const colorAcento = new THREE.Color(COLOR_ACENTO_AMBAR);
+    const colorTinta = new THREE.Color(this.esTemaClaro ? COLOR_TINTA_NODOS_CLARO : COLOR_TINTA_NODOS);
+    const colorAcento = new THREE.Color(this.esTemaClaro ? COLOR_ACENTO_AMBAR_CLARO : COLOR_ACENTO_AMBAR);
+
+    this.nodosDeAcento = [];
 
     for (let indice = 0; indice < cantidadDeNodos; indice++) {
       const esNodoDeAcento = Math.random() < FRACCION_NODOS_ACENTO;
+      this.nodosDeAcento.push(esNodoDeAcento);
       const colorDelNodo = esNodoDeAcento ? colorAcento : colorTinta;
 
       arrayDeColores[indice * 3] = colorDelNodo.r;
@@ -175,6 +185,45 @@ export class EscenaRedServidores {
     }
 
     return arrayDeColores;
+  }
+
+  // Cambia la paleta de la escena en caliente cuando el usuario alterna el
+  // tema. En claro el blending aditivo no funciona (sumaria hacia blanco
+  // sobre papel), asi que se cambia a blending normal.
+  establecerTema(esClaro: boolean): void {
+    this.esTemaClaro = esClaro;
+
+    if (this.escena?.fog instanceof THREE.FogExp2) {
+      this.escena.fog.color.setHex(esClaro ? COLOR_NIEBLA_CLARO : COLOR_NIEBLA_OSCURO);
+    }
+
+    const colorTinta = new THREE.Color(esClaro ? COLOR_TINTA_NODOS_CLARO : COLOR_TINTA_NODOS);
+    const colorAcento = new THREE.Color(esClaro ? COLOR_ACENTO_AMBAR_CLARO : COLOR_ACENTO_AMBAR);
+
+    const atributoDeColor = this.geometriaDeNodos?.getAttribute("color") as THREE.BufferAttribute | undefined;
+    if (atributoDeColor) {
+      for (let indice = 0; indice < this.nodosDeAcento.length; indice++) {
+        const colorDelNodo = this.nodosDeAcento[indice] ? colorAcento : colorTinta;
+        atributoDeColor.setXYZ(indice, colorDelNodo.r, colorDelNodo.g, colorDelNodo.b);
+      }
+      atributoDeColor.needsUpdate = true;
+    }
+
+    if (this.materialDeNodos) {
+      this.materialDeNodos.blending = esClaro ? THREE.NormalBlending : THREE.AdditiveBlending;
+      this.materialDeNodos.needsUpdate = true;
+    }
+
+    if (this.materialDeLineas) {
+      this.materialDeLineas.color.setHex(esClaro ? COLOR_TINTA_NODOS_CLARO : COLOR_TINTA_NODOS);
+      this.materialDeLineas.opacity = esClaro ? 0.18 : 0.16;
+      this.materialDeLineas.blending = esClaro ? THREE.NormalBlending : THREE.AdditiveBlending;
+      this.materialDeLineas.needsUpdate = true;
+    }
+
+    if (this.esModoReducido) {
+      this.renderizarFrame();
+    }
   }
 
   private calcularVerticesDeConexiones(posicionesDeNodos: Float32Array): Float32Array {

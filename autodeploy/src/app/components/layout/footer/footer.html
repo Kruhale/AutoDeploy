@@ -1,9 +1,7 @@
 <footer class="pie">
-  <hr class="pie__linea-decorativa" aria-hidden="true">
-
   <section class="pie__contenido" [attr.aria-label]="'footer.ariaContenido' | translate">
     <section class="pie__marca" [attr.aria-label]="'footer.ariaMarca' | translate">
-      <p class="pie__marca__nombre">AutoDeployService</p>
+      <p class="pie__marca__eyebrow" aria-hidden="true">— AutoDeploy</p>
       <p class="pie__marca__descripcion">{{ "footer.marca.descripcion1" | translate }}</p>
       <p class="pie__marca__descripcion">{{ "footer.marca.descripcion2" | translate }}</p>
       <p class="pie__marca__descripcion">{{ "footer.marca.descripcion3" | translate }}</p>
@@ -40,8 +38,6 @@
     </nav>
   </section>
 
-  <hr class="pie__separador" aria-hidden="true">
-
   <section class="pie__inferior" [attr.aria-label]="'footer.ariaInferior' | translate">
     <p class="pie__inferior__copyright">{{ "footer.copyright" | translate }}</p>
     <section class="pie__inferior__bloque-derecha" [attr.aria-label]="'footer.ariaAjustes' | translate">
@@ -65,4 +61,7 @@
       </nav>
     </section>
   </section>
+
+  <!-- Wordmark monumental de cierre, medio desvanecido: firma editorial -->
+  <p class="pie__wordmark" aria-hidden="true">AutoDeploy</p>
 </footer>

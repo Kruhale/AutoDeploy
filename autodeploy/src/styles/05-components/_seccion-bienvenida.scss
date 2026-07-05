@@ -105,19 +105,6 @@ html.tema-claro body:has(.landing) .banner-cookies {
   }
 }
 
-// Footer en papel (el componente esta encapsulado; override global).
-html.tema-claro body:has(.landing) .pie {
-  background-color: hsl(40, 26%, 90%);
-}
-
-html.tema-claro body:has(.landing) .pie__marca__nombre {
-  color: hsl(230, 14%, 13%);
-}
-
-html.tema-claro body:has(.landing) .pie__inferior__red {
-  border-color: hsla(230, 14%, 13%, 0.16);
-}
-
 // ---------------------------------------------------------------- PORTADA
 
 .portada {

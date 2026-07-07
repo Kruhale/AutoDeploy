@@ -1,0 +1,129 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: autodeploy-mongodb
+    volumes:
+      - mongodb-datos:/data/db
+    networks:
+      - red-interna
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.runCommand({ ping: 1 }).ok"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
+
+  backend:
+    image: ghcr.io/kruhale/autodeploy-backend:${IMAGE_TAG:-latest}
+    build: ./backend
+    container_name: autodeploy-backend
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/autodeploy
+      AUTODEPLOY_JWT_SECRET: ${AUTODEPLOY_JWT_SECRET}
+      AUTODEPLOY_CIFRADO_CLAVE: ${AUTODEPLOY_CIFRADO_CLAVE}
+      OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+      OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemini-2.5-pro}
+      DISCORD_CONTACTO_WEBHOOK: ${DISCORD_CONTACTO_WEBHOOK:-}
+    volumes:
+      - backend-logs:/var/log/autodeploy
+    networks:
+      - red-interna
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+    restart: unless-stopped
+
+  # Contenedor sandbox para probar la conexión SSH del asistente IA sin tocar
+  # un VPS externo real. Sin sudo, claves SSH solamente, reseteable con
+  # `docker compose restart sandbox-ssh`. El SSH del contenedor escucha en 2222
+  # pero el puerto 2222 del HOST ya lo usa el sshd del propio VPS (movido del
+  # 22 por seguridad), asi que mapeamos al 2223 del host. Dentro de la red
+  # `red-interna` el backend conecta directamente a `sandbox-ssh:2222` por DNS
+  # de Docker, sin pasar por el host.
+  sandbox-ssh:
+    image: linuxserver/openssh-server:latest
+    container_name: autodeploy-sandbox
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Madrid
+      USER_NAME: demo
+      PASSWORD_ACCESS: "true"
+      USER_PASSWORD: ${SANDBOX_PASSWORD}
+      SUDO_ACCESS: "false"
+      PUBLIC_KEY: ${SANDBOX_PUBLIC_KEY}
+    volumes:
+      - sandbox-config:/config
+      # Volumen compartido con sandbox-web: aqui caen los despliegues ZIP
+      # del usuario `demo` y nginx los sirve por HTTP.
+      - sandbox-web-content:/web
+      # Init hooks de s6-overlay: fijan permisos de /web a 1000:1000 al
+      # arrancar (sin esto, el volumen es root:root y SFTP falla con
+      # "No such file" al hacer mkdir).
+      - ./sandbox/custom-cont-init.d:/custom-cont-init.d:ro
+    ports:
+      - "2223:2222"
+    networks:
+      - red-interna
+    restart: unless-stopped
+
+  # Sidecar nginx que sirve los archivos estaticos depositados en el sandbox.
+  # El backend de AutoDeploy descomprime los ZIPs del usuario en /web/<app>
+  # dentro de sandbox-ssh (volumen compartido). Este contenedor los publica
+  # por HTTP en el puerto 8084 del host. El nginx-host del VPS hace TLS
+  # termination con Let's Encrypt y proxy_pass al subdominio publico.
+  sandbox-web:
+    image: nginx:alpine
+    container_name: autodeploy-sandbox-web
+    depends_on:
+      - sandbox-ssh
+    volumes:
+      - sandbox-web-content:/usr/share/nginx/html:ro
+      - ./sandbox/nginx-sandbox.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "127.0.0.1:8084:80"
+    networks:
+      - red-interna
+    restart: unless-stopped
+
+  frontend:
+    image: ghcr.io/kruhale/autodeploy-frontend:${IMAGE_TAG:-latest}
+    build: ./autodeploy
+    container_name: autodeploy-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    # Solo HTTP en un puerto interno del VPS (8082).
+    # El nginx-host del VPS hace TLS termination (Let's Encrypt) y proxy_pass
+    # desde el dominio público a http://localhost:8082/.
+    ports:
+      - "${HOST_PORT:-8082}:80"
+    volumes:
+      - nginx-logs:/var/log/nginx
+    networks:
+      - red-interna
+    healthcheck:
+      test: ["CMD-SHELL", "wget --quiet --tries=1 --spider http://127.0.0.1/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 15s
+    restart: unless-stopped
+
+networks:
+  red-interna:
+    driver: bridge
+
+volumes:
+  mongodb-datos:
+  backend-logs:
+  nginx-logs:
+  sandbox-config:
+  sandbox-web-content:

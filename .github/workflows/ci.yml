@@ -1,0 +1,136 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+# Cancelar runs antiguos del mismo PR/rama si llega un push nuevo
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend-test:
+    name: Backend (Java 21 + Maven, tests + package)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: backend
+    # MongoDB efímero para los @SpringBootTest (config en application-test.properties
+    # apunta a mongodb://localhost:27017/autodeploy-test).
+    services:
+      mongodb:
+        image: mongo:8
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1}).ok' || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+          --health-start-period 30s
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: "maven"
+
+      - name: Verify (compilar + tests + empaquetar)
+        run: mvn -B verify
+
+      - name: Subir JAR como artefacto
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar-${{ github.sha }}
+          path: backend/target/*.jar
+          retention-days: 7
+
+      - name: Subir reportes de tests (siempre, incluso si fallan)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-test-reports-${{ github.sha }}
+          path: backend/target/surefire-reports/
+          retention-days: 7
+
+  frontend-test:
+    name: Frontend (Node 22 + Angular, tests + build)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: autodeploy
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configurar Node 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: autodeploy/package-lock.json
+
+      - name: Instalar dependencias (npm ci)
+        run: npm ci --no-audit --no-fund
+
+      - name: Wrapper de Chrome con --no-sandbox para CI
+        # Algunos entornos CI (sandboxing/cgroups) hacen que Chromium falle al
+        # crear su sandbox. Envolviendo el binario en un script que añade
+        # --no-sandbox evitamos tener que tocar la config de Karma.
+        run: |
+          cat > /tmp/chrome-ci <<'SH'
+          #!/bin/bash
+          exec /usr/bin/google-chrome --no-sandbox --disable-gpu --disable-dev-shm-usage "$@"
+          SH
+          chmod +x /tmp/chrome-ci
+
+      - name: Tests unitarios (Karma + ChromeHeadless via wrapper)
+        run: npm run test:unit
+        env:
+          CHROME_BIN: /tmp/chrome-ci
+
+      - name: Build de producción
+        run: npm run build
+
+      - name: Subir bundle como artefacto
+        if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist-${{ github.sha }}
+          path: autodeploy/dist/autodeploy/browser
+          retention-days: 7
+
+  lint-docker:
+    name: Lint Dockerfiles (hadolint)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: hadolint backend/Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: backend/Dockerfile
+          failure-threshold: warning
+          ignore: DL3008,DL3018
+
+      - name: hadolint autodeploy/Dockerfile
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: autodeploy/Dockerfile
+          failure-threshold: warning
+          ignore: DL3008,DL3018

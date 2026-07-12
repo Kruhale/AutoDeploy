@@ -117,18 +117,4 @@
     }
   </section>
 
-  <footer class="editorial__pie">
-    <section class="editorial__pie__izquierda">
-      <span class="editorial__pie__codigo">{{ "logsTerminal.pie.logCodigoPrefijo" | translate }}{{ entradasDeLog().length }}</span>
-      <span class="editorial__pie__separador" aria-hidden="true">·</span>
-      <span class="editorial__pie__texto">
-        @if (entradasDeLog().length === 0) {
-          {{ "logsTerminal.pie.vacio" | translate }}
-        } @else {
-          {{ "logsTerminal.pie.resumen" | translate: { n: entradasDeLog().length, m: listaDeServidores().length } }}
-        }
-      </span>
-    </section>
-    <span class="editorial__pie__edicion">{{ "logsTerminal.pie.edicion" | translate }}</span>
-  </footer>
 </section>

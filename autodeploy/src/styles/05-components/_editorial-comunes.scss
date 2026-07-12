@@ -304,7 +304,7 @@
     gap: 0.6rem;
     padding: var(--spacing-size-6xl) 0;
     text-align: center;
-    border: 1px dashed var(--borde-normal);
+    border: 1px solid var(--borde-normal);
     border-radius: var(--radius-xl);
 
     &__icono {
@@ -338,39 +338,6 @@
   }
 
   // Pie de pagina con un codigo de referencia, texto y separador con degradado
-  &__pie {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-size-l);
-    padding: var(--spacing-size-l) 0 var(--spacing-size-xl);
-    margin-top: var(--spacing-size-xl);
-    border-top: 1px solid var(--borde-suave);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--texto-apagado);
-
-    &__codigo {
-      color: var(--texto-medio);
-    }
-
-    &__texto {
-      font-style: italic;
-      text-transform: none;
-      letter-spacing: 0.04em;
-    }
-
-    &__separador {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--borde-suave), transparent, var(--borde-suave));
-    }
-
-    &__edicion {
-      color: var(--texto-medio);
-    }
-  }
 }
 
 // Animaciones que solo se usan en estos bloques editoriales

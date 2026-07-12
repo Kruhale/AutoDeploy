@@ -195,12 +195,4 @@
     }
   </section>
 
-  <footer class="editorial__pie">
-    <section class="editorial__pie__izquierda">
-      <span class="editorial__pie__codigo">{{ "nuevoDespliegue.pie.codigoPrefijo" | translate }}{{ origenCodigo() === 'git' ? 'GIT' : 'ZIP' }}</span>
-      <span class="editorial__pie__separador" aria-hidden="true">·</span>
-      <span class="editorial__pie__texto">{{ (sslActivo() ? "nuevoDespliegue.pie.tlsOn" : "nuevoDespliegue.pie.tlsOff") | translate }}</span>
-    </section>
-    <button class="boton--ghost" type="button" (click)="cancelar()">{{ "nuevoDespliegue.cancelar" | translate }}</button>
-  </footer>
 </section>

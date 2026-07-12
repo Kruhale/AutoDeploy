@@ -181,13 +181,6 @@
     </section>
   </section>
 
-  <footer class="editorial__pie">
-    <span class="editorial__pie__codigo">{{ "networking.pieCodigo" | translate: { count: listaDeDominios().length } }}</span>
-    <span class="editorial__pie__separador" aria-hidden="true"></span>
-    <span class="editorial__pie__texto">{{ "networking.pieTexto" | translate }}</span>
-    <span class="editorial__pie__separador" aria-hidden="true"></span>
-    <span class="editorial__pie__edicion">{{ "networking.pieEdicion" | translate }}</span>
-  </footer>
 
   @if (panelDnsAbierto()) {
     <section class="pagina-networking__modal" (click)="cerrarPanelDns()">

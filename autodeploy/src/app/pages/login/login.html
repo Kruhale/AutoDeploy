@@ -1,5 +1,8 @@
 <main class="pagina-login">
 
+  <section class="pagina-login__lienzo" aria-hidden="true" #lienzoFondo></section>
+  <section class="pagina-login__velo" aria-hidden="true"></section>
+
   <aside class="pagina-login__panel-marca">
     <header class="pagina-login__panel-marca__cabecera">
       <a class="pagina-login__logo" routerLink="/">
@@ -58,7 +61,7 @@
 
     <section class="pagina-login__panel-formulario__contenido">
       <header class="pagina-login__cabecera">
-        <span class="pagina-login__cabecera__numero" aria-hidden="true">{{ 'login.cabeceraNumero' | translate }}</span>
+        <span class="pagina-login__cabecera__numero" aria-hidden="true">— {{ 'login.cabeceraNumero' | translate }}</span>
         <h1 class="pagina-login__titulo">{{ 'login.titulo' | translate }}<span class="pagina-login__titulo__punto" aria-hidden="true">.</span></h1>
         <p class="pagina-login__subtitulo">{{ 'login.subtitulo' | translate }}</p>
       </header>
@@ -73,7 +76,7 @@
 
         <section class="campo">
           <label class="campo__etiqueta" for="email">
-            <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
+            <span class="campo__etiqueta__numero" aria-hidden="true">01</span>
             {{ 'login.emailEtiqueta' | translate }}
           </label>
           <input class="campo__input" id="email" name="email" type="email"
@@ -89,7 +92,7 @@
 
         <section class="campo">
           <label class="campo__etiqueta" for="password">
-            <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
+            <span class="campo__etiqueta__numero" aria-hidden="true">02</span>
             {{ 'login.claveEtiqueta' | translate }}
           </label>
           <section class="pagina-login__campo-password">

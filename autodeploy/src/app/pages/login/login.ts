@@ -1,9 +1,10 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject, signal, AfterViewInit, OnDestroy, ViewChild, ElementRef } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { FormBuilder, ReactiveFormsModule, Validators } from "@angular/forms";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
+import { EscenaRedServidores } from "../home/escena-red-servidores";
 
 @Component({
   selector: "app-login",
@@ -11,7 +12,11 @@ import { UsuarioService } from "../../services/usuario.service";
   templateUrl: "./login.html",
   styleUrl: "./login.scss"
 })
-export class Login {
+export class Login implements AfterViewInit, OnDestroy {
+  @ViewChild("lienzoFondo") lienzoFondo!: ElementRef<HTMLElement>;
+
+  private escenaDeFondo: EscenaRedServidores | null = null;
+
   // Formulario reactivo con validadores: email obligatorio + formato email, password obligatoria + minimo 8 caracteres
   private formBuilder = inject(FormBuilder);
   formularioLogin = this.formBuilder.nonNullable.group({
@@ -33,6 +38,22 @@ export class Login {
     private usuarioService: UsuarioService,
     private translate: TranslateService
   ) {}
+
+  ngAfterViewInit(): void {
+    this.escenaDeFondo = new EscenaRedServidores(this.lienzoFondo.nativeElement);
+    this.escenaDeFondo.iniciar();
+
+    const raizDelDocumento = document.documentElement;
+    const estaEnTemaClaro = raizDelDocumento.classList.contains("tema-claro");
+    this.escenaDeFondo.establecerTema(estaEnTemaClaro);
+  }
+
+  ngOnDestroy(): void {
+    if (this.escenaDeFondo !== null) {
+      this.escenaDeFondo.destruir();
+      this.escenaDeFondo = null;
+    }
+  }
 
   alternarVisibilidadPassword(): void {
     this.passwordEsVisible.update(function(estadoActual) {

@@ -34,6 +34,7 @@ app-cuenta {
   pointer-events: none;
 }
 
+/* La referencia va en mayusculas en sus tres apariciones: intencion de troquel */
 .cuenta__indice-vertical__codigo {
   font-family: var(--font-mono);
   font-size: var(--font-size-xs);
@@ -117,7 +118,7 @@ app-cuenta {
   z-index: 0;
 }
 
-.cuenta__hero > *:not(.cuenta__hero__spotlight):not(.cuenta__hero__grano) {
+.cuenta__hero > *:not(.cuenta__hero__spotlight):not(.cuenta__hero__grano):not(.cuenta__estampa-plan) {
   position: relative;
   z-index: 1;
 }
@@ -196,8 +197,23 @@ app-cuenta {
   background: var(--amarillo-normal);
 }
 
+/* En free no hay retrato "definitivo": el aro dashed comunica expediente incompleto */
 .cuenta__avatar[data-plan="free"] {
-  background: hsl(32, 6%, 32%);
+  background: var(--amarillo-transparente-008);
+  border: 1px solid var(--amarillo-transparente-030);
+  color: var(--amarillo-normal);
+}
+
+.cuenta__avatar[data-plan="free"] .cuenta__avatar__inicial {
+  text-shadow: none;
+}
+
+.cuenta__avatar[data-plan="free"] .cuenta__avatar__halo {
+  border-style: dashed;
+  opacity: 0.55;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-girar-estrella 26s linear infinite;
+  }
 }
 
 .cuenta__avatar__halo {
@@ -249,7 +265,7 @@ app-cuenta {
 
 .cuenta__credenciales__fila {
   display: grid;
-  grid-template-columns: 5.5rem minmax(0, 1fr);
+  grid-template-columns: 7rem minmax(0, 1fr);
   gap: var(--spacing-size-s);
   align-items: baseline;
   border-bottom: 1px dashed var(--borde-suave);
@@ -269,14 +285,13 @@ app-cuenta {
   color: var(--texto-apagado);
 }
 
+/* El email debe leerse entero: en un dosier no se trunca la ficha */
 .cuenta__credenciales__valor {
   font-family: var(--font-mono);
   font-size: var(--font-size-sm);
   color: var(--texto-claro);
   letter-spacing: 0.01em;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
 }
 
 .cuenta__hero__columna-titulo {
@@ -321,50 +336,139 @@ app-cuenta {
   }
 }
 
-.cuenta__hero__titulo__plan {
-  font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.5em;
-  text-transform: uppercase;
-  color: var(--texto-medio);
-  margin-top: 0.35rem;
-  text-indent: 0.5em;
-}
 
-/* Marquee infinita del plan */
+/* Ticker del plan: microtipografia mono, como un teletipo del dosier.
+   Sin gap en la pista para que el -33.333% caiga justo en la costura. */
 .cuenta__hero__marquee {
-  position: relative;
   display: flex;
-  overflow: hidden;
-  padding: var(--spacing-size-m) 0;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  padding: 0.55rem 0;      /* 9px */
   border-top: 1px solid var(--borde-suave);
   border-bottom: 1px solid var(--borde-suave);
-  mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+}
+
+/* La mascara vive en la ventana y no en la seccion para no comerse el boton de pausa */
+.cuenta__hero__marquee__ventana {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
 }
 
 .cuenta__hero__marquee__pista {
   display: inline-flex;
-  gap: 4rem;
   white-space: nowrap;
+  width: max-content;
   @media (prefers-reduced-motion: no-preference) {
-    animation: cuenta-marquee 38s linear infinite;
+    animation: cuenta-marquee 46s linear infinite;
   }
+}
+
+/* Pausa en hover: WCAG 2.2.2 pide poder detener el movimiento */
+.cuenta__hero__marquee:hover .cuenta__hero__marquee__pista {
+  animation-play-state: paused;
+}
+
+.cuenta__hero__marquee__pista--pausada {
+  animation-play-state: paused;
+}
+
+/* Control real de pausa: el hover no sirve a quien navega con teclado */
+.cuenta__hero__marquee__pausa {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;      /* 28px */
+  height: 1.75rem;
+  flex-shrink: 0;
+  background-color: transparent;
+  border: 1px solid var(--borde-normal);
+  border-radius: 50%;
+  color: var(--texto-apagado);
+  font-size: 0.55rem;      /* 9px */
+  cursor: pointer;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cuenta__hero__marquee__pausa:hover {
+  color: var(--texto-claro);
+  border-color: hsla(40, 33.33%, 91.37%, 0.3);
+}
+
+.cuenta__hero__marquee__pausa:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
 }
 
 .cuenta__hero__marquee__texto {
   display: inline-flex;
-  font-family: var(--font-secondary);
-  font-size: 1.6rem;
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: -0.015em;
-  color: var(--texto-medio);
-  -webkit-text-stroke: 0;
-  padding-right: 4rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;      /* 11px */
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  padding-right: 3.5rem;
 }
 
-.cuenta__hero__marquee__texto:nth-child(2n) {
-  -webkit-text-stroke: 1px var(--texto-medio);
-  color: transparent;
+/* =====================================================
+   02b — SELLO DE GOMA DEL PLAN (la firma del dosier)
+   ===================================================== */
+
+.cuenta__estampa-plan {
+  position: absolute;
+  top: 4.6rem;
+  right: 2.5rem;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.85rem 1.4rem;
+  border: 2px solid var(--amarillo-normal);
+  border-radius: var(--radius-m);
+  color: var(--amarillo-normal);
+  transform: rotate(-8deg);
+  opacity: 0.85;
+  pointer-events: none;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-estampar 640ms cubic-bezier(0.16, 1, 0.3, 1) 520ms backwards;
+  }
+}
+
+.cuenta__estampa-plan::before {
+  content: "";
+  position: absolute;
+  inset: 0.3rem;
+  border: 1px dashed var(--amarillo-normal);
+  border-radius: 0.3rem;      /* 5px */
+  opacity: 0.6;
+}
+
+.cuenta__estampa-plan__marca {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;      /* 9px */
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.cuenta__estampa-plan__plan {
+  font-family: var(--font-secondary);
+  font-size: 1.5rem;      /* 24px */
+  font-weight: var(--font-weight-extrabold);
+  letter-spacing: 0.14em;
+  line-height: 1;
+}
+
+.cuenta__estampa-plan__numero {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;      /* 9px */
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  opacity: 0.8;
 }
 
 /* =====================================================
@@ -441,18 +545,21 @@ app-cuenta {
   gap: var(--spacing-size-xl);
 }
 
+/* Eyebrow "— 01" como los de la landing: aqui los numeros SI son secuencia */
 .cuenta__cabecera-seccion__indice {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.18em;
   color: var(--texto-apagado);
-  padding: 0.1rem 0.5rem;
-  border: 1px solid var(--borde-normal);
-  border-radius: 999px;
   align-self: start;
   justify-self: start;
-  margin-top: 0.45rem;
+  margin-top: 0.6rem;
   width: max-content;
+}
+
+.cuenta__cabecera-seccion__indice::before {
+  content: "— ";
+  color: var(--amarillo-normal);
 }
 
 .cuenta__cabecera-seccion__texto {
@@ -479,7 +586,10 @@ app-cuenta {
 
 .cuenta__cabecera-seccion--peligro .cuenta__cabecera-seccion__indice {
   color: var(--rojo-normal);
-  border-color: hsla(0, 79.17%, 60.59%, 0.3);
+}
+
+.cuenta__cabecera-seccion--peligro .cuenta__cabecera-seccion__indice::before {
+  color: var(--rojo-normal);
 }
 
 /* =====================================================
@@ -495,18 +605,20 @@ app-cuenta {
   grid-template-columns: auto minmax(0, 1fr);
   gap: var(--spacing-size-5xl);
   align-items: flex-end;
+  margin-top: var(--spacing-size-l);
 }
 
 .cuenta__tenure__numero {
   display: flex;
   align-items: baseline;
-  gap: 0.4rem;
+  gap: 1rem;
   font-family: var(--font-secondary);
   line-height: 0.85;
 }
 
+/* Mas contenido que el nombre del hero seria robarle jerarquia al usuario */
 .cuenta__tenure__numero__valor {
-  font-size: clamp(6rem, 14vw, 11rem);
+  font-size: 8rem;      /* 128px */
   font-weight: var(--font-weight-semibold);
   letter-spacing: -0.07em;
   color: var(--texto-claro);
@@ -537,7 +649,7 @@ app-cuenta {
 .cuenta__tenure__detalle {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-l);
+  gap: var(--spacing-size-m);
   padding-bottom: 0.5rem;
 }
 
@@ -556,14 +668,19 @@ app-cuenta {
   gap: 0.5rem;
 }
 
+/* Los ticks dan referencia de escala: sin ellos el 2% inicial parece barra vacia rota */
 .cuenta__tenure__progreso__pista {
   position: relative;
   display: block;
   height: 0.3rem;
   width: 100%;
   background-color: hsla(40, 33.33%, 91.37%, 0.06);
+  background-image: repeating-linear-gradient(90deg, hsla(40, 20%, 92%, 0.14) 0 1px, transparent 1px 10%);
   border-radius: 999px;
-  overflow: hidden;
+}
+
+.tema-claro .cuenta__tenure__progreso__pista {
+  background-image: repeating-linear-gradient(90deg, hsla(230, 14%, 13%, 0.16) 0 1px, transparent 1px 10%);
 }
 
 .cuenta__tenure__progreso__relleno {
@@ -572,6 +689,22 @@ app-cuenta {
   background: linear-gradient(90deg, var(--amarillo-normal), var(--naranja-normal));
   border-radius: 999px;
   transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cuenta__tenure__progreso__marcador {
+  position: absolute;
+  top: 50%;
+  width: 0.75rem;      /* 12px */
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: var(--amarillo-normal);
+  border: 2px solid var(--fondo-normal);
+  box-shadow: 0 0 0 1px hsla(41, 68%, 56%, 0.5);
+  transform: translate(-50%, -50%);
+  transition: left 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  @media (prefers-reduced-motion: no-preference) {
+    animation: cuenta-respirar-marcador 2.4s ease-in-out infinite;
+  }
 }
 
 .cuenta__tenure__progreso__leyenda {
@@ -689,28 +822,28 @@ app-cuenta {
   overflow: visible;
 }
 
+/* Pill outline como el resto de CTA del panel: un link subrayado le daba
+   menos peso a la accion principal que al boton secundario de las claves */
 .cuenta__boton-guardar__contenido {
   position: relative;
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  padding: 0.5rem 0;
+  padding: 0.6rem 1.3rem;
+  border: 1px solid var(--amarillo-normal);
+  border-radius: var(--radius-full);
   z-index: 1;
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.cuenta__boton-guardar__contenido::before {
-  content: "";
-  position: absolute;
-  inset: auto 0 0 0;
-  height: 1px;
-  background-color: currentColor;
-  opacity: 0.4;
-  transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+.cuenta__boton-guardar:hover:not(:disabled) .cuenta__boton-guardar__contenido {
+  background-color: var(--amarillo-normal);
+  color: var(--fondo-oscuro);
 }
 
-.cuenta__boton-guardar:hover:not(:disabled) .cuenta__boton-guardar__contenido::before {
-  opacity: 1;
-  transform: scaleX(1.05);
+.cuenta__boton-guardar:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 3px;
 }
 
 .cuenta__boton-guardar__texto {
@@ -788,6 +921,15 @@ app-cuenta {
   z-index: 0;
 }
 
+/* Recorrido ambar hasta el plan contratado: el rail cuenta una historia */
+.cuenta__timeline-planes__rail__relleno {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: var(--progreso-rail, 0%);
+  background: linear-gradient(90deg, transparent, var(--amarillo-normal));
+  transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .cuenta__nodo-plan {
   position: relative;
   z-index: 1;
@@ -815,6 +957,12 @@ app-cuenta {
 .cuenta__nodo-plan--bloqueado {
   pointer-events: none;
   opacity: 0.4;
+}
+
+.cuenta__nodo-plan:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 4px;
+  border-radius: var(--radius-m);
 }
 
 .cuenta__nodo-plan__bullet {
@@ -1116,7 +1264,7 @@ app-cuenta {
   gap: 0.6rem;
   padding: var(--spacing-size-5xl) 0;
   text-align: center;
-  border: 1px dashed var(--borde-normal);
+  border: 1px solid var(--borde-normal);
   border-radius: var(--radius-xl);
 }
 
@@ -1245,8 +1393,17 @@ app-cuenta {
   align-items: center;
   justify-content: space-between;
   gap: var(--spacing-size-l);
-  padding: var(--spacing-size-l) 0;
+  padding: var(--spacing-size-l) var(--spacing-size-s);
   border-bottom: 1px solid var(--borde-suave);
+  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cuenta__toggle-fila:hover {
+  background-color: hsla(40, 20%, 92%, 0.025);
+}
+
+.tema-claro .cuenta__toggle-fila:hover {
+  background-color: hsla(230, 14%, 13%, 0.03);
 }
 
 .cuenta__toggle-fila__info {
@@ -1298,8 +1455,8 @@ app-cuenta {
   position: relative;
   display: inline-flex;
   align-items: center;
-  width: 2.4rem;
-  height: 1.35rem;
+  width: 2.6rem;      /* 41.6px */
+  height: 1.5rem;      /* 24px, minimo WCAG 2.5.8 */
   background-color: hsla(40, 20%, 92%, 0.06);
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-full);
@@ -1324,16 +1481,16 @@ app-cuenta {
 
 .cuenta__interruptor__circulo {
   display: block;
-  width: 0.95rem;
-  height: 0.95rem;
+  width: 1.05rem;      /* 16.8px */
+  height: 1.05rem;
   border-radius: 50%;
   background-color: var(--texto-medio);
-  margin-left: 0.18rem;
+  margin-left: 0.2rem;
   transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .cuenta__interruptor--activo .cuenta__interruptor__circulo {
-  transform: translateX(1rem);
+  transform: translateX(1.15rem);
   background-color: var(--fondo-oscuro);
 }
 
@@ -1590,6 +1747,15 @@ app-cuenta {
   animation: cuenta-progreso-salida 1100ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
+/* Con reduced-motion el hold sigue necesitando feedback: relleno inmediato sin barrido */
+@media (prefers-reduced-motion: reduce) {
+  .cuenta__boton-salida--cargando .cuenta__boton-salida__progreso {
+    animation: none;
+    transform: scaleX(1);
+    opacity: 0.45;
+  }
+}
+
 .cuenta__boton-salida--cargando .cuenta__boton-salida__contenido {
   color: var(--texto-claro);
   border-color: transparent;
@@ -1630,10 +1796,56 @@ app-cuenta {
   color: var(--texto-medio);
 }
 
+/* currentColor para heredar la tinta del pie sin inventar otra variable */
+.cuenta__pie__barras {
+  width: 4rem;      /* 64px */
+  height: 1rem;      /* 16px */
+  background-image: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 3px, currentColor 3px 5px, transparent 5px 7px, currentColor 7px 8px, transparent 8px 11px);
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
 .cuenta__pie__notas {
   font-style: italic;
   text-transform: none;
   letter-spacing: 0.06em;
+}
+
+/* =====================================================
+   12 — REVEAL AL SCROLL (la clase la pone el componente
+   solo si no hay prefers-reduced-motion)
+   ===================================================== */
+
+.cuenta--con-reveal .cuenta__bloque {
+  opacity: 0;
+  transform: translateY(1.1rem);
+}
+
+.cuenta--con-reveal .cuenta__bloque--visible {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 640ms cubic-bezier(0.16, 1, 0.3, 1), transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* El foco de teclado no puede aterrizar en controles invisibles: revelar al instante */
+.cuenta--con-reveal .cuenta__bloque:focus-within {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Delays escalonados: el ojo lee retrato → overline → nombre en vez de recibirlo todo a la vez */
+@media (prefers-reduced-motion: no-preference) {
+  .cuenta__avatar {
+    animation: cuenta-aparecer 620ms cubic-bezier(0.16, 1, 0.3, 1) 80ms backwards;
+  }
+
+  .cuenta__hero__titulo__overline {
+    animation: cuenta-aparecer 620ms cubic-bezier(0.16, 1, 0.3, 1) 160ms backwards;
+  }
+
+  .cuenta__hero__titulo__principal {
+    animation: cuenta-aparecer 620ms cubic-bezier(0.16, 1, 0.3, 1) 260ms backwards;
+  }
 }
 
 /* =====================================================
@@ -1690,6 +1902,32 @@ app-cuenta {
   }
 }
 
+@keyframes cuenta-respirar-marcador {
+  0%, 100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: translate(-50%, -50%) scale(0.8);
+  }
+}
+
+@keyframes cuenta-estampar {
+  from {
+    opacity: 0;
+    transform: rotate(-16deg) scale(1.7);
+  }
+  70% {
+    opacity: 0.9;
+    transform: rotate(-7deg) scale(0.94);
+  }
+  to {
+    opacity: 0.85;
+    transform: rotate(-8deg) scale(1);
+  }
+}
+
 @keyframes cuenta-marquee {
   from {
     transform: translateX(0);
@@ -1723,6 +1961,10 @@ app-cuenta {
     padding-left: 3rem;
     gap: var(--spacing-size-3xl);
     padding-right: 0;
+  }
+
+  .cuenta__estampa-plan {
+    display: none;
   }
 
   .cuenta__hero__bloque-principal {

@@ -926,7 +926,9 @@
       "serversSuffix": "Server",
       "aiIncluded": "KI-Assistent inklusive",
       "supportSuffix": "Support",
-      "enterpriseGrade": "Enterprise-Niveau"
+      "enterpriseGrade": "Enterprise-Niveau",
+      "pausar": "Informationslaufband anhalten",
+      "reanudar": "Informationslaufband fortsetzen"
     }
   },
   "billing": {

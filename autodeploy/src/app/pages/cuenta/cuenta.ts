@@ -1,4 +1,4 @@
-import { Component, signal, computed, Signal, HostListener, ElementRef, OnDestroy } from "@angular/core";
+import { Component, signal, computed, Signal, HostListener, ElementRef, AfterViewInit, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 import { Router, RouterLink } from "@angular/router";
 import { UpperCasePipe, DatePipe } from "@angular/common";
@@ -33,7 +33,7 @@ const DIAS_REFERENCIA_ANIVERSARIO = 365;
   templateUrl: "./cuenta.html",
   styleUrl: "./cuenta.scss"
 })
-export class Cuenta implements OnDestroy {
+export class Cuenta implements AfterViewInit, OnDestroy {
   readonly planes = PLANES;
   readonly anioActual = new Date().getFullYear();
   readonly letrasIndiceVertical = ["Y", "O", "U", "R"];
@@ -51,6 +51,8 @@ export class Cuenta implements OnDestroy {
   nombreNuevaClave = signal("");
   contenidoNuevaClave = signal("");
 
+  cintaPausada = signal(false);
+
   notificacionesEmail = signal(true);
   notificacionesAlertasCriticas = signal(true);
   notificacionesDespliegues = signal(true);
@@ -65,9 +67,13 @@ export class Cuenta implements OnDestroy {
   progresoAniversarioPorcentaje: Signal<number>;
   idTruncado: Signal<string>;
   textoMarqueePlan: Signal<string>;
+  progresoRailPorcentaje: Signal<string>;
+  parteLocalDelEmail: Signal<string>;
+  parteDominioDelEmail: Signal<string>;
 
   private temporizadorSalida: ReturnType<typeof setTimeout> | null = null;
   private suscripcionIdioma: Subscription;
+  private observadorBloques: IntersectionObserver | null = null;
 
   suscripcionCancelada = computed(
     function (this: Cuenta) {
@@ -133,7 +139,7 @@ export class Cuenta implements OnDestroy {
     this.progresoAniversarioPorcentaje = computed(function () {
       const dias = componente.diasComoMiembro();
       const porcentajeCrudo = (dias / DIAS_REFERENCIA_ANIVERSARIO) * 100;
-      return Math.min(100, Math.max(2, porcentajeCrudo));
+      return Math.min(100, Math.max(3, porcentajeCrudo));
     });
 
     this.resumenDeCuenta = computed(function (): FilaResumen[] {
@@ -194,10 +200,64 @@ export class Cuenta implements OnDestroy {
       if (plan.id === "business") palabras.push(componente.translate.instant("cuenta.marquee.enterpriseGrade"));
       return palabras.join("   ·   ");
     });
+
+    this.parteLocalDelEmail = computed(function () {
+      const emailCompleto = componente.usuarioService.email();
+      const posicionArroba = emailCompleto.indexOf("@");
+      if (posicionArroba < 0) return emailCompleto;
+      return emailCompleto.substring(0, posicionArroba + 1);
+    });
+
+    this.parteDominioDelEmail = computed(function () {
+      const emailCompleto = componente.usuarioService.email();
+      const posicionArroba = emailCompleto.indexOf("@");
+      if (posicionArroba < 0) return "";
+      return emailCompleto.substring(posicionArroba + 1);
+    });
+
+    this.progresoRailPorcentaje = computed(function () {
+      const idActual = componente.planService.planActual();
+      const indiceActivo = PLANES.findIndex(function (plan) {
+        return plan.id === idActual;
+      });
+      if (indiceActivo <= 0) return "0%";
+      const totalDeTramos = PLANES.length - 1;
+      const porcentaje = (indiceActivo / totalDeTramos) * 100;
+      return porcentaje + "%";
+    });
+  }
+
+  ngAfterViewInit(): void {
+    const consultaMovimiento = window.matchMedia("(prefers-reduced-motion: reduce)");
+    if (consultaMovimiento.matches) return;
+
+    const host = this.elemento.nativeElement;
+    const raizCuenta = host.getElementsByClassName("cuenta")[0];
+    if (!raizCuenta) return;
+    raizCuenta.classList.add("cuenta--con-reveal");
+
+    const componente = this;
+    this.observadorBloques = new IntersectionObserver(
+      function (entradas) {
+        for (const entrada of entradas) {
+          if (entrada.isIntersecting) {
+            entrada.target.classList.add("cuenta__bloque--visible");
+            componente.observadorBloques?.unobserve(entrada.target);
+          }
+        }
+      },
+      { threshold: 0.12 }
+    );
+
+    const bloquesDeSeccion = Array.from(host.getElementsByClassName("cuenta__bloque"));
+    for (const bloque of bloquesDeSeccion) {
+      this.observadorBloques.observe(bloque);
+    }
   }
 
   ngOnDestroy(): void {
     this.suscripcionIdioma.unsubscribe();
+    this.observadorBloques?.disconnect();
   }
 
   @HostListener("mousemove", ["$event"])
@@ -257,13 +317,20 @@ export class Cuenta implements OnDestroy {
     }
   }
 
+  alternarPausaCinta(): void {
+    this.cintaPausada.update(function (valorActual) {
+      return !valorActual;
+    });
+  }
+
   activarTema(tema: "oscuro" | "claro"): void {
     if (this.themeService.temaActual() === tema) return;
     this.themeService.alternarTema();
   }
 
   iniciarSalida(): void {
-    this.cancelarSalida();
+    // El auto-repeat de keydown reiniciaria el temporizador y el hold jamas completaria
+    if (this.progresoSalidaActivo()) return;
     this.progresoSalidaActivo.set(true);
     const componente = this;
     this.temporizadorSalida = setTimeout(function () {

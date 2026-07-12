@@ -926,7 +926,9 @@
       "serversSuffix": "serveurs",
       "aiIncluded": "Assistant IA inclus",
       "supportSuffix": "support",
-      "enterpriseGrade": "Niveau entreprise"
+      "enterpriseGrade": "Niveau entreprise",
+      "pausar": "Mettre en pause le bandeau d'informations",
+      "reanudar": "Relancer le bandeau d'informations"
     }
   },
   "billing": {

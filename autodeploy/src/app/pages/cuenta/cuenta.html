@@ -20,7 +20,7 @@
 
     <section class="cuenta__hero__capa-superior">
       <p class="cuenta__hero__sello">
-        <span class="cuenta__hero__sello__circulo">·</span>
+        <span class="cuenta__hero__sello__circulo" aria-hidden="true">·</span>
         <span class="cuenta__hero__sello__texto">{{ "cuenta.selloIssue" | translate: { anio: anioActual } }}</span>
       </p>
       <p class="cuenta__hero__fecha-edicion">{{ fechaCreacionCuenta() | date:"EEEE, d MMM yyyy":"":"en" }}</p>
@@ -37,11 +37,15 @@
         <ul class="cuenta__credenciales">
           <li class="cuenta__credenciales__fila">
             <span class="cuenta__credenciales__clave">{{ "cuenta.credenciales.email" | translate }}</span>
-            <span class="cuenta__credenciales__valor">{{ usuarioService.email() || ("comun.guion" | translate) }}</span>
+            @if (usuarioService.email()) {
+              <span class="cuenta__credenciales__valor">{{ parteLocalDelEmail() }}<wbr>{{ parteDominioDelEmail() }}</span>
+            } @else {
+              <span class="cuenta__credenciales__valor">{{ "comun.guion" | translate }}</span>
+            }
           </li>
           <li class="cuenta__credenciales__fila">
             <span class="cuenta__credenciales__clave">{{ "cuenta.credenciales.reference" | translate }}</span>
-            <span class="cuenta__credenciales__valor">{{ idTruncado() || ("comun.guion" | translate) }}</span>
+            <span class="cuenta__credenciales__valor">{{ (idTruncado() | uppercase) || ("comun.guion" | translate) }}</span>
           </li>
           <li class="cuenta__credenciales__fila">
             <span class="cuenta__credenciales__clave">{{ "cuenta.credenciales.memberSince" | translate }}</span>
@@ -54,17 +58,32 @@
         <h1 class="cuenta__hero__titulo">
           <span class="cuenta__hero__titulo__overline">{{ planService.planActual() === "free" ? ("cuenta.overlineFree" | translate) : ("cuenta.overlinePaid" | translate) }}</span>
           <span class="cuenta__hero__titulo__principal">{{ usuarioService.nombre() || ("cuenta.anonymous" | translate) }}<span class="cuenta__hero__titulo__estrella" aria-hidden="true">*</span></span>
-          <span class="cuenta__hero__titulo__plan">{{ detallePlanActual().nombre | uppercase }}</span>
         </h1>
       </section>
     </section>
 
-    <section class="cuenta__hero__marquee" aria-hidden="true">
-      <span class="cuenta__hero__marquee__pista">
-        <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
-        <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
-        <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
+    <span class="cuenta__estampa-plan" aria-hidden="true">
+      <span class="cuenta__estampa-plan__marca">AutoDeploy</span>
+      <span class="cuenta__estampa-plan__plan">{{ detallePlanActual().nombre | uppercase }}</span>
+      <span class="cuenta__estampa-plan__numero">Nº {{ anioActual }}·{{ idTruncado() || "0000" }}</span>
+    </span>
+
+    <section class="cuenta__hero__marquee">
+      <span class="cuenta__hero__marquee__ventana" aria-hidden="true">
+        <span class="cuenta__hero__marquee__pista" [class.cuenta__hero__marquee__pista--pausada]="cintaPausada()">
+          <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
+          <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
+          <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
+        </span>
       </span>
+      <button
+        class="cuenta__hero__marquee__pausa"
+        type="button"
+        (click)="alternarPausaCinta()"
+        [attr.aria-label]="(cintaPausada() ? 'cuenta.marquee.reanudar' : 'cuenta.marquee.pausar') | translate"
+        [attr.aria-pressed]="cintaPausada()">
+        <i class="fa-solid" [class.fa-pause]="!cintaPausada()" [class.fa-play]="cintaPausada()" aria-hidden="true"></i>
+      </button>
     </section>
   </header>
 
@@ -104,8 +123,9 @@
           {{ diasComoMiembro() === 0 ? ("cuenta.tenure.leyendaInaugural" | translate) : ("cuenta.tenure.leyendaContinuo" | translate) }}
         </p>
         <section class="cuenta__tenure__progreso">
-          <span class="cuenta__tenure__progreso__pista">
+          <span class="cuenta__tenure__progreso__pista" aria-hidden="true">
             <span class="cuenta__tenure__progreso__relleno" [style.width.%]="progresoAniversarioPorcentaje()"></span>
+            <span class="cuenta__tenure__progreso__marcador" [style.left.%]="progresoAniversarioPorcentaje()"></span>
           </span>
           <section class="cuenta__tenure__progreso__leyenda">
             <span class="cuenta__tenure__progreso__borde">{{ "cuenta.tenure.diaCero" | translate }}</span>
@@ -191,13 +211,17 @@
       </section>
     </header>
 
-    <section class="cuenta__timeline-planes">
-      <span class="cuenta__timeline-planes__rail" aria-hidden="true"></span>
+    <section class="cuenta__timeline-planes" [style.--progreso-rail]="progresoRailPorcentaje()">
+      <span class="cuenta__timeline-planes__rail" aria-hidden="true">
+        <span class="cuenta__timeline-planes__rail__relleno"></span>
+      </span>
       @for (plan of planes; track plan.id) {
-        <article
+        <button
+          type="button"
           class="cuenta__nodo-plan"
           [class.cuenta__nodo-plan--activo]="planService.planActual() === plan.id"
           [class.cuenta__nodo-plan--bloqueado]="suscripcionCancelada() && plan.id === 'free'"
+          [disabled]="suscripcionCancelada() && plan.id === 'free'"
           (click)="cambiarPlan(plan.id)">
           <span class="cuenta__nodo-plan__bullet" aria-hidden="true">
             <span class="cuenta__nodo-plan__bullet__nucleo"></span>
@@ -215,7 +239,7 @@
               }
             </span>
           }
-        </article>
+        </button>
       }
     </section>
 
@@ -337,13 +361,14 @@
         <section class="cuenta__toggle-fila__info">
           <span class="cuenta__toggle-fila__numero" aria-hidden="true">i</span>
           <section class="cuenta__toggle-fila__texto">
-            <span class="cuenta__toggle-fila__titulo">{{ "cuenta.notifEmailTitulo" | translate }}</span>
+            <span class="cuenta__toggle-fila__titulo" id="cuenta-notif-email-titulo">{{ "cuenta.notifEmailTitulo" | translate }}</span>
             <span class="cuenta__toggle-fila__detalle">{{ "cuenta.notifEmailDetalle" | translate }}</span>
           </section>
         </section>
         <button
           class="cuenta__interruptor"
           type="button"
+          aria-labelledby="cuenta-notif-email-titulo"
           (click)="alternarNotificacion('email')"
           [class.cuenta__interruptor--activo]="notificacionesEmail()"
           [attr.aria-pressed]="notificacionesEmail()">
@@ -355,13 +380,14 @@
         <section class="cuenta__toggle-fila__info">
           <span class="cuenta__toggle-fila__numero" aria-hidden="true">ii</span>
           <section class="cuenta__toggle-fila__texto">
-            <span class="cuenta__toggle-fila__titulo">{{ "cuenta.notifCriticasTitulo" | translate }}</span>
+            <span class="cuenta__toggle-fila__titulo" id="cuenta-notif-criticas-titulo">{{ "cuenta.notifCriticasTitulo" | translate }}</span>
             <span class="cuenta__toggle-fila__detalle">{{ "cuenta.notifCriticasDetalle" | translate }}</span>
           </section>
         </section>
         <button
           class="cuenta__interruptor"
           type="button"
+          aria-labelledby="cuenta-notif-criticas-titulo"
           (click)="alternarNotificacion('criticas')"
           [class.cuenta__interruptor--activo]="notificacionesAlertasCriticas()"
           [attr.aria-pressed]="notificacionesAlertasCriticas()">
@@ -373,13 +399,14 @@
         <section class="cuenta__toggle-fila__info">
           <span class="cuenta__toggle-fila__numero" aria-hidden="true">iii</span>
           <section class="cuenta__toggle-fila__texto">
-            <span class="cuenta__toggle-fila__titulo">{{ "cuenta.notifDespliegesTitulo" | translate }}</span>
+            <span class="cuenta__toggle-fila__titulo" id="cuenta-notif-despliegues-titulo">{{ "cuenta.notifDespliegesTitulo" | translate }}</span>
             <span class="cuenta__toggle-fila__detalle">{{ "cuenta.notifDespliegesDetalle" | translate }}</span>
           </section>
         </section>
         <button
           class="cuenta__interruptor"
           type="button"
+          aria-labelledby="cuenta-notif-despliegues-titulo"
           (click)="alternarNotificacion('despliegues')"
           [class.cuenta__interruptor--activo]="notificacionesDespliegues()"
           [attr.aria-pressed]="notificacionesDespliegues()">
@@ -487,12 +514,17 @@
       (mouseleave)="cancelarSalida()"
       (touchstart)="iniciarSalida()"
       (touchend)="cancelarSalida()"
-      (touchcancel)="cancelarSalida()">
+      (touchcancel)="cancelarSalida()"
+      (keydown.enter)="iniciarSalida()"
+      (keydown.space)="iniciarSalida()"
+      (keyup.enter)="cancelarSalida()"
+      (keyup.space)="cancelarSalida()"
+      (blur)="cancelarSalida()">
       <span class="cuenta__boton-salida__contenido">
         <span class="cuenta__boton-salida__icono" aria-hidden="true">
           <i class="fa-solid fa-arrow-right-from-bracket"></i>
         </span>
-        <span class="cuenta__boton-salida__texto">
+        <span class="cuenta__boton-salida__texto" aria-live="polite">
           {{ progresoSalidaActivo() ? ("cuenta.salidaCargando" | translate) : ("cuenta.salidaReposo" | translate) }}
         </span>
       </span>
@@ -501,6 +533,7 @@
   </section>
 
   <footer class="cuenta__pie">
+    <span class="cuenta__pie__barras" aria-hidden="true"></span>
     <span class="cuenta__pie__codigo">{{ idTruncado() }}</span>
     <span class="cuenta__pie__separador" aria-hidden="true"></span>
     <span class="cuenta__pie__notas">{{ "cuenta.pieNotas" | translate }}</span>

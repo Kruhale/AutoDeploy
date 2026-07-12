@@ -926,7 +926,9 @@
       "serversSuffix": "servers",
       "aiIncluded": "AI Assistant included",
       "supportSuffix": "support",
-      "enterpriseGrade": "Enterprise grade"
+      "enterpriseGrade": "Enterprise grade",
+      "pausar": "Pause the information ticker",
+      "reanudar": "Resume the information ticker"
     }
   },
   "billing": {

@@ -210,7 +210,7 @@
     gap: var(--spacing-size-s);
     padding: var(--spacing-size-m) var(--spacing-size-l);
     background: var(--amarillo-transparente-008);
-    border: 1px solid hsla(47, 86%, 56%, 0.15);
+    border: 1px solid hsla(41, 68%, 56%, 0.15);
     border-radius: var(--radius-m);
 
     &__icono {
@@ -315,7 +315,7 @@
     width: 10rem;
     height: 10rem;
     border-radius: 50%;
-    background: hsla(47, 86%, 56%, 0.06);
+    background: hsla(41, 68%, 56%, 0.06);
   }
 
   &::after {
@@ -326,7 +326,7 @@
     width: 14rem;
     height: 14rem;
     border-radius: 50%;
-    background: hsla(47, 86%, 56%, 0.04);
+    background: hsla(41, 68%, 56%, 0.04);
   }
 
   &--visa {

@@ -27,7 +27,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: radial-gradient(50% 30% at 20% 20%, hsla(47, 86%, 56%, 0.06), transparent 70%);
+      background: radial-gradient(50% 30% at 20% 20%, hsla(41, 68%, 56%, 0.06), transparent 70%);
       pointer-events: none;
       z-index: 0;
     }
@@ -388,7 +388,7 @@
       background-color: var(--amarillo-normal-hover);
       transform: translateY(-1px);
       gap: 0.9rem;
-      box-shadow: 0 0.625rem 1.25rem hsla(47, 86%, 56%, 0.22);
+      box-shadow: 0 0.625rem 1.25rem hsla(41, 68%, 56%, 0.22);
 
       .pagina-login__boton-enviar__flecha {
         transform: translateX(0.2rem);

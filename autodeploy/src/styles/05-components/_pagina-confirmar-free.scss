@@ -18,8 +18,8 @@
     inset: 0;
     pointer-events: none;
     background:
-      radial-gradient(ellipse 42rem 28rem at 18% 28%, hsla(47, 86%, 56%, 0.05), transparent 65%),
-      radial-gradient(ellipse 34rem 24rem at 88% 78%, hsla(47, 86%, 56%, 0.025), transparent 70%);
+      radial-gradient(ellipse 42rem 28rem at 18% 28%, hsla(41, 68%, 56%, 0.05), transparent 65%),
+      radial-gradient(ellipse 34rem 24rem at 88% 78%, hsla(41, 68%, 56%, 0.025), transparent 70%);
     z-index: 0;
 
     &::after {

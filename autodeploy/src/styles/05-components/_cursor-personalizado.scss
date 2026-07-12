@@ -5,7 +5,7 @@
   z-index: 9999;
   width: 1.75rem;   /* 28px */
   height: 1.75rem;  /* 28px */
-  border: 1.5px solid hsl(47, 86%, 56%);
+  border: 1.5px solid hsl(41, 68%, 56%);
   border-radius: 50%;
   pointer-events: none;
   transform: translate(-50%, -50%);
@@ -17,7 +17,7 @@
 .cursor-personalizado--activo {
   width: 3rem;   /* 48px */
   height: 3rem;  /* 48px */
-  background-color: hsla(47, 86%, 56%, 0.15);
+  background-color: hsla(41, 68%, 56%, 0.15);
 }
 
 body.cursor-personalizado-activo {

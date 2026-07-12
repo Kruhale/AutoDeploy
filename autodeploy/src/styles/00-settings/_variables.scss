@@ -10,9 +10,9 @@
   --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
   --negro-cta: hsl(0, 0%, 6.67%);
 
-  /* Amarillo de marca: el color principal de toda la interfaz */
-  --amarillo-normal: hsl(47, 86%, 56%);
-  --amarillo-normal-hover: hsl(45, 78%, 48%);
+  /* Acento de marca: ámbar sereno alineado con la home (antes amarillo neón). */
+  --amarillo-normal: hsl(41, 68%, 56%);
+  --amarillo-normal-hover: hsl(39, 70%, 48%);
 
   /* Textos: tres niveles segun la importancia (titulos, parrafos, apagados) */
   --texto-claro: hsl(40, 33.33%, 91.37%);
@@ -28,14 +28,16 @@
   --rojo-normal: hsl(0, 79.17%, 60.59%);
   --rojo-critico: hsl(0, 72.13%, 50.59%);
   --naranja-normal: hsl(37.69, 92.13%, 50.2%);
-  --azul-normal: hsl(217.22, 91.22%, 59.8%);
-  --cyan-normal: hsl(191, 72%, 44%);
-  --teal-normal: hsl(168, 60%, 42%);
+  /* Los antiguos acentos decorativos (azul/cyan/teal) se unifican en el ámbar:
+     la home usa un solo acento; verde/rojo/naranja siguen siendo estados. */
+  --azul-normal: var(--amarillo-normal);
+  --cyan-normal: var(--amarillo-normal);
+  --teal-normal: var(--amarillo-normal);
 
   /* Versiones translucidas para fondos suaves (hovers, badges) */
-  --amarillo-transparente-008: hsla(47, 86%, 56%, 0.08);
-  --amarillo-transparente-030: hsla(47, 86%, 56%, 0.3);
-  --cyan-transparente-008: hsla(191, 72%, 44%, 0.08);
+  --amarillo-transparente-008: hsla(41, 68%, 56%, 0.08);
+  --amarillo-transparente-030: hsla(41, 68%, 56%, 0.3);
+  --cyan-transparente-008: hsla(41, 68%, 56%, 0.08);
   --negro-transparente-020: hsla(0, 0%, 0%, 0.2);
   --negro-transparente-040: hsla(0, 0%, 0%, 0.4);
 
@@ -88,23 +90,25 @@
   --spacing-size-8xl: 6rem;
 
   /* Esquinas redondeadas: de casi cuadrado a totalmente redondo */
+  /* Radios planos de estilo editorial (antes tarjetas muy redondeadas). */
   --radius-xs: 0.125rem;
-  --radius-s: 0.25rem;
-  --radius-m: 0.5rem;
-  --radius-l: 0.75rem;
-  --radius-xl: 1rem;
-  --radius-2xl: 1.125rem;
-  --radius-3xl: 1.5rem;
-  --radius-4xl: 2.5rem;
+  --radius-s: 0.1875rem;
+  --radius-m: 0.3125rem;
+  --radius-l: 0.375rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.5rem;
+  --radius-3xl: 0.625rem;
+  --radius-4xl: 0.75rem;
   --radius-full: 9999px;
 
   /* Sombras para dar profundidad a tarjetas y modales */
   --shadow-sm: 0 0.0625rem 0.1875rem hsla(0, 0%, 0%, 0.2);
   --shadow-md: 0 0.5rem 1.25rem hsla(0, 0%, 0%, 0.2);
   --shadow-lg: 0 0.5rem 1.5rem hsla(0, 0%, 0%, 0.4);
-  --shadow-glow-amarillo: 0 0 1.25rem hsla(47, 86%, 56%, 0.2);
-  --shadow-hover-amarillo: 0 0.5rem 1.25rem hsla(47, 86%, 56%, 0.06);
-  --shadow-hover-cyan: 0 0.5rem 1.25rem hsla(191, 72%, 44%, 0.06);
+  /* Sin glows de color: elevación neutra sutil, como la home. */
+  --shadow-glow-amarillo: none;
+  --shadow-hover-amarillo: 0 0.75rem 2rem hsla(0, 0%, 0%, 0.35);
+  --shadow-hover-cyan: 0 0.75rem 2rem hsla(0, 0%, 0%, 0.35);
 
   /* Velocidad de las transiciones: rapida, normal o lenta */
   --duration-fast: 150ms;
@@ -158,7 +162,7 @@
   --shadow-sm: 0 0.0625rem 0.1875rem hsla(0, 0%, 0%, 0.06);
   --shadow-md: 0 0.5rem 1.25rem hsla(0, 0%, 0%, 0.08);
   --shadow-lg: 0 0.5rem 1.5rem hsla(0, 0%, 0%, 0.12);
-  --shadow-glow-amarillo: 0 0 1.25rem hsla(47, 86%, 56%, 0.15);
-  --shadow-hover-amarillo: 0 0.5rem 1.25rem hsla(47, 86%, 56%, 0.08);
-  --shadow-hover-cyan: 0 0.5rem 1.25rem hsla(191, 72%, 44%, 0.08);
+  --shadow-glow-amarillo: none;
+  --shadow-hover-amarillo: 0 0.75rem 2rem hsla(30, 10%, 20%, 0.14);
+  --shadow-hover-cyan: 0 0.75rem 2rem hsla(30, 10%, 20%, 0.14);
 }

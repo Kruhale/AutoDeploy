@@ -104,7 +104,7 @@
     @include transicion(background-color, color);
 
     &--activa {
-      background-color: rgba(245, 214, 35, 0.1);
+      background-color: hsla(41, 68%, 56%, 0.1);
       color: var(--amarillo-normal);
       border-left: 2px solid var(--amarillo-normal);
     }

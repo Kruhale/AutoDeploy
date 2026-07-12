@@ -303,7 +303,7 @@
       width: 5.5rem;
       height: 5.5rem;
       border-radius: var(--radius-full);
-      background: radial-gradient(circle at 30% 30%, hsla(47, 86%, 56%, 0.25) 0%, hsla(47, 86%, 56%, 0.05) 100%);
+      background: radial-gradient(circle at 30% 30%, hsla(41, 68%, 56%, 0.25) 0%, hsla(41, 68%, 56%, 0.05) 100%);
       border: 1px solid var(--amarillo-transparente-030);
       font-size: 2rem;
       color: var(--amarillo-normal);
@@ -1021,8 +1021,8 @@
 }
 
 @keyframes asistente-halo-respirar {
-  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 hsla(47, 86%, 56%, 0.4); }
-  50%      { transform: scale(1.04); box-shadow: 0 0 0 0.75rem hsla(47, 86%, 56%, 0); }
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 hsla(41, 68%, 56%, 0.4); }
+  50%      { transform: scale(1.04); box-shadow: 0 0 0 0.75rem hsla(41, 68%, 56%, 0); }
 }
 
 @keyframes asistente-punto-rebote {

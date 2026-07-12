@@ -260,7 +260,7 @@
   // Caja de demostracion donde se ven las animaciones en accion
   &__demo-animacion {
     padding: var(--spacing-size-l) var(--spacing-size-2xl);
-    background: rgba(245, 214, 35, 0.08);
+    background: hsla(41, 68%, 56%, 0.08);
     border: 1px solid var(--amarillo-normal-hover);
     border-radius: var(--radius-m);
     color: var(--texto-claro);

@@ -289,7 +289,7 @@
       font-weight: var(--font-weight-extrabold);
       flex-shrink: 0;
 
-      &--amarillo { background: rgba(245, 214, 35, 0.15); color: var(--amarillo-normal); }
+      &--amarillo { background: hsla(41, 68%, 56%, 0.15); color: var(--amarillo-normal); }
       &--cyan     { background: rgba(0, 212, 255, 0.15);  color: var(--cyan-normal); }
       &--teal     { background: rgba(45, 175, 140, 0.15); color: var(--teal-normal); }
     }
@@ -424,7 +424,7 @@
       flex-shrink: 0;
 
       &--verde    { background: rgba(34, 197, 94, 0.15); color: var(--verde-normal); }
-      &--amarillo { background: rgba(245, 214, 35, 0.15); color: var(--amarillo-normal); }
+      &--amarillo { background: hsla(41, 68%, 56%, 0.15); color: var(--amarillo-normal); }
     }
 
     &__info {

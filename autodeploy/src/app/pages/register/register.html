@@ -1,5 +1,8 @@
 <main class="pagina-registro">
 
+  <section class="pagina-registro__lienzo" aria-hidden="true" #lienzoFondo></section>
+  <section class="pagina-registro__velo" aria-hidden="true"></section>
+
   <section class="pagina-registro__panel-formulario">
     <a class="pagina-registro__volver" routerLink="/">
       <span class="pagina-registro__volver__flecha" aria-hidden="true">←</span>
@@ -8,7 +11,7 @@
 
     <section class="pagina-registro__panel-formulario__contenido">
       <header class="pagina-registro__cabecera">
-        <span class="pagina-registro__cabecera__numero" aria-hidden="true">{{ 'register.cabeceraNumero' | translate }}</span>
+        <span class="pagina-registro__cabecera__numero" aria-hidden="true">— {{ 'register.cabeceraNumero' | translate }}</span>
         <h1 class="pagina-registro__titulo">{{ 'register.titulo' | translate }}<span class="pagina-registro__titulo__punto" aria-hidden="true">.</span></h1>
         <p class="pagina-registro__subtitulo">{{ 'register.subtitulo' | translate }}</p>
       </header>
@@ -23,7 +26,7 @@
 
         <section class="campo">
           <label class="campo__etiqueta" for="nombre">
-            <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
+            <span class="campo__etiqueta__numero" aria-hidden="true">01</span>
             {{ 'register.nombreEtiqueta' | translate }}
           </label>
           <input class="campo__input" id="nombre" name="nombre" type="text"
@@ -34,7 +37,7 @@
 
         <section class="campo">
           <label class="campo__etiqueta" for="email">
-            <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
+            <span class="campo__etiqueta__numero" aria-hidden="true">02</span>
             {{ 'register.emailEtiqueta' | translate }}
           </label>
           <input class="campo__input" id="email" name="email" type="email"
@@ -45,7 +48,7 @@
 
         <section class="campo">
           <label class="campo__etiqueta" for="password">
-            <span class="campo__etiqueta__numero" aria-hidden="true">iii</span>
+            <span class="campo__etiqueta__numero" aria-hidden="true">03</span>
             {{ 'register.claveEtiqueta' | translate }}
           </label>
           <section class="pagina-registro__campo-password">
@@ -96,7 +99,7 @@
 
         <section class="campo">
           <label class="campo__etiqueta" for="confirmar-password">
-            <span class="campo__etiqueta__numero" aria-hidden="true">iv</span>
+            <span class="campo__etiqueta__numero" aria-hidden="true">04</span>
             {{ 'register.confirmarPasswordEtiqueta' | translate }}
           </label>
           <section class="pagina-registro__campo-password">

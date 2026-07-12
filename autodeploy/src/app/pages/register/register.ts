@@ -1,10 +1,11 @@
-import { Component, computed, inject, signal, Signal } from "@angular/core";
+import { Component, computed, inject, signal, Signal, AfterViewInit, OnDestroy, ViewChild, ElementRef } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { toSignal } from "@angular/core/rxjs-interop";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
+import { EscenaRedServidores } from "../home/escena-red-servidores";
 
 // Validador cruzado: la confirmacion debe coincidir con la password
 function confirmarPasswordCoincide(): ValidatorFn {
@@ -24,7 +25,11 @@ function confirmarPasswordCoincide(): ValidatorFn {
   templateUrl: "./register.html",
   styleUrl: "./register.scss"
 })
-export class Register {
+export class Register implements AfterViewInit, OnDestroy {
+  @ViewChild("lienzoFondo") lienzoFondo!: ElementRef<HTMLElement>;
+
+  private escenaDeFondo: EscenaRedServidores | null = null;
+
   // Formulario reactivo con validadores por campo + validador de grupo para la confirmacion
   private formBuilder = inject(FormBuilder);
   formularioRegistro = this.formBuilder.nonNullable.group(
@@ -87,6 +92,22 @@ export class Register {
         && componente.criterioNumero()
         && componente.criterioEspecial();
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.escenaDeFondo = new EscenaRedServidores(this.lienzoFondo.nativeElement);
+    this.escenaDeFondo.iniciar();
+
+    const raizDelDocumento = document.documentElement;
+    const estaEnTemaClaro = raizDelDocumento.classList.contains("tema-claro");
+    this.escenaDeFondo.establecerTema(estaEnTemaClaro);
+  }
+
+  ngOnDestroy(): void {
+    if (this.escenaDeFondo !== null) {
+      this.escenaDeFondo.destruir();
+      this.escenaDeFondo = null;
+    }
   }
 
   alternarVisibilidadPassword(): void {

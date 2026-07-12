@@ -62,7 +62,12 @@ export class EscenaRedServidores {
     const consultaDeMovimientoReducido = window.matchMedia("(prefers-reduced-motion: reduce)");
     this.esModoReducido = consultaDeMovimientoReducido.matches;
 
-    this.crearRenderer();
+    // Sin WebGL (navegadores capados, tests headless) la pagina sigue sin escena.
+    try {
+      this.crearRenderer();
+    } catch {
+      return;
+    }
     this.crearEscena();
     this.crearCamara();
     this.crearRedDeNodos();

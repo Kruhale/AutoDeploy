@@ -79,28 +79,19 @@
     flex-direction: column;
     gap: var(--spacing-size-s);
 
+    // Indice de revista: etiqueta minuscula y filete que corre hasta el borde.
     &__cabecera {
       display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
+      align-items: center;
+      gap: 0.75rem;
       padding: 0 var(--spacing-size-l);
       margin-bottom: var(--spacing-size-xs);
-    }
-
-    // Eyebrow editorial "— 01 · SECCION", como los de la landing.
-    &__numero {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      font-weight: var(--font-weight-medium);
-      letter-spacing: 0.18em;
-      color: var(--texto-apagado);
-
-      &::before {
-        content: "— ";
-      }
 
       &::after {
-        content: " ·";
+        content: "";
+        flex: 1;
+        height: 1px;
+        background-color: var(--borde-normal);
       }
     }
 
@@ -409,18 +400,13 @@
       display: none;
     }
 
+    // Colapsada solo queda el filete como separador de secciones
     .barra-lateral__seccion__cabecera {
-      justify-content: center;
-      padding: 0;
+      padding: 0 var(--spacing-size-s);
     }
 
     .barra-lateral__seccion__titulo {
       display: none;
-    }
-
-    .barra-lateral__seccion__numero {
-      font-size: 0.5rem;
-      padding: 0.05rem 0.3rem;
     }
 
     .barra-lateral__enlace {

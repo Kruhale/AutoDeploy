@@ -558,7 +558,8 @@
     },
     "botonCancelar": "Abbrechen",
     "botonConfirmarBajada": "Herabstufung bestätigen",
-    "botonContinuar": "Weiter zur Registrierung"
+    "botonContinuar": "Weiter zur Registrierung",
+    "metadatos": "Ohne Karte · Ohne Bindung"
   },
   "dashboard": {
     "sello": "Betrieb · Live-Monitor",

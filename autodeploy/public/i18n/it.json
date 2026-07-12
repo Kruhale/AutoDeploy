@@ -558,7 +558,8 @@
     },
     "botonCancelar": "Annulla",
     "botonConfirmarBajada": "Conferma il downgrade",
-    "botonContinuar": "Continua con la registrazione"
+    "botonContinuar": "Continua con la registrazione",
+    "metadatos": "Senza carta · Senza vincoli"
   },
   "dashboard": {
     "sello": "Operazioni · monitoraggio in tempo reale",

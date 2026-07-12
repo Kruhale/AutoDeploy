@@ -558,7 +558,8 @@
     },
     "botonCancelar": "Annuler",
     "botonConfirmarBajada": "Confirmer le changement",
-    "botonContinuar": "Continuer vers l'inscription"
+    "botonContinuar": "Continuer vers l'inscription",
+    "metadatos": "Sans carte · Sans engagement"
   },
   "dashboard": {
     "sello": "Opérations · moniteur en direct",

@@ -1,133 +1,120 @@
-<section class="confirmar-free">
+<main class="confirmar-free">
 
-  <section class="confirmar-free__atmosfera" aria-hidden="true"></section>
+  <section class="confirmar-free__lienzo" aria-hidden="true" #lienzoFondo></section>
+  <section class="confirmar-free__velo" aria-hidden="true"></section>
 
-  <a class="confirmar-free__volver" routerLink="/" (click)="cancelar(); $event.preventDefault()">
-    <i class="fa-solid fa-arrow-left-long"></i>
-    <span>{{ 'confirmarFree.volver' | translate }}</span>
-  </a>
+  <header class="confirmar-free__barra">
+    <a class="confirmar-free__volver" routerLink="/">
+      <i class="fa-solid fa-arrow-left-long" aria-hidden="true"></i>
+      <span>{{ 'confirmarFree.volver' | translate }}</span>
+    </a>
+    @if (!esBajada()) {
+      <p class="confirmar-free__metadatos">{{ 'confirmarFree.metadatos' | translate }}</p>
+    }
+  </header>
 
   <section class="confirmar-free__contenedor">
+    <section class="confirmar-free__columnas">
 
-    <section class="confirmar-free__visual">
+      <article class="confirmar-free__plan">
+        <p class="confirmar-free__eyebrow">— 00 · {{ 'confirmarFree.etiqueta' | translate }}</p>
 
-      <span class="confirmar-free__etiqueta">{{ 'confirmarFree.etiqueta' | translate }}</span>
+        <header class="confirmar-free__plan__cabecera">
+          <h2 class="confirmar-free__mascara">
+            <span class="confirmar-free__plan__nombre">{{ 'confirmarFree.nombre' | translate }}</span>
+          </h2>
+          <p class="confirmar-free__mascara">
+            <span class="confirmar-free__plan__precio">
+              €0<span class="confirmar-free__plan__periodo">{{ 'confirmarFree.precioPeriodo' | translate }}</span>
+            </span>
+          </p>
+        </header>
 
-      <section class="confirmar-free__nombre-precio">
-        <p class="confirmar-free__nombre">{{ 'confirmarFree.nombre' | translate }}</p>
-        <section class="confirmar-free__precio">
-          <span class="confirmar-free__precio__simbolo">€</span>
-          <span class="confirmar-free__precio__numero">0</span>
-          <span class="confirmar-free__precio__periodo">{{ 'confirmarFree.precioPeriodo' | translate }}</span>
-        </section>
-      </section>
+        <p class="confirmar-free__plan__resumen">{{ 'confirmarFree.resumen' | translate }}</p>
 
-      <p class="confirmar-free__resumen">
-        {{ 'confirmarFree.resumen' | translate }}
-      </p>
+        <ul class="confirmar-free__lista">
+          <li class="confirmar-free__item">
+            <span class="confirmar-free__item__numero" aria-hidden="true">01</span>
+            <span class="confirmar-free__item__texto">{{ 'confirmarFree.item1' | translate }}</span>
+          </li>
+          <li class="confirmar-free__item">
+            <span class="confirmar-free__item__numero" aria-hidden="true">02</span>
+            <span class="confirmar-free__item__texto">{{ 'confirmarFree.item2' | translate }}</span>
+          </li>
+          <li class="confirmar-free__item">
+            <span class="confirmar-free__item__numero" aria-hidden="true">03</span>
+            <span class="confirmar-free__item__texto">{{ 'confirmarFree.item3' | translate }}</span>
+          </li>
+          <li class="confirmar-free__item">
+            <span class="confirmar-free__item__numero" aria-hidden="true">04</span>
+            <span class="confirmar-free__item__texto">{{ 'confirmarFree.item4' | translate }}</span>
+          </li>
+        </ul>
+      </article>
 
-      <section class="confirmar-free__lista">
-        <section class="confirmar-free__item">
-          <span class="confirmar-free__item__icono">01</span>
-          <span class="confirmar-free__item__texto">{{ 'confirmarFree.item1' | translate }}</span>
-        </section>
-        <section class="confirmar-free__item">
-          <span class="confirmar-free__item__icono">02</span>
-          <span class="confirmar-free__item__texto">{{ 'confirmarFree.item2' | translate }}</span>
-        </section>
-        <section class="confirmar-free__item">
-          <span class="confirmar-free__item__icono">03</span>
-          <span class="confirmar-free__item__texto">{{ 'confirmarFree.item3' | translate }}</span>
-        </section>
-        <section class="confirmar-free__item">
-          <span class="confirmar-free__item__icono">04</span>
-          <span class="confirmar-free__item__texto">{{ 'confirmarFree.item4' | translate }}</span>
-        </section>
-      </section>
+      <section class="confirmar-free__decision">
 
-    </section>
+        @if (esBajada()) {
 
-    <section class="confirmar-free__decision">
+          <p class="confirmar-free__eyebrow confirmar-free__eyebrow--aviso">— 01 · {{ 'confirmarFree.bajada.eyebrow' | translate }}</p>
 
-      @if (esBajada()) {
+          <h1 class="confirmar-free__titulo">
+            {{ 'confirmarFree.bajada.tituloParte1' | translate }} <span class="confirmar-free__resaltar confirmar-free__resaltar--origen">{{ planActual() }}</span> {{ 'confirmarFree.bajada.tituloParte2' | translate }} <span class="confirmar-free__resaltar">{{ 'confirmarFree.bajada.planFree' | translate }}</span>.
+          </h1>
 
-        <span class="confirmar-free__eyebrow confirmar-free__eyebrow--aviso">
-          {{ 'confirmarFree.bajada.eyebrow' | translate }}
-        </span>
+          <p class="confirmar-free__descripcion">{{ 'confirmarFree.bajada.descripcion' | translate }}</p>
 
-        <h1 class="confirmar-free__titulo">
-          {{ 'confirmarFree.bajada.tituloParte1' | translate }} <span class="confirmar-free__resaltar">{{ planActual() }}</span> {{ 'confirmarFree.bajada.tituloParte2' | translate }} <span class="confirmar-free__resaltar">{{ 'confirmarFree.bajada.planFree' | translate }}</span>.
-        </h1>
-
-        <p class="confirmar-free__descripcion">
-          {{ 'confirmarFree.bajada.descripcion' | translate }}
-        </p>
-
-        <section class="confirmar-free__perdidas">
-          <span class="confirmar-free__perdidas__titulo">{{ 'confirmarFree.bajada.perdidasTitulo' | translate }}</span>
-          <section class="confirmar-free__perdidas__lista">
-            <section class="confirmar-free__perdida">
-              <span class="confirmar-free__perdida__icono">—</span>
-              <span>{{ 'confirmarFree.bajada.perdida1' | translate }}</span>
-            </section>
-            <section class="confirmar-free__perdida">
-              <span class="confirmar-free__perdida__icono">—</span>
-              <span>{{ 'confirmarFree.bajada.perdida2' | translate }}</span>
-            </section>
-            <section class="confirmar-free__perdida">
-              <span class="confirmar-free__perdida__icono">—</span>
-              <span>{{ 'confirmarFree.bajada.perdida3' | translate }}</span>
-            </section>
+          <section class="confirmar-free__perdidas">
+            <p class="confirmar-free__perdidas__titulo">{{ 'confirmarFree.bajada.perdidasTitulo' | translate }}</p>
+            <ul class="confirmar-free__perdidas__lista">
+              <li class="confirmar-free__perdida">{{ 'confirmarFree.bajada.perdida1' | translate }}</li>
+              <li class="confirmar-free__perdida">{{ 'confirmarFree.bajada.perdida2' | translate }}</li>
+              <li class="confirmar-free__perdida">{{ 'confirmarFree.bajada.perdida3' | translate }}</li>
+            </ul>
           </section>
+
+        } @else {
+
+          <p class="confirmar-free__eyebrow">— 01 · {{ 'confirmarFree.alta.eyebrow' | translate }}</p>
+
+          <h1 class="confirmar-free__titulo">{{ 'confirmarFree.alta.titulo' | translate }}</h1>
+
+          <p class="confirmar-free__descripcion">{{ 'confirmarFree.alta.descripcion' | translate }}</p>
+
+          <ol class="confirmar-free__pasos">
+            <li class="confirmar-free__paso">
+              <span class="confirmar-free__paso__numero" aria-hidden="true">01</span>
+              <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso1' | translate }}</span>
+            </li>
+            <li class="confirmar-free__paso">
+              <span class="confirmar-free__paso__numero" aria-hidden="true">02</span>
+              <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso2' | translate }}</span>
+            </li>
+            <li class="confirmar-free__paso">
+              <span class="confirmar-free__paso__numero" aria-hidden="true">03</span>
+              <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso3' | translate }}</span>
+            </li>
+          </ol>
+
+        }
+
+        <section class="confirmar-free__acciones">
+          <button class="confirmar-free__cancelar" type="button" (click)="cancelar()">
+            {{ 'confirmarFree.botonCancelar' | translate }}
+          </button>
+          <button class="confirmar-free__cta" [class.confirmar-free__cta--aviso]="esBajada()" type="button" (click)="confirmar()">
+            @if (esBajada()) {
+              <span>{{ 'confirmarFree.botonConfirmarBajada' | translate }}</span>
+            } @else {
+              <span>{{ 'confirmarFree.botonContinuar' | translate }}</span>
+            }
+            <i class="fa-solid fa-arrow-right-long confirmar-free__cta__flecha" aria-hidden="true"></i>
+          </button>
         </section>
 
-      } @else {
-
-        <span class="confirmar-free__eyebrow">
-          {{ 'confirmarFree.alta.eyebrow' | translate }}
-        </span>
-
-        <h1 class="confirmar-free__titulo">
-          {{ 'confirmarFree.alta.titulo' | translate }}
-        </h1>
-
-        <p class="confirmar-free__descripcion">
-          {{ 'confirmarFree.alta.descripcion' | translate }}
-        </p>
-
-        <section class="confirmar-free__pasos">
-          <section class="confirmar-free__paso">
-            <span class="confirmar-free__paso__numero">01</span>
-            <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso1' | translate }}</span>
-          </section>
-          <section class="confirmar-free__paso">
-            <span class="confirmar-free__paso__numero">02</span>
-            <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso2' | translate }}</span>
-          </section>
-          <section class="confirmar-free__paso">
-            <span class="confirmar-free__paso__numero">03</span>
-            <span class="confirmar-free__paso__texto">{{ 'confirmarFree.alta.paso3' | translate }}</span>
-          </section>
-        </section>
-
-      }
-
-      <section class="confirmar-free__acciones">
-        <button class="boton--ghost confirmar-free__boton confirmar-free__boton--secundario" type="button" (click)="cancelar()">
-          {{ 'confirmarFree.botonCancelar' | translate }}
-        </button>
-        <button class="boton--primario confirmar-free__boton confirmar-free__boton--principal" type="button" (click)="confirmar()">
-          @if (esBajada()) {
-            {{ 'confirmarFree.botonConfirmarBajada' | translate }}
-          } @else {
-            {{ 'confirmarFree.botonContinuar' | translate }}
-          }
-          <i class="fa-solid fa-arrow-right-long confirmar-free__boton__flecha"></i>
-        </button>
       </section>
 
     </section>
-
   </section>
 
-</section>
+</main>

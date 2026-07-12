@@ -558,7 +558,8 @@
     },
     "botonCancelar": "Cancel",
     "botonConfirmarBajada": "Confirm downgrade",
-    "botonContinuar": "Continue to sign up"
+    "botonContinuar": "Continue to sign up",
+    "metadatos": "No card · No commitment"
   },
   "dashboard": {
     "sello": "Operations · live monitor",

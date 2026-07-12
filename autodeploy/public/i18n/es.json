@@ -558,7 +558,8 @@
     },
     "botonCancelar": "Cancelar",
     "botonConfirmarBajada": "Confirmar bajada",
-    "botonContinuar": "Continuar al registro"
+    "botonContinuar": "Continuar al registro",
+    "metadatos": "Sin tarjeta · Sin permanencia"
   },
   "dashboard": {
     "sello": "Operaciones · monitor en vivo",

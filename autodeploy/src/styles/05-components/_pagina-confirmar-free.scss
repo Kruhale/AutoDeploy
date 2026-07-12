@@ -1,459 +1,663 @@
+// Confirmacion del plan Free: mismo lenguaje editorial que la home. La
+// constelacion 3D vive detras y el precio €0 es el protagonista tipografico.
+
 .confirmar-free {
+  --fondo-editorial: hsl(230, 8%, 4%);
+  --tinta: hsl(40, 20%, 92%);
+  --tinta-suave: hsl(40, 6%, 60%);
+  // Apagada al 52% para no bajar de AA en los textos mono pequeños.
+  --tinta-apagada: hsl(40, 5%, 52%);
+  --acento: hsl(42, 62%, 62%);
+  --linea: hsla(40, 20%, 92%, 0.09);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background-color: var(--fondo-editorial);
+  color: var(--tinta);
+  overflow: hidden;
+}
+
+html.tema-claro .confirmar-free {
+  --fondo-editorial: hsl(40, 30%, 95%);
+  --tinta: hsl(230, 14%, 13%);
+  --tinta-suave: hsl(230, 7%, 38%);
+  --tinta-apagada: hsl(230, 6%, 44%);
+  // Ambar profundo: al 36% el texto del CTA se quedaba en 3,9:1 sobre papel.
+  --acento: hsl(38, 80%, 30%);
+  --linea: hsla(230, 14%, 13%, 0.14);
+}
+
+// Algo mas tenue que en la home: aqui hay una decision que leer y ningun
+// nodo brillante debe pisar el texto a brillo completo.
+.confirmar-free__lienzo {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+// Velo radial: oscurece los bordes para que el texto respire sobre la escena.
+.confirmar-free__velo {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(120% 120% at 50% 40%, transparent 55%, hsla(230, 8%, 2%, 0.55) 100%);
+}
+
+html.tema-claro .confirmar-free__velo {
+  background: radial-gradient(120% 120% at 50% 40%, transparent 60%, hsla(40, 30%, 85%, 0.55) 100%);
+}
+
+// La barra comparte ancho maximo con las columnas para que VOLVER quede
+// alineado en vertical con el eyebrow del contenido.
+.confirmar-free__barra {
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-size-2xl);
+  width: 100%;
+  // Mismo ancho que las columnas mas su padding, para que VOLVER alinee.
+  max-width: 76rem;           /* 1216px */
+  margin: 0 auto;
+  padding: 1.75rem 4rem;      /* 28px 64px */
+  z-index: 2;
+}
+
+.confirmar-free__volver {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-size-s);
+  padding: 0.5rem 0;          /* 8px */
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;       /* 11px */
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  transition-property: color, transform;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.confirmar-free__volver:hover {
+  color: var(--tinta);
+  transform: translateX(-0.1875rem);   /* -3px */
+}
+
+.confirmar-free__volver:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+.confirmar-free__metadatos {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;        /* 10px */
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+}
+
+.confirmar-free__contenedor {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  min-height: 100dvh;
-  padding: var(--spacing-size-5xl) var(--spacing-size-3xl);
-  background: var(--fondo-oscuro);
+  padding: 2rem 4rem 4.5rem;  /* 32px 64px 72px */
+  z-index: 2;
+}
+
+.confirmar-free__columnas {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  max-width: 68rem;           /* 1088px */
+}
+
+// -------------------------------------------------- COLUMNA DEL PLAN
+
+.confirmar-free__plan {
+  flex: 1.15;
+  display: flex;
+  flex-direction: column;
+  padding-right: 4.5rem;      /* 72px */
+}
+
+.confirmar-free__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;       /* 11px */
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  margin-bottom: 2.25rem;     /* 36px */
+}
+
+.confirmar-free__eyebrow--aviso {
+  color: var(--rojo-normal);
+}
+
+.confirmar-free__plan__cabecera {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.75rem;     /* 28px */
+}
+
+// Cada linea del titular vive en una mascara: entra subiendo desde abajo.
+.confirmar-free__mascara {
   overflow: hidden;
+  margin: 0;
+  padding-bottom: 0.08em;
+}
 
-  @media (max-width: 60rem) {
-    padding: var(--spacing-size-3xl) var(--spacing-size-l);
-    padding-top: var(--spacing-size-6xl);
+.confirmar-free__plan__nombre {
+  display: inline-block;
+  font-family: var(--font-secondary);
+  font-size: 6.5rem;          /* 104px */
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  color: var(--tinta);
+}
+
+.confirmar-free__plan__precio {
+  display: inline-block;
+  font-family: var(--font-secondary);
+  font-size: 3.25rem;         /* 52px */
+  font-weight: 300;
+  font-style: italic;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--acento);
+}
+
+.confirmar-free__plan__periodo {
+  font-size: 1.125rem;        /* 18px */
+  color: var(--tinta-apagada);
+  margin-left: 0.5rem;        /* 8px */
+  letter-spacing: 0;
+}
+
+.confirmar-free__plan__resumen {
+  font-size: 0.95rem;         /* 15px */
+  line-height: 1.7;
+  color: var(--tinta-suave);
+  max-width: 24rem;           /* 384px */
+  margin-bottom: 2.75rem;     /* 44px */
+  text-wrap: pretty;
+}
+
+.confirmar-free__lista {
+  margin-top: auto;
+  border-top: 1px solid var(--linea);
+}
+
+.confirmar-free__item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;                /* 24px */
+  padding: 0.95rem 0;         /* 15px */
+  border-bottom: 1px solid var(--linea);
+}
+
+.confirmar-free__item__numero {
+  width: 1.5rem;              /* 24px */
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;       /* 11px */
+  color: var(--tinta-apagada);
+}
+
+.confirmar-free__item__texto {
+  font-size: 0.95rem;         /* 15px */
+  color: var(--tinta);
+  letter-spacing: -0.005em;
+}
+
+// -------------------------------------------------- COLUMNA DE DECISION
+
+.confirmar-free__decision {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-left: 4.5rem;       /* 72px */
+  border-left: 1px solid var(--linea);
+}
+
+.confirmar-free__titulo {
+  font-family: var(--font-secondary);
+  font-size: 3.1rem;          /* 50px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  color: var(--tinta);
+  margin-bottom: 1.25rem;     /* 20px */
+  text-wrap: balance;
+}
+
+.confirmar-free__resaltar {
+  color: var(--acento);
+  text-transform: capitalize;
+}
+
+// El plan de origen queda tachado y apagado: la direccion del cambio se lee
+// de un vistazo sin tener que procesar la frase entera.
+.confirmar-free__resaltar--origen {
+  color: var(--tinta-suave);
+  text-decoration: line-through;
+}
+
+.confirmar-free__descripcion {
+  font-size: 0.95rem;         /* 15px */
+  line-height: 1.7;
+  color: var(--tinta-suave);
+  max-width: 26rem;           /* 416px */
+  margin-bottom: 2.25rem;     /* 36px */
+  text-wrap: pretty;
+}
+
+.confirmar-free__pasos {
+  width: 100%;
+  border-top: 1px solid var(--linea);
+}
+
+.confirmar-free__paso {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;                /* 24px */
+  padding: 0.95rem 0;         /* 15px */
+  border-bottom: 1px solid var(--linea);
+}
+
+.confirmar-free__paso__numero {
+  width: 1.5rem;              /* 24px */
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;       /* 11px */
+  color: var(--tinta-apagada);
+}
+
+.confirmar-free__paso__texto {
+  font-size: 0.95rem;         /* 15px */
+  color: var(--tinta);
+  letter-spacing: -0.005em;
+}
+
+// FOMO de la bajada: lo que pierde queda marcado en rojo, es un estado real.
+.confirmar-free__perdidas {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-m);
+  padding-left: 1.25rem;      /* 20px */
+  border-left: 1px solid hsla(0, 79%, 60%, 0.4);
+}
+
+.confirmar-free__perdidas__titulo {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;       /* 11px */
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--rojo-normal);
+}
+
+.confirmar-free__perdidas__lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-s);
+}
+
+.confirmar-free__perdida {
+  font-size: 0.95rem;         /* 15px */
+  color: var(--tinta-suave);
+}
+
+.confirmar-free__perdida::before {
+  content: "—";
+  margin-right: 0.75rem;      /* 12px */
+  color: hsla(0, 79%, 60%, 0.7);
+}
+
+// -------------------------------------------------- ACCIONES
+
+.confirmar-free__acciones {
+  display: flex;
+  align-items: center;
+  gap: 2rem;                  /* 32px */
+  width: 100%;
+  margin-top: auto;
+  padding-top: 2.75rem;       /* 44px */
+}
+
+.confirmar-free__cancelar {
+  position: relative;
+  padding: 0.85rem 0;         /* 14px, area tactil de 44px */
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-family: var(--font-primary);
+  font-size: 0.9rem;          /* 14px */
+  color: var(--tinta-suave);
+  letter-spacing: 0.02em;
+  transition-property: color;
+  transition-duration: 0.3s;
+  transition-timing-function: ease;
+}
+
+// Subrayado que se dibuja al pasar el raton, como los enlaces de la home.
+.confirmar-free__cancelar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0.35rem;            /* 6px */
+  width: 100%;
+  height: 1px;
+  background-color: var(--tinta);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition-property: transform;
+  transition-duration: 0.4s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.confirmar-free__cancelar:hover {
+  color: var(--tinta);
+}
+
+.confirmar-free__cancelar:hover::after {
+  transform: scaleX(1);
+}
+
+.confirmar-free__cancelar:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+.confirmar-free__cta {
+  flex: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.85rem;               /* 14px */
+  height: 3.4rem;             /* 54px */
+  padding: 0 2.25rem;         /* 36px */
+  // Tinte + blur de cristal: las particulas de la escena no pisan el texto.
+  background-color: hsla(230, 8%, 4%, 0.45);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--acento);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;         /* 15px */
+  font-weight: var(--font-weight-semibold);
+  color: var(--acento);
+  transition-property: background-color, color, gap, transform;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html.tema-claro .confirmar-free__cta {
+  background-color: hsla(40, 30%, 95%, 0.5);
+}
+
+.confirmar-free__cta:hover {
+  background-color: var(--acento);
+  color: var(--fondo-editorial);
+  gap: 1.1rem;                /* 18px */
+}
+
+html.tema-claro .confirmar-free__cta:hover {
+  background-color: var(--acento);
+}
+
+// En la bajada de plan el boton hereda el lenguaje de aviso: confirmar una
+// perdida no puede verse igual de invitante que empezar gratis.
+.confirmar-free__cta--aviso {
+  border-color: var(--rojo-normal);
+  color: var(--rojo-normal);
+}
+
+.confirmar-free__cta--aviso:hover {
+  background-color: var(--rojo-normal);
+  color: var(--fondo-editorial);
+}
+
+html.tema-claro .confirmar-free__cta--aviso:hover {
+  background-color: var(--rojo-normal);
+}
+
+.confirmar-free__cta:active {
+  transform: scale(0.985);
+}
+
+.confirmar-free__cta:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+.confirmar-free__cta__flecha {
+  font-size: 0.8rem;          /* 13px */
+  transition-property: transform;
+  transition-duration: 0.35s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.confirmar-free__cta:hover .confirmar-free__cta__flecha {
+  transform: translateX(0.1875rem);   /* 3px */
+}
+
+// -------------------------------------------------- ENTRADA ORQUESTADA
+
+@media (prefers-reduced-motion: no-preference) {
+
+  .confirmar-free__plan__nombre {
+    transform: translateY(110%);
+    animation: confirmarFreeSubir 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
   }
 
-  &__atmosfera {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background:
-      radial-gradient(ellipse 42rem 28rem at 18% 28%, hsla(41, 68%, 56%, 0.05), transparent 65%),
-      radial-gradient(ellipse 34rem 24rem at 88% 78%, hsla(41, 68%, 56%, 0.025), transparent 70%);
-    z-index: 0;
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image:
-        linear-gradient(var(--borde-suave) 1px, transparent 1px),
-        linear-gradient(90deg, var(--borde-suave) 1px, transparent 1px);
-      background-size: 5.5rem 5.5rem;
-      mask-image: radial-gradient(ellipse 55% 55% at 50% 50%, black, transparent 78%);
-      opacity: 0.22;
-    }
+  .confirmar-free__plan__precio {
+    transform: translateY(110%);
+    animation: confirmarFreeSubir 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards;
   }
 
-  &__volver {
-    position: absolute;
-    top: var(--spacing-size-2xl);
-    left: var(--spacing-size-2xl);
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-size-s);
-    padding: var(--spacing-size-xs) 0;
-    color: var(--texto-apagado);
-    font-size: var(--font-size-sm);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    text-decoration: none;
-    transition: color 0.2s ease, transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 2;
-
-    &:hover {
-      color: var(--texto-claro);
-      transform: translateX(-3px);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--amarillo-normal);
-      outline-offset: 2px;
-    }
-
-    i {
-      font-size: 0.6875rem;
-    }
-
-    @media (max-width: 60rem) {
-      top: var(--spacing-size-l);
-      left: var(--spacing-size-l);
-    }
-  }
-
-  &__contenedor {
-    position: relative;
-    display: flex;
-    align-items: stretch;
-    gap: var(--spacing-size-7xl);
-    width: 100%;
-    max-width: 72rem;
-    z-index: 1;
+  .confirmar-free__eyebrow {
     opacity: 0;
-    transform: translateY(0.5rem);
-    animation: confirmarFreeEntrada 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
-
-    @media (max-width: 60rem) {
-      flex-direction: column;
-      gap: var(--spacing-size-2xl);
-      max-width: 32rem;
-    }
+    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
   }
 
-  // Panel izquierdo con la ilustracion visual de "te quedas con el plan gratuito"
-  &__visual {
-    position: relative;
-    flex: 1.15;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-size-2xl);
-    padding: var(--spacing-size-3xl) var(--spacing-size-2xl) var(--spacing-size-2xl);
-    background: var(--fondo-tarjeta);
-    border: 1px solid var(--borde-normal);
-    border-radius: var(--radius-m);
-    box-shadow: inset 0 1px 0 hsla(40, 33%, 91%, 0.05);
-
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: var(--spacing-size-2xl);
-      width: 2.5rem;
-      height: 2px;
-      background: var(--amarillo-normal);
-    }
-
-    @media (max-width: 60rem) {
-      padding: var(--spacing-size-2xl) var(--spacing-size-xl);
-    }
-  }
-
-  &__etiqueta {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-size-s);
-    font-size: 0.6875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    color: var(--texto-apagado);
-    font-weight: var(--font-weight-medium);
-    font-family: var(--font-family-mono, ui-monospace, "SFMono-Regular", Menlo, monospace);
-
-    &::before {
-      content: "";
-      width: 0.375rem;
-      height: 0.375rem;
-      background: var(--amarillo-normal);
-    }
-  }
-
-  &__nombre-precio {
-    display: flex;
-    align-items: baseline;
-    gap: var(--spacing-size-l);
-    flex-wrap: wrap;
-  }
-
-  &__nombre {
-    font-size: clamp(2.25rem, 4.4vw, 3rem);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: -0.045em;
-    line-height: 0.95;
-    color: var(--texto-claro);
-    margin: 0;
-  }
-
-  &__precio {
-    display: inline-flex;
-    align-items: baseline;
-    gap: 0.0625rem;
-    color: var(--texto-medio);
-
-    &__simbolo {
-      font-size: var(--font-size-md);
-      color: var(--texto-medio);
-      font-weight: var(--font-weight-medium);
-    }
-
-    &__numero {
-      font-size: var(--font-size-xl);
-      font-weight: var(--font-weight-semibold);
-      color: var(--texto-claro);
-      letter-spacing: -0.02em;
-    }
-
-    &__periodo {
-      font-size: var(--font-size-sm);
-      color: var(--texto-apagado);
-      margin-left: 0.1875rem;
-    }
-  }
-
-  &__resumen {
-    font-size: var(--font-size-md);
-    line-height: 1.55;
-    color: var(--texto-medio);
-    margin: 0;
-    max-width: 26rem;
-  }
-
-  &__lista {
-    display: flex;
-    flex-direction: column;
-    margin-top: auto;
-    padding-top: var(--spacing-size-l);
-    border-top: 1px solid var(--borde-suave);
-  }
-
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-size-l);
-    padding: var(--spacing-size-m) 0;
+  .confirmar-free__plan__resumen {
     opacity: 0;
-    transform: translateY(0.375rem);
-    animation: confirmarFreeEntrada 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
-    & + & {
-      border-top: 1px solid var(--borde-suave);
-    }
-
-    &:nth-child(1) { animation-delay: 0.22s; }
-    &:nth-child(2) { animation-delay: 0.28s; }
-    &:nth-child(3) { animation-delay: 0.34s; }
-    &:nth-child(4) { animation-delay: 0.40s; }
-
-    &__icono {
-      width: 1.5rem;
-      font-size: 0.6875rem;
-      color: var(--texto-apagado);
-      text-align: left;
-      font-family: var(--font-family-mono, ui-monospace, monospace);
-    }
-
-    &__texto {
-      font-size: var(--font-size-md);
-      color: var(--texto-claro);
-      letter-spacing: -0.005em;
-    }
+    transform: translateY(0.6rem);
+    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
   }
 
-  // Panel derecho donde el usuario decide: confirmar gratis o pasarse a Pro
-  &__decision {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-size-l);
-    padding-top: var(--spacing-size-l);
-
-    @media (max-width: 60rem) {
-      padding-top: 0;
-    }
-  }
-
-  &__eyebrow {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-size-s);
-    align-self: flex-start;
-    padding: 0;
-    font-size: 0.6875rem;
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    font-weight: var(--font-weight-medium);
-    color: var(--amarillo-normal);
-    background: none;
-    border: none;
-    font-family: var(--font-family-mono, ui-monospace, monospace);
-
-    &::before {
-      content: "";
-      width: 1.25rem;
-      height: 1px;
-      background: currentColor;
-      opacity: 0.6;
-    }
-
-    &--aviso {
-      color: var(--rojo-normal);
-    }
-  }
-
-  &__titulo {
-    font-size: clamp(1.625rem, 3vw, 2.25rem);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: -0.035em;
-    line-height: 1.1;
-    color: var(--texto-claro);
-    margin: 0;
-    max-width: 22rem;
-  }
-
-  &__resaltar {
-    color: var(--amarillo-normal);
-    text-transform: capitalize;
-  }
-
-  &__descripcion {
-    font-size: var(--font-size-md);
-    line-height: 1.6;
-    color: var(--texto-medio);
-    margin: 0;
-    max-width: 28rem;
-  }
-
-  // Lista de los pasos siguientes (que va a poder hacer) si confirma el plan gratuito
-  &__pasos {
-    display: flex;
-    flex-direction: column;
-    margin-top: var(--spacing-size-s);
-  }
-
-  &__paso {
-    display: flex;
-    align-items: baseline;
-    gap: var(--spacing-size-l);
-    padding: var(--spacing-size-m) 0;
-    border-top: 1px solid var(--borde-suave);
+  .confirmar-free__item {
     opacity: 0;
-    transform: translateX(-0.375rem);
-    animation: confirmarFreePasoEntrada 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-
-    &:last-child {
-      border-bottom: 1px solid var(--borde-suave);
-    }
-
-    &:nth-child(1) { animation-delay: 0.28s; }
-    &:nth-child(2) { animation-delay: 0.34s; }
-    &:nth-child(3) { animation-delay: 0.40s; }
-
-    &__numero {
-      font-size: 0.6875rem;
-      font-weight: var(--font-weight-medium);
-      color: var(--texto-apagado);
-      letter-spacing: 0.06em;
-      font-family: var(--font-family-mono, ui-monospace, monospace);
-      flex-shrink: 0;
-      width: 1.75rem;
-    }
-
-    &__texto {
-      font-size: var(--font-size-md);
-      color: var(--texto-claro);
-      line-height: 1.4;
-    }
+    transform: translateY(0.6rem);
+    animation: confirmarFreeAparecer 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  // Lista de las cosas que pierde al no pillar el plan Pro (un poco de FOMO)
-  &__perdidas {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-size-m);
-    margin-top: var(--spacing-size-s);
-    padding-left: var(--spacing-size-l);
-    border-left: 2px solid hsla(0, 79%, 60%, 0.35);
+  .confirmar-free__item:nth-child(1) { animation-delay: 0.5s; }
+  .confirmar-free__item:nth-child(2) { animation-delay: 0.56s; }
+  .confirmar-free__item:nth-child(3) { animation-delay: 0.62s; }
+  .confirmar-free__item:nth-child(4) { animation-delay: 0.68s; }
 
-    &__titulo {
-      font-size: 0.6875rem;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      font-weight: var(--font-weight-medium);
-      color: var(--rojo-normal);
-      font-family: var(--font-family-mono, ui-monospace, monospace);
-    }
-
-    &__lista {
-      display: flex;
-      flex-direction: column;
-      gap: var(--spacing-size-s);
-    }
+  .confirmar-free__titulo {
+    opacity: 0;
+    transform: translateY(0.6rem);
+    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
   }
 
-  &__perdida {
-    display: flex;
-    align-items: baseline;
-    gap: var(--spacing-size-m);
-    font-size: var(--font-size-md);
-    color: var(--texto-medio);
-
-    &__icono {
-      color: hsla(0, 79%, 60%, 0.7);
-      font-size: 0.625rem;
-      font-family: var(--font-family-mono, ui-monospace, monospace);
-      flex-shrink: 0;
-    }
+  .confirmar-free__descripcion {
+    opacity: 0;
+    transform: translateY(0.6rem);
+    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
   }
 
-  // Botones finales: "confirmar gratis" o "mejor paso a Pro"
-  &__acciones {
-    display: flex;
-    align-items: stretch;
-    gap: var(--spacing-size-m);
-    margin-top: var(--spacing-size-xl);
-    padding-top: var(--spacing-size-xl);
-    border-top: 1px solid var(--borde-suave);
-
-    @media (max-width: 60rem) {
-      flex-direction: column-reverse;
-    }
+  .confirmar-free__paso {
+    opacity: 0;
+    transform: translateY(0.6rem);
+    animation: confirmarFreeAparecer 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  &__boton {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: var(--spacing-size-m);
-    height: 2.75rem;
-    padding: 0 var(--spacing-size-xl);
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-medium);
-    letter-spacing: -0.005em;
-    border-radius: var(--radius-s);
-    transition:
-      transform 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-      background-color 0.2s ease,
-      color 0.2s ease;
+  .confirmar-free__paso:nth-child(1) { animation-delay: 0.6s; }
+  .confirmar-free__paso:nth-child(2) { animation-delay: 0.66s; }
+  .confirmar-free__paso:nth-child(3) { animation-delay: 0.72s; }
 
-    &:hover {
-      transform: translateY(-1px);
-    }
+  .confirmar-free__perdidas {
+    opacity: 0;
+    transform: translateY(0.6rem);
+    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+  }
 
-    &:active {
-      transform: translateY(0) scale(0.985);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--amarillo-normal);
-      outline-offset: 2px;
-    }
-
-    &--secundario {
-      flex: 0 0 auto;
-
-      @media (max-width: 60rem) {
-        width: 100%;
-      }
-    }
-
-    &--principal {
-      flex: 1;
-
-      &:hover .confirmar-free__boton__flecha {
-        transform: translateX(3px);
-      }
-
-      @media (max-width: 60rem) {
-        width: 100%;
-      }
-    }
-
-    &__flecha {
-      font-size: 0.75rem;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+  .confirmar-free__acciones {
+    opacity: 0;
+    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
   }
 }
 
-@keyframes confirmarFreeEntrada {
+@keyframes confirmarFreeSubir {
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes confirmarFreeAparecer {
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
 
-@keyframes confirmarFreePasoEntrada {
-  to {
-    opacity: 1;
-    transform: translateX(0);
+// -------------------------------------------------- RESPONSIVE
+
+// Banda tablet: se mantienen las dos columnas pero compactas, para que el
+// CTA no caiga dos pantallas por debajo del pliegue.
+@media (max-width: 60rem) {
+
+  .confirmar-free__barra {
+    padding: 1.25rem 1.5rem;  /* 20px 24px */
+  }
+
+  .confirmar-free__contenedor {
+    padding: 1.5rem 1.5rem 3rem;   /* 24px 24px 48px */
+  }
+
+  .confirmar-free__plan {
+    padding-right: 2.25rem;   /* 36px */
+  }
+
+  .confirmar-free__decision {
+    padding-left: 2.25rem;    /* 36px */
+  }
+
+  .confirmar-free__plan__nombre {
+    font-size: 4.25rem;       /* 68px */
+  }
+
+  .confirmar-free__plan__precio {
+    font-size: 2.25rem;       /* 36px */
+  }
+
+  .confirmar-free__titulo {
+    font-size: 2.1rem;        /* 34px */
+  }
+
+  .confirmar-free__eyebrow {
+    margin-bottom: 1.5rem;    /* 24px */
+  }
+
+  .confirmar-free__plan__resumen {
+    margin-bottom: 2rem;      /* 32px */
+  }
+
+  .confirmar-free__acciones {
+    gap: 1.25rem;             /* 20px */
+    padding-top: 2rem;        /* 32px */
+  }
+
+  .confirmar-free__cta {
+    padding: 0 1.5rem;        /* 24px */
+  }
+}
+
+// Por debajo de ~760px las columnas se apilan.
+@media (max-width: 47.5rem) {
+
+  .confirmar-free__barra {
+    max-width: 37rem;         /* 34rem de columnas + 1.5rem por lado */
+  }
+
+  .confirmar-free__columnas {
+    flex-direction: column;
+    max-width: 34rem;         /* 544px */
+  }
+
+  .confirmar-free__plan {
+    padding-right: 0;
+    padding-bottom: 2.25rem;  /* 36px */
+  }
+
+  .confirmar-free__decision {
+    padding-left: 0;
+    padding-top: 2.25rem;     /* 36px */
+    border-left: 0;
+    border-top: 1px solid var(--linea);
+  }
+
+  // En columna, el rail inferior de la lista y el border-top de decision
+  // formaban dos lineas paralelas: se deja solo el separador de columnas.
+  .confirmar-free__item:last-child {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 40rem) {
+
+  .confirmar-free__metadatos {
+    display: none;
+  }
+}
+
+@media (max-width: 30rem) {
+
+  .confirmar-free__plan__nombre {
+    font-size: 3.5rem;        /* 56px */
+  }
+
+  .confirmar-free__plan__precio {
+    font-size: 2rem;          /* 32px */
+  }
+
+  .confirmar-free__plan__periodo {
+    font-size: 0.85rem;       /* 14px */
+  }
+
+  .confirmar-free__titulo {
+    font-size: 1.85rem;       /* 30px */
+  }
+
+  .confirmar-free__volver {
+    padding: 0.85rem 0;       /* 14px, area tactil de 44px */
+  }
+
+  .confirmar-free__acciones {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 1.25rem;             /* 20px */
+  }
+
+  // En columna, flex: 1 (basis 0) aplastaba el alto del boton a 21px; el
+  // ancho completo ya lo da el align-items: stretch del contenedor.
+  .confirmar-free__cta {
+    flex: none;
+  }
+
+  .confirmar-free__cancelar {
+    align-self: center;
+    min-height: 2.75rem;      /* 44px */
   }
 }

@@ -1,27 +1,27 @@
 // Todas las variables CSS del proyecto. El tema claro las sobreescribe al final del archivo.
 
 :root {
-  /* Fondos: del mas claro al mas oscuro de la web */
-  --fondo-normal: hsl(30, 4.65%, 10.78%);
-  --fondo-oscuro: hsl(30, 5.56%, 7.06%);
-  --fondo-tarjeta: hsl(32, 4.11%, 16.47%);
-  --fondo-negro: hsl(0, 0%, 5.1%);
-  --fondo-negro-medio: hsl(28, 7.07%, 8.43%);
+  /* Fondos editoriales: el mismo negro azulado sereno que la landing */
+  --fondo-normal: hsl(230, 8%, 5%);
+  --fondo-oscuro: hsl(230, 8%, 4%);
+  --fondo-tarjeta: hsl(230, 6%, 9%);
+  --fondo-negro: hsl(230, 8%, 3%);
+  --fondo-negro-medio: hsl(230, 7%, 7%);
   --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
-  --negro-cta: hsl(0, 0%, 6.67%);
+  --negro-cta: hsl(230, 8%, 6%);
 
   /* Acento de marca: ámbar sereno alineado con la home (antes amarillo neón). */
   --amarillo-normal: hsl(41, 68%, 56%);
   --amarillo-normal-hover: hsl(39, 70%, 48%);
 
-  /* Textos: tres niveles segun la importancia (titulos, parrafos, apagados) */
-  --texto-claro: hsl(40, 33.33%, 91.37%);
-  --texto-medio: hsl(30, 5.08%, 63.14%);
-  --texto-apagado: hsl(33, 5%, 60%);
+  /* Tinta editorial: tres niveles segun la importancia */
+  --texto-claro: hsl(40, 20%, 92%);
+  --texto-medio: hsl(40, 6%, 62%);
+  --texto-apagado: hsl(40, 5%, 52%);
 
-  /* Bordes finos para separar tarjetas y zonas */
-  --borde-normal: hsla(40, 33.33%, 91.37%, 0.08);
-  --borde-suave: hsla(40, 33.33%, 91.37%, 0.05);
+  /* Lineas de 1px para separar zonas, como en la landing */
+  --borde-normal: hsla(40, 20%, 92%, 0.09);
+  --borde-suave: hsla(40, 20%, 92%, 0.05);
 
   /* Colores de estado: ok, error, aviso, info */
   --verde-normal: hsl(142.09, 70.56%, 45.29%);
@@ -129,7 +129,7 @@
   --sidebar-ancho: 16.25rem;
 
   /* Fondo de la cabecera con un toque translucido para que se vea el blur */
-  --fondo-cabecera: hsla(30, 5.56%, 10%, 0.9);
+  --fondo-cabecera: hsla(230, 8%, 5%, 0.9);
 }
 
 /* Cuando el usuario pide reducir movimiento: ralentiza el spinner para no marear */
@@ -142,25 +142,32 @@
 /* Tema claro: sobreescribe los colores cuando el ThemeService activa modo claro */
 
 .tema-claro {
-  --fondo-normal: hsl(40, 18%, 96%);
-  --fondo-oscuro: hsl(40, 12%, 91%);
-  --fondo-tarjeta: hsl(0, 0%, 100%);
-  --fondo-negro: hsl(40, 10%, 88%);
-  --fondo-negro-medio: hsl(40, 8%, 93%);
+  /* Papel editorial: el mismo claro que la landing */
+  --fondo-normal: hsl(40, 30%, 95%);
+  --fondo-oscuro: hsl(40, 26%, 91%);
+  --fondo-tarjeta: hsl(40, 33%, 97%);
+  --fondo-negro: hsl(40, 22%, 88%);
+  --fondo-negro-medio: hsl(40, 26%, 93%);
   --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
 
-  /* Textos en modo claro: oscuros para que contrasten sobre el fondo blanco */
-  --texto-claro: hsl(30, 12%, 12%);
-  --texto-medio: hsl(30, 5%, 38%);
-  --texto-apagado: hsl(30, 4%, 42%);
+  /* Tinta oscura sobre papel */
+  --texto-claro: hsl(230, 14%, 13%);
+  --texto-medio: hsl(230, 7%, 38%);
+  --texto-apagado: hsl(230, 6%, 44%);
 
-  --borde-normal: hsla(30, 10%, 12%, 0.12);
-  --borde-suave: hsla(30, 10%, 12%, 0.07);
+  --borde-normal: hsla(230, 14%, 13%, 0.13);
+  --borde-suave: hsla(230, 14%, 13%, 0.07);
+
+  /* Ambar profundo: el de 56% se queda corto de contraste sobre papel */
+  --amarillo-normal: hsl(38, 78%, 34%);
+  --amarillo-normal-hover: hsl(38, 80%, 28%);
+  --amarillo-transparente-008: hsla(38, 78%, 34%, 0.08);
+  --amarillo-transparente-030: hsla(38, 78%, 34%, 0.3);
 
   /* El rojo de estado al 60% se quedaba en 3,4:1 sobre fondos claros */
   --rojo-normal: hsl(0, 70%, 44%);
 
-  --fondo-cabecera: hsla(40, 18%, 96%, 0.92);
+  --fondo-cabecera: hsla(40, 30%, 95%, 0.92);
 
   --shadow-sm: 0 0.0625rem 0.1875rem hsla(0, 0%, 0%, 0.06);
   --shadow-md: 0 0.5rem 1.25rem hsla(0, 0%, 0%, 0.08);

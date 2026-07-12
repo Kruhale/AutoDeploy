@@ -13,14 +13,19 @@
 }
 
 .boton {
+  // Outline ambar, el mismo lenguaje que los CTA de la landing.
   &--primario {
     @extend %boton-base;
-    background-color: var(--amarillo-normal);
-    color: var(--fondo-oscuro);
+    background-color: transparent;
+    color: var(--amarillo-normal);
     font-weight: var(--font-weight-bold);
-    border: none;
+    border: 1px solid var(--amarillo-normal);
+    border-radius: var(--radius-full);
 
-    &:hover     { background-color: var(--amarillo-normal-hover); }
+    &:hover {
+      background-color: var(--amarillo-normal);
+      color: var(--fondo-oscuro);
+    }
     &:active    { transform: scale(0.98); }
     &:focus-visible {
       outline: 2px solid var(--amarillo-normal);
@@ -31,12 +36,12 @@
 
   &--secundario {
     @extend %boton-base;
-    background: rgba(240, 236, 226, 0.03);
+    background: hsla(40, 20%, 92%, 0.03);
     color: var(--texto-claro);
     font-weight: var(--font-weight-semibold);
     border: 1px solid var(--borde-normal);
 
-    &:hover     { border-color: rgba(240, 236, 226, 0.2); }
+    &:hover     { border-color: hsla(40, 20%, 92%, 0.2); }
     &:active    { transform: scale(0.98); }
     &:focus-visible {
       outline: 2px solid var(--amarillo-normal);
@@ -54,7 +59,7 @@
 
     &:hover {
       color: var(--texto-claro);
-      border-color: rgba(240, 236, 226, 0.2);
+      border-color: hsla(40, 20%, 92%, 0.2);
     }
     &:active    { transform: scale(0.98); }
     &:focus-visible {

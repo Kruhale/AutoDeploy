@@ -1,7 +1,7 @@
 .visor-eventos {
   display: flex;
   flex-direction: column;
-  background: rgba(240, 236, 226, 0.02);
+  background: hsla(40, 20%, 92%, 0.02);
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-l);
   overflow: hidden;
@@ -77,7 +77,7 @@
     transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
-      background-color: rgba(240, 236, 226, 0.03);
+      background-color: hsla(40, 20%, 92%, 0.03);
     }
 
     &--error {

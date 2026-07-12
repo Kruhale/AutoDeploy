@@ -81,28 +81,26 @@
     max-width: 48rem;
   }
 
-  // Boton de accion principal de la pagina: pill amarillo grande con icono y dos lineas de texto
+  // Boton de accion principal: outline tipo pill, como los CTA de la landing
   &__cta-principal {
     display: inline-flex;
     align-items: center;
     gap: var(--spacing-size-l);
     padding: 0.85rem 1.1rem 0.85rem 0.85rem;
-    background-color: var(--amarillo-normal);
-    color: var(--fondo-oscuro);
-    border: none;
+    background-color: transparent;
+    color: var(--amarillo-normal);
+    border: 1px solid var(--amarillo-normal);
     border-radius: var(--radius-full);
     font-family: var(--font-secondary);
     cursor: pointer;
     text-decoration: none;
     transition:
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+      color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
       background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
-      background-color: var(--amarillo-normal-hover);
-      transform: translateY(-1px);
-      box-shadow: 0 0.625rem 1.25rem hsla(41, 68%, 56%, 0.22);
+      background-color: var(--amarillo-normal);
+      color: var(--fondo-oscuro);
     }
 
     &:active {
@@ -125,7 +123,7 @@
       width: 2rem;
       height: 2rem;
       border-radius: 50%;
-      background-color: hsla(0, 0%, 0%, 0.18);
+      border: 1px solid currentColor;
       font-size: 0.75rem;
     }
 
@@ -279,7 +277,7 @@
 
     &:hover:not(:disabled) {
       border-color: hsla(40, 33.33%, 91.37%, 0.24);
-      background-color: rgba(240, 236, 226, 0.045);
+      background-color: hsla(40, 20%, 92%, 0.045);
       transform: translateY(-1px);
     }
 
@@ -317,7 +315,7 @@
       height: 3rem;
       border-radius: 50%;
       border: 1px solid var(--borde-normal);
-      background-color: rgba(240, 236, 226, 0.025);
+      background-color: hsla(40, 20%, 92%, 0.025);
       color: var(--texto-apagado);
       font-size: 1.15rem;
       margin-bottom: 0.4rem;

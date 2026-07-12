@@ -3,7 +3,7 @@
   flex-direction: column;
   gap: var(--spacing-size-l);
   padding: var(--spacing-size-2xl);
-  background: rgba(240, 236, 226, 0.03);
+  background: hsla(40, 20%, 92%, 0.03);
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-l);
 
@@ -62,15 +62,15 @@
     transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
-      background-color: rgba(240, 236, 226, 0.03);
+      background-color: hsla(40, 20%, 92%, 0.03);
     }
 
     &:active {
-      background-color: rgba(240, 236, 226, 0.06);
+      background-color: hsla(40, 20%, 92%, 0.06);
     }
 
     &:focus-within {
-      background-color: rgba(240, 236, 226, 0.05);
+      background-color: hsla(40, 20%, 92%, 0.05);
       outline: 2px solid var(--amarillo-normal);
       outline-offset: -2px;
     }

@@ -1037,7 +1037,7 @@ app-cuenta {
 
 .cuenta__boton-ghost:hover:not(:disabled) {
   border-color: hsla(40, 33.33%, 91.37%, 0.24);
-  background-color: rgba(240, 236, 226, 0.045);
+  background-color: hsla(40, 20%, 92%, 0.045);
   transform: translateY(-1px);
 }
 
@@ -1158,7 +1158,7 @@ app-cuenta {
 }
 
 .cuenta__clave:hover {
-  background-color: rgba(240, 236, 226, 0.025);
+  background-color: hsla(40, 20%, 92%, 0.025);
 }
 
 .cuenta__clave__icono {
@@ -1300,7 +1300,7 @@ app-cuenta {
   align-items: center;
   width: 2.4rem;
   height: 1.35rem;
-  background-color: rgba(240, 236, 226, 0.06);
+  background-color: hsla(40, 20%, 92%, 0.06);
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-full);
   cursor: pointer;
@@ -1440,7 +1440,6 @@ app-cuenta {
 
         .cuenta__tema__opcion__circulo {
           background: var(--amarillo-normal);
-          box-shadow: 0 0 1.5rem hsla(41, 68%, 56%, 0.4);
         }
       }
     }

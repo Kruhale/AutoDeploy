@@ -78,7 +78,7 @@
     align-items: center;
     width: 2.4rem;
     height: 1.35rem;
-    background-color: rgba(240, 236, 226, 0.06);
+    background-color: hsla(40, 20%, 92%, 0.06);
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-full);
     cursor: pointer;
@@ -170,7 +170,7 @@
       width: 2.5rem;
       height: 2.5rem;
       border-radius: var(--radius-m);
-      background-color: rgba(240, 236, 226, 0.04);
+      background-color: hsla(40, 20%, 92%, 0.04);
       border: 1px solid var(--borde-normal);
       color: var(--texto-medio);
       font-size: 0.95rem;

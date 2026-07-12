@@ -56,7 +56,7 @@ export class Login implements AfterViewInit, OnDestroy {
   }
 
   alternarVisibilidadPassword(): void {
-    this.passwordEsVisible.update(function(estadoActual) {
+    this.passwordEsVisible.update(function (estadoActual) {
       return !estadoActual;
     });
   }
@@ -114,7 +114,9 @@ export class Login implements AfterViewInit, OnDestroy {
   }
 
   private generarCodigoSesion(): string {
-    const aleatorio = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
+    const aleatorio = Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .toUpperCase();
     return ("000000" + aleatorio).slice(-6);
   }
 }

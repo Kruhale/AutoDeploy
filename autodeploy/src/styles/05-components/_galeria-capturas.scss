@@ -57,7 +57,7 @@
   &__placeholder {
     grid-column: 1 / -1;
     padding: var(--spacing-size-3xl);
-    background: rgba(240, 236, 226, 0.02);
+    background: hsla(40, 20%, 92%, 0.02);
     border: 1px dashed var(--borde-normal);
     border-radius: var(--radius-l);
     text-align: center;

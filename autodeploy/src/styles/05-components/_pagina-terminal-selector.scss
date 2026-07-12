@@ -17,7 +17,7 @@
     transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
-      background-color: rgba(240, 236, 226, 0.035);
+      background-color: hsla(40, 20%, 92%, 0.035);
 
       .pagina-terminal-selector__servidor__icono {
         background-color: var(--amarillo-transparente-008);
@@ -43,7 +43,7 @@
       width: 2.25rem;
       height: 2.25rem;
       border-radius: 50%;
-      background-color: rgba(240, 236, 226, 0.04);
+      background-color: hsla(40, 20%, 92%, 0.04);
       border: 1px solid var(--borde-normal);
       color: var(--texto-medio);
       font-size: 0.85rem;

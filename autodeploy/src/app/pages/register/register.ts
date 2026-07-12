@@ -9,7 +9,7 @@ import { EscenaRedServidores } from "../home/escena-red-servidores";
 
 // Validador cruzado: la confirmacion debe coincidir con la password
 function confirmarPasswordCoincide(): ValidatorFn {
-  return function(grupo: AbstractControl): ValidationErrors | null {
+  return function (grupo: AbstractControl): ValidationErrors | null {
     const password = grupo.get("password")?.value;
     const confirmar = grupo.get("confirmPassword")?.value;
     if (!password || !confirmar) {
@@ -70,27 +70,23 @@ export class Register implements AfterViewInit, OnDestroy {
   ) {
     const componente = this;
 
-    this.criterioLongitud = computed(function() {
+    this.criterioLongitud = computed(function () {
       return (componente.passwordSignal() ?? "").length >= 8;
     });
-    this.criterioMayuscula = computed(function() {
+    this.criterioMayuscula = computed(function () {
       return /[A-Z]/.test(componente.passwordSignal() ?? "");
     });
-    this.criterioMinuscula = computed(function() {
+    this.criterioMinuscula = computed(function () {
       return /[a-z]/.test(componente.passwordSignal() ?? "");
     });
-    this.criterioNumero = computed(function() {
+    this.criterioNumero = computed(function () {
       return /[0-9]/.test(componente.passwordSignal() ?? "");
     });
-    this.criterioEspecial = computed(function() {
+    this.criterioEspecial = computed(function () {
       return /[^A-Za-z0-9]/.test(componente.passwordSignal() ?? "");
     });
-    this.passwordEsValida = computed(function() {
-      return componente.criterioLongitud()
-        && componente.criterioMayuscula()
-        && componente.criterioMinuscula()
-        && componente.criterioNumero()
-        && componente.criterioEspecial();
+    this.passwordEsValida = computed(function () {
+      return componente.criterioLongitud() && componente.criterioMayuscula() && componente.criterioMinuscula() && componente.criterioNumero() && componente.criterioEspecial();
     });
   }
 
@@ -111,13 +107,13 @@ export class Register implements AfterViewInit, OnDestroy {
   }
 
   alternarVisibilidadPassword(): void {
-    this.passwordEsVisible.update(function(valor) {
+    this.passwordEsVisible.update(function (valor) {
       return !valor;
     });
   }
 
   alternarVisibilidadConfirmPassword(): void {
-    this.confirmPasswordEsVisible.update(function(valor) {
+    this.confirmPasswordEsVisible.update(function (valor) {
       return !valor;
     });
   }
@@ -175,7 +171,9 @@ export class Register implements AfterViewInit, OnDestroy {
   }
 
   private generarCodigoSesion(): string {
-    const aleatorio = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
+    const aleatorio = Math.floor(Math.random() * 16777215)
+      .toString(16)
+      .toUpperCase();
     return ("000000" + aleatorio).slice(-6);
   }
 }

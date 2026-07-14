@@ -1,0 +1,478 @@
+@use "../01-tools/mixins" as *;
+@use "../01-tools/funciones" as *;
+
+.pagina-style-guide {
+  @include contenedor(64rem);
+  padding-block: var(--spacing-size-6xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-7xl);
+
+  &__cabecera {
+    @include flex-columna;
+    gap: var(--spacing-size-l);
+    padding-bottom: var(--spacing-size-3xl);
+    border-bottom: 1px solid var(--borde-normal);
+  }
+
+  &__superior {
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    color: var(--texto-apagado);
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+  }
+
+  &__titulo {
+    font-family: var(--font-secondary);
+    font-size: fluido(2rem, 3rem);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--line-height-tight);
+    color: var(--texto-claro);
+    letter-spacing: -0.03em;
+  }
+
+  &__intro {
+    max-width: 42rem;
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-relaxed);
+    color: var(--texto-medio);
+  }
+
+  // Indice lateral que se queda fijo al hacer scroll por la guia de estilos
+  &__indice {
+    position: sticky;
+    top: var(--spacing-size-2xl);
+    align-self: flex-start;
+    padding: var(--spacing-size-l) var(--spacing-size-2xl);
+    background: var(--fondo-tarjeta);
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-l);
+    z-index: 1;
+  }
+
+  &__indice-lista {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-size-m) var(--spacing-size-2xl);
+    list-style: decimal-leading-zero inside;
+    color: var(--texto-medio);
+    counter-reset: indice;
+
+    a {
+      color: var(--texto-medio);
+      @include transicion(color);
+
+      &:hover { color: var(--texto-claro); }
+      &:focus-visible {
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: 2px;
+        border-radius: var(--radius-xs);
+      }
+    }
+  }
+
+  // Cada bloque de la guia (colores, tipografia, botones...) apilados en vertical
+  &__seccion {
+    @include flex-columna;
+    gap: var(--spacing-size-3xl);
+
+    &__cabecera {
+      @include flex-columna;
+      gap: var(--spacing-size-s);
+      padding-bottom: var(--spacing-size-2xl);
+      border-bottom: 1px solid var(--borde-suave);
+    }
+
+    &__numero {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+      color: var(--amarillo-normal);
+      letter-spacing: 0.2em;
+    }
+
+    &__titulo {
+      font-family: var(--font-secondary);
+      font-size: var(--font-size-3xl);
+      font-weight: var(--font-weight-bold);
+      color: var(--texto-claro);
+      line-height: var(--line-height-tight);
+    }
+
+    &__descripcion {
+      font-size: var(--font-size-base);
+      line-height: var(--line-height-relaxed);
+      color: var(--texto-medio);
+      max-width: 44rem;
+    }
+  }
+
+  &__bloque {
+    @include flex-columna;
+    gap: var(--spacing-size-l);
+    padding: var(--spacing-size-2xl);
+    background: var(--fondo-tarjeta);
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-l);
+
+    &__titulo {
+      font-size: var(--font-size-lg);
+      font-weight: var(--font-weight-semibold);
+      color: var(--texto-claro);
+    }
+  }
+
+  // Cuadricula que muestra varias muestras (colores, iconos...) en horizontal
+  &__galeria {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-size-l);
+    align-items: center;
+  }
+
+  &__lista-tipografia {
+    list-style: none;
+    @include flex-columna;
+    gap: var(--spacing-size-l);
+
+    li {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: var(--spacing-size-2xl);
+      padding-bottom: var(--spacing-size-m);
+      border-bottom: 1px dashed var(--borde-suave);
+
+      code {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-xs);
+        color: var(--texto-apagado);
+      }
+    }
+  }
+
+  &__lista-pesos {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--spacing-size-l);
+
+    li {
+      padding: var(--spacing-size-m) var(--spacing-size-l);
+      background: hsla(40, 20%, 92%, 0.03);
+      border-radius: var(--radius-m);
+      color: var(--texto-claro);
+    }
+  }
+
+  &__lista-color {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: var(--spacing-size-l);
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-size-m);
+      padding: var(--spacing-size-m);
+      background: hsla(40, 20%, 92%, 0.02);
+      border: 1px solid var(--borde-suave);
+      border-radius: var(--radius-m);
+
+      code {
+        font-family: var(--font-mono);
+        font-size: var(--font-size-xs);
+        color: var(--texto-medio);
+      }
+    }
+  }
+
+  &__muestra {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: var(--radius-m);
+    border: 1px solid var(--borde-normal);
+    flex-shrink: 0;
+  }
+
+  // Lista con las muestras de espaciado (xxs, xs, s...) en barras horizontales
+  &__lista-espaciado {
+    list-style: none;
+    @include flex-columna;
+    gap: var(--spacing-size-m);
+
+    li {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-size-l);
+      padding: var(--spacing-size-s) var(--spacing-size-l);
+      background: hsla(40, 20%, 92%, 0.02);
+      border-radius: var(--radius-m);
+    }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: var(--font-size-xs);
+      color: var(--texto-medio);
+    }
+  }
+
+  &__muestra-espaciado {
+    height: 0.5rem;
+    background-color: var(--amarillo-normal);
+    border-radius: var(--radius-xs);
+    flex-shrink: 0;
+  }
+
+  // Formulario de ejemplo para mostrar como se ven los inputs, selects y textareas
+  &__formulario {
+    @include flex-columna;
+    gap: var(--spacing-size-3xl);
+    padding: var(--spacing-size-3xl);
+    background: var(--fondo-tarjeta);
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-l);
+  }
+
+  &__fieldset {
+    border: 0;
+    padding: 0;
+    @include flex-columna;
+    gap: var(--spacing-size-l);
+  }
+
+  &__legend {
+    font-family: var(--font-secondary);
+    font-size: var(--font-size-md);
+    font-weight: var(--font-weight-bold);
+    color: var(--texto-claro);
+    margin-bottom: var(--spacing-size-m);
+  }
+
+  // Galeria de tarjetas para enseñar como cambian de tamaño segun el ancho del contenedor
+  &__galeria-tarjetas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: var(--spacing-size-2xl);
+  }
+
+  // Caja de demostracion donde se ven las animaciones en accion
+  &__demo-animacion {
+    padding: var(--spacing-size-l) var(--spacing-size-2xl);
+    background: hsla(41, 68%, 56%, 0.08);
+    border: 1px solid var(--amarillo-normal-hover);
+    border-radius: var(--radius-m);
+    color: var(--texto-claro);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  &__demo-stagger {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(8rem, 1fr));
+    gap: var(--spacing-size-m);
+
+    li {
+      padding: var(--spacing-size-m) var(--spacing-size-l);
+      background: var(--fondo-tarjeta);
+      border: 1px solid var(--borde-normal);
+      border-radius: var(--radius-m);
+      text-align: center;
+      color: var(--texto-claro);
+    }
+  }
+
+  @include movil {
+    padding-block: var(--spacing-size-4xl);
+    gap: var(--spacing-size-5xl);
+
+    &__indice { position: static; }
+  }
+}
+
+// Variantes de tamaño de letra (5xl, 4xl, ...) para mostrar cada token en la guia
+.pagina-style-guide__muestra-tipo--5xl {
+  font-size: var(--font-size-5xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-style-guide__muestra-tipo--4xl {
+  font-size: var(--font-size-4xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-style-guide__muestra-tipo--3xl {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-style-guide__muestra-tipo--2xl {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-style-guide__muestra-tipo--xl {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-style-guide__muestra-tipo--lg {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-style-guide__muestra-tipo--base {
+  font-size: var(--font-size-base);
+}
+
+.pagina-style-guide__muestra-tipo--md {
+  font-size: var(--font-size-md);
+}
+
+.pagina-style-guide__muestra-tipo--sm {
+  font-size: var(--font-size-sm);
+}
+
+.pagina-style-guide__muestra-tipo--xs {
+  font-size: var(--font-size-xs);
+}
+
+// Variantes de grosor de fuente (400 normal, 500 medium, etc) para la guia
+.pagina-style-guide__muestra-peso--400 {
+  font-weight: var(--font-weight-normal);
+}
+
+.pagina-style-guide__muestra-peso--500 {
+  font-weight: var(--font-weight-medium);
+}
+
+.pagina-style-guide__muestra-peso--600 {
+  font-weight: var(--font-weight-semibold);
+}
+
+.pagina-style-guide__muestra-peso--700 {
+  font-weight: var(--font-weight-bold);
+}
+
+.pagina-style-guide__muestra-peso--800 {
+  font-weight: var(--font-weight-extrabold);
+}
+
+.pagina-style-guide__muestra-peso--900 {
+  font-weight: var(--font-weight-black);
+}
+
+// Cuadraditos con cada color de fondo del proyecto
+.pagina-style-guide__muestra--fondo-normal {
+  background-color: var(--fondo-normal);
+}
+
+.pagina-style-guide__muestra--fondo-oscuro {
+  background-color: var(--fondo-oscuro);
+}
+
+.pagina-style-guide__muestra--fondo-tarjeta {
+  background-color: var(--fondo-tarjeta);
+}
+
+.pagina-style-guide__muestra--fondo-negro {
+  background-color: var(--fondo-negro);
+}
+
+.pagina-style-guide__muestra--fondo-cta-claro {
+  background-color: var(--fondo-cta-claro);
+}
+
+.pagina-style-guide__muestra--amarillo-normal {
+  background-color: var(--amarillo-normal);
+}
+
+.pagina-style-guide__muestra--amarillo-normal-hover {
+  background-color: var(--amarillo-normal-hover);
+}
+
+.pagina-style-guide__muestra--texto-claro {
+  background-color: var(--texto-claro);
+}
+
+.pagina-style-guide__muestra--texto-medio {
+  background-color: var(--texto-medio);
+}
+
+.pagina-style-guide__muestra--texto-apagado {
+  background-color: var(--texto-apagado);
+}
+
+.pagina-style-guide__muestra--verde-normal {
+  background-color: var(--verde-normal);
+}
+
+.pagina-style-guide__muestra--rojo-normal {
+  background-color: var(--rojo-normal);
+}
+
+.pagina-style-guide__muestra--rojo-critico {
+  background-color: var(--rojo-critico);
+}
+
+.pagina-style-guide__muestra--naranja-normal {
+  background-color: var(--naranja-normal);
+}
+
+.pagina-style-guide__muestra--azul-normal {
+  background-color: var(--azul-normal);
+}
+
+.pagina-style-guide__muestra--cyan-normal {
+  background-color: var(--cyan-normal);
+}
+
+.pagina-style-guide__muestra--teal-normal {
+  background-color: var(--teal-normal);
+}
+
+// Barras horizontales con cada token de espaciado en su tamaño real
+.pagina-style-guide__muestra-espaciado--xxs {
+  width: var(--spacing-size-xxs);
+}
+
+.pagina-style-guide__muestra-espaciado--xs {
+  width: var(--spacing-size-xs);
+}
+
+.pagina-style-guide__muestra-espaciado--s {
+  width: var(--spacing-size-s);
+}
+
+.pagina-style-guide__muestra-espaciado--m {
+  width: var(--spacing-size-m);
+}
+
+.pagina-style-guide__muestra-espaciado--l {
+  width: var(--spacing-size-l);
+}
+
+.pagina-style-guide__muestra-espaciado--xl {
+  width: var(--spacing-size-xl);
+}
+
+.pagina-style-guide__muestra-espaciado--2xl {
+  width: var(--spacing-size-2xl);
+}
+
+.pagina-style-guide__muestra-espaciado--3xl {
+  width: var(--spacing-size-3xl);
+}
+
+.pagina-style-guide__muestra-espaciado--4xl {
+  width: var(--spacing-size-4xl);
+}
+
+.pagina-style-guide__muestra-espaciado--5xl {
+  width: var(--spacing-size-5xl);
+}
+
+.pagina-style-guide__muestra-espaciado--6xl {
+  width: var(--spacing-size-6xl);
+}

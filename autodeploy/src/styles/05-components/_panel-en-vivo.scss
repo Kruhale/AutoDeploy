@@ -1,0 +1,416 @@
+// La pieza central del capitulo del hero: composicion en CAPAS. Una ventana
+// satelite de logs asoma detras, la ventana principal es de cristal (las
+// fichas 3D del fondo se adivinan a traves), y un toast de exito entra cuando
+// el despliegue llega a "live". Vive en .landing: tokens y tema.
+.panel-en-vivo {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+// ------------------------------------------------ VENTANA SATELITE (detras)
+.panel-en-vivo__satelite {
+  position: absolute;
+  top: -2.6rem;
+  left: -3.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.7rem 0.95rem 0.85rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radius-m);
+  background-color: hsla(40, 33%, 91%, 0.025);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.04em;
+  color: var(--tinta-apagada);
+  white-space: nowrap;
+  rotate: -2deg;
+  filter: blur(0.6px);
+  opacity: 0.8;
+  box-shadow: 0 0.8rem 2rem hsla(230, 12%, 2%, 0.3);
+}
+
+html.tema-claro .panel-en-vivo__satelite {
+  background-color: hsla(40, 30%, 96%, 0.8);
+  box-shadow: 0 0.8rem 2rem hsla(35, 30%, 40%, 0.12);
+}
+
+.panel-en-vivo__satelite__titulo {
+  font-size: 0.52rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.panel-en-vivo__satelite__linea {
+  color: var(--tinta-suave);
+  opacity: 0.8;
+}
+
+@media (max-width: 640px) {
+  .panel-en-vivo__satelite {
+    display: none;
+  }
+}
+
+// ------------------------------------------------ VENTANA PRINCIPAL (cristal)
+.panel-en-vivo__ventana {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--linea);
+  border-radius: var(--radius-l);
+  // Cristal: el caos 3D del fondo se adivina a traves de la ventana.
+  background-color: hsla(230, 10%, 6%, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  overflow: hidden;
+  // Sombra profunda tintada + un susurro ambar de "luz de pantalla".
+  box-shadow:
+    inset 0 1px 0 hsla(40, 20%, 92%, 0.08),
+    inset 0 0 0 1px hsla(40, 20%, 92%, 0.03),
+    0 2.6rem 5.5rem hsla(230, 12%, 2%, 0.55),
+    0 0 3.5rem hsla(42, 62%, 50%, 0.05);
+  transition: border-color var(--duration-base) var(--ease-suave);
+}
+
+.panel-en-vivo__ventana:hover {
+  border-color: var(--tinta-apagada);
+}
+
+html.tema-claro .panel-en-vivo__ventana {
+  background-color: hsla(40, 30%, 96%, 0.62);
+  box-shadow:
+    inset 0 1px 0 hsla(40, 40%, 99%, 0.85),
+    inset 0 0 0 1px hsla(40, 40%, 99%, 0.4),
+    0 2.6rem 5.5rem hsla(35, 30%, 35%, 0.18),
+    0 0 3.5rem hsla(38, 70%, 40%, 0.06);
+}
+
+// Sheen: un barrido de luz diagonal cruza el cristal cada ~7s.
+.panel-en-vivo__ventana::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 42%, hsla(40, 30%, 96%, 0.045) 50%, transparent 58%);
+  transform: translateX(-120%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .panel-en-vivo__ventana::after {
+    animation: panel-en-vivo-sheen 7s var(--ease-suave) infinite;
+  }
+}
+
+@keyframes panel-en-vivo-sheen {
+  0% {
+    transform: translateX(-120%);
+  }
+  32% {
+    transform: translateX(120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.panel-en-vivo__barra {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.2rem;
+  border-bottom: 1px solid var(--linea);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  color: var(--tinta-apagada);
+}
+
+.panel-en-vivo__direccion {
+  padding: 0.28rem 0.75rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radius-full);
+  color: var(--tinta-suave);
+}
+
+.panel-en-vivo__conexion {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-transform: uppercase;
+  font-size: 0.56rem;
+  letter-spacing: 0.14em;
+}
+
+.panel-en-vivo__conexion__punto {
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--verde-normal);
+}
+
+.panel-en-vivo__cuerpo {
+  display: flex;
+  gap: 1.6rem;
+  padding: 1.3rem 1.2rem 1.4rem;
+}
+
+.panel-en-vivo__servidor {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.panel-en-vivo__despliegue {
+  flex: 1 1 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+  border-left: 1px solid var(--linea);
+  padding-left: 1.6rem;
+}
+
+.panel-en-vivo__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+}
+
+.panel-en-vivo__nombre {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-family: var(--font-secondary);
+  font-size: 1.2rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.01em;
+  color: var(--tinta);
+}
+
+.panel-en-vivo__estado {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--verde-normal);
+}
+
+.panel-en-vivo__metrica {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.panel-en-vivo__metrica__nombre {
+  width: 1.9rem;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+}
+
+.panel-en-vivo__metrica__valor {
+  min-width: 2.2rem;
+  text-align: right;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-suave);
+}
+
+// La grafica de CPU: linea ambar latiendo (los puntos los pinta el signal).
+.panel-en-vivo__grafica {
+  flex: 1;
+  height: 1.6rem;
+  min-width: 0;
+  color: var(--acento);
+  opacity: 0.9;
+}
+
+.panel-en-vivo__barra-ram {
+  flex: 1;
+  height: 0.3rem;
+  border-radius: var(--radius-full);
+  background-color: hsla(40, 20%, 92%, 0.08);
+  overflow: hidden;
+}
+
+html.tema-claro .panel-en-vivo__barra-ram {
+  background-color: hsla(230, 14%, 13%, 0.1);
+}
+
+.panel-en-vivo__barra-ram__avance {
+  display: block;
+  width: 41%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  background-color: var(--tinta-suave);
+}
+
+.panel-en-vivo__uptime {
+  margin-top: 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--tinta-apagada);
+  font-variant-numeric: tabular-nums;
+}
+
+.panel-en-vivo__pipeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.panel-en-vivo__paso {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  color: var(--tinta-apagada);
+  transition: color var(--duration-base) var(--ease-suave);
+}
+
+.panel-en-vivo__paso__senal {
+  width: 0.9rem;
+  flex-shrink: 0;
+  text-align: center;
+}
+
+// Estados del pipeline: pendiente (hueco), activo (ambar), hecho (tinta ✓).
+.panel-en-vivo__paso--pendiente .panel-en-vivo__paso__senal::before {
+  content: "○";
+  opacity: 0.5;
+}
+
+.panel-en-vivo__paso--activo {
+  color: var(--acento);
+}
+
+.panel-en-vivo__paso--activo .panel-en-vivo__paso__senal::before {
+  content: "●";
+}
+
+.panel-en-vivo__paso--hecho {
+  color: var(--tinta-suave);
+}
+
+.panel-en-vivo__paso--hecho .panel-en-vivo__paso__senal::before {
+  content: "✓";
+}
+
+.panel-en-vivo__paso__etiqueta {
+  min-width: 6.2rem;
+}
+
+.panel-en-vivo__paso__detalle {
+  flex: 1;
+  font-size: 0.6rem;
+  color: var(--tinta-apagada);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// La duracion solo aparece cuando el paso esta hecho: informacion ganada.
+.panel-en-vivo__paso__duracion {
+  font-size: 0.6rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-apagada);
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-suave);
+}
+
+.panel-en-vivo__paso--hecho .panel-en-vivo__paso__duracion {
+  opacity: 1;
+}
+
+// El ultimo paso completado ("live") se queda en ambar: el climax del bucle.
+.panel-en-vivo__paso--hecho:last-child {
+  color: var(--acento);
+}
+
+.panel-en-vivo__paso--hecho:last-child .panel-en-vivo__paso__detalle {
+  color: var(--acento);
+}
+
+// ------------------------------------------------ TOAST DE EXITO (delante)
+.panel-en-vivo__toast {
+  position: absolute;
+  // Mas a la derecha: la notificacion flota fuera del panel, no lo tapa.
+  right: -4rem;
+  bottom: 1.6rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  padding: 0.65rem 0.95rem;
+  border: 1px solid var(--amarillo-transparente-030);
+  border-radius: var(--radius-m);
+  background-color: hsla(230, 10%, 7%, 0.9);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.05em;
+  color: var(--acento);
+  white-space: nowrap;
+  box-shadow: 0 1.1rem 2.6rem hsla(230, 12%, 2%, 0.5);
+  opacity: 0;
+  transform: translateY(0.9rem);
+  transition:
+    opacity var(--duration-base) var(--ease-suave),
+    transform var(--duration-base) var(--ease-vaiven);
+}
+
+html.tema-claro .panel-en-vivo__toast {
+  background-color: hsla(40, 30%, 97%, 0.95);
+  box-shadow: 0 1.1rem 2.6rem hsla(35, 30%, 35%, 0.18);
+}
+
+.panel-en-vivo__toast--visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.panel-en-vivo__toast__senal {
+  font-weight: var(--font-weight-bold);
+}
+
+.panel-en-vivo__toast__tiempo {
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-apagada);
+}
+
+@media (max-width: 640px) {
+  .panel-en-vivo__toast {
+    right: 0;
+  }
+}
+
+// En movil el cuerpo se apila y el pipeline pierde su medianil.
+@media (max-width: 560px) {
+  .panel-en-vivo__cuerpo {
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .panel-en-vivo__despliegue {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 1px solid var(--linea);
+    padding-top: 1.1rem;
+  }
+}

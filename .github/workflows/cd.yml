@@ -1,0 +1,222 @@
+name: CD
+
+# Dispara cuando el workflow CI termina correctamente SOLO sobre main,
+# o cuando se lanza manualmente desde la pestaña Actions (tambien restringido a main).
+# Las ramas feature/dev nunca despliegan: el merge a main es el unico camino a produccion.
+on:
+  workflow_run:
+    workflows: ["CI"]
+    branches: ["main"]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+  actions: read
+
+# Evita que dos deploys se pisen
+concurrency:
+  group: cd-deploy
+  cancel-in-progress: false
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  build-and-push:
+    name: Construir y publicar imágenes en GHCR
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    # Guard doble: workflow_run ya filtra por main, pero workflow_dispatch puede lanzarse
+    # desde la UI sobre cualquier rama. Aqui exigimos ademas que sea main.
+    if: >
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main') ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main')
+    outputs:
+      sha_short: ${{ steps.tag.outputs.sha_short }}
+      owner_lc: ${{ steps.owner.outputs.lc }}
+
+    steps:
+      - name: Determinar SHA a desplegar
+        id: tag
+        run: |
+          if [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+            FULL_SHA="${{ github.event.workflow_run.head_sha }}"
+          else
+            FULL_SHA="${{ github.sha }}"
+          fi
+          echo "full_sha=$FULL_SHA" >> "$GITHUB_OUTPUT"
+          echo "sha_short=${FULL_SHA:0:7}" >> "$GITHUB_OUTPUT"
+          echo "::notice::Building SHA $FULL_SHA"
+
+      - name: Checkout en el SHA correcto
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.tag.outputs.full_sha }}
+
+      - name: Owner en minúsculas (ghcr lo exige)
+        id: owner
+        run: echo "lc=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]')" >> "$GITHUB_OUTPUT"
+
+      - name: Configurar Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login en GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & push imagen backend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.lc }}/autodeploy-backend:latest
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.lc }}/autodeploy-backend:${{ steps.tag.outputs.sha_short }}
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,scope=backend,mode=max
+
+      - name: Build & push imagen frontend
+        uses: docker/build-push-action@v5
+        with:
+          context: ./autodeploy
+          file: ./autodeploy/Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.lc }}/autodeploy-frontend:latest
+            ${{ env.REGISTRY }}/${{ steps.owner.outputs.lc }}/autodeploy-frontend:${{ steps.tag.outputs.sha_short }}
+          cache-from: type=gha,scope=frontend
+          cache-to: type=gha,scope=frontend,mode=max
+
+  deploy-vps:
+    name: Desplegar al VPS (SSH + health + smoke + rollback)
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Deploy y verificación
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          NEW_TAG: ${{ needs.build-and-push.outputs.sha_short }}
+          GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GHCR_USER: ${{ github.actor }}
+          SMOKE_URL: ${{ secrets.SMOKE_URL }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: ${{ secrets.SSH_PORT || 22 }}
+          envs: NEW_TAG,GHCR_TOKEN,GHCR_USER,SMOKE_URL,DEPLOY_PATH
+          command_timeout: 8m
+          script_stop: false
+          script: |
+            set -uo pipefail
+            cd "$DEPLOY_PATH"
+            COMPOSE="docker compose -f docker-compose.prod.yml"
+
+            echo "==> 1) git fetch + reset --hard origin/main"
+            git fetch origin main
+            git reset --hard origin/main
+
+            echo "==> 2) Guardando IMAGE_TAG anterior para rollback"
+            PREV_TAG=$(grep '^IMAGE_TAG=' .env 2>/dev/null | cut -d= -f2- || echo "latest")
+            echo "    PREV_TAG=$PREV_TAG | NEW_TAG=$NEW_TAG"
+
+            echo "==> 3) Apuntando .env al nuevo SHA"
+            if grep -q '^IMAGE_TAG=' .env; then
+              sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=$NEW_TAG|" .env
+            else
+              echo "IMAGE_TAG=$NEW_TAG" >> .env
+            fi
+
+            echo "==> 4) Login en GHCR (token de la run)"
+            echo "$GHCR_TOKEN" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
+
+            echo "==> 5) Pull imágenes nuevas"
+            $COMPOSE pull
+
+            echo "==> 6) Recrear contenedores"
+            $COMPOSE up -d --remove-orphans
+
+            echo "==> 6 bis) Recrear sandbox-ssh desde cero (hard reset por si la imagen externa quedo colgada)"
+            $COMPOSE stop sandbox-ssh || true
+            $COMPOSE rm -f sandbox-ssh || true
+            docker volume rm autodeploy_sandbox-config 2>/dev/null || true
+            $COMPOSE up -d sandbox-ssh || true
+            echo "==> Esperando 25s para que sshd regenere host keys y arranque"
+            sleep 25
+
+            echo "==> Diagnostico sandbox completo"
+            echo "    PUBLIC_KEY presente: $(grep -c '^SANDBOX_PUBLIC_KEY=' .env || echo 0)"
+            echo "    docker port sandbox:"
+            docker port autodeploy-sandbox || true
+            echo "    Quien escucha en 2222/2223 del HOST (ss):"
+            ss -ltnp 2>&1 | grep -E ":(2222|2223)\b" | head -5 || echo "    nada"
+            echo "    Banner SSH del sandbox desde el HOST (via puerto 2223 mapeado):"
+            timeout 6 bash -c "exec 3<>/dev/tcp/127.0.0.1/2223; head -1 <&3" 2>&1 | head -3 || echo "    no banner en 2223"
+            echo "    Banner SSH del sandbox desde el BACKEND (red Docker interna):"
+            docker exec autodeploy-backend sh -c "timeout 6 bash -c 'exec 3<>/dev/tcp/sandbox-ssh/2222; head -1 <&3'" 2>&1 | head -3 || echo "    no banner internoBackend"
+
+            echo "==> 7) Esperando que los 3 servicios con healthcheck reporten (healthy), timeout 120s"
+            DEADLINE=$((SECONDS + 120))
+            HEALTHY=0
+            while [ $SECONDS -lt $DEADLINE ]; do
+              CNT=$($COMPOSE ps | grep -c '(healthy)' || true)
+              echo "    healthy=$CNT/3"
+              if [ "$CNT" -ge 3 ]; then HEALTHY=1; break; fi
+              sleep 5
+            done
+
+            rollback() {
+              echo "==> ROLLBACK: restaurando IMAGE_TAG=$PREV_TAG"
+              sed -i "s|^IMAGE_TAG=.*|IMAGE_TAG=$PREV_TAG|" .env
+              $COMPOSE up -d
+              echo "==> Estado tras rollback:"
+              $COMPOSE ps
+            }
+
+            if [ "$HEALTHY" -ne 1 ]; then
+              echo "::error::Healthcheck timeout. Estado:"
+              $COMPOSE ps
+              echo "Últimas líneas de logs por servicio:"
+              $COMPOSE logs --tail 80 || true
+              rollback
+              exit 1
+            fi
+            echo "✅ Stack healthy"
+
+            echo "==> 8) Smoke test contra $SMOKE_URL/api/estado"
+            BODY=$(curl -fsS --max-time 15 "$SMOKE_URL/api/estado" || true)
+            if ! echo "$BODY" | grep -q '"estadoGeneral":"UP"'; then
+              echo "::error::Smoke test falló. Respuesta:"
+              echo "$BODY" | head -c 500
+              rollback
+              exit 1
+            fi
+            echo "✅ Smoke OK"
+
+            echo "==> 9) Limpieza imágenes huérfanas"
+            docker image prune -f >/dev/null || true
+
+            echo "::notice::Deploy completo en SHA=$NEW_TAG"
+
+      - name: Verificación externa final (desde GHA)
+        run: |
+          curl -fsS --max-time 15 "${{ secrets.SMOKE_URL }}/api/estado" \
+            -o /dev/null \
+            -w "External smoke: HTTP %{http_code} en %{time_total}s\n"
+
+      - name: Resumen
+        if: always()
+        run: |
+          echo "## 🚀 Deploy" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **SHA desplegado:** \`${{ needs.build-and-push.outputs.sha_short }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **URL:** ${{ secrets.SMOKE_URL }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- **Estado:** ${{ job.status }}" >> "$GITHUB_STEP_SUMMARY"

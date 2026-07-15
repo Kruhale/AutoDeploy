@@ -126,6 +126,21 @@ public class UsuarioController {
         return ResponseEntity.ok(cuerpo);
     }
 
+    @Operation(summary = "Actualizar la foto de perfil (data URL base64, o vacio para quitarla)")
+    @PutMapping("/{id}/foto")
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")
+    public ResponseEntity<ApiResponse<LoginResponse>> actualizarFoto(
+            @PathVariable String id,
+            @RequestBody Map<String, String> datos) {
+        String fotoPerfil = datos.getOrDefault("fotoPerfil", "");
+
+        Usuario usuario = usuarioService.actualizarFoto(id, fotoPerfil);
+        LoginResponse respuesta = usuarioService.construirLoginResponse(usuario, null);
+
+        ApiResponse<LoginResponse> cuerpo = new ApiResponse<>(true, "Foto actualizada", respuesta);
+        return ResponseEntity.ok(cuerpo);
+    }
+
     @Operation(summary = "Eliminar la cuenta propia (irreversible)")
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.name")

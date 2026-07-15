@@ -9,5 +9,6 @@ public record LoginResponse(
     String token,
     String plan,
     LocalDateTime fechaFinSuscripcion,
-    String idioma
+    String idioma,
+    String fotoPerfil
 ) {}

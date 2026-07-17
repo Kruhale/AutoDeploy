@@ -114,7 +114,12 @@
       }
     </button>
     <a class="barra-lateral__usuario" routerLink="/app/cuenta" [attr.data-plan]="planService.planActual()">
-      <span class="barra-lateral__usuario__avatar" aria-hidden="true">
+      <span class="barra-lateral__usuario__avatar" aria-hidden="true" [style.background]="usuarioService.fotoPerfil() ? null : usuarioService.avatarGradiente()">
+        @if (usuarioService.fotoPerfil()) {
+          <img class="barra-lateral__usuario__avatar__foto" [src]="usuarioService.fotoPerfil()" alt="">
+        } @else {
+          <span class="barra-lateral__usuario__avatar__iniciales">{{ usuarioService.iniciales() }}</span>
+        }
         <span class="barra-lateral__usuario__avatar__estado" aria-hidden="true"></span>
       </span>
       <section class="barra-lateral__usuario__info" [attr.aria-label]="'sidebar.ariaInfoUsuario' | translate">

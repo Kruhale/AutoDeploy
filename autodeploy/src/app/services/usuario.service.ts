@@ -1,7 +1,46 @@
-import { Injectable, signal, inject } from "@angular/core";
+import { Injectable, signal, computed, Signal, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { IdiomaService } from "./idioma.service";
+
+// Paleta del avatar generado: cada cuenta recibe uno de estos degradados de
+// forma determinista (por hash del nombre+email), asi que su avatar es siempre
+// el mismo pero distinto del de otras cuentas. Pensados para inicial en blanco.
+const PALETA_AVATARES: [string, string][] = [
+  ["#e0a94e", "#b06f1c"],
+  ["#e08a72", "#bf5560"],
+  ["#7f7bd6", "#5a4fa6"],
+  ["#4fb3a6", "#2c8078"],
+  ["#5f93d8", "#3a63a4"],
+  ["#5cb87f", "#2f8a58"],
+  ["#cf78ad", "#9a4f82"],
+  ["#7e8ac2", "#515c98"]
+];
+
+// Hash estable de una cadena (no criptografico): mismo texto -> mismo indice.
+function calcularHashDeTexto(texto: string): number {
+  let hash = 0;
+  for (let indice = 0; indice < texto.length; indice++) {
+    hash = (hash * 31 + texto.charCodeAt(indice)) >>> 0;
+  }
+  return hash;
+}
+
+// Una o dos iniciales a partir del nombre; si no hay, la primera del email.
+function calcularIniciales(nombre: string, email: string): string {
+  const nombreLimpio = (nombre || "").trim();
+  if (nombreLimpio) {
+    const palabras = nombreLimpio.split(/\s+/);
+    if (palabras.length >= 2) {
+      return (palabras[0].charAt(0) + palabras[1].charAt(0)).toUpperCase();
+    }
+    return nombreLimpio.charAt(0).toUpperCase();
+  }
+  if (email) {
+    return email.charAt(0).toUpperCase();
+  }
+  return "?";
+}
 
 interface RespuestaApi<T> {
   success: boolean;
@@ -17,6 +56,7 @@ interface DatosUsuario {
   fechaFinSuscripcion: string | null;
   idioma: string;
   token?: string | null;
+  fotoPerfil?: string | null;
 }
 
 interface ClaveSshUsuario {
@@ -34,7 +74,6 @@ interface PreferenciasNotificacion {
 
 @Injectable({ providedIn: "root" })
 export class UsuarioService {
-
   private readonly urlBase = "/api/usuarios";
 
   usuarioId = signal(sessionStorage.getItem("usuarioId") || "");
@@ -42,19 +81,55 @@ export class UsuarioService {
   email = signal(sessionStorage.getItem("email") || "");
   plan = signal(sessionStorage.getItem("plan") || "free");
   fechaFinSuscripcion = signal<string | null>(sessionStorage.getItem("fechaFinSuscripcion"));
+  fotoPerfil = signal(sessionStorage.getItem("fotoPerfil") || "");
+
+  // Avatar generado por defecto: iniciales sobre un degradado propio de la
+  // cuenta. La foto subida (si existe) manda sobre esto en la plantilla.
+  iniciales: Signal<string>;
+  avatarGradiente: Signal<string>;
 
   private idiomaService = inject(IdiomaService);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    const servicio = this;
+
+    this.iniciales = computed(function () {
+      return calcularIniciales(servicio.nombre(), servicio.email());
+    });
+
+    this.avatarGradiente = computed(function () {
+      const semilla = servicio.nombre() + "|" + servicio.email();
+      const par = PALETA_AVATARES[calcularHashDeTexto(semilla) % PALETA_AVATARES.length];
+      return "linear-gradient(135deg, " + par[0] + " 0%, " + par[1] + " 100%)";
+    });
+  }
+
+  async actualizarFoto(fotoPerfil: string): Promise<DatosUsuario> {
+    const idActual = this.usuarioId();
+    const cuerpo = { fotoPerfil: fotoPerfil };
+    let respuesta: RespuestaApi<DatosUsuario>;
+
+    try {
+      respuesta = await firstValueFrom(this.http.put<RespuestaApi<DatosUsuario>>(this.urlBase + "/" + idActual + "/foto", cuerpo));
+    } catch (errorHttp: any) {
+      const mensaje = errorHttp?.error?.message || "Error al actualizar la foto";
+      throw new Error(mensaje);
+    }
+
+    if (!respuesta.success) {
+      throw new Error(respuesta.message);
+    }
+
+    this.guardarEnSesion(respuesta.data);
+    return respuesta.data;
+  }
 
   async registrar(nombre: string, email: string, password: string): Promise<DatosUsuario> {
     const cuerpo = { nombre: nombre, email: email, password: password };
     let respuesta: RespuestaApi<DatosUsuario>;
 
     try {
-      respuesta = await firstValueFrom(
-        this.http.post<RespuestaApi<DatosUsuario>>(this.urlBase + "/registro", cuerpo)
-      );
+      respuesta = await firstValueFrom(this.http.post<RespuestaApi<DatosUsuario>>(this.urlBase + "/registro", cuerpo));
     } catch (errorHttp: any) {
       const mensaje = errorHttp?.error?.message || "Error al registrar";
       throw new Error(mensaje);
@@ -73,9 +148,7 @@ export class UsuarioService {
     let respuesta: RespuestaApi<DatosUsuario>;
 
     try {
-      respuesta = await firstValueFrom(
-        this.http.post<RespuestaApi<DatosUsuario>>(this.urlBase + "/login", cuerpo)
-      );
+      respuesta = await firstValueFrom(this.http.post<RespuestaApi<DatosUsuario>>(this.urlBase + "/login", cuerpo));
     } catch (errorHttp: any) {
       const mensaje = errorHttp?.error?.message || "Email o password incorrectos";
       throw new Error(mensaje);
@@ -94,9 +167,7 @@ export class UsuarioService {
     let respuesta: RespuestaApi<DatosUsuario>;
 
     try {
-      respuesta = await firstValueFrom(
-        this.http.put<RespuestaApi<DatosUsuario>>(this.urlBase + "/" + usuarioId + "/plan", cuerpo)
-      );
+      respuesta = await firstValueFrom(this.http.put<RespuestaApi<DatosUsuario>>(this.urlBase + "/" + usuarioId + "/plan", cuerpo));
     } catch {
       throw new Error("Error al actualizar plan");
     }
@@ -114,9 +185,7 @@ export class UsuarioService {
     let respuesta: RespuestaApi<DatosUsuario>;
 
     try {
-      respuesta = await firstValueFrom(
-        this.http.put<RespuestaApi<DatosUsuario>>(this.urlBase + "/" + idActual + "/cancelar-suscripcion", {})
-      );
+      respuesta = await firstValueFrom(this.http.put<RespuestaApi<DatosUsuario>>(this.urlBase + "/" + idActual + "/cancelar-suscripcion", {}));
     } catch {
       throw new Error("Error al cancelar suscripción");
     }
@@ -135,9 +204,7 @@ export class UsuarioService {
     let respuesta: RespuestaApi<DatosUsuario>;
 
     try {
-      respuesta = await firstValueFrom(
-        this.http.put<RespuestaApi<DatosUsuario>>(this.urlBase + "/" + idActual, cuerpo)
-      );
+      respuesta = await firstValueFrom(this.http.put<RespuestaApi<DatosUsuario>>(this.urlBase + "/" + idActual, cuerpo));
     } catch {
       throw new Error("Error al actualizar perfil");
     }
@@ -154,9 +221,7 @@ export class UsuarioService {
     const idActual = this.usuarioId();
 
     try {
-      const respuesta = await firstValueFrom(
-        this.http.get<RespuestaApi<ClaveSshUsuario[]>>(this.urlBase + "/" + idActual + "/claves-ssh")
-      );
+      const respuesta = await firstValueFrom(this.http.get<RespuestaApi<ClaveSshUsuario[]>>(this.urlBase + "/" + idActual + "/claves-ssh"));
       return respuesta.data || [];
     } catch {
       throw new Error("Could not load SSH keys");
@@ -168,9 +233,7 @@ export class UsuarioService {
     const cuerpo = { nombre: nombre, claveCompleta: claveCompleta };
 
     try {
-      const respuesta = await firstValueFrom(
-        this.http.post<RespuestaApi<ClaveSshUsuario>>(this.urlBase + "/" + idActual + "/claves-ssh", cuerpo)
-      );
+      const respuesta = await firstValueFrom(this.http.post<RespuestaApi<ClaveSshUsuario>>(this.urlBase + "/" + idActual + "/claves-ssh", cuerpo));
       return respuesta.data;
     } catch {
       throw new Error("Could not save the SSH key");
@@ -181,9 +244,7 @@ export class UsuarioService {
     const idActual = this.usuarioId();
 
     try {
-      await firstValueFrom(
-        this.http.delete(this.urlBase + "/" + idActual + "/claves-ssh/" + idClave)
-      );
+      await firstValueFrom(this.http.delete(this.urlBase + "/" + idActual + "/claves-ssh/" + idClave));
     } catch {
       throw new Error("Could not delete the SSH key");
     }
@@ -193,9 +254,7 @@ export class UsuarioService {
     const idActual = this.usuarioId();
 
     try {
-      const respuesta = await firstValueFrom(
-        this.http.get<RespuestaApi<PreferenciasNotificacion>>(this.urlBase + "/" + idActual + "/notificaciones")
-      );
+      const respuesta = await firstValueFrom(this.http.get<RespuestaApi<PreferenciasNotificacion>>(this.urlBase + "/" + idActual + "/notificaciones"));
       return respuesta.data;
     } catch {
       throw new Error("Could not load preferences");
@@ -206,9 +265,7 @@ export class UsuarioService {
     const idActual = this.usuarioId();
 
     try {
-      await firstValueFrom(
-        this.http.put(this.urlBase + "/" + idActual + "/notificaciones", preferencias)
-      );
+      await firstValueFrom(this.http.put(this.urlBase + "/" + idActual + "/notificaciones", preferencias));
     } catch {
       throw new Error("Could not save preferences");
     }
@@ -221,11 +278,13 @@ export class UsuarioService {
     sessionStorage.removeItem("email");
     sessionStorage.removeItem("plan");
     sessionStorage.removeItem("fechaFinSuscripcion");
+    sessionStorage.removeItem("fotoPerfil");
     this.usuarioId.set("");
     this.nombre.set("");
     this.email.set("");
     this.plan.set("free");
     this.fechaFinSuscripcion.set(null);
+    this.fotoPerfil.set("");
   }
 
   private guardarEnSesion(datos: DatosUsuario): void {
@@ -246,6 +305,14 @@ export class UsuarioService {
       this.fechaFinSuscripcion.set(null);
     }
 
+    const foto = datos.fotoPerfil || "";
+    if (foto) {
+      sessionStorage.setItem("fotoPerfil", foto);
+    } else {
+      sessionStorage.removeItem("fotoPerfil");
+    }
+    this.fotoPerfil.set(foto);
+
     this.usuarioId.set(datos.id);
     this.nombre.set(datos.nombre);
     this.email.set(datos.email);
@@ -255,5 +322,6 @@ export class UsuarioService {
       sessionStorage.setItem("idioma", datos.idioma);
       this.idiomaService.aplicarIdiomaDelUsuario(datos.idioma);
     }
+
   }
 }

@@ -213,8 +213,25 @@ public class UsuarioService {
             token,
             usuario.getPlan() != null ? usuario.getPlan() : "free",
             usuario.getFechaFinSuscripcion(),
-            usuario.getIdioma()
+            usuario.getIdioma(),
+            usuario.getFotoPerfil()
         );
+    }
+
+    // La foto se guarda como data URL (base64). Se limita el tamano para no
+    // inflar el documento en Mongo; el frontend ya la reescala a 256x256.
+    public Usuario actualizarFoto(String id, String fotoPerfil) {
+        boolean vacia = fotoPerfil == null || fotoPerfil.isBlank();
+        if (!vacia) {
+            boolean formatoValido = fotoPerfil.startsWith("data:image/");
+            boolean tamanoValido = fotoPerfil.length() <= 700_000;
+            if (!formatoValido || !tamanoValido) {
+                throw new BadRequestException("Imagen no valida o demasiado grande");
+            }
+        }
+        Usuario usuario = obtenerPorId(id);
+        usuario.setFotoPerfil(vacia ? null : fotoPerfil);
+        return usuarioRepository.save(usuario);
     }
 
     public Usuario actualizarIdioma(String id, String idioma) {

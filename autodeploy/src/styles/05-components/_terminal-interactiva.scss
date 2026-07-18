@@ -89,8 +89,8 @@
     font-family: var(--font-mono);
     font-size: var(--font-size-xs);
     color: var(--texto-apagado);
-    text-transform: lowercase;
-    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
 
     &--conectado  { color: var(--verde-normal); }
     &--conectando { color: var(--amarillo-normal); }

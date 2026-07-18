@@ -155,7 +155,7 @@ export class AsistenteIa implements OnInit, OnDestroy {
   abrirConfiguracion(): void {
     this.mostrarPanelConfiguracion.set(true);
     this.elementoConFocoPrevio = document.activeElement as HTMLElement | null;
-    setTimeout(function() {
+    setTimeout(function () {
       const campo = document.getElementById("campo-api-key");
       campo?.focus();
     }, 0);
@@ -167,6 +167,32 @@ export class AsistenteIa implements OnInit, OnDestroy {
     this.mensajeError.set("");
     this.elementoConFocoPrevio?.focus();
     this.elementoConFocoPrevio = null;
+  }
+
+  // Trampa de foco del modal: el Tab circula entre sus controles y no escapa
+  // al fondo. querySelectorAll es la unica via para enumerar los focusables.
+  manejarTabulacionModal(evento: Event): void {
+    const eventoTeclado = evento as KeyboardEvent;
+    const caja = document.getElementById("config-asistente-panel");
+    if (!caja) {
+      return;
+    }
+    const focusables = caja.querySelectorAll<HTMLElement>("button:not(:disabled), input, select, textarea, a[href]");
+    if (focusables.length === 0) {
+      return;
+    }
+    const primero = focusables[0];
+    const ultimo = focusables[focusables.length - 1];
+    const elementoActivo = document.activeElement;
+    if (eventoTeclado.shiftKey && elementoActivo === primero) {
+      eventoTeclado.preventDefault();
+      ultimo.focus();
+      return;
+    }
+    if (!eventoTeclado.shiftKey && elementoActivo === ultimo) {
+      eventoTeclado.preventDefault();
+      primero.focus();
+    }
   }
 
   async guardarConfiguracion(): Promise<void> {

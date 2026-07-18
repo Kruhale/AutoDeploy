@@ -205,8 +205,8 @@
     "tituloPanel": "Notificaciones",
     "ariaCerrar": "Cerrar",
     "vacio": "No hay notificaciones",
-    "marcarLeida": "Marcar como leída",
-    "eliminar": "Eliminar",
+    "marcarLeida": "Marcar como leída: {{titulo}}",
+    "eliminar": "Eliminar el aviso: {{titulo}}",
     "marcarTodas": "Marcar todas como leídas"
   },
   "toastNotificaciones": {
@@ -610,7 +610,9 @@
     },
     "servidor": {
       "manage": "Gestionar",
-      "ssh": "SSH"
+      "ssh": "SSH",
+      "ariaGestionar": "Gestionar el servidor {{nombre}}",
+      "ariaSsh": "Abrir terminal SSH de {{nombre}}"
     },
     "despliegues": {
       "vacio": "No hay despliegues registrados todavía"
@@ -1058,7 +1060,7 @@
     "vacioDetalle": "Añade tu primer dominio para empezar a enrutar tráfico a tu servidor.",
     "sslActivo": "SSL activo",
     "sslInactivo": "Sin SSL",
-    "ariaEliminarDominio": "Eliminar dominio",
+    "ariaEliminarDominio": "Eliminar el dominio {{nombre}}",
     "accionesTitulo": "Acciones rápidas",
     "accionesDescripcion": "Ejecuta los flujos DNS y SSL más habituales en un clic.",
     "renovarTitulo": "Renovar SSL",
@@ -1091,7 +1093,7 @@
       "agregar": "Añadir",
       "cargando": "Cargando…",
       "vacio": "No hay redirecciones configuradas · se escribirán en `$HOME/.autodeploy/redirects.conf` al guardar.",
-      "ariaEliminar": "Eliminar redirección"
+      "ariaEliminar": "Eliminar la redirección de {{origen}}"
     },
     "mensajes": {
       "errorAgregar": "No se pudo añadir el dominio. Inténtalo de nuevo.",

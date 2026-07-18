@@ -205,8 +205,8 @@
     "tituloPanel": "Notifications",
     "ariaCerrar": "Close",
     "vacio": "No notifications",
-    "marcarLeida": "Mark as read",
-    "eliminar": "Delete",
+    "marcarLeida": "Mark as read: {{titulo}}",
+    "eliminar": "Delete notification: {{titulo}}",
     "marcarTodas": "Mark all as read"
   },
   "toastNotificaciones": {
@@ -610,7 +610,9 @@
     },
     "servidor": {
       "manage": "Manage",
-      "ssh": "SSH"
+      "ssh": "SSH",
+      "ariaGestionar": "Manage server {{nombre}}",
+      "ariaSsh": "Open SSH terminal for {{nombre}}"
     },
     "despliegues": {
       "vacio": "No deployments recorded yet"
@@ -1058,7 +1060,7 @@
     "vacioDetalle": "Add your first domain to start routing traffic to your server.",
     "sslActivo": "SSL active",
     "sslInactivo": "No SSL",
-    "ariaEliminarDominio": "Remove domain",
+    "ariaEliminarDominio": "Delete domain {{nombre}}",
     "accionesTitulo": "Quick actions",
     "accionesDescripcion": "Run the most common DNS and SSL flows in one click.",
     "renovarTitulo": "Renew SSL",
@@ -1091,7 +1093,7 @@
       "agregar": "Add",
       "cargando": "Loading…",
       "vacio": "No redirects configured · they will be written to `$HOME/.autodeploy/redirects.conf` on save.",
-      "ariaEliminar": "Remove redirect"
+      "ariaEliminar": "Delete redirect from {{origen}}"
     },
     "mensajes": {
       "errorAgregar": "Could not add the domain. Please try again.",

@@ -77,9 +77,11 @@
         <article class="editorial__vitales__dato">
           <span class="editorial__vitales__etiqueta">{{ uso.etiqueta }}</span>
           <span class="editorial__vitales__cifra">{{ uso.valor }}</span>
-          <span class="editorial__vitales__barra" aria-hidden="true">
-            <span class="editorial__vitales__barra__relleno" [style.width.%]="uso.porcentaje"></span>
-          </span>
+          @if (!uso.esIlimitado) {
+            <span class="editorial__vitales__barra" aria-hidden="true">
+              <span class="editorial__vitales__barra__relleno" [style.width.%]="uso.porcentaje"></span>
+            </span>
+          }
           <span class="editorial__vitales__nota">{{ uso.detalle }}</span>
         </article>
       }

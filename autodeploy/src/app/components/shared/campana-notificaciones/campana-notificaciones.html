@@ -1,11 +1,11 @@
-<button class="campana-boton" type="button" (click)="alternarCampana()" [attr.aria-label]="'campanaNotificaciones.ariaBoton' | translate" [attr.aria-expanded]="campanAbierta()">
+<button class="campana-boton" type="button" (click)="alternarCampana()" [attr.aria-label]="'campanaNotificaciones.ariaBoton' | translate" [attr.aria-expanded]="campanAbierta()" aria-controls="campana-panel">
 	<i class="fa-solid fa-bell" aria-hidden="true"></i>
 	@if (notificacionService.conteoNoLeidas() > 0) {
 		<span class="campana-boton__conteo">{{ notificacionService.conteoNoLeidas() }}</span>
 	}
 </button>
 
-<aside class="campana-panel" [class.campana-panel--abierto]="campanAbierta()">
+<aside class="campana-panel" id="campana-panel" [class.campana-panel--abierto]="campanAbierta()" (keydown.escape)="cerrarCampana()">
 	<header class="campana-panel__cabecera">
 		<h2 class="campana-panel__indice">{{ "campanaNotificaciones.tituloPanel" | translate }}</h2>
 		<button class="campana-panel__cerrar" type="button" (click)="cerrarCampana()" [attr.aria-label]="'campanaNotificaciones.ariaCerrar' | translate">
@@ -27,11 +27,11 @@
 				</section>
 				<section class="campana-item__acciones">
 					@if (!notificacion.leida) {
-						<button class="campana-item__accion" type="button" (click)="marcarComoLeida(notificacion.id)" [attr.aria-label]="'campanaNotificaciones.marcarLeida' | translate" [title]="'campanaNotificaciones.marcarLeida' | translate">
+						<button class="campana-item__accion" type="button" (click)="marcarComoLeida(notificacion.id)" [attr.aria-label]="'campanaNotificaciones.marcarLeida' | translate: { titulo: notificacion.titulo }" [title]="'campanaNotificaciones.marcarLeida' | translate: { titulo: notificacion.titulo }">
 							<i class="fa-solid fa-check" aria-hidden="true"></i>
 						</button>
 					}
-					<button class="campana-item__accion campana-item__accion--eliminar" type="button" (click)="eliminarNotificacion(notificacion.id)" [attr.aria-label]="'campanaNotificaciones.eliminar' | translate" [title]="'campanaNotificaciones.eliminar' | translate">
+					<button class="campana-item__accion campana-item__accion--eliminar" type="button" (click)="eliminarNotificacion(notificacion.id)" [attr.aria-label]="'campanaNotificaciones.eliminar' | translate: { titulo: notificacion.titulo }" [title]="'campanaNotificaciones.eliminar' | translate: { titulo: notificacion.titulo }">
 						<i class="fa-solid fa-trash" aria-hidden="true"></i>
 					</button>
 				</section>

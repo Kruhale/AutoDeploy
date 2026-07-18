@@ -87,7 +87,8 @@
     left: var(--spacing-size-l);
     right: var(--spacing-size-l);
     width: auto;
-    max-height: 26rem; /* 416px */
+    // Relativo al viewport para no cortar el pie en moviles apaisados
+    max-height: 70vh;
   }
 }
 

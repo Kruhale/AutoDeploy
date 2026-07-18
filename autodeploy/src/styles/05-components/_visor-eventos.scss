@@ -112,4 +112,9 @@
     flex-wrap: wrap;
     row-gap: 0.3rem; /* 5px */
   }
+
+  // Con el padding de pagina reducido en movil el rail no puede colgar tanto
+  .visor-eventos__entrada--error::before {
+    left: -0.35rem; /* 6px */
+  }
 }

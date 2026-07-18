@@ -159,6 +159,12 @@
     @include movil {
       width: 100%;
     }
+
+    // El ghost trae margenes para vivir suelto; aqui se alinea con Refrescar
+    .editorial__boton-ghost {
+      margin-top: 0;
+      align-self: auto;
+    }
   }
 
   &__pie {

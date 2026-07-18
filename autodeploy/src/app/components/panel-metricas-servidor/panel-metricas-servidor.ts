@@ -9,7 +9,6 @@ import { MetricasServidorService, MetricaServidor } from "../../services/metrica
   styleUrl: "./panel-metricas-servidor.scss"
 })
 export class PanelMetricasServidor implements OnInit, OnDestroy {
-
   @Input({ required: true }) servidorId: string = "";
   @Input() nombreServidor: string = "";
 
@@ -71,7 +70,11 @@ export class PanelMetricasServidor implements OnInit, OnDestroy {
     }
   }
 
-  ngOnDestroy(): void {
+  ngOnDestroy(): void {}
+
+  // Entero como RAM y disco: las tres cifras con la misma precision
+  redondearPorcentaje(valor: number): number {
+    return Math.round(valor);
   }
 
   obtenerColorBarra(porcentaje: number): string {

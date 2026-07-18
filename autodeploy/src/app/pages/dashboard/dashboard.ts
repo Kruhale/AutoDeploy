@@ -71,24 +71,24 @@ export class Dashboard implements OnInit, OnDestroy {
   ) {
     const componente = this;
 
-    this.contadorServidoresOnline = computed(function() {
+    this.contadorServidoresOnline = computed(function () {
       const servidores = componente.listaDeServidores();
-      const servidoresOnline = servidores.filter(function(servidor) {
+      const servidoresOnline = servidores.filter(function (servidor) {
         return servidor.estado === "verde";
       });
       return servidoresOnline.length;
     });
 
-    this.contadorServidoresOffline = computed(function() {
+    this.contadorServidoresOffline = computed(function () {
       const servidores = componente.listaDeServidores();
-      const servidoresOffline = servidores.filter(function(servidor) {
+      const servidoresOffline = servidores.filter(function (servidor) {
         return servidor.estado === "rojo";
       });
       return servidoresOffline.length;
     });
 
     // El titular del parte se redacta con los datos reales de la flota
-    this.claveFraseEstado = computed(function() {
+    this.claveFraseEstado = computed(function () {
       const totalServidores = componente.listaDeServidores().length;
       if (totalServidores === 0) {
         return "dashboard.frase.vacia";
@@ -103,7 +103,7 @@ export class Dashboard implements OnInit, OnDestroy {
       return "dashboard.frase.caidosVarios";
     });
 
-    this.colorEstadoFlota = computed(function() {
+    this.colorEstadoFlota = computed(function () {
       if (componente.listaDeServidores().length === 0) {
         return "ambar";
       }
@@ -130,11 +130,11 @@ export class Dashboard implements OnInit, OnDestroy {
     const acumulado: SitioWeb[] = [];
     let respondidos = 0;
 
-    servidores.forEach(function(servidor) {
+    servidores.forEach(function (servidor) {
       componente.http.get<any>("/api/subdominios/servidor/" + servidor.id).subscribe({
-        next: function(respuesta: any) {
-          const subdominios = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
-          subdominios.forEach(function(subdominio: { nombre: string; tipo: string; destino: string; sslActivo: boolean }) {
+        next: function (respuesta: any) {
+          const subdominios = componente.extraerListaDeRespuesta(respuesta);
+          subdominios.forEach(function (subdominio: { nombre: string; tipo: string; destino: string; sslActivo: boolean }) {
             acumulado.push({
               nombre: subdominio.nombre,
               icono: "fa-solid fa-globe",
@@ -149,7 +149,7 @@ export class Dashboard implements OnInit, OnDestroy {
             componente.listaDeSitios.set([...acumulado]);
           }
         },
-        error: function() {
+        error: function () {
           respondidos = respondidos + 1;
           if (respondidos === servidores.length) {
             componente.listaDeSitios.set([...acumulado]);
@@ -163,13 +163,24 @@ export class Dashboard implements OnInit, OnDestroy {
     this.metricasService.desconectar();
   }
 
+  // Las respuestas del backend llegan como lista directa o envueltas en .data
+  private extraerListaDeRespuesta(respuesta: any): any[] {
+    if (Array.isArray(respuesta)) {
+      return respuesta;
+    }
+    if (respuesta && Array.isArray(respuesta.data)) {
+      return respuesta.data;
+    }
+    return [];
+  }
+
   cargarActividad(): void {
     const componente = this;
 
     this.http.get<any>("/api/actividad").subscribe({
-      next: function(respuesta: any) {
-        const actividadesApi: ActividadApi[] = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
-        const actividadesMapeadas = actividadesApi.map(function(actividadApi: ActividadApi) {
+      next: function (respuesta: any) {
+        const actividadesApi: ActividadApi[] = componente.extraerListaDeRespuesta(respuesta);
+        const actividadesMapeadas = actividadesApi.map(function (actividadApi: ActividadApi) {
           const colorIcono = componente.resolverColorIcono(actividadApi.tipo);
           const tiempoRelativo = componente.calcularTiempoRelativo(actividadApi.fechaCreacion);
 
@@ -182,6 +193,9 @@ export class Dashboard implements OnInit, OnDestroy {
           return actividad;
         });
         componente.listaDeActividad.set(actividadesMapeadas);
+      },
+      error: function () {
+        componente.listaDeActividad.set([]);
       }
     });
   }
@@ -225,9 +239,12 @@ export class Dashboard implements OnInit, OnDestroy {
     const componente = this;
 
     this.http.get<any>("/api/despliegues").subscribe({
-      next: function(respuesta: any) {
-        const despliegues: DespliegueReciente[] = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
+      next: function (respuesta: any) {
+        const despliegues: DespliegueReciente[] = componente.extraerListaDeRespuesta(respuesta);
         componente.listaDespliegues.set(despliegues);
+      },
+      error: function () {
+        componente.listaDespliegues.set([]);
       }
     });
   }
@@ -239,8 +256,8 @@ export class Dashboard implements OnInit, OnDestroy {
     // `servidores` del servicio se actualice y otros componentes puedan
     // leerlo (cantidadServidores, servidoresConectados) sin re-pedir.
     this.servidorService.cargarYCachear().subscribe({
-      next: function(servidoresRemotos: ServidorRemoto[]) {
-        const servidoresMapeados = servidoresRemotos.map(function(servidorRemoto: ServidorRemoto) {
+      next: function (servidoresRemotos: ServidorRemoto[]) {
+        const servidoresMapeados = servidoresRemotos.map(function (servidorRemoto: ServidorRemoto) {
           const servidorDashboard: ServidorDashboard = {
             id: servidorRemoto.id,
             nombre: servidorRemoto.nombre,
@@ -251,6 +268,9 @@ export class Dashboard implements OnInit, OnDestroy {
         });
         componente.listaDeServidores.set(servidoresMapeados);
         componente.cargarSitios(servidoresRemotos);
+      },
+      error: function () {
+        componente.listaDeServidores.set([]);
       }
     });
   }

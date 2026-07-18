@@ -205,8 +205,8 @@
     "tituloPanel": "Notifiche",
     "ariaCerrar": "Chiudi",
     "vacio": "Nessuna notifica",
-    "marcarLeida": "Segna come letta",
-    "eliminar": "Elimina",
+    "marcarLeida": "Segna come letta: {{titulo}}",
+    "eliminar": "Elimina l'avviso: {{titulo}}",
     "marcarTodas": "Segna tutte come lette"
   },
   "toastNotificaciones": {
@@ -610,7 +610,9 @@
     },
     "servidor": {
       "manage": "Gestisci",
-      "ssh": "SSH"
+      "ssh": "SSH",
+      "ariaGestionar": "Gestisci il server {{nombre}}",
+      "ariaSsh": "Apri il terminale SSH di {{nombre}}"
     },
     "despliegues": {
       "vacio": "Nessun deploy registrato ancora"
@@ -1058,7 +1060,7 @@
     "vacioDetalle": "Aggiungi il tuo primo dominio per iniziare a instradare il traffico verso il tuo server.",
     "sslActivo": "SSL attivo",
     "sslInactivo": "Senza SSL",
-    "ariaEliminarDominio": "Elimina dominio",
+    "ariaEliminarDominio": "Elimina il dominio {{nombre}}",
     "accionesTitulo": "Azioni rapide",
     "accionesDescripcion": "Esegui i flussi DNS e SSL più comuni con un clic.",
     "renovarTitulo": "Rinnova SSL",
@@ -1091,7 +1093,7 @@
       "agregar": "Aggiungi",
       "cargando": "Caricamento…",
       "vacio": "Nessun reindirizzamento configurato · verranno scritti in `$HOME/.autodeploy/redirects.conf` al salvataggio.",
-      "ariaEliminar": "Elimina reindirizzamento"
+      "ariaEliminar": "Elimina il reindirizzamento di {{origen}}"
     },
     "mensajes": {
       "errorAgregar": "Impossibile aggiungere il dominio. Riprova.",

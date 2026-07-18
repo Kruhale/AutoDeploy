@@ -17,46 +17,41 @@ function crearNotificacionEjemplo(parcial: Partial<Notificacion> = {}): Notifica
   };
 }
 
-describe("ToastNotificaciones", function() {
+describe("ToastNotificaciones", function () {
   let fixture: ComponentFixture<ToastNotificaciones>;
   let componente: ToastNotificaciones;
   let sujetoRecibidas: Subject<Notificacion>;
   let notificacionFake: { obtenerNotificacionesRecibidas: jasmine.Spy };
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     sujetoRecibidas = new Subject<Notificacion>();
     notificacionFake = {
-      obtenerNotificacionesRecibidas: jasmine.createSpy("obtenerNotificacionesRecibidas")
-        .and.returnValue(sujetoRecibidas.asObservable())
+      obtenerNotificacionesRecibidas: jasmine.createSpy("obtenerNotificacionesRecibidas").and.returnValue(sujetoRecibidas.asObservable())
     };
 
     await TestBed.configureTestingModule({
       imports: [ToastNotificaciones, TranslateModule.forRoot()],
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        { provide: NotificacionService, useValue: notificacionFake }
-      ]
+      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: NotificacionService, useValue: notificacionFake }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ToastNotificaciones);
     componente = fixture.componentInstance;
   });
 
-  it("debe crear el componente", function() {
+  it("debe crear el componente", function () {
     expect(componente).toBeTruthy();
   });
 
-  it("toastsMostrados arranca vacío", function() {
+  it("toastsMostrados arranca vacío", function () {
     expect(componente.toastsMostrados.length).toBe(0);
   });
 
-  it("ngOnInit se suscribe al observable del servicio", function() {
+  it("ngOnInit se suscribe al observable del servicio", function () {
     componente.ngOnInit();
     expect(notificacionFake.obtenerNotificacionesRecibidas).toHaveBeenCalled();
   });
 
-  it("al recibir una notificación añade un toast a la lista", function() {
+  it("al recibir una notificación añade un toast a la lista", function () {
     componente.ngOnInit();
 
     sujetoRecibidas.next(crearNotificacionEjemplo({ id: "n-100", titulo: "Hola" }));
@@ -66,7 +61,7 @@ describe("ToastNotificaciones", function() {
     expect(componente.toastsMostrados[0].id).toContain("toast-");
   });
 
-  it("el toast se elimina automáticamente tras 5 segundos", fakeAsync(function() {
+  it("el toast se elimina automáticamente tras 5 segundos", fakeAsync(function () {
     componente.ngOnInit();
 
     sujetoRecibidas.next(crearNotificacionEjemplo());
@@ -77,7 +72,7 @@ describe("ToastNotificaciones", function() {
     expect(componente.toastsMostrados.length).toBe(0);
   }));
 
-  it("cerrarToast elimina el toast con el id indicado", function() {
+  it("cerrarToast elimina el toast con el id indicado", function () {
     componente.ngOnInit();
     sujetoRecibidas.next(crearNotificacionEjemplo({ id: "n-1" }));
     const idGenerado = componente.toastsMostrados[0].id;
@@ -87,7 +82,7 @@ describe("ToastNotificaciones", function() {
     expect(componente.toastsMostrados.length).toBe(0);
   });
 
-  it("cerrarToast con id inexistente no rompe ni altera la lista", function() {
+  it("cerrarToast con id inexistente no rompe ni altera la lista", function () {
     componente.ngOnInit();
     sujetoRecibidas.next(crearNotificacionEjemplo());
     const tamanoPrevio = componente.toastsMostrados.length;
@@ -97,7 +92,7 @@ describe("ToastNotificaciones", function() {
     expect(componente.toastsMostrados.length).toBe(tamanoPrevio);
   });
 
-  it("ngOnDestroy cancela la suscripción si existe", function() {
+  it("ngOnDestroy cancela la suscripción si existe", function () {
     componente.ngOnInit();
     const suscripcionInterna = (componente as unknown as { suscripcion: { unsubscribe: jasmine.Spy } }).suscripcion;
     spyOn(suscripcionInterna, "unsubscribe");
@@ -107,13 +102,13 @@ describe("ToastNotificaciones", function() {
     expect(suscripcionInterna.unsubscribe).toHaveBeenCalled();
   });
 
-  it("ngOnDestroy sin suscripción previa no lanza errores", function() {
-    expect(function() {
+  it("ngOnDestroy sin suscripción previa no lanza errores", function () {
+    expect(function () {
       componente.ngOnDestroy();
     }).not.toThrow();
   });
 
-  it("obtenerColorPorTipo devuelve el color específico de cada tipo", function() {
+  it("obtenerColorPorTipo devuelve el color específico de cada tipo", function () {
     expect(componente.obtenerColorPorTipo("servidor_desconectado")).toBe("rojo");
     expect(componente.obtenerColorPorTipo("deployment")).toBe("verde");
     expect(componente.obtenerColorPorTipo("error_critico")).toBe("rojo");
@@ -121,7 +116,7 @@ describe("ToastNotificaciones", function() {
     expect(componente.obtenerColorPorTipo("cambio_configuracion")).toBe("neutro");
   });
 
-  it("obtenerColorPorTipo devuelve neutro para tipos desconocidos", function() {
+  it("obtenerColorPorTipo devuelve neutro para tipos desconocidos", function () {
     expect(componente.obtenerColorPorTipo("xxx")).toBe("neutro");
   });
 });

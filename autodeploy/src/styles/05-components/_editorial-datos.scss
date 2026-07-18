@@ -122,6 +122,19 @@
   color: var(--texto-apagado);
 }
 
+// En movil las columnas fijas no caben en una linea: la fila se pliega
+@media (max-width: 640px) {
+  .editorial__ledger__cabecera {
+    flex-wrap: wrap;
+    row-gap: 0.3rem; /* 5px */
+  }
+
+  .editorial__ledger__fila {
+    flex-wrap: wrap;
+    row-gap: 0.45rem; /* 7px */
+  }
+}
+
 // ---------------------------------------------------------------------------
 // Teletipo y esqueleto: la carga habla el idioma de la casa, sin spinners.
 // El retardo de 200ms evita el parpadeo cuando la respuesta llega rapida.
@@ -297,6 +310,16 @@
   .editorial__vitales__cifra {
     font-size: 2.2rem; /* 35px */
   }
+
+  // Repetimos el selector compacto para ganar a su especificidad base
+  .editorial__vitales--compacta .editorial__vitales__cifra {
+    font-size: 1.7rem; /* 27px */
+  }
+
+  .editorial__vitales__dato {
+    gap: 0.4rem; /* 6px */
+    padding: var(--spacing-size-l) var(--spacing-size-m);
+  }
 }
 
 // ---------------------------------------------------------------------------
@@ -408,12 +431,17 @@
   outline-offset: 2px;
 }
 
+// Sticky dentro de la caja con scroll: los botones nunca quedan fuera de vista
 .editorial__modal__acciones {
+  position: sticky;
+  bottom: 0;
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: var(--spacing-size-l);
   margin-top: 0.4rem; /* 6px */
+  padding-top: 0.5rem; /* 8px */
+  background-color: var(--fondo-oscuro);
 }
 
 // El ghost trae margenes pensados para vivir suelto; dentro del pie del

@@ -36,8 +36,8 @@
   }
 
   @if (mensajeError()) {
-    <p class="pagina-backups__alerta">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ mensajeError() }}
+    <p class="pagina-backups__alerta" role="alert">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> {{ mensajeError() }}
     </p>
   }
 
@@ -47,7 +47,7 @@
         <i class="fa-solid fa-clock-rotate-left"></i>
       </span>
       <section class="pagina-backups__auto__texto">
-        <span class="pagina-backups__auto__titulo">{{ "backups.autoTitulo" | translate }}</span>
+        <span class="pagina-backups__auto__titulo" id="backups-auto-titulo">{{ "backups.autoTitulo" | translate }}</span>
         <span class="pagina-backups__auto__detalle">{{ "backups.autoDetalle" | translate: { hora: horaBackupAutomatico() } }}</span>
       </section>
     </section>
@@ -56,14 +56,15 @@
             [class.pagina-backups__interruptor--activo]="backupsAutomaticos()"
             [disabled]="guardandoAutoBackup() || !servidorSeleccionadoId()"
             (click)="alternarBackupsAutomaticos()"
+            aria-labelledby="backups-auto-titulo"
             [attr.aria-pressed]="backupsAutomaticos()">
       <span class="pagina-backups__interruptor__circulo" aria-hidden="true"></span>
     </button>
   </section>
 
   @if (mensajeExito()) {
-    <p class="pagina-backups__alerta pagina-backups__alerta--ok">
-      <i class="fa-solid fa-circle-check"></i> {{ mensajeExito() }}
+    <p class="pagina-backups__alerta pagina-backups__alerta--ok" role="status">
+      <i class="fa-solid fa-circle-check" aria-hidden="true"></i> {{ mensajeExito() }}
     </p>
   }
 

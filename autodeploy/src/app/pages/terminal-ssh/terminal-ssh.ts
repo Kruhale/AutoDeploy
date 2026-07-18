@@ -14,7 +14,6 @@ import { Subscription } from "rxjs";
   styleUrl: "./terminal-ssh.scss"
 })
 export class TerminalSsh implements OnDestroy {
-
   @ViewChild("contenedorTerminal", { static: false }) contenedorTerminal!: ElementRef;
 
   nombreServidor = signal("—");
@@ -33,14 +32,14 @@ export class TerminalSsh implements OnDestroy {
   ) {
     const componente = this;
 
-    afterNextRender(function() {
+    afterNextRender(function () {
       const servidorId = componente.ruta.snapshot.paramMap.get("servidorId");
       if (!servidorId) {
         return;
       }
 
       componente.servidorService.obtenerPorId(servidorId).subscribe({
-        next: function(servidor: ServidorRemoto) {
+        next: function (servidor: ServidorRemoto) {
           componente.nombreServidor.set(servidor.nombre);
           componente.ipServidor.set(servidor.direccionIp);
           componente.puertoServidor.set(servidor.puertoSsh);
@@ -80,23 +79,20 @@ export class TerminalSsh implements OnDestroy {
     this.terminal.open(this.contenedorTerminal.nativeElement);
     this.fitAddon.fit();
 
-    this.terminal.onData(function(datos: string) {
+    this.terminal.onData(function (datos: string) {
       componente.terminalService.enviarEntrada(datos);
     });
 
-    this.suscripcionDatos = this.terminalService.datosRecibidos.subscribe(function(datos: string) {
+    this.suscripcionDatos = this.terminalService.datosRecibidos.subscribe(function (datos: string) {
       if (componente.terminal) {
         componente.terminal.write(datos);
       }
     });
 
-    this.manejadorRedimensionar = function() {
+    this.manejadorRedimensionar = function () {
       if (componente.fitAddon && componente.terminal) {
         componente.fitAddon.fit();
-        componente.terminalService.enviarRedimensionar(
-          componente.terminal.cols,
-          componente.terminal.rows
-        );
+        componente.terminalService.enviarRedimensionar(componente.terminal.cols, componente.terminal.rows);
       }
     };
     window.addEventListener("resize", this.manejadorRedimensionar);

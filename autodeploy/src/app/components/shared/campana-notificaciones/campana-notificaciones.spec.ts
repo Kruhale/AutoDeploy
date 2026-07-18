@@ -21,7 +21,7 @@ function crearNotificacionServiceFake() {
     conteoNoLeidas: conteoNoLeidas,
     conectarWebSocket: jasmine.createSpy("conectarWebSocket"),
     desconectarWebSocket: jasmine.createSpy("desconectarWebSocket"),
-    obtenerNotificacionesRecibidas: function() {
+    obtenerNotificacionesRecibidas: function () {
       return sujetoRecibidas.asObservable();
     },
     obtenerConteoNoLeidas: jasmine.createSpy("obtenerConteoNoLeidas").and.returnValue(Promise.resolve(0)),
@@ -32,24 +32,19 @@ function crearNotificacionServiceFake() {
   };
 }
 
-describe("CampanaNotificaciones", function() {
+describe("CampanaNotificaciones", function () {
   let fixture: ComponentFixture<CampanaNotificaciones>;
   let componente: CampanaNotificaciones;
   let notificacionFake: ReturnType<typeof crearNotificacionServiceFake>;
   let usuarioService: UsuarioService;
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     sessionStorage.clear();
     notificacionFake = crearNotificacionServiceFake();
 
     await TestBed.configureTestingModule({
       imports: [CampanaNotificaciones, TranslateModule.forRoot()],
-      providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        { provide: NotificacionService, useValue: notificacionFake }
-      ]
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), { provide: NotificacionService, useValue: notificacionFake }]
     }).compileComponents();
 
     usuarioService = TestBed.inject(UsuarioService);
@@ -57,33 +52,33 @@ describe("CampanaNotificaciones", function() {
     componente = fixture.componentInstance;
   });
 
-  afterEach(function() {
+  afterEach(function () {
     sessionStorage.clear();
   });
 
-  it("debe crear el componente", function() {
+  it("debe crear el componente", function () {
     expect(componente).toBeTruthy();
   });
 
-  it("campanAbierta arranca en falso", function() {
+  it("campanAbierta arranca en falso", function () {
     expect(componente.campanAbierta()).toBeFalse();
   });
 
-  it("alternarCampana invierte el estado de la señal", function() {
+  it("alternarCampana invierte el estado de la señal", function () {
     componente.alternarCampana();
     expect(componente.campanAbierta()).toBeTrue();
     componente.alternarCampana();
     expect(componente.campanAbierta()).toBeFalse();
   });
 
-  it("cerrarCampana pone la señal en falso", function() {
+  it("cerrarCampana pone la señal en falso", function () {
     componente.alternarCampana();
     expect(componente.campanAbierta()).toBeTrue();
     componente.cerrarCampana();
     expect(componente.campanAbierta()).toBeFalse();
   });
 
-  it("ngOnInit con usuario carga notificaciones y conecta WebSocket", async function() {
+  it("ngOnInit con usuario carga notificaciones y conecta WebSocket", async function () {
     usuarioService.usuarioId.set("usuario-321");
 
     componente.ngOnInit();
@@ -94,7 +89,7 @@ describe("CampanaNotificaciones", function() {
     expect(notificacionFake.conectarWebSocket).toHaveBeenCalledWith("usuario-321");
   });
 
-  it("ngOnInit sin usuario no llama a los métodos del servicio", function() {
+  it("ngOnInit sin usuario no llama a los métodos del servicio", function () {
     usuarioService.usuarioId.set("");
 
     componente.ngOnInit();
@@ -103,17 +98,17 @@ describe("CampanaNotificaciones", function() {
     expect(notificacionFake.conectarWebSocket).not.toHaveBeenCalled();
   });
 
-  it("ngOnDestroy desconecta el WebSocket", function() {
+  it("ngOnDestroy desconecta el WebSocket", function () {
     componente.ngOnDestroy();
     expect(notificacionFake.desconectarWebSocket).toHaveBeenCalled();
   });
 
-  it("marcarComoLeida delega en el servicio con el id correcto", async function() {
+  it("marcarComoLeida delega en el servicio con el id correcto", async function () {
     await componente.marcarComoLeida("notif-1");
     expect(notificacionFake.marcarComoLeida).toHaveBeenCalledWith("notif-1");
   });
 
-  it("marcarComoLeida captura errores del servicio", async function() {
+  it("marcarComoLeida captura errores del servicio", async function () {
     notificacionFake.marcarComoLeida.and.returnValue(Promise.reject(new Error("fallo")));
     spyOn(console, "error");
 
@@ -122,19 +117,19 @@ describe("CampanaNotificaciones", function() {
     expect(console.error).toHaveBeenCalled();
   });
 
-  it("marcarTodasComoLeidas con usuario delega en el servicio", async function() {
+  it("marcarTodasComoLeidas con usuario delega en el servicio", async function () {
     usuarioService.usuarioId.set("usuario-555");
     await componente.marcarTodasComoLeidas();
     expect(notificacionFake.marcarTodasComoLeidas).toHaveBeenCalledWith("usuario-555");
   });
 
-  it("marcarTodasComoLeidas sin usuario no hace nada", async function() {
+  it("marcarTodasComoLeidas sin usuario no hace nada", async function () {
     usuarioService.usuarioId.set("");
     await componente.marcarTodasComoLeidas();
     expect(notificacionFake.marcarTodasComoLeidas).not.toHaveBeenCalled();
   });
 
-  it("marcarTodasComoLeidas captura errores del servicio", async function() {
+  it("marcarTodasComoLeidas captura errores del servicio", async function () {
     usuarioService.usuarioId.set("usuario-555");
     notificacionFake.marcarTodasComoLeidas.and.returnValue(Promise.reject(new Error("fallo")));
     spyOn(console, "error");
@@ -144,12 +139,12 @@ describe("CampanaNotificaciones", function() {
     expect(console.error).toHaveBeenCalled();
   });
 
-  it("eliminarNotificacion delega en el servicio con el id correcto", async function() {
+  it("eliminarNotificacion delega en el servicio con el id correcto", async function () {
     await componente.eliminarNotificacion("notif-99");
     expect(notificacionFake.eliminarNotificacion).toHaveBeenCalledWith("notif-99");
   });
 
-  it("eliminarNotificacion captura errores del servicio", async function() {
+  it("eliminarNotificacion captura errores del servicio", async function () {
     notificacionFake.eliminarNotificacion.and.returnValue(Promise.reject(new Error("fallo")));
     spyOn(console, "error");
 
@@ -158,7 +153,7 @@ describe("CampanaNotificaciones", function() {
     expect(console.error).toHaveBeenCalled();
   });
 
-  it("obtenerColorPorTipo devuelve el color correspondiente", function() {
+  it("obtenerColorPorTipo devuelve el color correspondiente", function () {
     expect(componente.obtenerColorPorTipo("servidor_desconectado")).toBe("rojo");
     expect(componente.obtenerColorPorTipo("deployment")).toBe("verde");
     expect(componente.obtenerColorPorTipo("error_critico")).toBe("rojo");
@@ -166,11 +161,11 @@ describe("CampanaNotificaciones", function() {
     expect(componente.obtenerColorPorTipo("cambio_configuracion")).toBe("neutro");
   });
 
-  it("obtenerColorPorTipo devuelve neutro para tipos desconocidos", function() {
+  it("obtenerColorPorTipo devuelve neutro para tipos desconocidos", function () {
     expect(componente.obtenerColorPorTipo("desconocido")).toBe("neutro");
   });
 
-  it("alClickFueraDelPanel no hace nada cuando la campana esta cerrada", function() {
+  it("alClickFueraDelPanel no hace nada cuando la campana esta cerrada", function () {
     spyOn(componente, "cerrarCampana");
     const evento = new MouseEvent("click");
 
@@ -179,7 +174,7 @@ describe("CampanaNotificaciones", function() {
     expect(componente.cerrarCampana).not.toHaveBeenCalled();
   });
 
-  it("alClickFueraDelPanel cierra la campana al clicar fuera", function() {
+  it("alClickFueraDelPanel cierra la campana al clicar fuera", function () {
     componente.alternarCampana();
     spyOn(componente, "cerrarCampana");
     const elementoExterno = document.createElement("section");
@@ -190,7 +185,7 @@ describe("CampanaNotificaciones", function() {
     expect(componente.cerrarCampana).toHaveBeenCalled();
   });
 
-  it("alClickFueraDelPanel no cierra al clicar dentro del componente", function() {
+  it("alClickFueraDelPanel no cierra al clicar dentro del componente", function () {
     componente.alternarCampana();
     fixture.detectChanges();
     spyOn(componente, "cerrarCampana");

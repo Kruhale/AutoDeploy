@@ -38,7 +38,7 @@
     <section class="editorial__vitales editorial__vitales--compacta">
       <article class="editorial__vitales__dato">
         <span class="editorial__vitales__etiqueta">{{ "panelMetricas.tarjetas.cpu" | translate }}</span>
-        <span class="editorial__vitales__cifra">{{ metrica?.cpuPorcentaje?.toFixed(1) || 0 }}<small class="panel-metricas__unidad">%</small></span>
+        <span class="editorial__vitales__cifra">{{ redondearPorcentaje(metrica?.cpuPorcentaje || 0) }}<small class="panel-metricas__unidad">%</small></span>
         <span class="editorial__vitales__barra" aria-hidden="true">
           <span class="editorial__vitales__barra__relleno editorial__vitales__barra__relleno--{{ obtenerColorBarra(metrica?.cpuPorcentaje || 0) }}" [style.width.%]="metrica?.cpuPorcentaje || 0"></span>
         </span>

@@ -5,7 +5,7 @@ import { provideRouter } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import { Backups } from "./backups";
 
-describe("Backups", function() {
+describe("Backups", function () {
   let componente: Backups;
   let fixture: ComponentFixture<Backups>;
   let httpMock: HttpTestingController;
@@ -53,14 +53,10 @@ describe("Backups", function() {
     fechaCreacion: "2026-05-22"
   };
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     await TestBed.configureTestingModule({
       imports: [Backups, TranslateModule.forRoot()],
-      providers: [
-        provideRouter([]),
-        provideHttpClient(),
-        provideHttpClientTesting()
-      ]
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(Backups);
@@ -68,7 +64,7 @@ describe("Backups", function() {
     httpMock = TestBed.inject(HttpTestingController);
   });
 
-  afterEach(function() {
+  afterEach(function () {
     httpMock.verify();
   });
 
@@ -79,11 +75,11 @@ describe("Backups", function() {
     httpMock.expectOne("/api/backups/auto/srv-1").flush({ success: true, message: "OK", data: { activado: true, hora: "04:30" } });
   }
 
-  it("debe crear el componente", function() {
+  it("debe crear el componente", function () {
     expect(componente).toBeTruthy();
   });
 
-  it("inicia con signals por defecto", function() {
+  it("inicia con signals por defecto", function () {
     expect(componente.cargando()).toBeTrue();
     expect(componente.listaDeBackups().length).toBe(0);
     expect(componente.backupsAutomaticos()).toBeFalse();
@@ -91,7 +87,7 @@ describe("Backups", function() {
     expect(componente.creandoBackup()).toBeFalse();
   });
 
-  it("cargarServidores selecciona el primero y carga backups y estado auto", function() {
+  it("cargarServidores selecciona el primero y carga backups y estado auto", function () {
     inicializarConServidores();
     expect(componente.servidorSeleccionadoId()).toBe("srv-1");
     expect(componente.listaDeBackups().length).toBe(1);
@@ -100,20 +96,20 @@ describe("Backups", function() {
     expect(componente.horaBackupAutomatico()).toBe("04:30");
   });
 
-  it("cargarServidores sin servidores deja cargando en false", function() {
+  it("cargarServidores sin servidores deja cargando en false", function () {
     fixture.detectChanges();
     httpMock.expectOne("/api/servidores").flush({ success: true, message: "OK", data: [] });
     expect(componente.cargando()).toBeFalse();
   });
 
-  it("cargarServidores con error deja cargando en false", function() {
+  it("cargarServidores con error deja cargando en false", function () {
     fixture.detectChanges();
     const peticion = httpMock.expectOne("/api/servidores");
     peticion.error(new ProgressEvent("net"), { status: 500, statusText: "fail" });
     expect(componente.cargando()).toBeFalse();
   });
 
-  it("cargarEstadoAutoBackup con error desactiva backups automaticos", function() {
+  it("cargarEstadoAutoBackup con error desactiva backups automaticos", function () {
     fixture.detectChanges();
     httpMock.expectOne("/api/servidores").flush({ success: true, message: "OK", data: listaServidoresFake });
     httpMock.expectOne("/api/backups/servidor/srv-1").flush({ success: true, message: "OK", data: [] });
@@ -122,7 +118,7 @@ describe("Backups", function() {
     expect(componente.backupsAutomaticos()).toBeFalse();
   });
 
-  it("cargarEstadoAutoBackup sin data usa valores por defecto", function() {
+  it("cargarEstadoAutoBackup sin data usa valores por defecto", function () {
     fixture.detectChanges();
     httpMock.expectOne("/api/servidores").flush({ success: true, message: "OK", data: listaServidoresFake });
     httpMock.expectOne("/api/backups/servidor/srv-1").flush({ success: true, message: "OK", data: [] });
@@ -131,7 +127,7 @@ describe("Backups", function() {
     expect(componente.horaBackupAutomatico()).toBe("03:00");
   });
 
-  it("cargarBackups soporta respuesta como array directo", function() {
+  it("cargarBackups soporta respuesta como array directo", function () {
     fixture.detectChanges();
     httpMock.expectOne("/api/servidores").flush({ success: true, message: "OK", data: listaServidoresFake });
     httpMock.expectOne("/api/backups/servidor/srv-1").flush([backupCompletado, { ...backupCompletado, id: "bk-3" }]);
@@ -139,7 +135,7 @@ describe("Backups", function() {
     expect(componente.listaDeBackups().length).toBe(2);
   });
 
-  it("cargarBackups con error deja la lista vacia", function() {
+  it("cargarBackups con error deja la lista vacia", function () {
     fixture.detectChanges();
     httpMock.expectOne("/api/servidores").flush({ success: true, message: "OK", data: listaServidoresFake });
     const peticion = httpMock.expectOne("/api/backups/servidor/srv-1");
@@ -149,7 +145,7 @@ describe("Backups", function() {
     expect(componente.cargando()).toBeFalse();
   });
 
-  it("cambiarServidor recarga backups y estado auto del nuevo servidor", function() {
+  it("cambiarServidor recarga backups y estado auto del nuevo servidor", function () {
     inicializarConServidores();
     componente.cambiarServidor("srv-2");
     expect(componente.servidorSeleccionadoId()).toBe("srv-2");
@@ -158,7 +154,7 @@ describe("Backups", function() {
     expect(componente.listaDeBackups().length).toBe(0);
   });
 
-  it("cargarBackups con backup en progreso arranca el temporizador", fakeAsync(function() {
+  it("cargarBackups con backup en progreso arranca el temporizador", fakeAsync(function () {
     fixture.detectChanges();
     httpMock.expectOne("/api/servidores").flush({ success: true, message: "OK", data: listaServidoresFake });
     httpMock.expectOne("/api/backups/servidor/srv-1").flush({ success: true, message: "OK", data: [backupEnProgreso] });
@@ -168,12 +164,14 @@ describe("Backups", function() {
     (componente as any).detenerRefresco();
   }));
 
-  it("alternarBackupsAutomaticos sin servidor no llama backend", function() {
+  it("alternarBackupsAutomaticos sin servidor no llama backend", function () {
     componente.alternarBackupsAutomaticos();
-    httpMock.expectNone(function(req) { return req.url.startsWith("/api/backups/auto/"); });
+    httpMock.expectNone(function (req) {
+      return req.url.startsWith("/api/backups/auto/");
+    });
   });
 
-  it("alternarBackupsAutomaticos activando muestra mensaje exito", fakeAsync(function() {
+  it("alternarBackupsAutomaticos activando muestra mensaje exito", fakeAsync(function () {
     inicializarConServidores();
     componente.backupsAutomaticos.set(false);
     componente.alternarBackupsAutomaticos();
@@ -188,7 +186,7 @@ describe("Backups", function() {
     expect(componente.mensajeExito()).toBe("");
   }));
 
-  it("alternarBackupsAutomaticos desactivando muestra mensaje exito distinto", fakeAsync(function() {
+  it("alternarBackupsAutomaticos desactivando muestra mensaje exito distinto", fakeAsync(function () {
     inicializarConServidores();
     componente.alternarBackupsAutomaticos();
     const peticion = httpMock.expectOne("/api/backups/auto/srv-1");
@@ -200,7 +198,7 @@ describe("Backups", function() {
     expect(componente.mensajeExito()).toBe("");
   }));
 
-  it("alternarBackupsAutomaticos con error muestra mensajeError", fakeAsync(function() {
+  it("alternarBackupsAutomaticos con error muestra mensajeError", fakeAsync(function () {
     inicializarConServidores();
     componente.alternarBackupsAutomaticos();
     const peticion = httpMock.expectOne("/api/backups/auto/srv-1");
@@ -211,12 +209,12 @@ describe("Backups", function() {
     expect(componente.mensajeError()).toBe("");
   }));
 
-  it("crearBackup sin servidor no llama backend", function() {
+  it("crearBackup sin servidor no llama backend", function () {
     componente.crearBackup();
     httpMock.expectNone("/api/backups");
   });
 
-  it("crearBackup OK recarga la lista", function() {
+  it("crearBackup OK recarga la lista", function () {
     inicializarConServidores();
     componente.crearBackup();
     const peticion = httpMock.expectOne("/api/backups");
@@ -227,7 +225,7 @@ describe("Backups", function() {
     expect(componente.creandoBackup()).toBeFalse();
   });
 
-  it("crearBackup con error muestra mensaje y lo limpia", fakeAsync(function() {
+  it("crearBackup con error muestra mensaje y lo limpia", fakeAsync(function () {
     inicializarConServidores();
     componente.crearBackup();
     const peticion = httpMock.expectOne("/api/backups");
@@ -238,7 +236,7 @@ describe("Backups", function() {
     expect(componente.mensajeError()).toBe("");
   }));
 
-  it("confirmarEliminarBackup OK recarga la lista", function() {
+  it("confirmarEliminarBackup OK recarga la lista", function () {
     inicializarConServidores();
     componente.solicitarEliminarBackup("bk-1");
     componente.confirmarEliminarBackup();
@@ -248,7 +246,7 @@ describe("Backups", function() {
     httpMock.expectOne("/api/backups/servidor/srv-1").flush({ success: true, message: "OK", data: [] });
   });
 
-  it("confirmarEliminarBackup con error muestra mensaje y lo limpia", fakeAsync(function() {
+  it("confirmarEliminarBackup con error muestra mensaje y lo limpia", fakeAsync(function () {
     inicializarConServidores();
     componente.solicitarEliminarBackup("bk-1");
     componente.confirmarEliminarBackup();
@@ -259,7 +257,7 @@ describe("Backups", function() {
     expect(componente.mensajeError()).toBe("");
   }));
 
-  it("cancelar el dialogo de restaurar no hace peticion", function() {
+  it("cancelar el dialogo de restaurar no hace peticion", function () {
     inicializarConServidores();
     componente.solicitarRestaurarBackup("bk-1");
     componente.cancelarDialogoBackup();
@@ -267,7 +265,7 @@ describe("Backups", function() {
     httpMock.expectNone("/api/backups/bk-1/restaurar");
   });
 
-  it("confirmarRestaurarBackup OK muestra mensaje exito y recarga", fakeAsync(function() {
+  it("confirmarRestaurarBackup OK muestra mensaje exito y recarga", fakeAsync(function () {
     inicializarConServidores();
     componente.solicitarRestaurarBackup("bk-1");
     componente.confirmarRestaurarBackup();
@@ -280,7 +278,7 @@ describe("Backups", function() {
     expect(componente.mensajeExito()).toBe("");
   }));
 
-  it("confirmarRestaurarBackup con error y detalle del backend muestra el detalle", fakeAsync(function() {
+  it("confirmarRestaurarBackup con error y detalle del backend muestra el detalle", fakeAsync(function () {
     inicializarConServidores();
     componente.solicitarRestaurarBackup("bk-1");
     componente.confirmarRestaurarBackup();
@@ -291,7 +289,7 @@ describe("Backups", function() {
     expect(componente.mensajeError()).toBe("");
   }));
 
-  it("confirmarRestaurarBackup con error sin detalle usa mensaje por defecto", fakeAsync(function() {
+  it("confirmarRestaurarBackup con error sin detalle usa mensaje por defecto", fakeAsync(function () {
     inicializarConServidores();
     componente.solicitarRestaurarBackup("bk-1");
     componente.confirmarRestaurarBackup();

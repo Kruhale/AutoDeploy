@@ -1,8 +1,8 @@
-<aside class="contenedor-toasts" role="status" aria-live="polite">
+<aside class="contenedor-toasts" role="status">
 	@for (toast of toastsMostrados; track toast.id) {
 		<article class="toast toast--{{ obtenerColorPorTipo(toast.notificacion.tipo) }}">
 			<section class="toast__contenido">
-				<h2 class="toast__titulo">{{ toast.notificacion.titulo }}</h2>
+				<p class="toast__titulo">{{ toast.notificacion.titulo }}</p>
 				<p class="toast__descripcion">{{ toast.notificacion.descripcion }}</p>
 			</section>
 			<button class="toast__cerrar" type="button" (click)="cerrarToast(toast.id)" [attr.aria-label]="'toastNotificaciones.ariaCerrar' | translate">

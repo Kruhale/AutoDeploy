@@ -6,7 +6,7 @@ import { signal } from "@angular/core";
 import { PanelMetricasServidor } from "./panel-metricas-servidor";
 import { MetricasServidorService, MetricaServidor } from "../../services/metricas-servidor.service";
 
-describe("PanelMetricasServidor", function() {
+describe("PanelMetricasServidor", function () {
   let component: PanelMetricasServidor;
   let fixture: ComponentFixture<PanelMetricasServidor>;
   let metricasFake: any;
@@ -31,7 +31,7 @@ describe("PanelMetricasServidor", function() {
     };
   }
 
-  beforeEach(async function() {
+  beforeEach(async function () {
     metricasFake = {
       metricasPorServidor: signal<Map<string, MetricaServidor>>(new Map()),
       cargarUltimaMetrica: jasmine.createSpy("cargarUltimaMetrica").and.returnValue(Promise.resolve(null)),
@@ -41,11 +41,7 @@ describe("PanelMetricasServidor", function() {
 
     await TestBed.configureTestingModule({
       imports: [PanelMetricasServidor, TranslateModule.forRoot()],
-      providers: [
-        provideHttpClient(),
-        provideHttpClientTesting(),
-        { provide: MetricasServidorService, useValue: metricasFake }
-      ]
+      providers: [provideHttpClient(), provideHttpClientTesting(), { provide: MetricasServidorService, useValue: metricasFake }]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PanelMetricasServidor);
@@ -54,18 +50,18 @@ describe("PanelMetricasServidor", function() {
     component.nombreServidor = "Mi VPS";
   });
 
-  it("debe crear el componente", function() {
+  it("debe crear el componente", function () {
     expect(component).toBeTruthy();
   });
 
-  it("ngOnInit con servidorId valido pide ultima metrica y conecta tiempo real", function() {
+  it("ngOnInit con servidorId valido pide ultima metrica y conecta tiempo real", function () {
     component.ngOnInit();
 
     expect(metricasFake.cargarUltimaMetrica).toHaveBeenCalledWith("srv-1");
     expect(metricasFake.conectarTiempoReal).toHaveBeenCalled();
   });
 
-  it("ngOnInit con servidorId vacio no llama al servicio", function() {
+  it("ngOnInit con servidorId vacio no llama al servicio", function () {
     component.servidorId = "";
     component.ngOnInit();
 
@@ -73,12 +69,12 @@ describe("PanelMetricasServidor", function() {
     expect(metricasFake.conectarTiempoReal).not.toHaveBeenCalled();
   });
 
-  it("metricaActual: null cuando no hay metrica en el mapa", function() {
+  it("metricaActual: null cuando no hay metrica en el mapa", function () {
     expect(component.metricaActual()).toBeNull();
     expect(component.estaEsperandoDatos()).toBeTrue();
   });
 
-  it("metricaActual: devuelve la metrica correcta cuando esta cacheada", function() {
+  it("metricaActual: devuelve la metrica correcta cuando esta cacheada", function () {
     const metrica = metricaDemo();
     const mapa = new Map<string, MetricaServidor>();
     mapa.set("srv-1", metrica);
@@ -88,11 +84,11 @@ describe("PanelMetricasServidor", function() {
     expect(component.estaEsperandoDatos()).toBeFalse();
   });
 
-  it("porcentajeRam: 0 si no hay metrica", function() {
+  it("porcentajeRam: 0 si no hay metrica", function () {
     expect(component.porcentajeRam()).toBe(0);
   });
 
-  it("porcentajeRam: 0 si ramTotalMb es 0", function() {
+  it("porcentajeRam: 0 si ramTotalMb es 0", function () {
     const mapa = new Map<string, MetricaServidor>();
     mapa.set("srv-1", metricaDemo({ ramUsadaMb: 100, ramTotalMb: 0 }));
     metricasFake.metricasPorServidor.set(mapa);
@@ -100,7 +96,7 @@ describe("PanelMetricasServidor", function() {
     expect(component.porcentajeRam()).toBe(0);
   });
 
-  it("porcentajeRam: calcula porcentaje redondeado correctamente", function() {
+  it("porcentajeRam: calcula porcentaje redondeado correctamente", function () {
     const mapa = new Map<string, MetricaServidor>();
     mapa.set("srv-1", metricaDemo({ ramUsadaMb: 1024, ramTotalMb: 4096 }));
     metricasFake.metricasPorServidor.set(mapa);
@@ -108,11 +104,11 @@ describe("PanelMetricasServidor", function() {
     expect(component.porcentajeRam()).toBe(25);
   });
 
-  it("tiempoEncendidoTexto: cadena vacia si no hay metrica", function() {
+  it("tiempoEncendidoTexto: cadena vacia si no hay metrica", function () {
     expect(component.tiempoEncendidoTexto()).toBe("");
   });
 
-  it("tiempoEncendidoTexto: formato dias y horas cuando hay dias", function() {
+  it("tiempoEncendidoTexto: formato dias y horas cuando hay dias", function () {
     const mapa = new Map<string, MetricaServidor>();
     mapa.set("srv-1", metricaDemo({ tiempoEncendidoSegundos: 90000 }));
     metricasFake.metricasPorServidor.set(mapa);
@@ -120,7 +116,7 @@ describe("PanelMetricasServidor", function() {
     expect(component.tiempoEncendidoTexto()).toBe("1d 1h");
   });
 
-  it("tiempoEncendidoTexto: formato horas y minutos cuando no hay dias", function() {
+  it("tiempoEncendidoTexto: formato horas y minutos cuando no hay dias", function () {
     const mapa = new Map<string, MetricaServidor>();
     mapa.set("srv-1", metricaDemo({ tiempoEncendidoSegundos: 7320 }));
     metricasFake.metricasPorServidor.set(mapa);
@@ -128,7 +124,7 @@ describe("PanelMetricasServidor", function() {
     expect(component.tiempoEncendidoTexto()).toBe("2h 2m");
   });
 
-  it("tiempoEncendidoTexto: solo minutos cuando es menor de una hora", function() {
+  it("tiempoEncendidoTexto: solo minutos cuando es menor de una hora", function () {
     const mapa = new Map<string, MetricaServidor>();
     mapa.set("srv-1", metricaDemo({ tiempoEncendidoSegundos: 300 }));
     metricasFake.metricasPorServidor.set(mapa);
@@ -136,22 +132,24 @@ describe("PanelMetricasServidor", function() {
     expect(component.tiempoEncendidoTexto()).toBe("5m");
   });
 
-  it("obtenerColorBarra: rojo si porcentaje >= 85", function() {
+  it("obtenerColorBarra: rojo si porcentaje >= 85", function () {
     expect(component.obtenerColorBarra(85)).toBe("rojo");
     expect(component.obtenerColorBarra(99)).toBe("rojo");
   });
 
-  it("obtenerColorBarra: naranja si porcentaje >= 65 y < 85", function() {
+  it("obtenerColorBarra: naranja si porcentaje >= 65 y < 85", function () {
     expect(component.obtenerColorBarra(65)).toBe("naranja");
     expect(component.obtenerColorBarra(80)).toBe("naranja");
   });
 
-  it("obtenerColorBarra: verde por defecto", function() {
+  it("obtenerColorBarra: verde por defecto", function () {
     expect(component.obtenerColorBarra(0)).toBe("verde");
     expect(component.obtenerColorBarra(40)).toBe("verde");
   });
 
-  it("ngOnDestroy: no falla al invocarse", function() {
-    expect(function() { component.ngOnDestroy(); }).not.toThrow();
+  it("ngOnDestroy: no falla al invocarse", function () {
+    expect(function () {
+      component.ngOnDestroy();
+    }).not.toThrow();
   });
 });

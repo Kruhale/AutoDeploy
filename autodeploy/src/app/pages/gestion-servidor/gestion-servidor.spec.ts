@@ -126,7 +126,7 @@ describe("GestionServidor", function() {
     metricasFake.metricasPorServidor.set(mapa);
 
     expect(component.metricaActual()).toBe(metrica);
-    expect(component.cpuValor()).toBe("50.5%");
+    expect(component.cpuValor()).toBe("51%");
     expect(component.porcentajeRam()).toBe(25);
     expect(component.ramValor()).toBe("25%");
     expect(component.discoValor()).toBe("75%");

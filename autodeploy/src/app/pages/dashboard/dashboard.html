@@ -48,20 +48,7 @@
     </article>
   </section>
 
-  @if (listaDeServidores().length === 0) {
-    <section class="editorial__vacio">
-      <span class="editorial__vacio__icono" aria-hidden="true">
-        <i class="fa-solid fa-server"></i>
-      </span>
-      <p class="editorial__vacio__titulo">{{ "dashboard.vacio.titulo" | translate }}</p>
-      <p class="editorial__vacio__detalle">{{ "dashboard.vacio.detalle" | translate }}</p>
-      <a class="editorial__cta-principal editorial__cta-principal--separado" routerLink="/app/onboarding">
-        <span class="editorial__cta-principal__texto">
-          <span class="editorial__cta-principal__principal">{{ "dashboard.vacio.boton" | translate }}</span>
-        </span>
-      </a>
-    </section>
-  } @else {
+  @if (listaDeServidores().length > 0) {
     <section class="editorial__bloque">
       <header class="editorial__bloque__cabecera">
         <span class="editorial__bloque__indice">01</span>
@@ -102,8 +89,8 @@
               <span class="panel-principal__servidor__nombre">{{ servidor.nombre }}</span>
               <span class="panel-principal__servidor__ip">{{ servidor.ip }}</span>
             </span>
-            <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">{{ "dashboard.servidor.manage" | translate }} <span aria-hidden="true">→</span></a>
-            <a class="panel-principal__servidor__enlace" [routerLink]="'/app/terminal/' + servidor.id">{{ "dashboard.servidor.ssh" | translate }}</a>
+            <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id" [attr.aria-label]="'dashboard.servidor.ariaGestionar' | translate: { nombre: servidor.nombre }">{{ "dashboard.servidor.manage" | translate }} <span aria-hidden="true">→</span></a>
+            <a class="panel-principal__servidor__enlace" [routerLink]="'/app/terminal/' + servidor.id" [attr.aria-label]="'dashboard.servidor.ariaSsh' | translate: { nombre: servidor.nombre }">{{ "dashboard.servidor.ssh" | translate }}</a>
           </article>
         }
       </section>

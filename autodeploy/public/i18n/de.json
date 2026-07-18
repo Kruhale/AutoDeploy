@@ -205,8 +205,8 @@
     "tituloPanel": "Benachrichtigungen",
     "ariaCerrar": "Schließen",
     "vacio": "Keine Benachrichtigungen vorhanden",
-    "marcarLeida": "Als gelesen markieren",
-    "eliminar": "Löschen",
+    "marcarLeida": "Als gelesen markieren: {{titulo}}",
+    "eliminar": "Benachrichtigung löschen: {{titulo}}",
     "marcarTodas": "Alle als gelesen markieren"
   },
   "toastNotificaciones": {
@@ -610,7 +610,9 @@
     },
     "servidor": {
       "manage": "Verwalten",
-      "ssh": "SSH"
+      "ssh": "SSH",
+      "ariaGestionar": "Server {{nombre}} verwalten",
+      "ariaSsh": "SSH-Terminal für {{nombre}} öffnen"
     },
     "despliegues": {
       "vacio": "Noch keine Deployments registriert"
@@ -1058,7 +1060,7 @@
     "vacioDetalle": "Fügen Sie Ihre erste Domain hinzu, um Traffic zu Ihrem Server zu leiten.",
     "sslActivo": "SSL aktiv",
     "sslInactivo": "Kein SSL",
-    "ariaEliminarDominio": "Domain löschen",
+    "ariaEliminarDominio": "Domain {{nombre}} löschen",
     "accionesTitulo": "Schnellaktionen",
     "accionesDescripcion": "Führen Sie die häufigsten DNS- und SSL-Abläufe mit einem Klick aus.",
     "renovarTitulo": "SSL erneuern",
@@ -1091,7 +1093,7 @@
       "agregar": "Hinzufügen",
       "cargando": "Lädt…",
       "vacio": "Keine Weiterleitungen konfiguriert · sie werden beim Speichern in `$HOME/.autodeploy/redirects.conf` geschrieben.",
-      "ariaEliminar": "Weiterleitung löschen"
+      "ariaEliminar": "Weiterleitung von {{origen}} löschen"
     },
     "mensajes": {
       "errorAgregar": "Die Domain konnte nicht hinzugefügt werden. Bitte versuchen Sie es erneut.",

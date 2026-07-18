@@ -18,13 +18,13 @@
 
   <section class="logs-terminal__barra-filtros">
     <section class="logs-terminal__filtros">
-      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'all'" (click)="cambiarFiltro('all')">{{ "logsTerminal.filtro.all" | translate }}</button>
-      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'info'" (click)="cambiarFiltro('info')">{{ "logsTerminal.filtro.info" | translate }}</button>
-      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'warn'" (click)="cambiarFiltro('warn')">{{ "logsTerminal.filtro.warn" | translate }}</button>
-      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'error'" (click)="cambiarFiltro('error')">{{ "logsTerminal.filtro.error" | translate }}</button>
+      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'all'" [attr.aria-pressed]="filtroActivo() === 'all'" (click)="cambiarFiltro('all')">{{ "logsTerminal.filtro.all" | translate }}</button>
+      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'info'" [attr.aria-pressed]="filtroActivo() === 'info'" (click)="cambiarFiltro('info')">{{ "logsTerminal.filtro.info" | translate }}</button>
+      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'warn'" [attr.aria-pressed]="filtroActivo() === 'warn'" (click)="cambiarFiltro('warn')">{{ "logsTerminal.filtro.warn" | translate }}</button>
+      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'error'" [attr.aria-pressed]="filtroActivo() === 'error'" (click)="cambiarFiltro('error')">{{ "logsTerminal.filtro.error" | translate }}</button>
     </section>
     <section class="logs-terminal__barra-acciones">
-      <button class="boton--ghost" type="button" (click)="exportarLogs()">
+      <button class="editorial__boton-ghost" type="button" (click)="exportarLogs()">
         <i class="fa-solid fa-download" aria-hidden="true"></i> {{ "logsTerminal.exportarLogs" | translate }}
       </button>
       <button class="boton--primario" type="button" (click)="reiniciarFlujo()" [disabled]="refrescandoFlujo()">

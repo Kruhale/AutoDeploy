@@ -100,7 +100,9 @@ export class GestionServidor implements OnInit, OnDestroy {
       if (metrica === null) {
         return "—";
       }
-      return metrica.cpuPorcentaje.toFixed(1) + "%";
+      // Entero como RAM y disco: tres cifras hermanas con la misma precision
+      const cpuRedondeada = Math.round(metrica.cpuPorcentaje);
+      return cpuRedondeada + "%";
     });
 
     this.ramValor = computed(function calcularRamValor() {
@@ -134,7 +136,7 @@ export class GestionServidor implements OnInit, OnDestroy {
     const componente = this;
 
     this.servidorService.obtenerPorId(idDesdeRuta).subscribe({
-      next: function(servidor: ServidorRemoto) {
+      next: function (servidor: ServidorRemoto) {
         componente.servidorNombre.set(servidor.nombre);
         componente.servidorIp.set(servidor.direccionIp);
         componente.servidorUsuario.set(servidor.usuarioSsh);
@@ -161,13 +163,13 @@ export class GestionServidor implements OnInit, OnDestroy {
     const componente = this;
 
     this.http.get<any>("/api/despliegues/servidor/" + idServidor).subscribe({
-      next: function(respuesta: any) {
-        const despliegues: DespliegueApi[] = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
-        const aplicaciones = despliegues.map(function(despliegue): AplicacionHospedada {
+      next: function (respuesta: any) {
+        const despliegues: DespliegueApi[] = Array.isArray(respuesta) ? respuesta : respuesta && Array.isArray(respuesta.data) ? respuesta.data : [];
+        const aplicaciones = despliegues.map(function (despliegue): AplicacionHospedada {
           return {
             icono: "fa-solid fa-cube",
             textoIcono: "",
-            colorIcono: despliegue.estado === "completado" ? "amarillo" : (despliegue.estado === "fallido" ? "teal" : "cyan"),
+            colorIcono: despliegue.estado === "completado" ? "amarillo" : despliegue.estado === "fallido" ? "teal" : "cyan",
             nombre: despliegue.url || despliegue.tipo,
             meta: despliegue.tipo + " · " + despliegue.estado,
             version: despliegue.fechaInicio ? new Date(despliegue.fechaInicio).toLocaleDateString() : "—"
@@ -175,7 +177,7 @@ export class GestionServidor implements OnInit, OnDestroy {
         });
         componente.listaDeAplicaciones.set(aplicaciones);
       },
-      error: function() {
+      error: function () {
         componente.listaDeAplicaciones.set([]);
       }
     });
@@ -185,8 +187,8 @@ export class GestionServidor implements OnInit, OnDestroy {
     const componente = this;
 
     this.http.get<any>("/api/health/" + idServidor).subscribe({
-      next: function(respuesta: any) {
-        const comprobaciones: ComprobacionSalud[] = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
+      next: function (respuesta: any) {
+        const comprobaciones: ComprobacionSalud[] = Array.isArray(respuesta) ? respuesta : respuesta && Array.isArray(respuesta.data) ? respuesta.data : [];
         if (comprobaciones.length > 0) {
           componente.estadoSalud.set(comprobaciones[0]);
         }
@@ -200,8 +202,8 @@ export class GestionServidor implements OnInit, OnDestroy {
     const componente = this;
 
     this.http.get<any>("/api/subdominios/servidor/" + idServidor).subscribe({
-      next: function(respuesta: any) {
-        const subdominios: SubdominioItem[] = Array.isArray(respuesta) ? respuesta : (respuesta && Array.isArray(respuesta.data) ? respuesta.data : []);
+      next: function (respuesta: any) {
+        const subdominios: SubdominioItem[] = Array.isArray(respuesta) ? respuesta : respuesta && Array.isArray(respuesta.data) ? respuesta.data : [];
         componente.listaSubdominios.set(subdominios);
       }
     });
@@ -212,7 +214,7 @@ export class GestionServidor implements OnInit, OnDestroy {
     const idServidor = this.servidorId();
 
     this.http.delete("/api/subdominios/" + idSubdominio).subscribe({
-      next: function() {
+      next: function () {
         componente.cargarSubdominios(idServidor);
       }
     });
@@ -226,19 +228,19 @@ export class GestionServidor implements OnInit, OnDestroy {
     const idActual = this.servidorId();
 
     this.http.post<{ success: boolean; message: string }>("/api/servidores/" + idActual + "/reboot", {}).subscribe({
-      next: function(respuesta) {
+      next: function (respuesta) {
         const componenteInterior = componente;
-        setTimeout(function() {
+        setTimeout(function () {
           componenteInterior.reiniciando.set(false);
           componenteInterior.servidorService.obtenerPorId(idActual).subscribe({
-            next: function(servidorActualizado: ServidorRemoto) {
+            next: function (servidorActualizado: ServidorRemoto) {
               const estadoTrasReinicio = servidorActualizado.estado === "conectado" ? "online" : "offline";
               componenteInterior.servidorEstado.set(estadoTrasReinicio);
             }
           });
         }, 5000);
       },
-      error: function() {
+      error: function () {
         componente.reiniciando.set(false);
         componente.servidorEstado.set("offline");
       }

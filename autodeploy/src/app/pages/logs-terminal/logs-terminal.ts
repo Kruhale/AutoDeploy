@@ -22,7 +22,6 @@ interface EntradaLog {
   styleUrl: "./logs-terminal.scss"
 })
 export class LogsTerminal implements OnDestroy {
-
   @ViewChild("contenedorTerminal", { static: false }) contenedorTerminal!: ElementRef;
 
   filtroActivo = signal<"all" | "info" | "warn" | "error">("all");
@@ -47,7 +46,7 @@ export class LogsTerminal implements OnDestroy {
   ) {
     const componente = this;
 
-    afterNextRender(function() {
+    afterNextRender(function () {
       componente.prepararTerminalXterm();
       componente.cargarServidoresDisponibles();
       componente.cargarActividadReciente();
@@ -59,14 +58,14 @@ export class LogsTerminal implements OnDestroy {
     this.cargandoLogs.set(true);
 
     this.actividadService.obtenerRecientes().subscribe({
-      next: function(actividades: ActividadLog[]) {
-        const entradas = actividades.map(function(actividad) {
+      next: function (actividades: ActividadLog[]) {
+        const entradas = actividades.map(function (actividad) {
           return componente.transformarActividad(actividad);
         });
         componente.entradasDeLog.set(entradas);
         componente.cargandoLogs.set(false);
       },
-      error: function() {
+      error: function () {
         componente.entradasDeLog.set([]);
         componente.cargandoLogs.set(false);
       }
@@ -76,14 +75,14 @@ export class LogsTerminal implements OnDestroy {
   private transformarActividad(actividad: ActividadLog): EntradaLog {
     const tipoNormalizado = (actividad.tipo || "info").toLowerCase();
     const mapaNiveles: Record<string, EntradaLog["nivel"]> = {
-      "info": "info",
-      "warning": "warn",
-      "warn": "warn",
-      "success": "ok",
-      "ok": "ok",
-      "error": "error",
-      "critical": "crit",
-      "crit": "crit"
+      info: "info",
+      warning: "warn",
+      warn: "warn",
+      success: "ok",
+      ok: "ok",
+      error: "error",
+      critical: "crit",
+      crit: "crit"
     };
     const nivel = mapaNiveles[tipoNormalizado] || "info";
     const hora = (actividad.fechaCreacion || "").substring(11, 19);
@@ -98,10 +97,10 @@ export class LogsTerminal implements OnDestroy {
 
   obtenerColorNivel(nivel: string): string {
     const coloresPorNivel: { [key: string]: string } = {
-      "ok": "verde",
-      "warn": "naranja",
-      "error": "rojo",
-      "crit": "rojo"
+      ok: "verde",
+      warn: "naranja",
+      error: "rojo",
+      crit: "rojo"
     };
     return coloresPorNivel[nivel] || "neutro";
   }
@@ -114,17 +113,17 @@ export class LogsTerminal implements OnDestroy {
     let entradasFiltradas = todasLasEntradas;
 
     if (filtro === "error") {
-      entradasFiltradas = entradasFiltradas.filter(function(entrada) {
+      entradasFiltradas = entradasFiltradas.filter(function (entrada) {
         return entrada.nivel === "error" || entrada.nivel === "crit";
       });
     } else if (filtro !== "all") {
-      entradasFiltradas = entradasFiltradas.filter(function(entrada) {
+      entradasFiltradas = entradasFiltradas.filter(function (entrada) {
         return entrada.nivel === filtro;
       });
     }
 
     if (textoBusqueda) {
-      entradasFiltradas = entradasFiltradas.filter(function(entrada) {
+      entradasFiltradas = entradasFiltradas.filter(function (entrada) {
         return entrada.mensaje.toLowerCase().includes(textoBusqueda);
       });
     }
@@ -138,9 +137,11 @@ export class LogsTerminal implements OnDestroy {
 
   exportarLogs(): void {
     const entradas = this.obtenerEntradasFiltradas();
-    const contenidoTexto = entradas.map(function(entrada) {
-      return "[" + entrada.hora + "] [" + entrada.nivel.toUpperCase() + "] " + entrada.mensaje;
-    }).join("\n");
+    const contenidoTexto = entradas
+      .map(function (entrada) {
+        return "[" + entrada.hora + "] [" + entrada.nivel.toUpperCase() + "] " + entrada.mensaje;
+      })
+      .join("\n");
 
     const blob = new Blob([contenidoTexto], { type: "text/plain" });
     const enlaceDescarga = document.createElement("a");
@@ -155,14 +156,14 @@ export class LogsTerminal implements OnDestroy {
     const componente = this;
 
     this.actividadService.obtenerRecientes().subscribe({
-      next: function(actividades: ActividadLog[]) {
-        const entradas = actividades.map(function(actividad) {
+      next: function (actividades: ActividadLog[]) {
+        const entradas = actividades.map(function (actividad) {
           return componente.transformarActividad(actividad);
         });
         componente.entradasDeLog.set(entradas);
         componente.refrescandoFlujo.set(false);
       },
-      error: function() {
+      error: function () {
         componente.refrescandoFlujo.set(false);
       }
     });
@@ -192,15 +193,15 @@ export class LogsTerminal implements OnDestroy {
     this.terminal.open(this.contenedorTerminal.nativeElement);
     this.fitAddon.fit();
 
-    this.terminal.onData(function(datos: string) {
+    this.terminal.onData(function (datos: string) {
       componente.terminalService.enviarEntrada(datos);
     });
 
-    this.suscripcionDatos = this.terminalService.datosRecibidos.subscribe(function(datos: string) {
+    this.suscripcionDatos = this.terminalService.datosRecibidos.subscribe(function (datos: string) {
       if (!componente.terminal) {
         return;
       }
-      componente.terminal.write(datos, function() {
+      componente.terminal.write(datos, function () {
         if (!componente.terminal) {
           return;
         }
@@ -213,13 +214,10 @@ export class LogsTerminal implements OnDestroy {
       });
     });
 
-    this.manejadorRedimensionar = function() {
+    this.manejadorRedimensionar = function () {
       if (componente.fitAddon && componente.terminal) {
         componente.fitAddon.fit();
-        componente.terminalService.enviarRedimensionar(
-          componente.terminal.cols,
-          componente.terminal.rows
-        );
+        componente.terminalService.enviarRedimensionar(componente.terminal.cols, componente.terminal.rows);
       }
     };
     window.addEventListener("resize", this.manejadorRedimensionar);
@@ -229,7 +227,7 @@ export class LogsTerminal implements OnDestroy {
     const componente = this;
 
     this.servidorService.listar().subscribe({
-      next: function(servidores: ServidorRemoto[]) {
+      next: function (servidores: ServidorRemoto[]) {
         componente.listaDeServidores.set(servidores);
 
         if (servidores.length === 1) {
@@ -246,7 +244,9 @@ export class LogsTerminal implements OnDestroy {
     if (!idSeleccionado) {
       return;
     }
-    const servidor = this.listaDeServidores().find(function(s) { return s.id === idSeleccionado; });
+    const servidor = this.listaDeServidores().find(function (s) {
+      return s.id === idSeleccionado;
+    });
     if (!servidor) {
       return;
     }
@@ -255,7 +255,9 @@ export class LogsTerminal implements OnDestroy {
 
   cambiarServidor(evento: Event): void {
     const seleccionado = (evento.target as HTMLSelectElement).value;
-    const servidor = this.listaDeServidores().find(function(s) { return s.id === seleccionado; });
+    const servidor = this.listaDeServidores().find(function (s) {
+      return s.id === seleccionado;
+    });
     if (!servidor) {
       this.servidorSeleccionadoId.set(null);
       this.servidorSeleccionadoNombre.set("");

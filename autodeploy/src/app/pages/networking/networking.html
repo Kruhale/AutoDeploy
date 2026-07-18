@@ -121,8 +121,8 @@
                 </span>
               }
             </section>
-            <button class="pagina-networking__dominio__eliminar" type="button" (click)="eliminarDominio(dominio.id)" [attr.aria-label]="'networking.ariaEliminarDominio' | translate">
-              <i class="fa-solid fa-trash"></i>
+            <button class="pagina-networking__dominio__eliminar" type="button" (click)="eliminarDominio(dominio.id)" [attr.aria-label]="'networking.ariaEliminarDominio' | translate: { nombre: dominio.nombre }">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
             </button>
           </article>
         }
@@ -183,8 +183,8 @@
 
 
   @if (panelDnsAbierto()) {
-    <section class="pagina-networking__modal" (click)="cerrarPanelDns()" (keydown.escape)="cerrarPanelDns()">
-      <article class="pagina-networking__modal__caja" role="dialog" aria-modal="true" aria-labelledby="modal-dns-titulo" (click)="$event.stopPropagation()">
+    <section class="pagina-networking__modal" (click)="cerrarPanelDns()" (keydown.escape)="cerrarPanelDns()" (keydown.tab)="manejarTabulacionModal($event, 'modal-dns-caja')" (keydown.shift.tab)="manejarTabulacionModal($event, 'modal-dns-caja')">
+      <article class="pagina-networking__modal__caja" id="modal-dns-caja" role="dialog" aria-modal="true" aria-labelledby="modal-dns-titulo" (click)="$event.stopPropagation()">
         <header class="pagina-networking__modal__cabecera">
           <section class="pagina-networking__modal__titulo-zona">
             <span class="pagina-networking__modal__indice">{{ "networking.modalDns.indice" | translate }}</span>
@@ -223,8 +223,8 @@
   }
 
   @if (panelRedirectsAbierto()) {
-    <section class="pagina-networking__modal" (click)="cerrarPanelRedirects()" (keydown.escape)="cerrarPanelRedirects()">
-      <article class="pagina-networking__modal__caja" role="dialog" aria-modal="true" aria-labelledby="modal-redirects-titulo" (click)="$event.stopPropagation()">
+    <section class="pagina-networking__modal" (click)="cerrarPanelRedirects()" (keydown.escape)="cerrarPanelRedirects()" (keydown.tab)="manejarTabulacionModal($event, 'modal-redirects-caja')" (keydown.shift.tab)="manejarTabulacionModal($event, 'modal-redirects-caja')">
+      <article class="pagina-networking__modal__caja" id="modal-redirects-caja" role="dialog" aria-modal="true" aria-labelledby="modal-redirects-titulo" (click)="$event.stopPropagation()">
         <header class="pagina-networking__modal__cabecera">
           <section class="pagina-networking__modal__titulo-zona">
             <span class="pagina-networking__modal__indice">{{ "networking.modalRedirects.indice" | translate }}</span>
@@ -265,8 +265,8 @@
                 <span class="pagina-networking__redirect__origen">{{ redir.hostOrigen }}</span>
                 <span class="pagina-networking__redirect__flecha">→</span>
                 <span class="pagina-networking__redirect__destino">{{ redir.urlDestino }}</span>
-                <button class="pagina-networking__dominio__eliminar" type="button" (click)="eliminarRedireccion(redir.id)" [attr.aria-label]="'networking.modalRedirects.ariaEliminar' | translate">
-                  <i class="fa-solid fa-trash"></i>
+                <button class="pagina-networking__dominio__eliminar" type="button" (click)="eliminarRedireccion(redir.id)" [attr.aria-label]="'networking.modalRedirects.ariaEliminar' | translate: { origen: redir.hostOrigen }">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
                 </button>
               </article>
             }

@@ -2,12 +2,12 @@
   <h1 class="u-solo-lectores-pantalla" id="terminal-ssh-titulo">{{ "terminalSsh.tituloAccesible" | translate:{ servidor: nombreServidor() } }}</h1>
   <header class="terminal-ssh__barra">
     <section class="terminal-ssh__semaforo">
-      <a class="terminal-ssh__punto terminal-ssh__punto--rojo" routerLink="/app/dashboard" [title]="'terminalSsh.ariaCerrar' | translate"></a>
+      <a class="terminal-ssh__punto terminal-ssh__punto--rojo" routerLink="/app/dashboard" [attr.aria-label]="'terminalSsh.ariaCerrar' | translate" [title]="'terminalSsh.ariaCerrar' | translate"></a>
       <span class="terminal-ssh__punto terminal-ssh__punto--naranja"></span>
       <span class="terminal-ssh__punto terminal-ssh__punto--verde"></span>
     </section>
     <span class="terminal-ssh__titulo">{{ nombreServidor() }} &mdash; {{ ipServidor() }}</span>
-    <section class="terminal-ssh__estado">
+    <section class="terminal-ssh__estado" aria-live="polite">
       <span class="terminal-ssh__estado__punto" [class.terminal-ssh__estado__punto--conectado]="terminalService.estadoConexion() === 'conectado'" aria-hidden="true"></span>
       <span class="terminal-ssh__estado__texto">{{ "comun.estados." + terminalService.estadoConexion() | translate }}</span>
     </section>

@@ -205,8 +205,8 @@
     "tituloPanel": "Notifications",
     "ariaCerrar": "Fermer",
     "vacio": "Aucune notification",
-    "marcarLeida": "Marquer comme lue",
-    "eliminar": "Supprimer",
+    "marcarLeida": "Marquer comme lue : {{titulo}}",
+    "eliminar": "Supprimer la notification : {{titulo}}",
     "marcarTodas": "Tout marquer comme lu"
   },
   "toastNotificaciones": {
@@ -610,7 +610,9 @@
     },
     "servidor": {
       "manage": "Gérer",
-      "ssh": "SSH"
+      "ssh": "SSH",
+      "ariaGestionar": "Gérer le serveur {{nombre}}",
+      "ariaSsh": "Ouvrir le terminal SSH de {{nombre}}"
     },
     "despliegues": {
       "vacio": "Aucun déploiement enregistré pour le moment"
@@ -1058,7 +1060,7 @@
     "vacioDetalle": "Ajoutez votre premier domaine pour commencer à router le trafic vers votre serveur.",
     "sslActivo": "SSL actif",
     "sslInactivo": "Sans SSL",
-    "ariaEliminarDominio": "Supprimer le domaine",
+    "ariaEliminarDominio": "Supprimer le domaine {{nombre}}",
     "accionesTitulo": "Actions rapides",
     "accionesDescripcion": "Exécutez les flux DNS et SSL les plus courants en un clic.",
     "renovarTitulo": "Renouveler SSL",
@@ -1091,7 +1093,7 @@
       "agregar": "Ajouter",
       "cargando": "Chargement…",
       "vacio": "Aucune redirection configurée · elles seront écrites dans `$HOME/.autodeploy/redirects.conf` lors de l'enregistrement.",
-      "ariaEliminar": "Supprimer la redirection"
+      "ariaEliminar": "Supprimer la redirection de {{origen}}"
     },
     "mensajes": {
       "errorAgregar": "Impossible d'ajouter le domaine. Réessayez.",

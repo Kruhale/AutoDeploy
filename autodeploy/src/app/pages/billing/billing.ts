@@ -124,11 +124,26 @@ export class Billing implements OnInit {
     });
   }
 
+  // El endpoint de despliegues llega paginado en .data.content (Pageable)
+  private extraerLista(respuesta: any): any[] {
+    if (Array.isArray(respuesta)) {
+      return respuesta;
+    }
+    const datos = respuesta && respuesta.data !== undefined ? respuesta.data : respuesta;
+    if (Array.isArray(datos)) {
+      return datos;
+    }
+    if (datos && Array.isArray(datos.content)) {
+      return datos.content;
+    }
+    return [];
+  }
+
   private cargarDespliegues(): void {
     const componente = this;
     this.http.get<any>("/api/despliegues").subscribe({
       next: function (respuesta: any) {
-        const lista: DespliegueApi[] = Array.isArray(respuesta) ? respuesta : respuesta && Array.isArray(respuesta.data) ? respuesta.data : [];
+        const lista: DespliegueApi[] = componente.extraerLista(respuesta);
         const inicioMes = new Date();
         inicioMes.setDate(1);
         inicioMes.setHours(0, 0, 0, 0);

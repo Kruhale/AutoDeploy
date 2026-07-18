@@ -163,13 +163,18 @@ export class Dashboard implements OnInit, OnDestroy {
     this.metricasService.desconectar();
   }
 
-  // Las respuestas del backend llegan como lista directa o envueltas en .data
+  // El backend responde de tres formas: array directo, envuelto en .data, o
+  // paginado en .data.content (los despliegues llegan asi por Pageable).
   private extraerListaDeRespuesta(respuesta: any): any[] {
     if (Array.isArray(respuesta)) {
       return respuesta;
     }
-    if (respuesta && Array.isArray(respuesta.data)) {
-      return respuesta.data;
+    const datos = respuesta && respuesta.data !== undefined ? respuesta.data : respuesta;
+    if (Array.isArray(datos)) {
+      return datos;
+    }
+    if (datos && Array.isArray(datos.content)) {
+      return datos.content;
     }
     return [];
   }

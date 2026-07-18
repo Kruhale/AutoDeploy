@@ -1277,7 +1277,9 @@
       "fechaExpirada": "Die Karte ist abgelaufen",
       "cvvObligatorio": "Der CVV ist erforderlich",
       "cvvLongitud": "Der CVV muss {{n}} Ziffern enthalten"
-    }
+    },
+    "estampaExito": "Genehmigt",
+    "estampaError": "Abgelehnt"
   },
   "asistenteIa": {
     "sello": "AutoDeploy · KI-Copilot",

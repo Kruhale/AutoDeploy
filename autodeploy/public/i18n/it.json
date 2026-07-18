@@ -1277,7 +1277,9 @@
       "fechaExpirada": "La carta è scaduta",
       "cvvObligatorio": "Il CVV è obbligatorio",
       "cvvLongitud": "Il CVV deve avere {{n}} cifre"
-    }
+    },
+    "estampaExito": "Approvato",
+    "estampaError": "Rifiutato"
   },
   "asistenteIa": {
     "sello": "AutoDeploy · copilota IA",

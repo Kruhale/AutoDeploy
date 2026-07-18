@@ -173,7 +173,6 @@
             [disabled]="estadoPago() === 'procesando'"
           >
             @if (estadoPago() === "procesando") {
-            <span class="pagina-pago__spinner"></span>
             {{ "pago.procesando" | translate }}
             } @else {
             <i class="fa-solid fa-lock"></i>
@@ -190,9 +189,10 @@
 
   @if (estadoPago() === "exito") {
   <section class="pagina-pago__resultado">
-    <section class="pagina-pago__resultado__icono pagina-pago__resultado__icono--exito">
-      <i class="fa-solid fa-check"></i>
-    </section>
+    <span class="pagina-pago__estampa" aria-hidden="true">
+      <span class="pagina-pago__estampa__marca">AutoDeploy</span>
+      <span class="pagina-pago__estampa__texto">{{ "pago.estampaExito" | translate }}</span>
+    </span>
     <h1 class="pagina-pago__resultado__titulo">{{ "pago.exitoTitulo" | translate }}</h1>
     <p class="pagina-pago__resultado__descripcion">
       {{ "pago.exitoDescripcion" | translate: { nombrePlan: infoDelPlan().nombre } }}
@@ -206,9 +206,10 @@
 
   @if (estadoPago() === "error") {
   <section class="pagina-pago__resultado">
-    <section class="pagina-pago__resultado__icono pagina-pago__resultado__icono--error">
-      <i class="fa-solid fa-xmark"></i>
-    </section>
+    <span class="pagina-pago__estampa pagina-pago__estampa--error" aria-hidden="true">
+      <span class="pagina-pago__estampa__marca">AutoDeploy</span>
+      <span class="pagina-pago__estampa__texto">{{ "pago.estampaError" | translate }}</span>
+    </span>
     <h1 class="pagina-pago__resultado__titulo">{{ "pago.errorTitulo" | translate }}</h1>
     <p class="pagina-pago__resultado__descripcion">{{ "pago.errorDescripcion" | translate }}</p>
     <button class="boton--ghost" type="button" (click)="reintentar()">

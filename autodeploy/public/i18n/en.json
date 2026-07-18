@@ -1277,7 +1277,9 @@
       "fechaExpirada": "The card has expired",
       "cvvObligatorio": "The CVV is required",
       "cvvLongitud": "The CVV must be {{n}} digits"
-    }
+    },
+    "estampaExito": "Approved",
+    "estampaError": "Declined"
   },
   "asistenteIa": {
     "sello": "AutoDeploy · AI copilot",

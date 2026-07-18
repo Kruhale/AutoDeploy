@@ -1277,7 +1277,9 @@
       "fechaExpirada": "La tarjeta ha caducado",
       "cvvObligatorio": "El CVV es obligatorio",
       "cvvLongitud": "El CVV debe tener {{n}} dígitos"
-    }
+    },
+    "estampaExito": "Aceptado",
+    "estampaError": "Rechazado"
   },
   "asistenteIa": {
     "sello": "AutoDeploy · copiloto IA",

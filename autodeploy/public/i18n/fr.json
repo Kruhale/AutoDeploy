@@ -1341,7 +1341,10 @@
       "errorDefault": "impossible de traiter votre message",
       "errorEjecutar": "Erreur : ",
       "falloComando": "échec de l'exécution de la commande"
-    }
+    },
+    "hablanteAsistente": "Assistant",
+    "hablanteTu": "Vous",
+    "escribiendo": "Rédaction de la réponse"
   },
   "apiDocs": {
     "sello": "API · Référence technique",

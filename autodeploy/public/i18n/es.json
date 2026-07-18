@@ -1341,7 +1341,10 @@
       "errorDefault": "no se pudo procesar tu mensaje",
       "errorEjecutar": "Error: ",
       "falloComando": "fallo al ejecutar el comando"
-    }
+    },
+    "hablanteAsistente": "Asistente",
+    "hablanteTu": "Tú",
+    "escribiendo": "Redactando respuesta"
   },
   "apiDocs": {
     "sello": "API · Referencia técnica",

@@ -1341,7 +1341,10 @@
       "errorDefault": "could not process your message",
       "errorEjecutar": "Error: ",
       "falloComando": "failed to execute the command"
-    }
+    },
+    "hablanteAsistente": "Assistant",
+    "hablanteTu": "You",
+    "escribiendo": "Drafting reply"
   },
   "apiDocs": {
     "sello": "API · Technical reference",

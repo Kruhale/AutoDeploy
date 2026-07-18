@@ -65,11 +65,11 @@
 
     @for (mensaje of asistenteService.historialMensajes(); track $index; let indice = $index) {
       <article class="asistente-ia__mensaje" [class.asistente-ia__mensaje--usuario]="mensaje.rol === 'user'" [class.asistente-ia__mensaje--asistente]="mensaje.rol === 'assistant'">
-        <span class="asistente-ia__avatar">
+        <span class="asistente-ia__hablante">
           @if (mensaje.rol === "assistant") {
-            <i class="fa-solid fa-robot"></i>
+            {{ "asistenteIa.hablanteAsistente" | translate }}
           } @else {
-            <span class="asistente-ia__avatar__inicial">{{ (usuarioService.nombre()[0] || 'T').toUpperCase() }}</span>
+            {{ usuarioService.nombre() || ("asistenteIa.hablanteTu" | translate) }}
           }
         </span>
         <section class="asistente-ia__burbuja">
@@ -83,16 +83,28 @@
                   <span>{{ "asistenteIa.comandoChip" | translate }}</span>
                 </span>
                 @if (mensaje.estadoComando === "pendiente" && mensaje.requiereConfirmacion) {
-                  <span class="tarjeta-comando__estado tarjeta-comando__estado--pendiente">{{ "asistenteIa.estado.pendiente" | translate }}</span>
+                  <span class="editorial__estado editorial__estado--ambar">
+                    <span class="editorial__estado__punto" aria-hidden="true"></span>
+                    {{ "asistenteIa.estado.pendiente" | translate }}
+                  </span>
                 }
                 @if (mensaje.estadoComando === "ejecutando") {
-                  <span class="tarjeta-comando__estado tarjeta-comando__estado--ejecutando">{{ "asistenteIa.estado.ejecutando" | translate }}</span>
+                  <span class="editorial__estado editorial__estado--ambar editorial__estado--vivo">
+                    <span class="editorial__estado__punto" aria-hidden="true"></span>
+                    {{ "asistenteIa.estado.ejecutando" | translate }}
+                  </span>
                 }
                 @if (mensaje.estadoComando === "ejecutado") {
-                  <span class="tarjeta-comando__estado tarjeta-comando__estado--ejecutado"><i class="fa-solid fa-check"></i> {{ "asistenteIa.estado.ejecutado" | translate }}</span>
+                  <span class="editorial__estado editorial__estado--verde">
+                    <span class="editorial__estado__punto" aria-hidden="true"></span>
+                    {{ "asistenteIa.estado.ejecutado" | translate }}
+                  </span>
                 }
                 @if (mensaje.estadoComando === "rechazado") {
-                  <span class="tarjeta-comando__estado tarjeta-comando__estado--rechazado"><i class="fa-solid fa-xmark"></i> {{ "asistenteIa.estado.rechazado" | translate }}</span>
+                  <span class="editorial__estado editorial__estado--rojo">
+                    <span class="editorial__estado__punto" aria-hidden="true"></span>
+                    {{ "asistenteIa.estado.rechazado" | translate }}
+                  </span>
                 }
               </header>
               <pre class="tarjeta-comando__codigo">{{ mensaje.comandoPropuesto }}</pre>
@@ -131,14 +143,8 @@
 
     @if (asistenteService.estaEscribiendo()) {
       <article class="asistente-ia__mensaje asistente-ia__mensaje--asistente asistente-ia__mensaje--escribiendo">
-        <span class="asistente-ia__avatar"><i class="fa-solid fa-robot"></i></span>
-        <section class="asistente-ia__burbuja asistente-ia__burbuja--escribiendo">
-          <span class="asistente-ia__puntos">
-            <span class="asistente-ia__puntos__punto"></span>
-            <span class="asistente-ia__puntos__punto"></span>
-            <span class="asistente-ia__puntos__punto"></span>
-          </span>
-        </section>
+        <span class="asistente-ia__hablante">{{ "asistenteIa.hablanteAsistente" | translate }}</span>
+        <p class="editorial__teletipo">{{ "asistenteIa.escribiendo" | translate }}</p>
       </article>
     }
   </article>
@@ -173,12 +179,12 @@
 </section>
 
 @if (mostrarPanelConfiguracion()) {
-  <section class="overlay-config" (click)="cerrarConfiguracion()">
-    <article class="overlay-config__panel" (click)="$event.stopPropagation()">
+  <section class="overlay-config" (click)="cerrarConfiguracion()" (keydown.escape)="cerrarConfiguracion()">
+    <article class="overlay-config__panel" role="dialog" aria-modal="true" aria-labelledby="config-asistente-titulo" (click)="$event.stopPropagation()">
       <header class="overlay-config__cabecera">
         <hgroup>
           <span class="overlay-config__etiqueta">{{ "asistenteIa.config.etiqueta" | translate }}</span>
-          <h2 class="overlay-config__titulo">{{ "asistenteIa.config.titulo" | translate }}</h2>
+          <h2 class="overlay-config__titulo" id="config-asistente-titulo">{{ "asistenteIa.config.titulo" | translate }}</h2>
         </hgroup>
         <button class="overlay-config__cerrar" type="button" (click)="cerrarConfiguracion()" [attr.aria-label]="'asistenteIa.config.ariaCerrar' | translate">
           <i class="fa-solid fa-xmark"></i>
@@ -239,12 +245,10 @@
         <footer class="overlay-config__acciones">
           <button class="overlay-config__boton overlay-config__boton--neutral" type="button" (click)="cerrarConfiguracion()">{{ "asistenteIa.config.cancelar" | translate }}</button>
           <button class="overlay-config__boton overlay-config__boton--principal" type="submit" [disabled]="estaCargandoConfiguracion()">
-            @if (estaCargandoConfiguracion()) {
-              <i class="fa-solid fa-spinner fa-spin"></i>
-            } @else {
-              <i class="fa-solid fa-floppy-disk"></i>
+            @if (!estaCargandoConfiguracion()) {
+              <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
             }
-            <span>{{ "asistenteIa.config.guardar" | translate }}</span>
+            <span>{{ (estaCargandoConfiguracion() ? "comun.guardando" : "asistenteIa.config.guardar") | translate }}</span>
           </button>
         </footer>
       </form>

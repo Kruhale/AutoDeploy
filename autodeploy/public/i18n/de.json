@@ -1341,7 +1341,10 @@
       "errorDefault": "Ihre Nachricht konnte nicht verarbeitet werden",
       "errorEjecutar": "Fehler: ",
       "falloComando": "Der Befehl konnte nicht ausgeführt werden"
-    }
+    },
+    "hablanteAsistente": "Assistent",
+    "hablanteTu": "Du",
+    "escribiendo": "Antwort wird verfasst"
   },
   "apiDocs": {
     "sello": "API · Technische Referenz",

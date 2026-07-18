@@ -1341,7 +1341,10 @@
       "errorDefault": "impossibile elaborare il tuo messaggio",
       "errorEjecutar": "Errore: ",
       "falloComando": "esecuzione del comando fallita"
-    }
+    },
+    "hablanteAsistente": "Assistente",
+    "hablanteTu": "Tu",
+    "escribiendo": "Sto scrivendo la risposta"
   },
   "apiDocs": {
     "sello": "API · Riferimento tecnico",

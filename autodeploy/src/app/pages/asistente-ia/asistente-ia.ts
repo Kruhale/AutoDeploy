@@ -148,14 +148,25 @@ export class AsistenteIa implements OnInit, OnDestroy {
     }
   }
 
+  // Guardamos el foco de origen y lo movemos al primer campo del modal
+  // para que el teclado no se quede detras del scrim (WCAG 2.4.3)
+  private elementoConFocoPrevio: HTMLElement | null = null;
+
   abrirConfiguracion(): void {
     this.mostrarPanelConfiguracion.set(true);
+    this.elementoConFocoPrevio = document.activeElement as HTMLElement | null;
+    setTimeout(function() {
+      const campo = document.getElementById("campo-api-key");
+      campo?.focus();
+    }, 0);
   }
 
   cerrarConfiguracion(): void {
     this.mostrarPanelConfiguracion.set(false);
     this.apiKeyEnEdicion.set("");
     this.mensajeError.set("");
+    this.elementoConFocoPrevio?.focus();
+    this.elementoConFocoPrevio = null;
   }
 
   async guardarConfiguracion(): Promise<void> {

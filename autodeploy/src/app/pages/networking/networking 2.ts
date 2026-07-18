@@ -305,11 +305,11 @@ export class Networking implements OnInit {
     this.panelDnsAbierto.set(true);
     this.registrosDns.set(null);
     this.guardarFocoYEnfocar("campo-consulta-dns");
-    // Prellenamos con el primer dominio pero NO lanzamos la consulta sola: un
-    // dominio no resoluble deja al backend esperando el timeout de DNS y el
-    // modal se quedaba bloqueado en "Resolviendo". La lanza el usuario.
     const primerDominio = this.listaDeDominios()[0];
     this.dominioConsultando.set(primerDominio ? primerDominio.nombre : "");
+    if (primerDominio) {
+      this.ejecutarConsultaDns(primerDominio.nombre);
+    }
   }
 
   cerrarPanelDns(): void {

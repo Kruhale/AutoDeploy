@@ -234,13 +234,22 @@ describe("Networking", function() {
     expect(componente.dominioConsultando()).toBe("");
   });
 
-  it("verRegistrosDns con dominios consulta el primero", function() {
+  it("verRegistrosDns prellena el primer dominio sin lanzar la consulta sola", function() {
     componente.listaDeDominios.set([
       { id: "1", servidorId: "srv-1", servidorNombre: "uno", nombre: "dominio.com", tipo: "primary", destino: "/", sslActivo: false, estado: "active" }
     ]);
     componente.verRegistrosDns();
     expect(componente.panelDnsAbierto()).toBeTrue();
     expect(componente.dominioConsultando()).toBe("dominio.com");
+
+    // No debe auto-consultar: un dominio no resoluble colgaba el modal
+    httpMock.expectNone("/api/networking/dns/" + encodeURIComponent("dominio.com"));
+    expect(componente.cargandoDns()).toBeFalse();
+  });
+
+  it("ejecutarConsultaDns pobla los registros cuando el usuario consulta", function() {
+    componente.dominioConsultando.set("dominio.com");
+    componente.ejecutarConsultaDns();
 
     const peticion = httpMock.expectOne("/api/networking/dns/" + encodeURIComponent("dominio.com"));
     peticion.flush({

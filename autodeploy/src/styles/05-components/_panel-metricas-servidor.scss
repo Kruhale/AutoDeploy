@@ -88,15 +88,12 @@
   color: var(--texto-apagado);
 }
 
+// Sin guion delante: junto a un cero se leia como cifra negativa
 .panel-metricas__recurso__contador {
   font-family: var(--font-mono);
   font-size: 0.62rem; /* 10px */
   color: var(--amarillo-normal);
   font-variant-numeric: tabular-nums;
-}
-
-.panel-metricas__recurso__contador::before {
-  content: "— ";
 }
 
 .panel-metricas__recurso__lista {

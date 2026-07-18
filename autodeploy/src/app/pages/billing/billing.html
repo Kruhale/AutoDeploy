@@ -79,7 +79,7 @@
           <span class="editorial__vitales__cifra">{{ uso.valor }}</span>
           @if (!uso.esIlimitado) {
             <span class="editorial__vitales__barra" aria-hidden="true">
-              <span class="editorial__vitales__barra__relleno" [style.width.%]="uso.porcentaje"></span>
+              <span class="editorial__vitales__barra__relleno" [class.editorial__vitales__barra__relleno--rojo]="uso.porcentaje >= 100" [style.width.%]="uso.porcentaje"></span>
             </span>
           }
           <span class="editorial__vitales__nota">{{ uso.detalle }}</span>

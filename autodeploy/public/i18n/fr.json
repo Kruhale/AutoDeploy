@@ -193,7 +193,7 @@
     },
     "webs": {
       "titulo": "Sites web déployés",
-      "vacio": "Aucun site actif dans /etc/nginx/sites-enabled"
+      "vacio": "Aucun site actif pour l'instant"
     },
     "docker": {
       "titulo": "Conteneurs Docker",
@@ -1092,7 +1092,7 @@
       "guardando": "Enregistrement",
       "agregar": "Ajouter",
       "cargando": "Chargement…",
-      "vacio": "Aucune redirection configurée · elles seront écrites dans `$HOME/.autodeploy/redirects.conf` lors de l'enregistrement.",
+      "vacio": "Aucune redirection configurée pour l'instant.",
       "ariaEliminar": "Supprimer la redirection de {{origen}}"
     },
     "mensajes": {

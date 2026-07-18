@@ -193,7 +193,7 @@
     },
     "webs": {
       "titulo": "Webs desplegadas",
-      "vacio": "Sin sitios activos en /etc/nginx/sites-enabled"
+      "vacio": "Sin sitios activos todavía"
     },
     "docker": {
       "titulo": "Contenedores Docker",
@@ -1092,7 +1092,7 @@
       "guardando": "Guardando",
       "agregar": "Añadir",
       "cargando": "Cargando…",
-      "vacio": "No hay redirecciones configuradas · se escribirán en `$HOME/.autodeploy/redirects.conf` al guardar.",
+      "vacio": "No hay redirecciones configuradas todavía.",
       "ariaEliminar": "Eliminar la redirección de {{origen}}"
     },
     "mensajes": {

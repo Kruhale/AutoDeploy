@@ -193,7 +193,7 @@
     },
     "webs": {
       "titulo": "Siti web pubblicati",
-      "vacio": "Nessun sito attivo in /etc/nginx/sites-enabled"
+      "vacio": "Ancora nessun sito attivo"
     },
     "docker": {
       "titulo": "Container Docker",
@@ -1092,7 +1092,7 @@
       "guardando": "Salvataggio",
       "agregar": "Aggiungi",
       "cargando": "Caricamento…",
-      "vacio": "Nessun reindirizzamento configurato · verranno scritti in `$HOME/.autodeploy/redirects.conf` al salvataggio.",
+      "vacio": "Ancora nessun reindirizzamento configurato.",
       "ariaEliminar": "Elimina il reindirizzamento di {{origen}}"
     },
     "mensajes": {

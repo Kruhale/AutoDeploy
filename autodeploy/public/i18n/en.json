@@ -193,7 +193,7 @@
     },
     "webs": {
       "titulo": "Deployed sites",
-      "vacio": "No active sites in /etc/nginx/sites-enabled"
+      "vacio": "No active sites yet"
     },
     "docker": {
       "titulo": "Docker containers",
@@ -1092,7 +1092,7 @@
       "guardando": "Saving",
       "agregar": "Add",
       "cargando": "Loading…",
-      "vacio": "No redirects configured · they will be written to `$HOME/.autodeploy/redirects.conf` on save.",
+      "vacio": "No redirects configured yet.",
       "ariaEliminar": "Delete redirect from {{origen}}"
     },
     "mensajes": {

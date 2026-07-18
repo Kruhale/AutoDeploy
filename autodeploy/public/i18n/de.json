@@ -193,7 +193,7 @@
     },
     "webs": {
       "titulo": "Veröffentlichte Websites",
-      "vacio": "Keine aktiven Websites in /etc/nginx/sites-enabled"
+      "vacio": "Noch keine aktiven Seiten"
     },
     "docker": {
       "titulo": "Docker-Container",
@@ -1092,7 +1092,7 @@
       "guardando": "Wird gespeichert",
       "agregar": "Hinzufügen",
       "cargando": "Lädt…",
-      "vacio": "Keine Weiterleitungen konfiguriert · sie werden beim Speichern in `$HOME/.autodeploy/redirects.conf` geschrieben.",
+      "vacio": "Noch keine Weiterleitungen konfiguriert.",
       "ariaEliminar": "Weiterleitung von {{origen}} löschen"
     },
     "mensajes": {

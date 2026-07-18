@@ -22,8 +22,8 @@
 
   @if (listaServidores().length > 1) {
     <section class="pagina-firewall__selector-servidor">
-      <label class="pagina-firewall__selector-servidor__etiqueta">{{ "firewall.selectorServidor" | translate }}</label>
-      <select class="pagina-firewall__selector-servidor__select" [value]="servidorSeleccionadoId()" (change)="cambiarServidor($any($event.target).value)">
+      <label class="pagina-firewall__selector-servidor__etiqueta" for="selector-servidor-firewall">{{ "firewall.selectorServidor" | translate }}</label>
+      <select class="pagina-firewall__selector-servidor__select" id="selector-servidor-firewall" [value]="servidorSeleccionadoId()" (change)="cambiarServidor($any($event.target).value)">
         @for (servidor of listaServidores(); track servidor.id) {
           <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
         }
@@ -74,46 +74,46 @@
       </header>
       <section class="pagina-firewall__formulario__campos">
         <section class="campo">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-puerto-regla">
             <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
             {{ "firewall.puerto" | translate }}
           </label>
-          <input class="campo__input" type="text" [placeholder]="'firewall.puertoPlaceholder' | translate" [ngModel]="nuevoPuerto()" (ngModelChange)="nuevoPuerto.set($event)">
+          <input class="campo__input" id="campo-puerto-regla" type="text" [placeholder]="'firewall.puertoPlaceholder' | translate" [ngModel]="nuevoPuerto()" (ngModelChange)="nuevoPuerto.set($event)">
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-protocolo-regla">
             <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
             {{ "firewall.protocolo" | translate }}
           </label>
-          <select class="campo__select" [ngModel]="nuevoProtocolo()" (ngModelChange)="nuevoProtocolo.set($event)">
+          <select class="campo__select" id="campo-protocolo-regla" [ngModel]="nuevoProtocolo()" (ngModelChange)="nuevoProtocolo.set($event)">
             <option value="TCP">TCP</option>
             <option value="UDP">UDP</option>
             <option value="TCP/UDP">TCP/UDP</option>
           </select>
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-accion-regla">
             <span class="campo__etiqueta__numero" aria-hidden="true">iii</span>
             {{ "firewall.accion" | translate }}
           </label>
-          <select class="campo__select" [ngModel]="nuevaAccion()" (ngModelChange)="nuevaAccion.set($event)">
+          <select class="campo__select" id="campo-accion-regla" [ngModel]="nuevaAccion()" (ngModelChange)="nuevaAccion.set($event)">
             <option value="allow">{{ "firewall.accionAllow" | translate }}</option>
             <option value="deny">{{ "firewall.accionDeny" | translate }}</option>
           </select>
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-origen-regla">
             <span class="campo__etiqueta__numero" aria-hidden="true">iv</span>
             {{ "firewall.origen" | translate }}
           </label>
-          <input class="campo__input" type="text" [placeholder]="'firewall.origenPlaceholder' | translate" [ngModel]="nuevoOrigen()" (ngModelChange)="nuevoOrigen.set($event)">
+          <input class="campo__input" id="campo-origen-regla" type="text" [placeholder]="'firewall.origenPlaceholder' | translate" [ngModel]="nuevoOrigen()" (ngModelChange)="nuevoOrigen.set($event)">
         </section>
         <section class="campo pagina-firewall__formulario__campo-ancho">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-descripcion-regla">
             <span class="campo__etiqueta__numero" aria-hidden="true">v</span>
             {{ "firewall.descripcion" | translate }}
           </label>
-          <input class="campo__input" type="text" [placeholder]="'firewall.descripcionPlaceholder' | translate" [ngModel]="nuevaDescripcion()" (ngModelChange)="nuevaDescripcion.set($event)">
+          <input class="campo__input" id="campo-descripcion-regla" type="text" [placeholder]="'firewall.descripcionPlaceholder' | translate" [ngModel]="nuevaDescripcion()" (ngModelChange)="nuevaDescripcion.set($event)">
         </section>
       </section>
       <section class="pagina-firewall__formulario__acciones">

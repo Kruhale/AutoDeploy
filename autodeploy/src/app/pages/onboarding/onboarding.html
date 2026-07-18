@@ -52,27 +52,27 @@
     <section class="onboarding__formulario">
       <section class="onboarding__formulario__fila">
         <section class="campo onboarding__campo--mitad">
-          <label class="campo__etiqueta">{{ "onboarding.formulario.serverNickname" | translate }}</label>
-          <input class="campo__input" name="nombre" type="text" [placeholder]="'onboarding.formulario.serverNicknamePlaceholder' | translate" [ngModel]="nombreServidor()" (ngModelChange)="nombreServidor.set($event)">
+          <label class="campo__etiqueta" for="campo-nombre-servidor">{{ "onboarding.formulario.serverNickname" | translate }}</label>
+          <input class="campo__input" id="campo-nombre-servidor" name="nombre" type="text" [placeholder]="'onboarding.formulario.serverNicknamePlaceholder' | translate" [ngModel]="nombreServidor()" (ngModelChange)="nombreServidor.set($event)">
         </section>
         <section class="campo onboarding__campo--mitad">
-          <label class="campo__etiqueta">{{ "onboarding.formulario.ipAddress" | translate }}</label>
-          <input class="campo__input" name="ip" type="text" [placeholder]="'onboarding.formulario.ipAddressPlaceholder' | translate" [ngModel]="direccionIp()" (ngModelChange)="direccionIp.set($event)">
+          <label class="campo__etiqueta" for="campo-direccion-ip">{{ "onboarding.formulario.ipAddress" | translate }}</label>
+          <input class="campo__input" id="campo-direccion-ip" name="ip" type="text" [placeholder]="'onboarding.formulario.ipAddressPlaceholder' | translate" [ngModel]="direccionIp()" (ngModelChange)="direccionIp.set($event)">
         </section>
       </section>
       <section class="onboarding__formulario__fila">
         <section class="campo onboarding__campo--mitad">
-          <label class="campo__etiqueta">{{ "onboarding.formulario.sshPort" | translate }}</label>
-          <input class="campo__input" name="puerto" type="text" [placeholder]="'onboarding.formulario.sshPortPlaceholder' | translate" [ngModel]="puertoSsh()" (ngModelChange)="puertoSsh.set($event)">
+          <label class="campo__etiqueta" for="campo-puerto-ssh">{{ "onboarding.formulario.sshPort" | translate }}</label>
+          <input class="campo__input" id="campo-puerto-ssh" name="puerto" type="text" [placeholder]="'onboarding.formulario.sshPortPlaceholder' | translate" [ngModel]="puertoSsh()" (ngModelChange)="puertoSsh.set($event)">
         </section>
         <section class="campo onboarding__campo--mitad">
-          <label class="campo__etiqueta">{{ "onboarding.formulario.user" | translate }}</label>
-          <input class="campo__input" name="usuario" type="text" [placeholder]="'onboarding.formulario.userPlaceholder' | translate" [ngModel]="usuarioSsh()" (ngModelChange)="usuarioSsh.set($event)">
+          <label class="campo__etiqueta" for="campo-usuario-ssh">{{ "onboarding.formulario.user" | translate }}</label>
+          <input class="campo__input" id="campo-usuario-ssh" name="usuario" type="text" [placeholder]="'onboarding.formulario.userPlaceholder' | translate" [ngModel]="usuarioSsh()" (ngModelChange)="usuarioSsh.set($event)">
         </section>
       </section>
       <section class="campo">
-        <label class="campo__etiqueta">{{ "onboarding.formulario.authMethod" | translate }}</label>
-        <section class="toggle">
+        <span class="campo__etiqueta" id="etiqueta-metodo-auth">{{ "onboarding.formulario.authMethod" | translate }}</span>
+        <section class="toggle" role="group" aria-labelledby="etiqueta-metodo-auth">
           <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'key'" (click)="cambiarMetodoAuth('key')">
             <i class="fa-solid fa-key"></i> {{ "onboarding.formulario.authMethodKey" | translate }}
           </button>
@@ -83,14 +83,14 @@
       </section>
       @if (metodoAutenticacion() === 'password') {
         <section class="campo">
-          <label class="campo__etiqueta">{{ "onboarding.formulario.contrasena" | translate }}</label>
-          <input class="campo__input" name="password" type="password" [placeholder]="'onboarding.formulario.clavePlaceholder' | translate" [ngModel]="passwordServidor()" (ngModelChange)="passwordServidor.set($event)">
+          <label class="campo__etiqueta" for="campo-password-ssh">{{ "onboarding.formulario.contrasena" | translate }}</label>
+          <input class="campo__input" id="campo-password-ssh" name="password" type="password" [placeholder]="'onboarding.formulario.clavePlaceholder' | translate" [ngModel]="passwordServidor()" (ngModelChange)="passwordServidor.set($event)">
         </section>
       }
       @if (metodoAutenticacion() === 'key') {
         <section class="campo">
-          <label class="campo__etiqueta">{{ "onboarding.formulario.claveSsh" | translate }}</label>
-          <textarea class="campo__textarea" name="claveSshPrivada" rows="8" spellcheck="false" autocomplete="off" [placeholder]="'onboarding.formulario.claveSshPlaceholder' | translate" [ngModel]="claveSshPrivada()" (ngModelChange)="claveSshPrivada.set($event)"></textarea>
+          <label class="campo__etiqueta" for="campo-clave-ssh">{{ "onboarding.formulario.claveSsh" | translate }}</label>
+          <textarea class="campo__textarea" id="campo-clave-ssh" name="claveSshPrivada" rows="8" spellcheck="false" autocomplete="off" [placeholder]="'onboarding.formulario.claveSshPlaceholder' | translate" [ngModel]="claveSshPrivada()" (ngModelChange)="claveSshPrivada.set($event)"></textarea>
           <p class="campo__pista">{{ "onboarding.formulario.claveSshPista" | translate }}</p>
         </section>
       }

@@ -31,39 +31,39 @@
       </header>
       <section class="pagina-networking__formulario__campos">
         <section class="campo">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-nuevo-dominio">
             <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
             {{ "networking.dominio" | translate }}
           </label>
-          <input class="campo__input" type="text" [placeholder]="'networking.dominioPlaceholder' | translate" [ngModel]="nuevoDominio()" (ngModelChange)="nuevoDominio.set($event)">
+          <input class="campo__input" id="campo-nuevo-dominio" type="text" [placeholder]="'networking.dominioPlaceholder' | translate" [ngModel]="nuevoDominio()" (ngModelChange)="nuevoDominio.set($event)">
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-servidor-dominio">
             <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
             {{ "networking.servidor" | translate }}
           </label>
-          <select class="campo__select" [ngModel]="nuevoServidorId()" (ngModelChange)="nuevoServidorId.set($event)">
+          <select class="campo__select" id="campo-servidor-dominio" [ngModel]="nuevoServidorId()" (ngModelChange)="nuevoServidorId.set($event)">
             @for (servidor of listaServidores(); track servidor.id) {
               <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
             }
           </select>
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-tipo-dominio">
             <span class="campo__etiqueta__numero" aria-hidden="true">iii</span>
             {{ "networking.tipo" | translate }}
           </label>
-          <select class="campo__select" [ngModel]="nuevoTipo()" (ngModelChange)="nuevoTipo.set($event)">
+          <select class="campo__select" id="campo-tipo-dominio" [ngModel]="nuevoTipo()" (ngModelChange)="nuevoTipo.set($event)">
             <option value="primary">{{ "networking.tipoPrimary" | translate }}</option>
             <option value="subdomain">{{ "networking.tipoSubdomain" | translate }}</option>
           </select>
         </section>
         <section class="campo">
-          <label class="campo__etiqueta">
+          <label class="campo__etiqueta" for="campo-destino-dominio">
             <span class="campo__etiqueta__numero" aria-hidden="true">iv</span>
             {{ "networking.destino" | translate }}
           </label>
-          <input class="campo__input" type="text" [placeholder]="'networking.destinoPlaceholder' | translate" [ngModel]="nuevoDestino()" (ngModelChange)="nuevoDestino.set($event)">
+          <input class="campo__input" id="campo-destino-dominio" type="text" [placeholder]="'networking.destinoPlaceholder' | translate" [ngModel]="nuevoDestino()" (ngModelChange)="nuevoDestino.set($event)">
         </section>
       </section>
       <section class="pagina-networking__formulario__acciones">

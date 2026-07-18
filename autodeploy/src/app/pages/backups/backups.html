@@ -26,8 +26,8 @@
 
   @if (listaServidores().length > 1) {
     <section class="pagina-backups__selector-servidor">
-      <label class="pagina-backups__selector-servidor__etiqueta">{{ "backups.selectorServidor" | translate }}</label>
-      <select class="pagina-backups__selector-servidor__select" [value]="servidorSeleccionadoId()" (change)="cambiarServidor($any($event.target).value)">
+      <label class="pagina-backups__selector-servidor__etiqueta" for="selector-servidor-backups">{{ "backups.selectorServidor" | translate }}</label>
+      <select class="pagina-backups__selector-servidor__select" id="selector-servidor-backups" [value]="servidorSeleccionadoId()" (change)="cambiarServidor($any($event.target).value)">
         @for (servidor of listaServidores(); track servidor.id) {
           <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
         }

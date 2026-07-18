@@ -1187,7 +1187,6 @@
       "errorIniciar": "Impossibile avviare il backup",
       "errorEliminar": "Impossibile eliminare il backup",
       "errorRestaurar": "Impossibile ripristinare il backup",
-      "confirmRestaurar": "Questo ripristinerà lo stato del server da questo istantanea. Verrà creato automaticamente uno istantanea di sicurezza prima del ripristino. Continuare?",
       "restoreIniciado": "Ripristino avviato · a breve apparirà uno istantanea di sicurezza precedente"
     },
     "tipo": {
@@ -1199,7 +1198,17 @@
       "en_progreso": "In corso",
       "fallido": "Fallito"
     },
-    "eliminar": "Elimina copia"
+    "eliminar": "Elimina copia",
+    "dialogoEliminar": {
+      "titulo": "Elimina backup",
+      "mensaje": "Il backup verrà eliminato definitivamente. Questa azione non può essere annullata.",
+      "confirmar": "Elimina backup"
+    },
+    "dialogoRestaurar": {
+      "titulo": "Ripristina backup",
+      "mensaje": "Il server tornerà allo stato salvato in questo backup. Le modifiche successive andranno perse.",
+      "confirmar": "Ripristina"
+    }
   },
   "terminalSelector": {
     "sello": "Pannello · Terminale · SSH",

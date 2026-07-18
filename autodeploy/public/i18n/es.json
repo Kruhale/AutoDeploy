@@ -1187,7 +1187,6 @@
       "errorIniciar": "No se pudo iniciar la copia",
       "errorEliminar": "No se pudo eliminar la copia",
       "errorRestaurar": "No se pudo restaurar la copia",
-      "confirmRestaurar": "Esto restaurará el estado del servidor desde este instantánea. Se creará automáticamente un instantánea de seguridad previo a la restauración. ¿Continuar?",
       "restoreIniciado": "Restauración iniciada · aparecerá en breve un instantánea de seguridad previo"
     },
     "tipo": {
@@ -1199,7 +1198,17 @@
       "en_progreso": "En progreso",
       "fallido": "Fallido"
     },
-    "eliminar": "Eliminar copia"
+    "eliminar": "Eliminar copia",
+    "dialogoEliminar": {
+      "titulo": "Eliminar copia de seguridad",
+      "mensaje": "La copia se borrará de forma permanente. Esta acción no se puede deshacer.",
+      "confirmar": "Eliminar copia"
+    },
+    "dialogoRestaurar": {
+      "titulo": "Restaurar copia de seguridad",
+      "mensaje": "El servidor volverá al estado guardado en esta copia. Los cambios posteriores se perderán.",
+      "confirmar": "Restaurar"
+    }
   },
   "terminalSelector": {
     "sello": "Panel · Terminal · SSH",

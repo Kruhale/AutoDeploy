@@ -238,18 +238,20 @@ describe("Backups", function() {
     expect(componente.mensajeError()).toBe("");
   }));
 
-  it("eliminarBackup OK recarga la lista", function() {
+  it("confirmarEliminarBackup OK recarga la lista", function() {
     inicializarConServidores();
-    componente.eliminarBackup("bk-1");
+    componente.solicitarEliminarBackup("bk-1");
+    componente.confirmarEliminarBackup();
     const peticion = httpMock.expectOne("/api/backups/bk-1");
     expect(peticion.request.method).toBe("DELETE");
     peticion.flush({ success: true, message: "OK", data: {} });
     httpMock.expectOne("/api/backups/servidor/srv-1").flush({ success: true, message: "OK", data: [] });
   });
 
-  it("eliminarBackup con error muestra mensaje y lo limpia", fakeAsync(function() {
+  it("confirmarEliminarBackup con error muestra mensaje y lo limpia", fakeAsync(function() {
     inicializarConServidores();
-    componente.eliminarBackup("bk-1");
+    componente.solicitarEliminarBackup("bk-1");
+    componente.confirmarEliminarBackup();
     const peticion = httpMock.expectOne("/api/backups/bk-1");
     peticion.error(new ProgressEvent("net"), { status: 500, statusText: "fail" });
     expect(componente.mensajeError().length).toBeGreaterThan(0);
@@ -257,17 +259,18 @@ describe("Backups", function() {
     expect(componente.mensajeError()).toBe("");
   }));
 
-  it("restaurarBackup cancelado por el usuario no hace peticion", function() {
+  it("cancelar el dialogo de restaurar no hace peticion", function() {
     inicializarConServidores();
-    spyOn(window, "confirm").and.returnValue(false);
-    componente.restaurarBackup("bk-1");
+    componente.solicitarRestaurarBackup("bk-1");
+    componente.cancelarDialogoBackup();
+    componente.confirmarRestaurarBackup();
     httpMock.expectNone("/api/backups/bk-1/restaurar");
   });
 
-  it("restaurarBackup OK muestra mensaje exito y recarga", fakeAsync(function() {
+  it("confirmarRestaurarBackup OK muestra mensaje exito y recarga", fakeAsync(function() {
     inicializarConServidores();
-    spyOn(window, "confirm").and.returnValue(true);
-    componente.restaurarBackup("bk-1");
+    componente.solicitarRestaurarBackup("bk-1");
+    componente.confirmarRestaurarBackup();
     const peticion = httpMock.expectOne("/api/backups/bk-1/restaurar");
     expect(peticion.request.method).toBe("POST");
     peticion.flush({ success: true, message: "OK", data: {} });
@@ -277,10 +280,10 @@ describe("Backups", function() {
     expect(componente.mensajeExito()).toBe("");
   }));
 
-  it("restaurarBackup con error y detalle del backend muestra el detalle", fakeAsync(function() {
+  it("confirmarRestaurarBackup con error y detalle del backend muestra el detalle", fakeAsync(function() {
     inicializarConServidores();
-    spyOn(window, "confirm").and.returnValue(true);
-    componente.restaurarBackup("bk-1");
+    componente.solicitarRestaurarBackup("bk-1");
+    componente.confirmarRestaurarBackup();
     const peticion = httpMock.expectOne("/api/backups/bk-1/restaurar");
     peticion.flush({ message: "detalle especifico" }, { status: 500, statusText: "fail" });
     expect(componente.mensajeError()).toBe("detalle especifico");
@@ -288,10 +291,10 @@ describe("Backups", function() {
     expect(componente.mensajeError()).toBe("");
   }));
 
-  it("restaurarBackup con error sin detalle usa mensaje por defecto", fakeAsync(function() {
+  it("confirmarRestaurarBackup con error sin detalle usa mensaje por defecto", fakeAsync(function() {
     inicializarConServidores();
-    spyOn(window, "confirm").and.returnValue(true);
-    componente.restaurarBackup("bk-1");
+    componente.solicitarRestaurarBackup("bk-1");
+    componente.confirmarRestaurarBackup();
     const peticion = httpMock.expectOne("/api/backups/bk-1/restaurar");
     peticion.error(new ProgressEvent("net"), { status: 500, statusText: "fail" });
     expect(componente.mensajeError().length).toBeGreaterThan(0);

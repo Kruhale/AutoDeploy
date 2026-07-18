@@ -1187,7 +1187,6 @@
       "errorIniciar": "Could not start the backup",
       "errorEliminar": "Could not delete the backup",
       "errorRestaurar": "Could not restore the backup",
-      "confirmRestaurar": "This will restore the server state from this snapshot. A safety snapshot will be created automatically before the restore. Continue?",
       "restoreIniciado": "Restore started · a pre-restore safety snapshot will appear shortly"
     },
     "tipo": {
@@ -1199,7 +1198,17 @@
       "en_progreso": "In progress",
       "fallido": "Failed"
     },
-    "eliminar": "Delete backup"
+    "eliminar": "Delete backup",
+    "dialogoEliminar": {
+      "titulo": "Delete backup",
+      "mensaje": "The backup will be permanently deleted. This action cannot be undone.",
+      "confirmar": "Delete backup"
+    },
+    "dialogoRestaurar": {
+      "titulo": "Restore backup",
+      "mensaje": "The server will return to the state saved in this backup. Later changes will be lost.",
+      "confirmar": "Restore"
+    }
   },
   "terminalSelector": {
     "sello": "Workspace · Terminal · SSH",

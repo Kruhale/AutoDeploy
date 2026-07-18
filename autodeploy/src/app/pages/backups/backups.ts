@@ -3,6 +3,7 @@ import { HttpClient } from "@angular/common/http";
 import { DatePipe } from "@angular/common";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
+import { DialogoConfirmacion } from "../../components/shared/dialogo-confirmacion/dialogo-confirmacion";
 
 interface BackupApi {
   id: string;
@@ -16,7 +17,7 @@ interface BackupApi {
 
 @Component({
   selector: "app-backups",
-  imports: [DatePipe, TranslateModule],
+  imports: [DatePipe, TranslateModule, DialogoConfirmacion],
   templateUrl: "./backups.html",
   styleUrl: "./backups.scss"
 })
@@ -31,6 +32,8 @@ export class Backups implements OnInit, OnDestroy {
   cargando = signal(true);
   mensajeError = signal<string>("");
   mensajeExito = signal<string>("");
+  idBackupParaEliminar = signal<string | null>(null);
+  idBackupParaRestaurar = signal<string | null>(null);
 
   private temporizadorRefresco: ReturnType<typeof setInterval> | null = null;
 
@@ -188,7 +191,25 @@ export class Backups implements OnInit, OnDestroy {
     });
   }
 
-  eliminarBackup(idBackup: string): void {
+  solicitarEliminarBackup(idBackup: string): void {
+    this.idBackupParaEliminar.set(idBackup);
+  }
+
+  solicitarRestaurarBackup(idBackup: string): void {
+    this.idBackupParaRestaurar.set(idBackup);
+  }
+
+  cancelarDialogoBackup(): void {
+    this.idBackupParaEliminar.set(null);
+    this.idBackupParaRestaurar.set(null);
+  }
+
+  confirmarEliminarBackup(): void {
+    const idBackup = this.idBackupParaEliminar();
+    this.idBackupParaEliminar.set(null);
+    if (!idBackup) {
+      return;
+    }
     const componente = this;
     const servidorId = this.servidorSeleccionadoId();
     this.http.delete("/api/backups/" + idBackup).subscribe({
@@ -204,10 +225,12 @@ export class Backups implements OnInit, OnDestroy {
     });
   }
 
-  restaurarBackup(idBackup: string): void {
-    const confirmado = window.confirm(this.translate.instant("backups.mensajes.confirmRestaurar"));
-    if (!confirmado) return;
-
+  confirmarRestaurarBackup(): void {
+    const idBackup = this.idBackupParaRestaurar();
+    this.idBackupParaRestaurar.set(null);
+    if (!idBackup) {
+      return;
+    }
     const componente = this;
     const servidorId = this.servidorSeleccionadoId();
 

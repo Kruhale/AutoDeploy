@@ -1187,7 +1187,6 @@
       "errorIniciar": "Impossible de démarrer la sauvegarde",
       "errorEliminar": "Impossible de supprimer la sauvegarde",
       "errorRestaurar": "Impossible de restaurer la sauvegarde",
-      "confirmRestaurar": "Cela restaurera l'état du serveur à partir de ce instantané. Un instantané de sécurité préalable sera créé automatiquement avant la restauration. Continuer ?",
       "restoreIniciado": "Restauration lancée · un instantané de sécurité préalable apparaîtra sous peu"
     },
     "tipo": {
@@ -1199,7 +1198,17 @@
       "en_progreso": "En cours",
       "fallido": "Échoué"
     },
-    "eliminar": "Supprimer la copie"
+    "eliminar": "Supprimer la copie",
+    "dialogoEliminar": {
+      "titulo": "Supprimer la sauvegarde",
+      "mensaje": "La sauvegarde sera supprimée définitivement. Cette action est irréversible.",
+      "confirmar": "Supprimer"
+    },
+    "dialogoRestaurar": {
+      "titulo": "Restaurer la sauvegarde",
+      "mensaje": "Le serveur reviendra à l'état enregistré dans cette sauvegarde. Les modifications ultérieures seront perdues.",
+      "confirmar": "Restaurer"
+    }
   },
   "terminalSelector": {
     "sello": "Panneau · Terminal · SSH",

@@ -1187,7 +1187,6 @@
       "errorIniciar": "Die Sicherung konnte nicht gestartet werden",
       "errorEliminar": "Die Sicherung konnte nicht gelöscht werden",
       "errorRestaurar": "Die Sicherung konnte nicht wiederhergestellt werden",
-      "confirmRestaurar": "Dadurch wird der Serverzustand aus diesem Momentaufnahme wiederhergestellt. Vor der Wiederherstellung wird automatisch ein Sicherungs-Momentaufnahme erstellt. Fortfahren?",
       "restoreIniciado": "Wiederherstellung gestartet · ein vorheriger Sicherungs-Momentaufnahme erscheint in Kürze"
     },
     "tipo": {
@@ -1199,7 +1198,17 @@
       "en_progreso": "In Bearbeitung",
       "fallido": "Fehlgeschlagen"
     },
-    "eliminar": "Sicherung löschen"
+    "eliminar": "Sicherung löschen",
+    "dialogoEliminar": {
+      "titulo": "Backup löschen",
+      "mensaje": "Das Backup wird dauerhaft gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "confirmar": "Backup löschen"
+    },
+    "dialogoRestaurar": {
+      "titulo": "Backup wiederherstellen",
+      "mensaje": "Der Server kehrt zum in diesem Backup gespeicherten Zustand zurück. Spätere Änderungen gehen verloren.",
+      "confirmar": "Wiederherstellen"
+    }
   },
   "terminalSelector": {
     "sello": "Bereich · Terminal · SSH",

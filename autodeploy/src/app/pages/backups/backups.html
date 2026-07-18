@@ -112,11 +112,11 @@
             </span>
 
             <section class="pagina-backups__item__acciones">
-              <button class="pagina-backups__accion pagina-backups__accion--primaria" type="button" (click)="restaurarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'">
+              <button class="pagina-backups__accion pagina-backups__accion--primaria" type="button" (click)="solicitarRestaurarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'">
                 <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
                 <span>{{ "backups.restore" | translate }}</span>
               </button>
-              <button class="pagina-backups__accion pagina-backups__accion--peligro" type="button" (click)="eliminarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'" [attr.aria-label]="'backups.eliminar' | translate">
+              <button class="pagina-backups__accion pagina-backups__accion--peligro" type="button" (click)="solicitarEliminarBackup(backup.id)" [disabled]="backup.estado === 'en_progreso'" [attr.aria-label]="'backups.eliminar' | translate">
                 <i class="fa-solid fa-trash" aria-hidden="true"></i>
               </button>
             </section>
@@ -126,5 +126,23 @@
     }
   </section>
 
+  @if (idBackupParaEliminar()) {
+    <app-dialogo-confirmacion
+      titulo="backups.dialogoEliminar.titulo"
+      mensaje="backups.dialogoEliminar.mensaje"
+      textoConfirmar="backups.dialogoEliminar.confirmar"
+      [peligro]="true"
+      (confirmar)="confirmarEliminarBackup()"
+      (cancelar)="cancelarDialogoBackup()"></app-dialogo-confirmacion>
+  }
+
+  @if (idBackupParaRestaurar()) {
+    <app-dialogo-confirmacion
+      titulo="backups.dialogoRestaurar.titulo"
+      mensaje="backups.dialogoRestaurar.mensaje"
+      textoConfirmar="backups.dialogoRestaurar.confirmar"
+      (confirmar)="confirmarRestaurarBackup()"
+      (cancelar)="cancelarDialogoBackup()"></app-dialogo-confirmacion>
+  }
 
 </section>

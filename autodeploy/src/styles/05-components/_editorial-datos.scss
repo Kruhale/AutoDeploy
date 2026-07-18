@@ -1,0 +1,472 @@
+// Sistema editorial de DATOS: estados, filas de registro, teletipo de carga,
+// tira de vitales y modal accesible. Partial ADITIVO: extiende el bloque
+// .editorial sin tocar _editorial-comunes.scss para no arriesgar las paginas
+// ya migradas. Selectores planos.
+
+// ---------------------------------------------------------------------------
+// Estado: punto de color + etiqueta mono. Sustituye a las pildoras de colores.
+
+.editorial__estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem; /* 7px */
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texto-medio);
+  white-space: nowrap;
+}
+
+.editorial__estado__punto {
+  width: 0.4rem; /* 6px */
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: var(--texto-apagado);
+  flex-shrink: 0;
+}
+
+.editorial__estado--verde .editorial__estado__punto {
+  background-color: var(--verde-normal);
+}
+
+.editorial__estado--rojo .editorial__estado__punto {
+  background-color: var(--rojo-normal);
+}
+
+.editorial__estado--ambar .editorial__estado__punto {
+  background-color: var(--amarillo-normal);
+}
+
+.editorial__estado--naranja .editorial__estado__punto {
+  background-color: var(--naranja-normal);
+}
+
+// Solo respira cuando el estado sigue vivo (en progreso, conectando...)
+@media (prefers-reduced-motion: no-preference) {
+  .editorial__estado--vivo .editorial__estado__punto {
+    animation: editorial-respirar 2.4s ease-in-out infinite;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Ledger: filas de datos separadas por filetes, como un libro de registro.
+// Las cifras van en mono tabular y alineadas a la derecha para comparar
+// magnitudes de un vistazo.
+
+.editorial__ledger {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--borde-normal);
+}
+
+.editorial__ledger__cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-xl);
+  padding: 0.55rem 0.25rem; /* 9px 4px */
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.editorial__ledger__th {
+  font-family: var(--font-mono);
+  font-size: 0.6rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.editorial__ledger__fila {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-xl);
+  padding: 0.9rem 0.25rem; /* 14px 4px */
+  border-bottom: 1px solid var(--borde-suave);
+  transition: background-color 180ms ease-out;
+}
+
+.editorial__ledger__fila:hover {
+  background-color: hsla(40, 20%, 92%, 0.03);
+}
+
+.tema-claro .editorial__ledger__fila:hover {
+  background-color: hsla(230, 14%, 13%, 0.04);
+}
+
+.editorial__ledger__celda {
+  min-width: 0;
+  font-size: var(--font-size-sm);
+  color: var(--texto-claro);
+}
+
+.editorial__ledger__celda--crece {
+  flex: 1;
+}
+
+.editorial__ledger__celda--mono {
+  font-family: var(--font-mono);
+  font-size: 0.78rem; /* 12px */
+  letter-spacing: 0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+.editorial__ledger__celda--numero {
+  font-family: var(--font-mono);
+  font-size: 0.78rem; /* 12px */
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.editorial__ledger__celda--apagada {
+  color: var(--texto-apagado);
+}
+
+// ---------------------------------------------------------------------------
+// Teletipo y esqueleto: la carga habla el idioma de la casa, sin spinners.
+// El retardo de 200ms evita el parpadeo cuando la respuesta llega rapida.
+
+.editorial__teletipo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem; /* 10px */
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.editorial__teletipo::before {
+  content: "···";
+  color: var(--amarillo-normal);
+  letter-spacing: 0.1em;
+}
+
+.editorial__esqueleto {
+  display: block;
+  height: 0.85rem; /* 14px */
+  border-radius: var(--radius-xs);
+  background-color: hsla(40, 20%, 92%, 0.05);
+}
+
+.tema-claro .editorial__esqueleto {
+  background-color: hsla(230, 14%, 13%, 0.06);
+}
+
+.editorial__esqueleto--media {
+  width: 55%;
+}
+
+.editorial__esqueleto--corta {
+  width: 30%;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .editorial__teletipo {
+    animation: editorial-aparecer 160ms ease-out 200ms backwards;
+  }
+
+  .editorial__teletipo::before {
+    animation: editorial-teletipo-latir 1.1s ease-in-out infinite;
+  }
+
+  .editorial__esqueleto {
+    background-image: linear-gradient(90deg, transparent 0%, hsla(40, 20%, 92%, 0.05) 50%, transparent 100%);
+    background-size: 200% 100%;
+    animation:
+      editorial-aparecer 160ms ease-out 200ms backwards,
+      editorial-esqueleto-brillo 1.6s ease-in-out infinite;
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Vitales: cifras grandes en linea separadas por filetes verticales, sin
+// cajas. Es la muerte de las stat-cards.
+
+.editorial__vitales {
+  display: flex;
+  border-top: 1px solid var(--borde-normal);
+  border-bottom: 1px solid var(--borde-normal);
+}
+
+.editorial__vitales__dato {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem; /* 9px */
+  padding: var(--spacing-size-2xl) var(--spacing-size-xl);
+  border-left: 1px solid var(--borde-suave);
+}
+
+.editorial__vitales__dato:first-child {
+  border-left: none;
+  padding-left: 0.25rem; /* 4px */
+}
+
+.editorial__vitales__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.6rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.editorial__vitales__cifra {
+  font-family: var(--font-mono);
+  font-size: 2.9rem; /* 46px */
+  font-weight: var(--font-weight-normal);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--texto-claro);
+  font-variant-numeric: tabular-nums;
+}
+
+.editorial__vitales__cifra--verde {
+  color: var(--verde-normal);
+}
+
+.editorial__vitales__cifra--roja {
+  color: var(--rojo-normal);
+}
+
+.editorial__vitales__nota {
+  font-size: var(--font-size-sm);
+  color: var(--texto-medio);
+}
+
+// Barra fina opcional para vitales con porcentaje (CPU, RAM, disco)
+.editorial__vitales__barra {
+  position: relative;
+  height: 2px;
+  margin-top: 0.4rem; /* 6px */
+  background-color: var(--borde-normal);
+  overflow: hidden;
+}
+
+.editorial__vitales__barra__relleno {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  background-color: var(--amarillo-normal);
+  transition: width 400ms ease-out;
+}
+
+@media (max-width: 900px) {
+  .editorial__vitales {
+    flex-wrap: wrap;
+    border-bottom: none;
+  }
+
+  .editorial__vitales__dato {
+    flex: 1 1 42%;
+    border-bottom: 1px solid var(--borde-suave);
+  }
+
+  .editorial__vitales__dato:nth-child(odd) {
+    border-left: none;
+    padding-left: 0.25rem; /* 4px */
+  }
+}
+
+@media (max-width: 480px) {
+  .editorial__vitales__cifra {
+    font-size: 2.2rem; /* 35px */
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Modal editorial accesible: scrim oscuro, caja con filete y microtipo.
+
+.editorial__modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-size-2xl);
+  background-color: hsla(230, 8%, 3%, 0.7);
+}
+
+.editorial__modal__caja {
+  width: 100%;
+  max-width: 34rem; /* 544px */
+  max-height: 85vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-xl);
+  padding: var(--spacing-size-2xl);
+  background-color: var(--fondo-oscuro);
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-xl);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .editorial__modal {
+    animation: editorial-aparecer 160ms ease-out;
+  }
+
+  .editorial__modal__caja {
+    animation: editorial-modal-entrar 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+.editorial__modal__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-size-xl);
+  padding-bottom: var(--spacing-size-l);
+  border-bottom: 1px solid var(--borde-suave);
+}
+
+.editorial__modal__titular {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem; /* 6px */
+}
+
+.editorial__modal__indice {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
+.editorial__modal__indice::before {
+  content: "— ";
+  color: var(--amarillo-normal);
+}
+
+.editorial__modal__titulo {
+  font-family: var(--font-secondary);
+  font-size: 1.35rem; /* 22px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.02em;
+  color: var(--texto-claro);
+  line-height: 1.1;
+}
+
+.editorial__modal__texto {
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+  line-height: var(--line-height-normal);
+}
+
+.editorial__modal__cerrar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem; /* 32px */
+  height: 2rem;
+  flex-shrink: 0;
+  background-color: transparent;
+  border: 1px solid var(--borde-normal);
+  border-radius: 50%;
+  color: var(--texto-medio);
+  font-size: 0.8rem; /* 13px */
+  cursor: pointer;
+  transition:
+    border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+    color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial__modal__cerrar:hover {
+  border-color: var(--amarillo-normal);
+  color: var(--amarillo-normal);
+}
+
+.editorial__modal__cerrar:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
+}
+
+.editorial__modal__acciones {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  margin-top: 0.4rem; /* 6px */
+}
+
+// El ghost trae margenes pensados para vivir suelto; dentro del pie del
+// modal tiene que alinearse con el boton de confirmar.
+.editorial__modal__acciones .editorial__boton-ghost {
+  margin-top: 0;
+  align-self: auto;
+}
+
+.editorial__modal__confirmar {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 1.15rem; /* 9px 18px */
+  background-color: transparent;
+  border: 1px solid var(--amarillo-normal);
+  border-radius: var(--radius-full);
+  color: var(--amarillo-normal);
+  font-family: var(--font-secondary);
+  font-size: 0.85rem; /* 14px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+    color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.editorial__modal__confirmar:hover {
+  background-color: var(--amarillo-normal);
+  color: var(--fondo-oscuro);
+}
+
+.editorial__modal__confirmar:active {
+  transform: scale(0.98);
+}
+
+.editorial__modal__confirmar:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 3px;
+}
+
+.editorial__modal__confirmar--peligro {
+  border-color: var(--rojo-normal);
+  color: var(--rojo-normal);
+}
+
+.editorial__modal__confirmar--peligro:hover {
+  background-color: var(--rojo-normal);
+  color: var(--fondo-oscuro);
+}
+
+.editorial__modal__confirmar--peligro:focus-visible {
+  outline-color: var(--rojo-normal);
+}
+
+// ---------------------------------------------------------------------------
+// Animaciones propias del sistema de datos
+
+@keyframes editorial-aparecer {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes editorial-teletipo-latir {
+  0%, 100% { opacity: 0.25; }
+  50%      { opacity: 1; }
+}
+
+@keyframes editorial-esqueleto-brillo {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+@keyframes editorial-modal-entrar {
+  from { opacity: 0; transform: translateY(0.6rem) scale(0.985); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}

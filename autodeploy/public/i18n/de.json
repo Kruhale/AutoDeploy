@@ -40,7 +40,24 @@
     "acciones": "Aktionen",
     "tipo": "Typ",
     "activo": "Aktiv",
-    "inactivo": "Inaktiv"
+    "inactivo": "Inaktiv",
+    "dialogoIndice": "Bestätigung",
+    "estados": {
+      "completado": "Abgeschlossen",
+      "fallido": "Fehlgeschlagen",
+      "en_progreso": "Läuft",
+      "paid": "Bezahlt",
+      "pending": "Ausstehend",
+      "failed": "Abgelehnt",
+      "allow": "Erlauben",
+      "deny": "Verweigern",
+      "primary": "Primär",
+      "subdomain": "Subdomain",
+      "desconectado": "Getrennt",
+      "conectando": "Verbinde",
+      "conectado": "Verbunden",
+      "error": "Fehler"
+    }
   },
   "selectorIdioma": {
     "etiqueta": "Sprache",

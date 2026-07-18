@@ -40,7 +40,24 @@
     "acciones": "Azioni",
     "tipo": "Tipo",
     "activo": "Attivo",
-    "inactivo": "Inattivo"
+    "inactivo": "Inattivo",
+    "dialogoIndice": "Conferma",
+    "estados": {
+      "completado": "Completato",
+      "fallido": "Fallito",
+      "en_progreso": "In corso",
+      "paid": "Pagata",
+      "pending": "In attesa",
+      "failed": "Rifiutata",
+      "allow": "Consenti",
+      "deny": "Nega",
+      "primary": "Primario",
+      "subdomain": "Sottodominio",
+      "desconectado": "Disconnesso",
+      "conectando": "In connessione",
+      "conectado": "Connesso",
+      "error": "Errore"
+    }
   },
   "selectorIdioma": {
     "etiqueta": "Lingua",

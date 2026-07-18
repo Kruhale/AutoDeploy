@@ -40,7 +40,24 @@
     "acciones": "Actions",
     "tipo": "Type",
     "activo": "Active",
-    "inactivo": "Inactive"
+    "inactivo": "Inactive",
+    "dialogoIndice": "Confirmation",
+    "estados": {
+      "completado": "Completed",
+      "fallido": "Failed",
+      "en_progreso": "In progress",
+      "paid": "Paid",
+      "pending": "Pending",
+      "failed": "Declined",
+      "allow": "Allow",
+      "deny": "Deny",
+      "primary": "Primary",
+      "subdomain": "Subdomain",
+      "desconectado": "Disconnected",
+      "conectando": "Connecting",
+      "conectado": "Connected",
+      "error": "Error"
+    }
   },
   "selectorIdioma": {
     "etiqueta": "Language",

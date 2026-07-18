@@ -183,19 +183,19 @@
 
 
   @if (panelDnsAbierto()) {
-    <section class="pagina-networking__modal" (click)="cerrarPanelDns()">
-      <article class="pagina-networking__modal__caja" (click)="$event.stopPropagation()">
+    <section class="pagina-networking__modal" (click)="cerrarPanelDns()" (keydown.escape)="cerrarPanelDns()">
+      <article class="pagina-networking__modal__caja" role="dialog" aria-modal="true" aria-labelledby="modal-dns-titulo" (click)="$event.stopPropagation()">
         <header class="pagina-networking__modal__cabecera">
           <section class="pagina-networking__modal__titulo-zona">
             <span class="pagina-networking__modal__indice">{{ "networking.modalDns.indice" | translate }}</span>
-            <h2 class="pagina-networking__modal__titulo">{{ "networking.modalDns.titulo" | translate }}</h2>
+            <h2 class="pagina-networking__modal__titulo" id="modal-dns-titulo">{{ "networking.modalDns.titulo" | translate }}</h2>
           </section>
           <button class="pagina-networking__modal__cerrar" type="button" (click)="cerrarPanelDns()" [attr.aria-label]="'networking.modalDns.ariaCerrar' | translate">
             <i class="fa-solid fa-xmark"></i>
           </button>
         </header>
         <section class="pagina-networking__modal__busqueda">
-          <input class="campo__input" type="text" [placeholder]="'networking.modalDns.placeholder' | translate" [ngModel]="dominioConsultando()" (ngModelChange)="dominioConsultando.set($event)" (keydown.enter)="ejecutarConsultaDns()">
+          <input class="campo__input" id="campo-consulta-dns" type="text" [placeholder]="'networking.modalDns.placeholder' | translate" [attr.aria-label]="'networking.modalDns.placeholder' | translate" [ngModel]="dominioConsultando()" (ngModelChange)="dominioConsultando.set($event)" (keydown.enter)="ejecutarConsultaDns()">
           <button class="editorial__cta-principal" type="button" (click)="ejecutarConsultaDns()" [disabled]="cargandoDns() || !dominioConsultando()">
             @if (cargandoDns()) { <i class="fa-solid fa-spinner fa-spin"></i> {{ "networking.modalDns.resolviendo" | translate }} } @else { <i class="fa-solid fa-magnifying-glass"></i> {{ "networking.modalDns.lookup" | translate }} }
           </button>
@@ -223,12 +223,12 @@
   }
 
   @if (panelRedirectsAbierto()) {
-    <section class="pagina-networking__modal" (click)="cerrarPanelRedirects()">
-      <article class="pagina-networking__modal__caja" (click)="$event.stopPropagation()">
+    <section class="pagina-networking__modal" (click)="cerrarPanelRedirects()" (keydown.escape)="cerrarPanelRedirects()">
+      <article class="pagina-networking__modal__caja" role="dialog" aria-modal="true" aria-labelledby="modal-redirects-titulo" (click)="$event.stopPropagation()">
         <header class="pagina-networking__modal__cabecera">
           <section class="pagina-networking__modal__titulo-zona">
             <span class="pagina-networking__modal__indice">{{ "networking.modalRedirects.indice" | translate }}</span>
-            <h2 class="pagina-networking__modal__titulo">{{ "networking.modalRedirects.titulo" | translate }}</h2>
+            <h2 class="pagina-networking__modal__titulo" id="modal-redirects-titulo">{{ "networking.modalRedirects.titulo" | translate }}</h2>
           </section>
           <button class="pagina-networking__modal__cerrar" type="button" (click)="cerrarPanelRedirects()" [attr.aria-label]="'networking.modalDns.ariaCerrar' | translate">
             <i class="fa-solid fa-xmark"></i>
@@ -242,7 +242,7 @@
               }
             </select>
           }
-          <input class="campo__input" type="text" [placeholder]="'networking.modalRedirects.placeholderOrigen' | translate" [ngModel]="hostOrigenNuevo()" (ngModelChange)="hostOrigenNuevo.set($event)">
+          <input class="campo__input" id="campo-origen-redireccion" type="text" [placeholder]="'networking.modalRedirects.placeholderOrigen' | translate" [attr.aria-label]="'networking.modalRedirects.placeholderOrigen' | translate" [ngModel]="hostOrigenNuevo()" (ngModelChange)="hostOrigenNuevo.set($event)">
           <input class="campo__input" type="text" [placeholder]="'networking.modalRedirects.placeholderDestino' | translate" [ngModel]="urlDestinoNueva()" (ngModelChange)="urlDestinoNueva.set($event)">
           <select class="campo__input" [ngModel]="codigoRedireccion()" (ngModelChange)="codigoRedireccion.set($event)">
             <option [ngValue]="301">{{ "networking.modalRedirects.codigo301" | translate }}</option>

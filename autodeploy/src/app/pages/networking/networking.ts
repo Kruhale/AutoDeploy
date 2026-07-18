@@ -241,9 +241,27 @@ export class Networking implements OnInit {
     });
   }
 
+  // Guardamos el foco de origen y lo movemos al primer campo del modal
+  // para que el teclado no se quede detras del scrim (WCAG 2.4.3)
+  private elementoConFocoPrevio: HTMLElement | null = null;
+
+  private guardarFocoYEnfocar(idCampo: string): void {
+    this.elementoConFocoPrevio = document.activeElement as HTMLElement | null;
+    setTimeout(function() {
+      const campo = document.getElementById(idCampo);
+      campo?.focus();
+    }, 0);
+  }
+
+  private devolverFoco(): void {
+    this.elementoConFocoPrevio?.focus();
+    this.elementoConFocoPrevio = null;
+  }
+
   verRegistrosDns(): void {
     this.panelDnsAbierto.set(true);
     this.registrosDns.set(null);
+    this.guardarFocoYEnfocar("campo-consulta-dns");
     const primerDominio = this.listaDeDominios()[0];
     this.dominioConsultando.set(primerDominio ? primerDominio.nombre : "");
     if (primerDominio) {
@@ -254,6 +272,7 @@ export class Networking implements OnInit {
   cerrarPanelDns(): void {
     this.panelDnsAbierto.set(false);
     this.registrosDns.set(null);
+    this.devolverFoco();
   }
 
   ejecutarConsultaDns(dominio?: string): void {
@@ -296,6 +315,7 @@ export class Networking implements OnInit {
 
   configurarRedirecciones(): void {
     this.panelRedirectsAbierto.set(true);
+    this.guardarFocoYEnfocar("campo-origen-redireccion");
     if (this.listaServidores().length > 0 && !this.servidorRedireccion()) {
       this.servidorRedireccion.set(this.listaServidores()[0].id);
     }
@@ -306,6 +326,7 @@ export class Networking implements OnInit {
     this.panelRedirectsAbierto.set(false);
     this.hostOrigenNuevo.set("");
     this.urlDestinoNueva.set("");
+    this.devolverFoco();
   }
 
   cargarRedirecciones(): void {

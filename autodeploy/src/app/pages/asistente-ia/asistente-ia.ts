@@ -155,10 +155,11 @@ export class AsistenteIa implements OnInit, OnDestroy {
   abrirConfiguracion(): void {
     this.mostrarPanelConfiguracion.set(true);
     this.elementoConFocoPrevio = document.activeElement as HTMLElement | null;
+    // 100ms: con 0 el campo aun no esta pintado por la deteccion de cambios
     setTimeout(function () {
       const campo = document.getElementById("campo-api-key");
       campo?.focus();
-    }, 0);
+    }, 100);
   }
 
   cerrarConfiguracion(): void {

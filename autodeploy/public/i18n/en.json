@@ -1158,7 +1158,9 @@
     "mensajes": {
       "errorPreset": "Could not add the preset rule",
       "errorAgregar": "Could not add the rule",
-      "errorEliminar": "Could not remove the rule"
+      "errorEliminar": "Could not remove the rule",
+      "sinServidor": "Connect a server before adding rules",
+      "puertoObligatorio": "Enter the rule port"
     }
   },
   "backups": {

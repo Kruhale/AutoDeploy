@@ -1158,7 +1158,9 @@
     "mensajes": {
       "errorPreset": "No se pudo añadir la regla preset",
       "errorAgregar": "No se pudo añadir la regla",
-      "errorEliminar": "No se pudo eliminar la regla"
+      "errorEliminar": "No se pudo eliminar la regla",
+      "sinServidor": "Conecta un servidor antes de añadir reglas",
+      "puertoObligatorio": "Indica el puerto de la regla"
     }
   },
   "backups": {

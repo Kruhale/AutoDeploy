@@ -108,7 +108,10 @@ export class Firewall implements OnInit {
 
   agregarPreset(puerto: string, descripcion: string): void {
     const servidorId = this.servidorSeleccionadoId();
-    if (!servidorId) return;
+    if (!servidorId) {
+      this.mostrarErrorTemporal("firewall.mensajes.sinServidor");
+      return;
+    }
 
     const yaExiste = this.listaDeReglas().some(function(regla) { return regla.puerto === puerto; });
     if (yaExiste) return;
@@ -145,10 +148,26 @@ export class Firewall implements OnInit {
     this.nuevaDescripcion.set("");
   }
 
+  // Antes estos casos hacian return silencioso y el boton parecia roto
+  private mostrarErrorTemporal(claveMensaje: string): void {
+    const componente = this;
+    this.mensajeError.set(this.translate.instant(claveMensaje));
+    setTimeout(function () {
+      componente.mensajeError.set("");
+    }, 3000);
+  }
+
   agregarRegla(): void {
     const puerto = this.nuevoPuerto();
     const servidorId = this.servidorSeleccionadoId();
-    if (!puerto || !servidorId) return;
+    if (!servidorId) {
+      this.mostrarErrorTemporal("firewall.mensajes.sinServidor");
+      return;
+    }
+    if (!puerto) {
+      this.mostrarErrorTemporal("firewall.mensajes.puertoObligatorio");
+      return;
+    }
 
     this.guardando.set(true);
     const componente = this;

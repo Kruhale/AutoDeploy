@@ -263,10 +263,11 @@ export class Networking implements OnInit {
 
   private guardarFocoYEnfocar(idCampo: string): void {
     this.elementoConFocoPrevio = document.activeElement as HTMLElement | null;
+    // 100ms: con 0 el campo aun no esta pintado por la deteccion de cambios
     setTimeout(function () {
       const campo = document.getElementById(idCampo);
       campo?.focus();
-    }, 0);
+    }, 100);
   }
 
   private devolverFoco(): void {

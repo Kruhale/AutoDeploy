@@ -1158,7 +1158,9 @@
     "mensajes": {
       "errorPreset": "Die Voreinstellungsregel konnte nicht hinzugefügt werden",
       "errorAgregar": "Die Regel konnte nicht hinzugefügt werden",
-      "errorEliminar": "Die Regel konnte nicht gelöscht werden"
+      "errorEliminar": "Die Regel konnte nicht gelöscht werden",
+      "sinServidor": "Verbinde zuerst einen Server, um Regeln hinzuzufügen",
+      "puertoObligatorio": "Gib den Port der Regel an"
     }
   },
   "backups": {

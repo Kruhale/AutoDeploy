@@ -1158,7 +1158,9 @@
     "mensajes": {
       "errorPreset": "Impossibile aggiungere la regola preset",
       "errorAgregar": "Impossibile aggiungere la regola",
-      "errorEliminar": "Impossibile eliminare la regola"
+      "errorEliminar": "Impossibile eliminare la regola",
+      "sinServidor": "Collega un server prima di aggiungere regole",
+      "puertoObligatorio": "Indica la porta della regola"
     }
   },
   "backups": {

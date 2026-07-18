@@ -97,6 +97,9 @@
     </section>
   }
 
+  <!-- Sin servidores no puede haber despliegues: la seccion entera sobra
+       y el parte queda en su frase, el CTA y las vitales a cero -->
+  @if (listaDeServidores().length > 0) {
   <section class="editorial__bloque">
     <header class="editorial__bloque__cabecera">
       <span class="editorial__bloque__indice">03</span>
@@ -128,6 +131,7 @@
       </section>
     }
   </section>
+  }
 
   @if (listaDeSitios().length > 0) {
     <section class="editorial__bloque">

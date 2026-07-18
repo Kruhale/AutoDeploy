@@ -1158,7 +1158,9 @@
     "mensajes": {
       "errorPreset": "Impossible d'ajouter la règle préréglée",
       "errorAgregar": "Impossible d'ajouter la règle",
-      "errorEliminar": "Impossible de supprimer la règle"
+      "errorEliminar": "Impossible de supprimer la règle",
+      "sinServidor": "Connectez un serveur avant d'ajouter des règles",
+      "puertoObligatorio": "Indiquez le port de la règle"
     }
   },
   "backups": {

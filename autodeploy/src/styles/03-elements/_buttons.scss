@@ -2,6 +2,11 @@
 
 // Propiedades comunes a todas las variantes de botón. Se extiende con
 // %placeholder para no generar selectores extra en el CSS final.
+//
+// La transicion separa el transform (relieve/press) en un tramo mas corto
+// para que el clic se sienta tactil e inmediato, mientras el color y la
+// sombra rellenan mas despacio. El icono interior se desplaza un pelin al
+// pasar por encima para dar vida.
 %boton-base {
   @include flex-centro;
   gap: 0.5rem;
@@ -9,7 +14,20 @@
   font-size: var(--font-size-md);
   border-radius: var(--radius-l);
   cursor: pointer;
-  @include transicion(background-color, border-color, color, transform);
+  transition:
+    background-color var(--duration-base) var(--ease-suave),
+    border-color var(--duration-base) var(--ease-suave),
+    color var(--duration-base) var(--ease-suave),
+    box-shadow var(--duration-base) var(--ease-suave),
+    transform var(--duration-fast) var(--ease-suave);
+
+  i {
+    transition: transform var(--duration-base) var(--ease-suave);
+  }
+
+  &:hover i {
+    transform: translateX(2px);
+  }
 }
 
 .boton {
@@ -25,13 +43,21 @@
     &:hover {
       background-color: var(--amarillo-normal);
       color: var(--fondo-oscuro);
+      transform: translateY(-2px);
+      box-shadow: 0 0.6rem 1.4rem hsla(230, 8%, 3%, 0.35);
     }
-    &:active    { transform: scale(0.98); }
+    // Al pulsar se hunde: vuelve al plano, encoge y la sombra se recoge
+    &:active {
+      transform: translateY(0) scale(0.96);
+      box-shadow: 0 0.15rem 0.4rem hsla(230, 8%, 3%, 0.3);
+    }
     &:focus-visible {
       outline: 2px solid var(--amarillo-normal);
       outline-offset: 2px;
     }
-    &:disabled  { @include disabled; }
+    &:disabled {
+      @include disabled;
+    }
   }
 
   &--secundario {
@@ -41,13 +67,21 @@
     font-weight: var(--font-weight-semibold);
     border: 1px solid var(--borde-normal);
 
-    &:hover     { border-color: hsla(40, 20%, 92%, 0.2); }
-    &:active    { transform: scale(0.98); }
+    &:hover {
+      border-color: hsla(40, 20%, 92%, 0.2);
+      background: hsla(40, 20%, 92%, 0.07);
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: scale(0.96);
+    }
     &:focus-visible {
       outline: 2px solid var(--amarillo-normal);
       outline-offset: 2px;
     }
-    &:disabled  { @include disabled; }
+    &:disabled {
+      @include disabled;
+    }
   }
 
   &--ghost {
@@ -60,13 +94,19 @@
     &:hover {
       color: var(--texto-claro);
       border-color: hsla(40, 20%, 92%, 0.2);
+      background: hsla(40, 20%, 92%, 0.04);
+      transform: translateY(-1px);
     }
-    &:active    { transform: scale(0.98); }
+    &:active {
+      transform: scale(0.96);
+    }
     &:focus-visible {
       outline: 2px solid var(--amarillo-normal);
       outline-offset: 2px;
     }
-    &:disabled  { @include disabled; }
+    &:disabled {
+      @include disabled;
+    }
   }
 
   &--peligro {
@@ -76,12 +116,20 @@
     font-weight: var(--font-weight-semibold);
     border: 1px solid rgba(239, 68, 68, 0.15);
 
-    &:hover     { background: rgba(239, 68, 68, 0.15); }
-    &:active    { transform: scale(0.98); }
+    &:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: scale(0.96);
+    }
     &:focus-visible {
       outline: 2px solid var(--rojo-normal);
       outline-offset: 2px;
     }
-    &:disabled  { @include disabled; }
+    &:disabled {
+      @include disabled;
+    }
   }
 }

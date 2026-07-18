@@ -37,18 +37,20 @@
     letter-spacing: -0.005em;
     cursor: pointer;
     transition:
-      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      border-color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave),
+      box-shadow var(--duration-base) var(--ease-suave),
+      transform var(--duration-fast) var(--ease-suave);
 
     &:hover {
       border-color: var(--amarillo-transparente-030);
       background-color: var(--amarillo-transparente-008);
-      transform: translateY(-1px);
+      transform: translateY(-2px);
+      box-shadow: 0 0.4rem 1rem hsla(230, 8%, 3%, 0.25);
     }
 
     &:active {
-      transform: scale(0.98);
+      transform: translateY(0) scale(0.96);
     }
 
     &:focus-visible {
@@ -56,8 +58,14 @@
       outline-offset: 2px;
     }
 
+    // Al pasar por encima el badge del puerto crece un pelin
+    &:hover .pagina-firewall__preset__puerto {
+      transform: scale(1.08);
+    }
+
     // Numero del puerto (ej: "22") en amarillo dentro de un mini badge
     &__puerto {
+      transition: transform var(--duration-base) var(--ease-vaiven);
       font-family: var(--font-mono);
       font-size: 0.65rem;
       font-weight: var(--font-weight-bold);

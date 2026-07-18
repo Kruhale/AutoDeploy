@@ -94,6 +94,10 @@
   overflow: hidden;
 
   &__opcion {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
     padding: 0.5rem 1.25rem;
     background: transparent;
     color: var(--texto-medio);
@@ -103,13 +107,30 @@
     cursor: pointer;
     @include transicion(background-color, color);
 
+    i {
+      transition: transform var(--duration-base) var(--ease-vaiven);
+    }
+
     &--activa {
       background-color: hsla(41, 68%, 56%, 0.1);
       color: var(--amarillo-normal);
       border-left: 2px solid var(--amarillo-normal);
     }
 
-    &:hover:not(&--activa) { color: var(--texto-claro); }
+    // El icono de la opcion activa da un saltito
+    &--activa i {
+      transform: scale(1.15);
+    }
+
+    &:hover:not(.toggle__opcion--activa) {
+      color: var(--texto-claro);
+      background-color: hsla(40, 20%, 92%, 0.04);
+    }
+
+    &:hover i {
+      transform: scale(1.12);
+    }
+
     &:focus-visible {
       outline: 2px solid var(--amarillo-normal);
       outline-offset: -2px;

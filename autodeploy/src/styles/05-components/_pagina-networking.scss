@@ -255,23 +255,29 @@
     cursor: pointer;
     text-align: left;
     transition:
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      transform var(--duration-fast) var(--ease-suave),
+      border-color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave),
+      box-shadow var(--duration-base) var(--ease-suave);
 
     &:hover {
-      transform: translateY(-2px);
+      transform: translateY(-3px);
       border-color: hsla(40, 33.33%, 91.37%, 0.18);
       background-color: hsla(40, 33.33%, 91.37%, 0.045);
+      box-shadow: 0 0.7rem 1.6rem hsla(230, 8%, 3%, 0.28);
 
       .pagina-networking__accion__flecha {
-        transform: translateX(0.25rem);
+        transform: translateX(0.4rem);
         color: var(--amarillo-normal);
+      }
+
+      .pagina-networking__accion__icono {
+        transform: scale(1.08);
       }
     }
 
     &:active {
-      transform: scale(0.99);
+      transform: translateY(0) scale(0.98);
     }
 
     &:focus-visible {
@@ -290,6 +296,7 @@
       border: 1px solid var(--amarillo-transparente-030);
       color: var(--amarillo-normal);
       font-size: 0.85rem;
+      transition: transform var(--duration-slow) var(--ease-vaiven);
     }
 
     &__cuerpo {

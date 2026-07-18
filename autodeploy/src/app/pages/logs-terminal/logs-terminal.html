@@ -10,30 +10,28 @@
     </section>
     <section class="logs-terminal__cabecera__derecha">
       <section class="logs-terminal__busqueda">
-        <i class="fa-solid fa-magnifying-glass"></i>
-        <input class="logs-terminal__busqueda__input" type="text" [placeholder]="'logsTerminal.busqueda' | translate" (input)="busquedaTexto.set($any($event.target).value)">
+        <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+        <input class="logs-terminal__busqueda__input" type="text" [placeholder]="'logsTerminal.busqueda' | translate" [attr.aria-label]="'logsTerminal.busqueda' | translate" (input)="busquedaTexto.set($any($event.target).value)">
       </section>
     </section>
   </header>
 
   <section class="logs-terminal__barra-filtros">
     <section class="logs-terminal__filtros">
-      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'all'" (click)="cambiarFiltro('all')">
-        <i class="fa-solid fa-filter"></i> {{ "logsTerminal.filtro.all" | translate }}
-      </button>
-      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'info'" (click)="cambiarFiltro('info')">{{ "logsTerminal.filtro.info" | translate }}</button>
-      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'warn'" (click)="cambiarFiltro('warn')">{{ "logsTerminal.filtro.warn" | translate }}</button>
-      <button class="logs-terminal__filtro" [class.logs-terminal__filtro--activo]="filtroActivo() === 'error'" (click)="cambiarFiltro('error')">{{ "logsTerminal.filtro.error" | translate }}</button>
+      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'all'" (click)="cambiarFiltro('all')">{{ "logsTerminal.filtro.all" | translate }}</button>
+      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'info'" (click)="cambiarFiltro('info')">{{ "logsTerminal.filtro.info" | translate }}</button>
+      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'warn'" (click)="cambiarFiltro('warn')">{{ "logsTerminal.filtro.warn" | translate }}</button>
+      <button class="logs-terminal__filtro" type="button" [class.logs-terminal__filtro--activo]="filtroActivo() === 'error'" (click)="cambiarFiltro('error')">{{ "logsTerminal.filtro.error" | translate }}</button>
     </section>
     <section class="logs-terminal__barra-acciones">
-      <button class="boton--ghost" (click)="exportarLogs()">
-        <i class="fa-solid fa-download"></i> {{ "logsTerminal.exportarLogs" | translate }}
+      <button class="boton--ghost" type="button" (click)="exportarLogs()">
+        <i class="fa-solid fa-download" aria-hidden="true"></i> {{ "logsTerminal.exportarLogs" | translate }}
       </button>
-      <button class="boton--primario" (click)="reiniciarFlujo()" [disabled]="refrescandoFlujo()">
+      <button class="boton--primario" type="button" (click)="reiniciarFlujo()" [disabled]="refrescandoFlujo()">
         @if (refrescandoFlujo()) {
-          <i class="fa-solid fa-spinner fa-spin"></i> {{ "logsTerminal.refrescando" | translate }}
+          {{ "logsTerminal.refrescando" | translate }}
         } @else {
-          <i class="fa-solid fa-rotate-right"></i> {{ "logsTerminal.refrescar" | translate }}
+          <i class="fa-solid fa-rotate-right" aria-hidden="true"></i> {{ "logsTerminal.refrescar" | translate }}
         }
       </button>
     </section>
@@ -50,20 +48,27 @@
     </header>
     @if (cargandoLogs()) {
       <section class="visor-eventos__cargando">
-        <i class="fa-solid fa-spinner fa-spin"></i> {{ "logsTerminal.visor.cargandoActividad" | translate }}
+        <p class="editorial__teletipo">{{ "logsTerminal.visor.cargandoActividad" | translate }}</p>
       </section>
     } @else if (obtenerEntradasFiltradas().length === 0) {
-      <section class="visor-eventos__vacio">
-        <i class="fa-solid fa-list-check visor-eventos__vacio__icono" aria-hidden="true"></i>
-        <p class="visor-eventos__vacio__titulo">{{ "logsTerminal.visor.vacioTitulo" | translate }}</p>
-        <p class="visor-eventos__vacio__detalle">{{ "logsTerminal.visor.vacioDetalle" | translate }}</p>
+      <section class="editorial__vacio">
+        <span class="editorial__vacio__icono" aria-hidden="true">
+          <i class="fa-solid fa-list-check"></i>
+        </span>
+        <p class="editorial__vacio__titulo">{{ "logsTerminal.visor.vacioTitulo" | translate }}</p>
+        <p class="editorial__vacio__detalle">{{ "logsTerminal.visor.vacioDetalle" | translate }}</p>
       </section>
     } @else {
       <ul class="visor-eventos__lista">
         @for (entrada of obtenerEntradasFiltradas(); track $index) {
-          <li class="visor-eventos__entrada" [class.visor-eventos__entrada--error]="entrada.nivel === 'error'">
+          <li class="visor-eventos__entrada" [class.visor-eventos__entrada--error]="entrada.nivel === 'error' || entrada.nivel === 'crit'">
             <span class="visor-eventos__hora">{{ entrada.hora }}</span>
-            <span class="visor-eventos__badge visor-eventos__badge--{{ entrada.nivel }}">{{ entrada.nivel | uppercase }}</span>
+            <span class="visor-eventos__nivel">
+              <span class="editorial__estado editorial__estado--{{ obtenerColorNivel(entrada.nivel) }}">
+                <span class="editorial__estado__punto" aria-hidden="true"></span>
+                {{ entrada.nivel | uppercase }}
+              </span>
+            </span>
             <span class="visor-eventos__mensaje" [class.visor-eventos__mensaje--destacado]="entrada.esDestacado">{{ entrada.mensaje }}</span>
           </li>
         }
@@ -101,7 +106,7 @@
             </button>
           }
         }
-        <span class="terminal-interactiva__estado terminal-interactiva__estado--{{ terminalService.estadoConexion() }}">{{ terminalService.estadoConexion() }}</span>
+        <span class="terminal-interactiva__estado terminal-interactiva__estado--{{ terminalService.estadoConexion() }}">{{ "comun.estados." + terminalService.estadoConexion() | translate }}</span>
       </section>
     </header>
 

@@ -96,6 +96,16 @@ export class LogsTerminal implements OnDestroy {
     };
   }
 
+  obtenerColorNivel(nivel: string): string {
+    const coloresPorNivel: { [key: string]: string } = {
+      "ok": "verde",
+      "warn": "naranja",
+      "error": "rojo",
+      "crit": "rojo"
+    };
+    return coloresPorNivel[nivel] || "neutro";
+  }
+
   obtenerEntradasFiltradas(): EntradaLog[] {
     const filtro = this.filtroActivo();
     const todasLasEntradas = this.entradasDeLog();

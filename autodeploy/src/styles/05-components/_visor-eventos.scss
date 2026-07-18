@@ -1,148 +1,115 @@
+// Visor de actividad "diario de a bordo": sin caja, rail de hora en mono,
+// nivel como punto+etiqueta y filetes entre entradas. Selectores planos.
+
 .visor-eventos {
   display: flex;
   flex-direction: column;
-  background: hsla(40, 20%, 92%, 0.02);
-  border: 1px solid var(--borde-normal);
-  border-radius: var(--radius-l);
-  overflow: hidden;
+}
 
-  &__cabecera {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: var(--spacing-size-l) var(--spacing-size-2xl);
-    border-bottom: 1px solid var(--borde-normal);
-  }
+.visor-eventos__cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+  padding: 0.55rem 0.25rem; /* 9px 4px */
+  border-top: 1px solid var(--borde-normal);
+  border-bottom: 1px solid var(--borde-suave);
+}
 
-  &__titulo {
-    font-size: var(--font-size-md);
-    font-weight: var(--font-weight-bold);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: var(--texto-claro);
-  }
+.visor-eventos__titulo {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
 
-  &__actualizado {
-    font-size: var(--font-size-xs);
-    color: var(--texto-apagado);
-  }
+.visor-eventos__titulo::before {
+  content: "— ";
+  color: var(--amarillo-normal);
+}
 
-  &__cargando,
-  &__vacio {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    padding: var(--spacing-size-4xl) var(--spacing-size-2xl);
-    color: var(--texto-medio);
-    font-size: var(--font-size-sm);
-    text-align: center;
-    min-height: 12rem;
-  }
+.visor-eventos__actualizado {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
 
-  &__vacio {
-    &__icono {
-      font-size: 1.4rem;
-      color: var(--texto-apagado);
-      margin-bottom: 0.2rem;
-    }
+.visor-eventos__cargando {
+  padding: var(--spacing-size-2xl) 0.25rem;
+}
 
-    &__titulo {
-      font-family: var(--font-secondary);
-      font-size: 1rem;
-      font-weight: var(--font-weight-semibold);
-      color: var(--texto-claro);
-      letter-spacing: -0.01em;
-    }
+.visor-eventos__lista {
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+}
 
-    &__detalle {
-      max-width: 32rem;
-      color: var(--texto-medio);
-      line-height: 1.5;
-    }
-  }
+.visor-eventos__entrada {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-size-l);
+  padding: 0.6rem 0.25rem; /* 10px 4px */
+  border-bottom: 1px solid var(--borde-suave);
+  transition: background-color 180ms ease-out;
+}
 
-  &__lista {
-    display: flex;
-    flex-direction: column;
-  }
+.visor-eventos__entrada:hover {
+  background-color: hsla(40, 20%, 92%, 0.03);
+}
 
-  &__entrada {
-    display: flex;
-    align-items: flex-start;
-    gap: var(--spacing-size-l);
-    padding: var(--spacing-size-m) var(--spacing-size-2xl);
-    border-bottom: 1px solid var(--borde-suave);
-    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+.tema-claro .visor-eventos__entrada:hover {
+  background-color: hsla(230, 14%, 13%, 0.04);
+}
 
-    &:hover {
-      background-color: hsla(40, 20%, 92%, 0.03);
-    }
+// Rail rojo de 2px: marca los errores sin banar la fila entera
+.visor-eventos__entrada--error::before {
+  content: "";
+  position: absolute;
+  top: 0.35rem; /* 6px */
+  bottom: 0.35rem;
+  left: -0.65rem; /* 10px, cuelga fuera de la columna de texto */
+  width: 2px;
+  background-color: var(--rojo-normal);
+}
 
-    &--error {
-      background: rgba(239, 68, 68, 0.03);
+.visor-eventos__hora {
+  min-width: 4.5rem; /* 72px */
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem; /* 12px */
+  color: var(--texto-apagado);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
 
-      &:hover {
-        background-color: rgba(239, 68, 68, 0.06);
-      }
-    }
-  }
+.visor-eventos__nivel {
+  width: 4.5rem; /* 72px */
+  flex-shrink: 0;
+}
 
-  &__hora {
-    font-family: var(--font-mono);
-    font-size: var(--font-size-sm);
-    color: var(--texto-apagado);
-    white-space: nowrap;
-    min-width: 4.5rem;
-  }
+.visor-eventos__mensaje {
+  font-family: var(--font-mono);
+  font-size: 0.78rem; /* 12px */
+  letter-spacing: 0.01em;
+  color: var(--texto-medio);
+  line-height: 1.45;
+  min-width: 0;
+}
 
-  &__badge {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.125rem 0.5rem;
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-extrabold);
-    border-radius: var(--radius-s);
-    white-space: nowrap;
-    min-width: 3rem;
-    text-align: center;
+.visor-eventos__mensaje--destacado {
+  font-weight: var(--font-weight-semibold);
+  color: var(--texto-claro);
+}
 
-    &--info {
-      background: rgba(59, 130, 246, 0.15);
-      color: var(--azul-normal);
-    }
-
-    &--warn {
-      background: rgba(245, 158, 11, 0.15);
-      color: var(--naranja-normal);
-    }
-
-    &--ok {
-      background: rgba(34, 197, 94, 0.15);
-      color: var(--verde-normal);
-    }
-
-    &--error {
-      background: rgba(239, 68, 68, 0.15);
-      color: var(--rojo-normal);
-    }
-
-    &--crit {
-      background: rgba(220, 38, 38, 0.2);
-      color: var(--rojo-critico);
-    }
-  }
-
-  &__mensaje {
-    font-size: var(--font-size-sm);
-    color: var(--texto-medio);
-    line-height: 1.4;
-
-    &--destacado {
-      font-weight: var(--font-weight-bold);
-      color: var(--texto-claro);
-    }
+@media (max-width: 640px) {
+  .visor-eventos__entrada {
+    flex-wrap: wrap;
+    row-gap: 0.3rem; /* 5px */
   }
 }

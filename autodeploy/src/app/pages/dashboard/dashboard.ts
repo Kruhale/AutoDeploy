@@ -1,5 +1,6 @@
 import { Component, signal, computed, Signal, OnInit, OnDestroy } from "@angular/core";
 import { RouterLink } from "@angular/router";
+import { DatePipe, UpperCasePipe } from "@angular/common";
 import { HttpClient } from "@angular/common/http";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
@@ -47,7 +48,7 @@ interface DespliegueReciente {
 
 @Component({
   selector: "app-dashboard",
-  imports: [RouterLink, PanelMetricasServidor, TranslateModule],
+  imports: [RouterLink, DatePipe, UpperCasePipe, PanelMetricasServidor, TranslateModule],
   templateUrl: "./dashboard.html",
   styleUrl: "./dashboard.scss"
 })
@@ -58,6 +59,9 @@ export class Dashboard implements OnInit, OnDestroy {
   listaDespliegues = signal<DespliegueReciente[]>([]);
   contadorServidoresOnline: Signal<number>;
   contadorServidoresOffline: Signal<number>;
+  claveFraseEstado: Signal<string>;
+  colorEstadoFlota: Signal<"verde" | "rojo" | "ambar">;
+  fechaActual = new Date();
 
   constructor(
     private servidorService: ServidorService,
@@ -81,6 +85,32 @@ export class Dashboard implements OnInit, OnDestroy {
         return servidor.estado === "rojo";
       });
       return servidoresOffline.length;
+    });
+
+    // El titular del parte se redacta con los datos reales de la flota
+    this.claveFraseEstado = computed(function() {
+      const totalServidores = componente.listaDeServidores().length;
+      if (totalServidores === 0) {
+        return "dashboard.frase.vacia";
+      }
+      const servidoresCaidos = componente.contadorServidoresOffline();
+      if (servidoresCaidos === 0) {
+        return "dashboard.frase.orden";
+      }
+      if (servidoresCaidos === 1) {
+        return "dashboard.frase.caidoUno";
+      }
+      return "dashboard.frase.caidosVarios";
+    });
+
+    this.colorEstadoFlota = computed(function() {
+      if (componente.listaDeServidores().length === 0) {
+        return "ambar";
+      }
+      if (componente.contadorServidoresOffline() > 0) {
+        return "rojo";
+      }
+      return "verde";
     });
   }
 

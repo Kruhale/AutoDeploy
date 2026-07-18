@@ -579,7 +579,7 @@
     "metadatos": "Sans carte · Sans engagement"
   },
   "dashboard": {
-    "sello": "Opérations · moniteur en direct",
+    "sello": "Rapport d'opérations",
     "titulo": "Tableau de bord",
     "subtitulo": "Aperçu de l'infrastructure en temps réel · tous les systèmes en streaming",
     "ctaAddServerPrincipal": "Ajouter un serveur",
@@ -620,6 +620,14 @@
       "minutos": "il y a {{n}} min",
       "horas": "il y a {{n}} h",
       "dias": "il y a {{n}} j"
+    },
+    "frase": {
+      "vacia": "Aucun serveur pour l'instant",
+      "orden": "Tout est en ordre",
+      "caidoUno": "Un serveur hors ligne",
+      "caidosVarios": "{{n}} serveurs hors ligne",
+      "detalle": "{{servidores}} dans la flotte · {{sitios}} sites actifs",
+      "detalleVacio": "Connectez votre premier serveur pour ouvrir le rapport"
     }
   },
   "gestionServidor": {

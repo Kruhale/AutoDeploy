@@ -579,7 +579,7 @@
     "metadatos": "Ohne Karte · Ohne Bindung"
   },
   "dashboard": {
-    "sello": "Betrieb · Live-Monitor",
+    "sello": "Betriebsbericht",
     "titulo": "Dashboard",
     "subtitulo": "Infrastrukturübersicht in Echtzeit · alle Systeme im Streaming",
     "ctaAddServerPrincipal": "Server hinzufügen",
@@ -620,6 +620,14 @@
       "minutos": "vor {{n}} Min.",
       "horas": "vor {{n}} Std.",
       "dias": "vor {{n}} T."
+    },
+    "frase": {
+      "vacia": "Noch keine Server",
+      "orden": "Alles in Ordnung",
+      "caidoUno": "Ein Server ausgefallen",
+      "caidosVarios": "{{n}} Server ausgefallen",
+      "detalle": "{{servidores}} in der Flotte · {{sitios}} aktive Seiten",
+      "detalleVacio": "Verbinde deinen ersten Server, um den Bericht zu öffnen"
     }
   },
   "gestionServidor": {

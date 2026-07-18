@@ -1,122 +1,167 @@
-<section class="panel-principal">
+<section class="panel-principal editorial">
 
-  <header class="panel-principal__cabecera">
-    <section class="panel-principal__cabecera__izquierda">
-      <p class="panel-principal__sello">
-        <span class="panel-principal__sello__circulo" aria-hidden="true"></span>
+  <header class="editorial__cabecera">
+    <section class="editorial__cabecera__izquierda">
+      <p class="editorial__sello">
+        <span class="editorial__sello__punto"
+              [class.editorial__sello__punto--verde]="colorEstadoFlota() === 'verde'"
+              [class.editorial__sello__punto--rojo]="colorEstadoFlota() === 'rojo'"
+              aria-hidden="true"></span>
         {{ "dashboard.sello" | translate }}
+        <span class="panel-principal__fecha">{{ fechaActual | date:"d MMM yyyy":"":"en" | uppercase }}</span>
       </p>
-      <h1 class="panel-principal__titulo">{{ "dashboard.titulo" | translate }}<span class="panel-principal__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="panel-principal__subtitulo">{{ "dashboard.subtitulo" | translate }}</p>
+      <h1 class="editorial__titulo">{{ claveFraseEstado() | translate: { n: contadorServidoresOffline() } }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      @if (listaDeServidores().length > 0) {
+        <p class="editorial__subtitulo">{{ "dashboard.frase.detalle" | translate: { servidores: listaDeServidores().length, sitios: listaDeSitios().length } }}</p>
+      } @else {
+        <p class="editorial__subtitulo">{{ "dashboard.frase.detalleVacio" | translate }}</p>
+      }
     </section>
-    <a class="panel-principal__cta-principal" routerLink="/app/onboarding">
-      <span class="panel-principal__cta-principal__icono" aria-hidden="true">
+    <a class="editorial__cta-principal" routerLink="/app/onboarding">
+      <span class="editorial__cta-principal__icono" aria-hidden="true">
         <i class="fa-solid fa-plus"></i>
       </span>
-      <span class="panel-principal__cta-principal__texto">
-        <span class="panel-principal__cta-principal__principal">{{ "dashboard.ctaAddServerPrincipal" | translate }}</span>
-        <span class="panel-principal__cta-principal__secundario">{{ "dashboard.ctaAddServerSecundario" | translate }}</span>
+      <span class="editorial__cta-principal__texto">
+        <span class="editorial__cta-principal__principal">{{ "dashboard.ctaAddServerPrincipal" | translate }}</span>
+        <span class="editorial__cta-principal__secundario">{{ "dashboard.ctaAddServerSecundario" | translate }}</span>
       </span>
     </a>
   </header>
 
-  <section class="panel-principal__metricas">
-    <article class="panel-principal__metrica panel-principal__metrica--destacada">
-      <span class="panel-principal__metrica__etiqueta">{{ "dashboard.metricas.totalServers" | translate }}</span>
-      <span class="panel-principal__metrica__valor">{{ listaDeServidores().length }}</span>
-      <span class="panel-principal__metrica__nota">{{ "dashboard.metricas.totalServersNota" | translate }}</span>
+  <section class="editorial__vitales">
+    <article class="editorial__vitales__dato">
+      <span class="editorial__vitales__etiqueta">{{ "dashboard.metricas.totalServers" | translate }}</span>
+      <span class="editorial__vitales__cifra">{{ listaDeServidores().length }}</span>
+      <span class="editorial__vitales__nota">{{ "dashboard.metricas.totalServersNota" | translate }}</span>
     </article>
-    <article class="panel-principal__metrica">
-      <span class="panel-principal__metrica__etiqueta">{{ "dashboard.metricas.online" | translate }}</span>
-      <span class="panel-principal__metrica__valor panel-principal__metrica__valor--verde">{{ contadorServidoresOnline() }}</span>
-      <span class="panel-principal__metrica__pulso" aria-hidden="true"></span>
+    <article class="editorial__vitales__dato">
+      <span class="editorial__vitales__etiqueta">{{ "dashboard.metricas.online" | translate }}</span>
+      <span class="editorial__vitales__cifra" [class.editorial__vitales__cifra--verde]="contadorServidoresOnline() > 0">{{ contadorServidoresOnline() }}</span>
     </article>
-    <article class="panel-principal__metrica">
-      <span class="panel-principal__metrica__etiqueta">{{ "dashboard.metricas.offline" | translate }}</span>
-      <span class="panel-principal__metrica__valor panel-principal__metrica__valor--rojo">{{ contadorServidoresOffline() }}</span>
+    <article class="editorial__vitales__dato">
+      <span class="editorial__vitales__etiqueta">{{ "dashboard.metricas.offline" | translate }}</span>
+      <span class="editorial__vitales__cifra" [class.editorial__vitales__cifra--roja]="contadorServidoresOffline() > 0">{{ contadorServidoresOffline() }}</span>
     </article>
-    <article class="panel-principal__metrica">
-      <span class="panel-principal__metrica__etiqueta">{{ "dashboard.metricas.sites" | translate }}</span>
-      <span class="panel-principal__metrica__valor">{{ listaDeSitios().length }}</span>
+    <article class="editorial__vitales__dato">
+      <span class="editorial__vitales__etiqueta">{{ "dashboard.metricas.sites" | translate }}</span>
+      <span class="editorial__vitales__cifra">{{ listaDeSitios().length }}</span>
     </article>
   </section>
 
   @if (listaDeServidores().length === 0) {
-    <section class="panel-principal__vacio">
-      <i class="fa-solid fa-server panel-principal__vacio__icono"></i>
-      <p class="panel-principal__vacio__titulo">{{ "dashboard.vacio.titulo" | translate }}</p>
-      <p class="panel-principal__vacio__detalle">{{ "dashboard.vacio.detalle" | translate }}</p>
-      <a class="boton--primario" routerLink="/app/onboarding">{{ "dashboard.vacio.boton" | translate }}</a>
+    <section class="editorial__vacio">
+      <span class="editorial__vacio__icono" aria-hidden="true">
+        <i class="fa-solid fa-server"></i>
+      </span>
+      <p class="editorial__vacio__titulo">{{ "dashboard.vacio.titulo" | translate }}</p>
+      <p class="editorial__vacio__detalle">{{ "dashboard.vacio.detalle" | translate }}</p>
+      <a class="editorial__cta-principal editorial__cta-principal--separado" routerLink="/app/onboarding">
+        <span class="editorial__cta-principal__texto">
+          <span class="editorial__cta-principal__principal">{{ "dashboard.vacio.boton" | translate }}</span>
+        </span>
+      </a>
     </section>
   } @else {
-    <section class="panel-principal__monitor-tiempo-real">
-      <header class="panel-principal__cabecera-seccion">
-        <span class="panel-principal__cabecera-seccion__indice">01</span>
-        <section class="panel-principal__cabecera-seccion__texto">
-          <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.liveMonitoringTitulo" | translate }}</h2>
-          <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.liveMonitoringDescripcion" | translate }}</p>
+    <section class="editorial__bloque">
+      <header class="editorial__bloque__cabecera">
+        <span class="editorial__bloque__indice">01</span>
+        <section class="editorial__bloque__texto">
+          <h2 class="editorial__bloque__titulo">{{ "dashboard.seccion.liveMonitoringTitulo" | translate }}</h2>
+          <p class="editorial__bloque__descripcion">{{ "dashboard.seccion.liveMonitoringDescripcion" | translate }}</p>
         </section>
       </header>
-      <section class="panel-principal__monitor-paneles">
+      <section class="panel-principal__monitores">
         @for (servidor of listaDeServidores(); track servidor.id) {
           <app-panel-metricas-servidor [servidorId]="servidor.id" [nombreServidor]="servidor.nombre"></app-panel-metricas-servidor>
         }
       </section>
     </section>
 
-    <section class="panel-principal__servidores">
-      <header class="panel-principal__cabecera-seccion">
-        <span class="panel-principal__cabecera-seccion__indice">02</span>
-        <section class="panel-principal__cabecera-seccion__texto">
-          <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.serversTitulo" | translate }}</h2>
-          <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.serversDescripcion" | translate }}</p>
+    <section class="editorial__bloque">
+      <header class="editorial__bloque__cabecera">
+        <span class="editorial__bloque__indice">02</span>
+        <section class="editorial__bloque__texto">
+          <h2 class="editorial__bloque__titulo">{{ "dashboard.seccion.serversTitulo" | translate }}</h2>
+          <p class="editorial__bloque__descripcion">{{ "dashboard.seccion.serversDescripcion" | translate }}</p>
         </section>
       </header>
-      <section class="panel-principal__servidores__lista">
+      <section class="editorial__ledger">
         @for (servidor of listaDeServidores(); track servidor.id) {
-          <article class="panel-principal__servidor">
-            <section class="panel-principal__servidor__izquierda">
-              <span class="panel-principal__servidor__indicador panel-principal__servidor__indicador--{{ servidor.estado }}"></span>
-              <section class="panel-principal__servidor__datos">
-                <span class="panel-principal__servidor__nombre">{{ servidor.nombre }}</span>
-                <span class="panel-principal__servidor__ip">{{ servidor.ip }}</span>
-              </section>
-            </section>
-            <section class="panel-principal__servidor__acciones">
-              <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">{{ "dashboard.servidor.manage" | translate }} <span aria-hidden="true">→</span></a>
-              <a class="panel-principal__servidor__enlace panel-principal__servidor__enlace--ssh" [routerLink]="'/app/terminal/' + servidor.id">
-                <i class="fa-solid fa-terminal"></i>
-                {{ "dashboard.servidor.ssh" | translate }}
-              </a>
-            </section>
+          <article class="editorial__ledger__fila">
+            <span class="panel-principal__servidor__estado">
+              <span class="editorial__estado"
+                    [class.editorial__estado--verde]="servidor.estado === 'verde'"
+                    [class.editorial__estado--vivo]="servidor.estado === 'verde'"
+                    [class.editorial__estado--naranja]="servidor.estado === 'naranja'"
+                    [class.editorial__estado--rojo]="servidor.estado === 'rojo'">
+                <span class="editorial__estado__punto" aria-hidden="true"></span>
+                {{ (servidor.estado === "verde" ? "dashboard.metricas.online" : "dashboard.metricas.offline") | translate }}
+              </span>
+            </span>
+            <span class="editorial__ledger__celda editorial__ledger__celda--crece">
+              <span class="panel-principal__servidor__nombre">{{ servidor.nombre }}</span>
+              <span class="panel-principal__servidor__ip">{{ servidor.ip }}</span>
+            </span>
+            <a class="panel-principal__servidor__enlace" [routerLink]="'/app/servidor/' + servidor.id">{{ "dashboard.servidor.manage" | translate }} <span aria-hidden="true">→</span></a>
+            <a class="panel-principal__servidor__enlace" [routerLink]="'/app/terminal/' + servidor.id">{{ "dashboard.servidor.ssh" | translate }}</a>
           </article>
         }
       </section>
     </section>
   }
 
+  <section class="editorial__bloque">
+    <header class="editorial__bloque__cabecera">
+      <span class="editorial__bloque__indice">03</span>
+      <section class="editorial__bloque__texto">
+        <h2 class="editorial__bloque__titulo">{{ "dashboard.seccion.recentDeploymentsTitulo" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "dashboard.seccion.recentDeploymentsDescripcion" | translate }}</p>
+      </section>
+    </header>
+    @if (listaDespliegues().length === 0) {
+      <p class="panel-principal__despliegues-vacio">{{ "dashboard.despliegues.vacio" | translate }}</p>
+    }
+    @if (listaDespliegues().length > 0) {
+      <section class="editorial__ledger">
+        @for (despliegue of listaDespliegues(); track despliegue.id) {
+          <article class="editorial__ledger__fila">
+            <span class="editorial__ledger__celda editorial__ledger__celda--mono editorial__ledger__celda--apagada panel-principal__despliegue__tipo">{{ despliegue.tipo }}</span>
+            <span class="editorial__ledger__celda editorial__ledger__celda--crece">{{ despliegue.mensaje }}</span>
+            <span class="editorial__ledger__celda editorial__ledger__celda--mono editorial__ledger__celda--apagada">{{ calcularTiempoRelativo(despliegue.fechaInicio) }}</span>
+            <span class="editorial__estado"
+                  [class.editorial__estado--verde]="despliegue.estado === 'completado'"
+                  [class.editorial__estado--rojo]="despliegue.estado === 'fallido'"
+                  [class.editorial__estado--ambar]="despliegue.estado === 'en_progreso'"
+                  [class.editorial__estado--vivo]="despliegue.estado === 'en_progreso'">
+              <span class="editorial__estado__punto" aria-hidden="true"></span>
+              {{ "comun.estados." + despliegue.estado | translate }}
+            </span>
+          </article>
+        }
+      </section>
+    }
+  </section>
+
   @if (listaDeSitios().length > 0) {
-    <section class="panel-principal__sitios">
-      <header class="panel-principal__cabecera-seccion">
-        <span class="panel-principal__cabecera-seccion__indice">03</span>
-        <section class="panel-principal__cabecera-seccion__texto">
-          <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.activeSitesTitulo" | translate }}</h2>
-          <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.activeSitesDescripcion" | translate }}</p>
+    <section class="editorial__bloque">
+      <header class="editorial__bloque__cabecera">
+        <span class="editorial__bloque__indice">04</span>
+        <section class="editorial__bloque__texto">
+          <h2 class="editorial__bloque__titulo">{{ "dashboard.seccion.activeSitesTitulo" | translate }}</h2>
+          <p class="editorial__bloque__descripcion">{{ "dashboard.seccion.activeSitesDescripcion" | translate }}</p>
         </section>
       </header>
-      <section class="panel-principal__sitios__lista">
+      <section class="editorial__ledger">
         @for (sitio of listaDeSitios(); track sitio.dominio) {
-          <article class="panel-principal__sitio">
-            <section class="panel-principal__sitio__izquierda">
-              <span class="panel-principal__sitio__icono panel-principal__sitio__icono--{{ sitio.colorIcono }}">
-                <i [class]="sitio.icono"></i>
-              </span>
-              <section class="panel-principal__sitio__datos">
-                <span class="panel-principal__sitio__nombre">{{ sitio.nombre }}</span>
-                <span class="panel-principal__sitio__dominio">{{ sitio.dominio }}</span>
-              </section>
-            </section>
-            <span class="panel-principal__sitio__estado panel-principal__sitio__estado--{{ sitio.estado }}">{{ sitio.textoEstado }}</span>
+          <article class="editorial__ledger__fila">
+            <span class="editorial__ledger__celda editorial__ledger__celda--crece">{{ sitio.nombre }}</span>
+            <span class="editorial__ledger__celda editorial__ledger__celda--mono editorial__ledger__celda--apagada">{{ sitio.dominio }}</span>
+            <span class="editorial__estado"
+                  [class.editorial__estado--verde]="sitio.colorIcono === 'verde'"
+                  [class.editorial__estado--ambar]="sitio.colorIcono === 'amarillo'">
+              <span class="editorial__estado__punto" aria-hidden="true"></span>
+              {{ sitio.textoEstado }}
+            </span>
           </article>
         }
       </section>
@@ -124,53 +169,26 @@
   }
 
   @if (listaDeActividad().length > 0) {
-    <section class="panel-principal__actividad">
-      <header class="panel-principal__cabecera-seccion">
-        <span class="panel-principal__cabecera-seccion__indice">04</span>
-        <section class="panel-principal__cabecera-seccion__texto">
-          <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.recentActivityTitulo" | translate }}</h2>
-          <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.recentActivityDescripcion" | translate }}</p>
+    <section class="editorial__bloque">
+      <header class="editorial__bloque__cabecera">
+        <span class="editorial__bloque__indice">05</span>
+        <section class="editorial__bloque__texto">
+          <h2 class="editorial__bloque__titulo">{{ "dashboard.seccion.recentActivityTitulo" | translate }}</h2>
+          <p class="editorial__bloque__descripcion">{{ "dashboard.seccion.recentActivityDescripcion" | translate }}</p>
         </section>
       </header>
-      <section class="panel-principal__actividad__lista">
+      <section class="panel-principal__registro">
         @for (evento of listaDeActividad(); track evento.texto) {
-          <article class="panel-principal__evento">
-            <span class="panel-principal__evento__icono panel-principal__evento__icono--{{ evento.colorIcono }}">
-              <i [class]="evento.icono"></i>
+          <article class="panel-principal__registro__linea">
+            <span class="panel-principal__registro__hora">{{ evento.detalle }}</span>
+            <span class="panel-principal__registro__eje" aria-hidden="true">
+              <span class="panel-principal__registro__punto panel-principal__registro__punto--{{ evento.colorIcono }}"></span>
             </span>
-            <section class="panel-principal__evento__datos">
-              <span class="panel-principal__evento__texto">{{ evento.texto }}</span>
-              <span class="panel-principal__evento__detalle">{{ evento.detalle }}</span>
-            </section>
+            <p class="panel-principal__registro__texto">{{ evento.texto }}</p>
           </article>
         }
       </section>
     </section>
   }
-
-  <section class="panel-principal__despliegues">
-    <header class="panel-principal__cabecera-seccion">
-      <span class="panel-principal__cabecera-seccion__indice">05</span>
-      <section class="panel-principal__cabecera-seccion__texto">
-        <h2 class="panel-principal__cabecera-seccion__titulo">{{ "dashboard.seccion.recentDeploymentsTitulo" | translate }}</h2>
-        <p class="panel-principal__cabecera-seccion__descripcion">{{ "dashboard.seccion.recentDeploymentsDescripcion" | translate }}</p>
-      </section>
-    </header>
-    @if (listaDespliegues().length === 0) {
-      <p class="panel-principal__despliegues__vacio">{{ "dashboard.despliegues.vacio" | translate }}</p>
-    }
-    @for (despliegue of listaDespliegues(); track despliegue.id) {
-      <article class="panel-principal__despliegue">
-        <section class="panel-principal__despliegue__izquierda">
-          <span class="panel-principal__despliegue__badge panel-principal__despliegue__badge--tipo">{{ despliegue.tipo }}</span>
-          <span class="panel-principal__despliegue__mensaje">{{ despliegue.mensaje }}</span>
-        </section>
-        <section class="panel-principal__despliegue__derecha">
-          <span class="panel-principal__despliegue__tiempo">{{ calcularTiempoRelativo(despliegue.fechaInicio) }}</span>
-          <span class="panel-principal__despliegue__badge panel-principal__despliegue__badge--{{ despliegue.estado }}">{{ despliegue.estado }}</span>
-        </section>
-      </article>
-    }
-  </section>
 
 </section>

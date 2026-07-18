@@ -579,7 +579,7 @@
     "metadatos": "No card · No commitment"
   },
   "dashboard": {
-    "sello": "Operations · live monitor",
+    "sello": "Operations report",
     "titulo": "Dashboard",
     "subtitulo": "Real-time infrastructure overview · all systems streaming",
     "ctaAddServerPrincipal": "Add server",
@@ -620,6 +620,14 @@
       "minutos": "{{n}} min ago",
       "horas": "{{n}} h ago",
       "dias": "{{n}} d ago"
+    },
+    "frase": {
+      "vacia": "No servers yet",
+      "orden": "All systems in order",
+      "caidoUno": "One server down",
+      "caidosVarios": "{{n}} servers down",
+      "detalle": "{{servidores}} in the fleet · {{sitios}} active sites",
+      "detalleVacio": "Connect your first server to open the operations report"
     }
   },
   "gestionServidor": {

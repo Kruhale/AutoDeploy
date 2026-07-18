@@ -579,7 +579,7 @@
     "metadatos": "Sin tarjeta · Sin permanencia"
   },
   "dashboard": {
-    "sello": "Operaciones · monitor en vivo",
+    "sello": "Parte de operaciones",
     "titulo": "Panel",
     "subtitulo": "Resumen de infraestructura en tiempo real · todos los sistemas en streaming",
     "ctaAddServerPrincipal": "Añadir servidor",
@@ -620,6 +620,14 @@
       "minutos": "hace {{n}} min",
       "horas": "hace {{n}} h",
       "dias": "hace {{n}} d"
+    },
+    "frase": {
+      "vacia": "Sin servidores todavía",
+      "orden": "Todo en orden",
+      "caidoUno": "Un servidor caído",
+      "caidosVarios": "{{n}} servidores caídos",
+      "detalle": "{{servidores}} en la flota · {{sitios}} sitios activos",
+      "detalleVacio": "Conecta tu primer servidor para abrir el parte de operaciones"
     }
   },
   "gestionServidor": {

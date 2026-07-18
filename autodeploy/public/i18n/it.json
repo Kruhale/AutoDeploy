@@ -579,7 +579,7 @@
     "metadatos": "Senza carta · Senza vincoli"
   },
   "dashboard": {
-    "sello": "Operazioni · monitoraggio in tempo reale",
+    "sello": "Rapporto operativo",
     "titulo": "Pannello",
     "subtitulo": "Riepilogo dell'infrastruttura in tempo reale · tutti i sistemi in streaming",
     "ctaAddServerPrincipal": "Aggiungi server",
@@ -620,6 +620,14 @@
       "minutos": "{{n}} min fa",
       "horas": "{{n}} h fa",
       "dias": "{{n}} g fa"
+    },
+    "frase": {
+      "vacia": "Ancora nessun server",
+      "orden": "Tutto in ordine",
+      "caidoUno": "Un server offline",
+      "caidosVarios": "{{n}} server offline",
+      "detalle": "{{servidores}} nella flotta · {{sitios}} siti attivi",
+      "detalleVacio": "Collega il tuo primo server per aprire il rapporto"
     }
   },
   "gestionServidor": {

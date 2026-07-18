@@ -2,7 +2,7 @@
   display: flex;
   flex-direction: column;
   height: 100%;
-  background-color: #0d0d0d;
+  background-color: var(--fondo-negro);
   border-radius: var(--radius-l);
   overflow: hidden;
   border: 1px solid var(--borde-normal);
@@ -32,10 +32,14 @@
       cursor: pointer;
       transition: background-color var(--duration-fast) cubic-bezier(0.16, 1, 0.3, 1);
 
-      &:hover,
+      &:hover {
+        background-color: rgba(217, 64, 53, 1);
+      }
+
       &:focus-visible {
         background-color: rgba(217, 64, 53, 1);
-        outline: none;
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: 2px;
       }
     }
 
@@ -75,8 +79,9 @@
     &__texto {
       font-family: var(--font-mono);
       font-size: var(--font-size-xs);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       color: var(--texto-apagado);
-      text-transform: capitalize;
     }
   }
 
@@ -100,20 +105,22 @@
     }
 
     &__volver {
+      font-family: var(--font-mono);
       font-size: var(--font-size-xs);
       font-weight: var(--font-weight-semibold);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
       color: var(--texto-apagado);
       transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 
-      &:hover,
-      &:focus-visible {
+      &:hover {
         color: var(--texto-claro);
-        outline: none;
       }
 
       &:focus-visible {
-        text-decoration: underline;
-        text-underline-offset: 0.25rem;
+        color: var(--texto-claro);
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: 3px;
       }
     }
   }

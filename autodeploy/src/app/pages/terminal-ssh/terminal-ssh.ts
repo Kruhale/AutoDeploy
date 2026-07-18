@@ -19,6 +19,7 @@ export class TerminalSsh implements OnDestroy {
 
   nombreServidor = signal("—");
   ipServidor = signal("—");
+  puertoServidor = signal(22);
 
   private terminal: Terminal | null = null;
   private fitAddon: FitAddon | null = null;
@@ -42,6 +43,7 @@ export class TerminalSsh implements OnDestroy {
         next: function(servidor: ServidorRemoto) {
           componente.nombreServidor.set(servidor.nombre);
           componente.ipServidor.set(servidor.direccionIp);
+          componente.puertoServidor.set(servidor.puertoSsh);
         }
       });
 
@@ -57,7 +59,8 @@ export class TerminalSsh implements OnDestroy {
       fontSize: 14,
       fontFamily: "'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace",
       theme: {
-        background: "#0d0d0d",
+        // Mismo negro que --fondo-negro (hsl 230 8% 3%): xterm pinta su propio lienzo
+        background: "#070708",
         foreground: "#e8e0d4",
         cursor: "#e2b93d",
         selectionBackground: "#e2b93d33",

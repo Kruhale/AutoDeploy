@@ -18,17 +18,17 @@
 // Keyframes globales
 
 @keyframes entrar-abajo {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(28px); filter: blur(4px); }
+  to   { opacity: 1; transform: translateY(0); filter: blur(0); }
 }
 
 @keyframes entrar-derecha {
-  from { opacity: 0; transform: translateX(28px); }
+  from { opacity: 0; transform: translateX(36px); }
   to   { opacity: 1; transform: translateX(0); }
 }
 
 @keyframes entrar-escala {
-  from { opacity: 0; transform: scale(0.93); }
+  from { opacity: 0; transform: scale(0.9); }
   to   { opacity: 1; transform: scale(1); }
 }
 
@@ -97,8 +97,8 @@
 
   .animar {
     animation-fill-mode: both;
-    animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
-    animation-duration: 0.7s;
+    animation-timing-function: var(--ease-suave);
+    animation-duration: var(--duration-entrada);
     animation-delay: var(--retraso, 0ms);
   }
 
@@ -119,36 +119,39 @@
   .revelar {
     opacity: 0;
     transition:
-      opacity   0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms),
-      transform 0.65s cubic-bezier(0.16, 1, 0.3, 1) var(--retraso, 0ms);
+      opacity   var(--duration-reveal) var(--ease-suave) var(--retraso, 0ms),
+      transform var(--duration-reveal) var(--ease-suave) var(--retraso, 0ms),
+      filter    var(--duration-reveal) var(--ease-suave) var(--retraso, 0ms);
+    filter: blur(5px);
   }
 
-  .revelar--arriba    { transform: translateY(28px); }
-  .revelar--izquierda { transform: translateX(-28px); }
-  .revelar--derecha   { transform: translateX(28px); }
-  .revelar--escala    { transform: scale(0.94); }
+  .revelar--arriba    { transform: translateY(36px); }
+  .revelar--izquierda { transform: translateX(-36px); }
+  .revelar--derecha   { transform: translateX(36px); }
+  .revelar--escala    { transform: scale(0.92); }
 
   .revelar--visible {
     opacity: 1;
     transform: none;
+    filter: blur(0);
   }
 
   // Anima los hijos de un contenedor en cascada.
 
   .animar-hijos > * {
     opacity: 0;
-    animation: entrar-abajo 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: entrar-abajo var(--duration-entrada) var(--ease-suave) both;
   }
 
-  .animar-hijos > *:nth-child(1) { animation-delay: 0ms;   }
-  .animar-hijos > *:nth-child(2) { animation-delay: 80ms;  }
-  .animar-hijos > *:nth-child(3) { animation-delay: 160ms; }
-  .animar-hijos > *:nth-child(4) { animation-delay: 240ms; }
-  .animar-hijos > *:nth-child(5) { animation-delay: 320ms; }
-  .animar-hijos > *:nth-child(6) { animation-delay: 400ms; }
+  .animar-hijos > *:nth-child(1) { animation-delay: 60ms;  }
+  .animar-hijos > *:nth-child(2) { animation-delay: 150ms; }
+  .animar-hijos > *:nth-child(3) { animation-delay: 240ms; }
+  .animar-hijos > *:nth-child(4) { animation-delay: 330ms; }
+  .animar-hijos > *:nth-child(5) { animation-delay: 420ms; }
+  .animar-hijos > *:nth-child(6) { animation-delay: 510ms; }
 
-  // Fade rapido desde abajo para feedback puntual (toasts, items nuevos).
+  // Fade desde abajo para feedback puntual (toasts, items nuevos).
   .aparecer {
-    animation: fade-arriba 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: fade-arriba var(--duration-base) var(--ease-suave) both;
   }
 }

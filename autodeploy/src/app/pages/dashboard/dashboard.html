@@ -31,20 +31,20 @@
   <section class="editorial__vitales">
     <article class="editorial__vitales__dato">
       <span class="editorial__vitales__etiqueta">{{ "dashboard.metricas.totalServers" | translate }}</span>
-      <span class="editorial__vitales__cifra">{{ listaDeServidores().length }}</span>
+      <span class="editorial__vitales__cifra" [contadorAnimado]="listaDeServidores().length">0</span>
       <span class="editorial__vitales__nota">{{ "dashboard.metricas.totalServersNota" | translate }}</span>
     </article>
     <article class="editorial__vitales__dato">
       <span class="editorial__vitales__etiqueta">{{ "dashboard.metricas.online" | translate }}</span>
-      <span class="editorial__vitales__cifra" [class.editorial__vitales__cifra--verde]="contadorServidoresOnline() > 0">{{ contadorServidoresOnline() }}</span>
+      <span class="editorial__vitales__cifra" [class.editorial__vitales__cifra--verde]="contadorServidoresOnline() > 0" [contadorAnimado]="contadorServidoresOnline()">0</span>
     </article>
     <article class="editorial__vitales__dato">
       <span class="editorial__vitales__etiqueta">{{ "dashboard.metricas.offline" | translate }}</span>
-      <span class="editorial__vitales__cifra" [class.editorial__vitales__cifra--roja]="contadorServidoresOffline() > 0">{{ contadorServidoresOffline() }}</span>
+      <span class="editorial__vitales__cifra" [class.editorial__vitales__cifra--roja]="contadorServidoresOffline() > 0" [contadorAnimado]="contadorServidoresOffline()">0</span>
     </article>
     <article class="editorial__vitales__dato">
       <span class="editorial__vitales__etiqueta">{{ "dashboard.metricas.sites" | translate }}</span>
-      <span class="editorial__vitales__cifra">{{ listaDeSitios().length }}</span>
+      <span class="editorial__vitales__cifra" [contadorAnimado]="listaDeSitios().length">0</span>
     </article>
   </section>
 

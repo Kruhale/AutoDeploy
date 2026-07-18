@@ -102,7 +102,13 @@ export class Billing implements OnInit {
       const dominios = formatear(componente.numeroDominios(), plan.dominiosPersonalizados);
       return [
         { etiqueta: componente.translate.instant("billing.uso.servers"), valor: servidores.valor, detalle: servidores.detalle, porcentaje: servidores.porc, esIlimitado: servidores.esIlimitado },
-        { etiqueta: componente.translate.instant("billing.uso.deployments"), valor: despliegues.valor, detalle: despliegues.detalle, porcentaje: despliegues.porc, esIlimitado: despliegues.esIlimitado },
+        {
+          etiqueta: componente.translate.instant("billing.uso.deployments"),
+          valor: despliegues.valor,
+          detalle: despliegues.detalle,
+          porcentaje: despliegues.porc,
+          esIlimitado: despliegues.esIlimitado
+        },
         { etiqueta: componente.translate.instant("billing.uso.customDomains"), valor: dominios.valor, detalle: dominios.detalle, porcentaje: dominios.porc, esIlimitado: dominios.esIlimitado }
       ];
     });

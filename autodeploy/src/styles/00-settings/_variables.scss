@@ -110,10 +110,19 @@
   --shadow-hover-amarillo: 0 0.75rem 2rem hsla(0, 0%, 0%, 0.35);
   --shadow-hover-cyan: 0 0.75rem 2rem hsla(0, 0%, 0%, 0.35);
 
-  /* Velocidad de las transiciones: rapida, normal o lenta */
-  --duration-fast: 150ms;
-  --duration-base: 200ms;
-  --duration-slow: 300ms;
+  /* Velocidad de las transiciones. Subidas respecto a antes: el movimiento
+     demasiado corto se siente brusco; lo editorial pide calma. */
+  --duration-fast: 220ms;
+  --duration-base: 320ms;
+  --duration-slow: 480ms;
+  /* Entradas y reveals: tramos largos para que el movimiento se lea sereno */
+  --duration-entrada: 720ms;
+  --duration-reveal: 860ms;
+
+  /* Curvas de aceleracion con nombre, para no repetir cubic-bezier a mano */
+  --ease-suave: cubic-bezier(0.16, 1, 0.3, 1);        /* expo-out: frena lento, ideal en entradas */
+  --ease-salida: cubic-bezier(0.4, 0, 0.9, 0.3);      /* acelera al salir, mas corto que la entrada */
+  --ease-vaiven: cubic-bezier(0.34, 1.3, 0.64, 1);    /* un puntito de rebote, para sellos y confirmaciones */
 
   /* Velocidad del spinner. Se ralentiza si el usuario activa "reducir movimiento" */
   --duration-spinner: 0.8s;

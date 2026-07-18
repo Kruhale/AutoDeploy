@@ -6,6 +6,7 @@ import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
 import { MetricasServidorService } from "../../services/metricas-servidor.service";
 import { PanelMetricasServidor } from "../../components/panel-metricas-servidor/panel-metricas-servidor";
+import { ContadorAnimadoDirective } from "../../directives/contador-animado.directive";
 
 interface ServidorDashboard {
   id: string;
@@ -48,7 +49,7 @@ interface DespliegueReciente {
 
 @Component({
   selector: "app-dashboard",
-  imports: [RouterLink, DatePipe, UpperCasePipe, PanelMetricasServidor, TranslateModule],
+  imports: [RouterLink, DatePipe, UpperCasePipe, PanelMetricasServidor, ContadorAnimadoDirective, TranslateModule],
   templateUrl: "./dashboard.html",
   styleUrl: "./dashboard.scss"
 })

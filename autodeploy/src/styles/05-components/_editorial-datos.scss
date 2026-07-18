@@ -83,11 +83,16 @@
   gap: var(--spacing-size-xl);
   padding: 0.9rem 0.25rem; /* 14px 4px */
   border-bottom: 1px solid var(--borde-suave);
-  transition: background-color 180ms ease-out;
+  transition:
+    background-color var(--duration-base) var(--ease-suave),
+    transform var(--duration-base) var(--ease-suave);
 }
 
+// Al pasar por encima la fila se desliza un pelin hacia dentro, como un
+// renglon que se adelanta en el libro de registro.
 .editorial__ledger__fila:hover {
   background-color: hsla(40, 20%, 92%, 0.03);
+  transform: translateX(6px);
 }
 
 .tema-claro .editorial__ledger__fila:hover {
@@ -363,11 +368,11 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .editorial__modal {
-    animation: editorial-aparecer 160ms ease-out;
+    animation: editorial-aparecer var(--duration-base) ease-out;
   }
 
   .editorial__modal__caja {
-    animation: editorial-modal-entrar 220ms cubic-bezier(0.16, 1, 0.3, 1);
+    animation: editorial-modal-entrar var(--duration-slow) var(--ease-vaiven);
   }
 }
 
@@ -528,6 +533,6 @@
 }
 
 @keyframes editorial-modal-entrar {
-  from { opacity: 0; transform: translateY(0.6rem) scale(0.985); }
+  from { opacity: 0; transform: translateY(1.4rem) scale(0.96); }
   to   { opacity: 1; transform: translateY(0) scale(1); }
 }

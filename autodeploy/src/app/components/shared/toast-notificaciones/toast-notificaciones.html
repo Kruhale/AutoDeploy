@@ -1,18 +1,13 @@
-<aside class="contenedor-toasts">
-	<article *ngFor="let toast of toastsMostrados"
-		 class="toast"
-		 [ngClass]="obtenerClasePorTipo(toast.notificacion.tipo)">
-		<span class="toast__icono">
-			<i class="fa-solid" [ngClass]="'fa-' + obtenerIconoPorTipo(toast.notificacion.tipo)"></i>
-		</span>
-
-		<section class="toast__contenido">
-			<h2 class="toast__titulo">{{ toast.notificacion.titulo }}</h2>
-			<p class="toast__descripcion">{{ toast.notificacion.descripcion }}</p>
-		</section>
-
-		<button class="toast__cerrar" (click)="cerrarToast(toast.id)" [attr.aria-label]="'toastNotificaciones.ariaCerrar' | translate">
-			<i class="fa-solid fa-xmark"></i>
-		</button>
-	</article>
+<aside class="contenedor-toasts" role="status" aria-live="polite">
+	@for (toast of toastsMostrados; track toast.id) {
+		<article class="toast toast--{{ obtenerColorPorTipo(toast.notificacion.tipo) }}">
+			<section class="toast__contenido">
+				<h2 class="toast__titulo">{{ toast.notificacion.titulo }}</h2>
+				<p class="toast__descripcion">{{ toast.notificacion.descripcion }}</p>
+			</section>
+			<button class="toast__cerrar" type="button" (click)="cerrarToast(toast.id)" [attr.aria-label]="'toastNotificaciones.ariaCerrar' | translate">
+				<i class="fa-solid fa-xmark" aria-hidden="true"></i>
+			</button>
+		</article>
+	}
 </aside>

@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, inject } from "@angular/core";
-import { CommonModule } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
 import { NotificacionService, Notificacion } from "../../../services/notificacion.service";
 import { Subscription } from "rxjs";
@@ -12,7 +11,7 @@ interface ToastInterno {
 @Component({
 	selector: "app-toast-notificaciones",
 	standalone: true,
-	imports: [CommonModule, TranslateModule],
+	imports: [TranslateModule],
 	templateUrl: "./toast-notificaciones.html",
 	styleUrl: "./toast-notificaciones.scss"
 })
@@ -43,34 +42,29 @@ export class ToastNotificaciones implements OnInit, OnDestroy {
 
 		this.toastsMostrados.push(toastNuevo);
 
-		setTimeout(() => {
-			this.toastsMostrados = this.toastsMostrados.filter(toast => toast.id !== idUnico);
-		}, 3000);
+		// 5s: con 3s los avisos desaparecian antes de poder leerse
+		const componenteActual = this;
+		setTimeout(function() {
+			componenteActual.toastsMostrados = componenteActual.toastsMostrados.filter(function(toast) {
+				return toast.id !== idUnico;
+			});
+		}, 5000);
 	}
 
 	cerrarToast(idToast: string): void {
-		this.toastsMostrados = this.toastsMostrados.filter(toast => toast.id !== idToast);
+		this.toastsMostrados = this.toastsMostrados.filter(function(toast) {
+			return toast.id !== idToast;
+		});
 	}
 
-	obtenerIconoPorTipo(tipo: string): string {
-		const iconosPorTipo: { [key: string]: string } = {
-			"servidor_desconectado": "fa-server",
-			"deployment": "fa-rocket",
-			"error_critico": "fa-triangle-exclamation",
-			"ssl_vencido": "fa-shield",
-			"cambio_configuracion": "fa-gear"
+	obtenerColorPorTipo(tipo: string): string {
+		const coloresPorTipo: { [key: string]: string } = {
+			"servidor_desconectado": "rojo",
+			"deployment": "verde",
+			"error_critico": "rojo",
+			"ssl_vencido": "naranja",
+			"cambio_configuracion": "neutro"
 		};
-		return iconosPorTipo[tipo] || "fa-bell";
-	}
-
-	obtenerClasePorTipo(tipo: string): string {
-		const clasesPorTipo: { [key: string]: string } = {
-			"servidor_desconectado": "toast--error",
-			"deployment": "toast--info",
-			"error_critico": "toast--error",
-			"ssl_vencido": "toast--advertencia",
-			"cambio_configuracion": "toast--info"
-		};
-		return clasesPorTipo[tipo] || "toast--info";
+		return coloresPorTipo[tipo] || "neutro";
 	}
 }

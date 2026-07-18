@@ -66,13 +66,13 @@ describe("ToastNotificaciones", function() {
     expect(componente.toastsMostrados[0].id).toContain("toast-");
   });
 
-  it("el toast se elimina automáticamente tras 3 segundos", fakeAsync(function() {
+  it("el toast se elimina automáticamente tras 5 segundos", fakeAsync(function() {
     componente.ngOnInit();
 
     sujetoRecibidas.next(crearNotificacionEjemplo());
     expect(componente.toastsMostrados.length).toBe(1);
 
-    tick(3000);
+    tick(5000);
 
     expect(componente.toastsMostrados.length).toBe(0);
   }));
@@ -113,27 +113,15 @@ describe("ToastNotificaciones", function() {
     }).not.toThrow();
   });
 
-  it("obtenerIconoPorTipo devuelve el icono específico de cada tipo", function() {
-    expect(componente.obtenerIconoPorTipo("servidor_desconectado")).toBe("fa-server");
-    expect(componente.obtenerIconoPorTipo("deployment")).toBe("fa-rocket");
-    expect(componente.obtenerIconoPorTipo("error_critico")).toBe("fa-triangle-exclamation");
-    expect(componente.obtenerIconoPorTipo("ssl_vencido")).toBe("fa-shield");
-    expect(componente.obtenerIconoPorTipo("cambio_configuracion")).toBe("fa-gear");
+  it("obtenerColorPorTipo devuelve el color específico de cada tipo", function() {
+    expect(componente.obtenerColorPorTipo("servidor_desconectado")).toBe("rojo");
+    expect(componente.obtenerColorPorTipo("deployment")).toBe("verde");
+    expect(componente.obtenerColorPorTipo("error_critico")).toBe("rojo");
+    expect(componente.obtenerColorPorTipo("ssl_vencido")).toBe("naranja");
+    expect(componente.obtenerColorPorTipo("cambio_configuracion")).toBe("neutro");
   });
 
-  it("obtenerIconoPorTipo devuelve fa-bell para tipos desconocidos", function() {
-    expect(componente.obtenerIconoPorTipo("xxx")).toBe("fa-bell");
-  });
-
-  it("obtenerClasePorTipo devuelve la clase específica de cada tipo", function() {
-    expect(componente.obtenerClasePorTipo("servidor_desconectado")).toBe("toast--error");
-    expect(componente.obtenerClasePorTipo("deployment")).toBe("toast--info");
-    expect(componente.obtenerClasePorTipo("error_critico")).toBe("toast--error");
-    expect(componente.obtenerClasePorTipo("ssl_vencido")).toBe("toast--advertencia");
-    expect(componente.obtenerClasePorTipo("cambio_configuracion")).toBe("toast--info");
-  });
-
-  it("obtenerClasePorTipo devuelve toast--info para tipos desconocidos", function() {
-    expect(componente.obtenerClasePorTipo("xxx")).toBe("toast--info");
+  it("obtenerColorPorTipo devuelve neutro para tipos desconocidos", function() {
+    expect(componente.obtenerColorPorTipo("xxx")).toBe("neutro");
   });
 });

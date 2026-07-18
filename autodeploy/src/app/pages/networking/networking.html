@@ -108,7 +108,7 @@
             </span>
             <section class="pagina-networking__dominio__info">
               <span class="pagina-networking__dominio__nombre">{{ dominio.nombre }}</span>
-              <span class="pagina-networking__dominio__tipo">{{ dominio.tipo }} · {{ dominio.servidorNombre }}{{ dominio.destino ? " → " + dominio.destino : "" }}</span>
+              <span class="pagina-networking__dominio__tipo">{{ "comun.estados." + dominio.tipo | translate }} · {{ dominio.servidorNombre }}{{ dominio.destino ? " → " + dominio.destino : "" }}</span>
             </section>
             <section class="pagina-networking__dominio__ssl">
               @if (dominio.sslActivo) {

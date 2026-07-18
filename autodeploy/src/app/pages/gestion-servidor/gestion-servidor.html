@@ -26,7 +26,7 @@
       </a>
       <button class="gestion-servidor__boton-peligro" type="button" (click)="reiniciarServidor()" [disabled]="reiniciando()">
         @if (reiniciando()) {
-          <i class="fa-solid fa-spinner fa-spin" aria-hidden="true"></i> {{ "gestionServidor.rebooting" | translate }}
+          {{ "gestionServidor.rebooting" | translate }}
         } @else {
           <i class="fa-solid fa-power-off" aria-hidden="true"></i> {{ "gestionServidor.reboot" | translate }}
         }
@@ -34,34 +34,31 @@
     </section>
   </header>
 
-  <section class="gestion-servidor__metricas">
-    <app-tarjeta-estadistica
-      class="gestion-servidor__metricas__item"
-      [etiqueta]="'gestionServidor.metricas.cpu' | translate"
-      [valor]="cpuValor()"
-      [barraProgreso]="metricaActual()?.cpuPorcentaje || 0"
-      icono="fa-solid fa-microchip"
-      [subtexto]="sinMetricasTodavia() ? ('gestionServidor.metricas.sinDatos' | translate) : (('gestionServidor.metricas.cargaPrefijo' | translate) + ' ' + (metricaActual()?.cargaPromedio?.toFixed(2) || '0.00'))"
-      variante="primario">
-    </app-tarjeta-estadistica>
-    <app-tarjeta-estadistica
-      class="gestion-servidor__metricas__item"
-      [etiqueta]="'gestionServidor.metricas.ram' | translate"
-      [valor]="ramValor()"
-      [barraProgreso]="porcentajeRam()"
-      icono="fa-solid fa-memory"
-      [subtexto]="sinMetricasTodavia() ? ('gestionServidor.metricas.sinDatos' | translate) : (metricaActual()?.ramUsadaMb + ' / ' + metricaActual()?.ramTotalMb + ' MB')"
-      variante="exito">
-    </app-tarjeta-estadistica>
-    <app-tarjeta-estadistica
-      class="gestion-servidor__metricas__item"
-      [etiqueta]="'gestionServidor.metricas.disco' | translate"
-      [valor]="discoValor()"
-      [barraProgreso]="metricaActual()?.discoUsadoPorcentaje || 0"
-      icono="fa-solid fa-hard-drive"
-      [subtexto]="sinMetricasTodavia() ? ('gestionServidor.metricas.sinDatos' | translate) : (metricaActual()?.discoUsadoGb + ' / ' + metricaActual()?.discoTotalGb + ' GB')"
-      variante="primario">
-    </app-tarjeta-estadistica>
+  <section class="editorial__vitales editorial__vitales--compacta">
+    <article class="editorial__vitales__dato">
+      <span class="editorial__vitales__etiqueta">{{ "gestionServidor.metricas.cpu" | translate }}</span>
+      <span class="editorial__vitales__cifra">{{ cpuValor() }}</span>
+      <span class="editorial__vitales__barra" aria-hidden="true">
+        <span class="editorial__vitales__barra__relleno" [style.width.%]="metricaActual()?.cpuPorcentaje || 0"></span>
+      </span>
+      <span class="editorial__vitales__nota">{{ sinMetricasTodavia() ? ("gestionServidor.metricas.sinDatos" | translate) : (("gestionServidor.metricas.cargaPrefijo" | translate) + " " + (metricaActual()?.cargaPromedio?.toFixed(2) || "0.00")) }}</span>
+    </article>
+    <article class="editorial__vitales__dato">
+      <span class="editorial__vitales__etiqueta">{{ "gestionServidor.metricas.ram" | translate }}</span>
+      <span class="editorial__vitales__cifra">{{ ramValor() }}</span>
+      <span class="editorial__vitales__barra" aria-hidden="true">
+        <span class="editorial__vitales__barra__relleno" [style.width.%]="porcentajeRam()"></span>
+      </span>
+      <span class="editorial__vitales__nota">{{ sinMetricasTodavia() ? ("gestionServidor.metricas.sinDatos" | translate) : (metricaActual()?.ramUsadaMb + " / " + metricaActual()?.ramTotalMb + " MB") }}</span>
+    </article>
+    <article class="editorial__vitales__dato">
+      <span class="editorial__vitales__etiqueta">{{ "gestionServidor.metricas.disco" | translate }}</span>
+      <span class="editorial__vitales__cifra">{{ discoValor() }}</span>
+      <span class="editorial__vitales__barra" aria-hidden="true">
+        <span class="editorial__vitales__barra__relleno" [style.width.%]="metricaActual()?.discoUsadoPorcentaje || 0"></span>
+      </span>
+      <span class="editorial__vitales__nota">{{ sinMetricasTodavia() ? ("gestionServidor.metricas.sinDatos" | translate) : (metricaActual()?.discoUsadoGb + " / " + metricaActual()?.discoTotalGb + " GB") }}</span>
+    </article>
   </section>
 
   @if (estadoSalud()) {
@@ -98,7 +95,7 @@
       <article class="gestion-servidor__subdominio">
         <section class="gestion-servidor__subdominio__info">
           <span class="gestion-servidor__subdominio__nombre">{{ subdominio.nombre }}</span>
-          <span class="gestion-servidor__subdominio__badge">{{ subdominio.tipo }}</span>
+          <span class="gestion-servidor__subdominio__badge">{{ "comun.estados." + subdominio.tipo | translate }}</span>
           <span class="gestion-servidor__subdominio__destino">{{ subdominio.destino }}</span>
         </section>
         <section class="gestion-servidor__subdominio__acciones">
@@ -151,11 +148,11 @@
   <footer class="gestion-servidor__inferior">
     <section class="gestion-servidor__inferior__item">
       <span class="gestion-servidor__inferior__etiqueta">{{ "gestionServidor.inferior.lastBackup" | translate }}</span>
-      <span class="gestion-servidor__inferior__valor">—</span>
+      <span class="gestion-servidor__inferior__valor">{{ "comun.sinDatos" | translate }}</span>
     </section>
     <section class="gestion-servidor__inferior__item">
       <span class="gestion-servidor__inferior__etiqueta">{{ "gestionServidor.inferior.systemUptime" | translate }}</span>
-      <span class="gestion-servidor__inferior__valor">—</span>
+      <span class="gestion-servidor__inferior__valor">{{ "comun.sinDatos" | translate }}</span>
     </section>
   </footer>
 </section>

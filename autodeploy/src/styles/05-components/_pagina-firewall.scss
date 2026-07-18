@@ -248,32 +248,6 @@
     }
   }
 
-  // Etiqueta tipo pildora que muestra si la regla permite o bloquea (allow / deny)
-  &__badge {
-    display: inline-flex;
-    padding: 0.2rem 0.55rem;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border-radius: var(--radius-full);
-    border: 1px solid transparent;
-
-    // Verde para "permitir trafico"
-    &--allow {
-      background: hsla(142.09, 70.56%, 45.29%, 0.08);
-      color: var(--verde-normal);
-      border-color: hsla(142.09, 70.56%, 45.29%, 0.28);
-    }
-
-    // Rojo para "bloquear trafico"
-    &--deny {
-      background: hsla(0, 79.17%, 60.59%, 0.08);
-      color: var(--rojo-normal);
-      border-color: hsla(0, 79.17%, 60.59%, 0.28);
-    }
-  }
 
   // Boton redondito de "eliminar regla". Al pasar por encima se pone en rojo
   &__eliminar {

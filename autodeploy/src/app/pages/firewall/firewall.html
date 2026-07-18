@@ -159,7 +159,12 @@
             <span class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.puerto }}</span>
             <span class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.protocolo }}</span>
             <span class="pagina-firewall__tabla__td">
-              <span class="pagina-firewall__badge pagina-firewall__badge--{{ regla.accion }}">{{ regla.accion }}</span>
+              <span class="editorial__estado"
+                    [class.editorial__estado--verde]="regla.accion === 'allow'"
+                    [class.editorial__estado--rojo]="regla.accion === 'deny'">
+                <span class="editorial__estado__punto" aria-hidden="true"></span>
+                {{ "comun.estados." + regla.accion | translate }}
+              </span>
             </span>
             <span class="pagina-firewall__tabla__td pagina-firewall__tabla__td--mono">{{ regla.origen }}</span>
             <span class="pagina-firewall__tabla__td">{{ regla.descripcion }}</span>

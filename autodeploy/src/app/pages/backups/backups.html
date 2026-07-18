@@ -11,11 +11,7 @@
     </section>
     <button class="editorial__cta-principal" type="button" (click)="crearBackup()" [disabled]="creandoBackup()">
       <span class="editorial__cta-principal__icono" aria-hidden="true">
-        @if (creandoBackup()) {
-          <i class="fa-solid fa-spinner fa-spin"></i>
-        } @else {
-          <i class="fa-solid fa-plus"></i>
-        }
+        <i class="fa-solid fa-plus"></i>
       </span>
       <span class="editorial__cta-principal__texto">
         <span class="editorial__cta-principal__principal">{{ creandoBackup() ? ("backups.creando" | translate) : ("backups.crear" | translate) }}</span>
@@ -107,8 +103,12 @@
               </section>
             </section>
 
-            <span class="pagina-backups__badge pagina-backups__badge--{{ backup.estado }}">
-              <span class="pagina-backups__badge__punto" aria-hidden="true"></span>
+            <span class="editorial__estado"
+                  [class.editorial__estado--verde]="backup.estado === 'completado'"
+                  [class.editorial__estado--rojo]="backup.estado === 'fallido'"
+                  [class.editorial__estado--ambar]="backup.estado === 'en_progreso'"
+                  [class.editorial__estado--vivo]="backup.estado === 'en_progreso'">
+              <span class="editorial__estado__punto" aria-hidden="true"></span>
               {{ "backups.estado." + backup.estado | translate }}
             </span>
 

@@ -89,18 +89,19 @@
     </header>
 
     @if (listaSubdominios().length === 0) {
-      <p class="editorial__vacio">{{ "gestionServidor.subdominios.vacio" | translate }}</p>
+      <p class="editorial__vacio-linea">{{ "gestionServidor.subdominios.vacio" | translate }}</p>
     }
     @for (subdominio of listaSubdominios(); track subdominio.id) {
       <article class="gestion-servidor__subdominio">
         <section class="gestion-servidor__subdominio__info">
           <span class="gestion-servidor__subdominio__nombre">{{ subdominio.nombre }}</span>
-          <span class="gestion-servidor__subdominio__badge">{{ "comun.estados." + subdominio.tipo | translate }}</span>
+          <span class="gestion-servidor__subdominio__tipo">{{ "comun.estados." + subdominio.tipo | translate }}</span>
           <span class="gestion-servidor__subdominio__destino">{{ subdominio.destino }}</span>
         </section>
         <section class="gestion-servidor__subdominio__acciones">
-          <span class="gestion-servidor__subdominio__badge" [class.gestion-servidor__subdominio__badge--ssl-activo]="subdominio.sslActivo">
-            <i class="fa-solid fa-lock"></i> {{ (subdominio.sslActivo ? "gestionServidor.subdominios.sslActivo" : "gestionServidor.subdominios.sslInactivo") | translate }}
+          <span class="editorial__estado" [class.editorial__estado--verde]="subdominio.sslActivo">
+            <span class="editorial__estado__punto" aria-hidden="true"></span>
+            {{ (subdominio.sslActivo ? "gestionServidor.subdominios.sslActivo" : "gestionServidor.subdominios.sslInactivo") | translate }}
           </span>
           <button class="gestion-servidor__app__btn gestion-servidor__app__btn--peligro" (click)="eliminarSubdominio(subdominio.id)">
             <i class="fa-solid fa-trash"></i>
@@ -120,7 +121,7 @@
     </header>
 
     @if (listaDeAplicaciones().length === 0) {
-      <p class="editorial__vacio">{{ "gestionServidor.aplicaciones.vacio" | translate }}</p>
+      <p class="editorial__vacio-linea">{{ "gestionServidor.aplicaciones.vacio" | translate }}</p>
     }
     @for (app of listaDeAplicaciones(); track app.nombre) {
       <article class="gestion-servidor__app">
@@ -138,7 +139,10 @@
           </section>
         </section>
         <section class="gestion-servidor__app__acciones">
-          <span class="gestion-servidor__app__badge gestion-servidor__app__badge--ok">{{ "gestionServidor.aplicaciones.ok" | translate }}</span>
+          <span class="editorial__estado editorial__estado--verde">
+            <span class="editorial__estado__punto" aria-hidden="true"></span>
+            {{ "gestionServidor.aplicaciones.ok" | translate }}
+          </span>
           <span class="gestion-servidor__app__version">{{ app.version }}</span>
         </section>
       </article>

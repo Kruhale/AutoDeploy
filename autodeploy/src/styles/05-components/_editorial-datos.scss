@@ -135,6 +135,17 @@
   }
 }
 
+// Vacio de seccion en una linea: nota mono sobre filete, sin caja
+.editorial__vacio-linea {
+  padding: var(--spacing-size-l) 0.25rem;
+  border-top: 1px solid var(--borde-normal);
+  font-family: var(--font-mono);
+  font-size: 0.65rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
+
 // ---------------------------------------------------------------------------
 // Teletipo y esqueleto: la carga habla el idioma de la casa, sin spinners.
 // El retardo de 200ms evita el parpadeo cuando la respuesta llega rapida.

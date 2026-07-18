@@ -88,8 +88,7 @@
 
     @if (cargando()) {
       <section class="editorial__vacio">
-        <i class="fa-solid fa-spinner fa-spin"></i>
-        <p class="editorial__vacio__titulo">{{ "networking.cargandoDominios" | translate }}</p>
+        <p class="editorial__teletipo">{{ "networking.cargandoDominios" | translate }}</p>
       </section>
     } @else if (listaDeDominios().length === 0 && !mostrarFormulario()) {
       <section class="editorial__vacio">
@@ -112,12 +111,14 @@
             </section>
             <section class="pagina-networking__dominio__ssl">
               @if (dominio.sslActivo) {
-                <span class="pagina-networking__ssl-badge pagina-networking__ssl-badge--activo">
-                  <i class="fa-solid fa-lock"></i> {{ "networking.sslActivo" | translate }}
+                <span class="editorial__estado editorial__estado--verde">
+                  <span class="editorial__estado__punto" aria-hidden="true"></span>
+                  {{ "networking.sslActivo" | translate }}
                 </span>
               } @else {
-                <span class="pagina-networking__ssl-badge pagina-networking__ssl-badge--inactivo">
-                  <i class="fa-solid fa-lock-open"></i> {{ "networking.sslInactivo" | translate }}
+                <span class="editorial__estado">
+                  <span class="editorial__estado__punto" aria-hidden="true"></span>
+                  {{ "networking.sslInactivo" | translate }}
                 </span>
               }
             </section>
@@ -149,8 +150,7 @@
     <section class="pagina-networking__acciones">
       <button class="pagina-networking__accion" type="button" (click)="renovarSsl()" [disabled]="procesandoSsl()">
         <span class="pagina-networking__accion__icono" aria-hidden="true">
-          @if (procesandoSsl()) { <i class="fa-solid fa-spinner fa-spin"></i> }
-          @else { <i class="fa-solid fa-rotate"></i> }
+          <i class="fa-solid fa-rotate"></i>
         </span>
         <section class="pagina-networking__accion__cuerpo">
           <span class="pagina-networking__accion__titulo">{{ procesandoSsl() ? ("networking.renovando" | translate) : ("networking.renovarTitulo" | translate) }}</span>
@@ -197,7 +197,7 @@
         <section class="pagina-networking__modal__busqueda">
           <input class="campo__input" id="campo-consulta-dns" type="text" [placeholder]="'networking.modalDns.placeholder' | translate" [attr.aria-label]="'networking.modalDns.placeholder' | translate" [ngModel]="dominioConsultando()" (ngModelChange)="dominioConsultando.set($event)" (keydown.enter)="ejecutarConsultaDns()">
           <button class="editorial__cta-principal" type="button" (click)="ejecutarConsultaDns()" [disabled]="cargandoDns() || !dominioConsultando()">
-            @if (cargandoDns()) { <i class="fa-solid fa-spinner fa-spin"></i> {{ "networking.modalDns.resolviendo" | translate }} } @else { <i class="fa-solid fa-magnifying-glass"></i> {{ "networking.modalDns.lookup" | translate }} }
+            @if (cargandoDns()) { {{ "networking.modalDns.resolviendo" | translate }} } @else { <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> {{ "networking.modalDns.lookup" | translate }} }
           </button>
         </section>
         @if (registrosDns()) {
@@ -254,7 +254,7 @@
         </section>
 
         @if (cargandoRedirecciones()) {
-          <p class="pagina-networking__redirects-vacio"><i class="fa-solid fa-spinner fa-spin"></i> {{ "networking.modalRedirects.cargando" | translate }}</p>
+          <p class="editorial__teletipo">{{ "networking.modalRedirects.cargando" | translate }}</p>
         } @else if (listaRedirecciones().length === 0) {
           <p class="pagina-networking__redirects-vacio">{{ "networking.modalRedirects.vacio" | translate }}</p>
         } @else {

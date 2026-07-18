@@ -198,31 +198,6 @@
     }
   }
 
-  &__ssl-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
-    border-radius: var(--radius-full);
-    border: 1px solid transparent;
-
-    &--activo {
-      color: var(--verde-normal);
-      background: hsla(142.09, 70.56%, 45.29%, 0.08);
-      border-color: hsla(142.09, 70.56%, 45.29%, 0.28);
-    }
-
-    &--inactivo {
-      color: var(--texto-apagado);
-      border-color: var(--borde-normal);
-    }
-  }
-
   &__ssl-expira {
     font-family: var(--font-mono);
     font-size: 0.65rem;

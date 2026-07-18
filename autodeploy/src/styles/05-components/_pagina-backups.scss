@@ -229,59 +229,6 @@
     }
   }
 
-  &__badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.3rem 0.7rem;
-    font-family: var(--font-mono);
-    font-size: 0.65rem;
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    border-radius: var(--radius-full);
-    border: 1px solid transparent;
-    white-space: nowrap;
-
-    @media (max-width: 720px) {
-      justify-self: flex-start;
-    }
-
-    &__punto {
-      width: 0.4rem;
-      height: 0.4rem;
-      border-radius: 50%;
-      background-color: currentColor;
-      flex-shrink: 0;
-    }
-
-    &--completado,
-    &--completed {
-      background: hsla(142.09, 70.56%, 45.29%, 0.1);
-      color: var(--verde-normal);
-      border-color: hsla(142.09, 70.56%, 45.29%, 0.28);
-    }
-
-    &--en_progreso,
-    &--in-progress {
-      background: var(--amarillo-transparente-008);
-      color: var(--amarillo-normal);
-      border-color: var(--amarillo-transparente-030);
-
-      .pagina-backups__badge__punto {
-        @media (prefers-reduced-motion: no-preference) {
-          animation: pagina-backups-respirar 1.6s ease-in-out infinite;
-        }
-      }
-    }
-
-    &--fallido,
-    &--failed {
-      background: hsla(0, 79.17%, 60.59%, 0.1);
-      color: var(--rojo-normal);
-      border-color: hsla(0, 79.17%, 60.59%, 0.28);
-    }
-  }
 
   &__accion {
     display: inline-flex;

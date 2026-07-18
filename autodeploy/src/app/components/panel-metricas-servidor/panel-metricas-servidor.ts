@@ -74,13 +74,13 @@ export class PanelMetricasServidor implements OnInit, OnDestroy {
   ngOnDestroy(): void {
   }
 
-  obtenerClaseColorBarra(porcentaje: number): string {
+  obtenerColorBarra(porcentaje: number): string {
     if (porcentaje >= 85) {
-      return "barra-progreso--critico";
+      return "rojo";
     }
     if (porcentaje >= 65) {
-      return "barra-progreso--alerta";
+      return "naranja";
     }
-    return "barra-progreso--normal";
+    return "verde";
   }
 }

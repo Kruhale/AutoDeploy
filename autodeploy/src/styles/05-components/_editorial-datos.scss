@@ -254,6 +254,28 @@
   transition: width 400ms ease-out;
 }
 
+.editorial__vitales__barra__relleno--verde {
+  background-color: var(--verde-normal);
+}
+
+.editorial__vitales__barra__relleno--naranja {
+  background-color: var(--naranja-normal);
+}
+
+.editorial__vitales__barra__relleno--rojo {
+  background-color: var(--rojo-normal);
+}
+
+// Variante compacta: vitales dentro de fichas (monitorizacion por servidor)
+.editorial__vitales--compacta .editorial__vitales__cifra {
+  font-size: 2rem; /* 32px */
+}
+
+.editorial__vitales--compacta .editorial__vitales__dato {
+  gap: 0.4rem; /* 6px */
+  padding: var(--spacing-size-l) var(--spacing-size-l);
+}
+
 @media (max-width: 900px) {
   .editorial__vitales {
     flex-wrap: wrap;

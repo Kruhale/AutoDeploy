@@ -2,8 +2,8 @@
   <section class="panel-metricas panel-metricas--vacio">
     <header class="panel-metricas__cabecera">
       <h3 class="panel-metricas__titulo">{{ nombreServidor || ("panelMetricas.fallbackNombre" | translate) }}</h3>
-      <span class="panel-metricas__chip panel-metricas__chip--esperando">
-        <i class="fa-solid fa-satellite-dish"></i>
+      <span class="editorial__estado editorial__estado--ambar editorial__estado--vivo">
+        <span class="editorial__estado__punto" aria-hidden="true"></span>
         {{ "panelMetricas.esperandoPrimerCiclo" | translate }}
       </span>
     </header>
@@ -19,103 +19,89 @@
     <header class="panel-metricas__cabecera">
       <article class="panel-metricas__identidad">
         <h3 class="panel-metricas__titulo">{{ nombreServidor || ("panelMetricas.fallbackNombre" | translate) }}</h3>
-        <span class="panel-metricas__uptime">
-          <i class="fa-solid fa-clock"></i>
-          {{ tiempoEncendidoTexto() }} {{ "panelMetricas.uptimeSufijo" | translate }}
-        </span>
+        <span class="panel-metricas__uptime">{{ tiempoEncendidoTexto() }} {{ "panelMetricas.uptimeSufijo" | translate }}</span>
       </article>
       @if (metrica && metrica.sesionActiva) {
-        <span class="panel-metricas__chip panel-metricas__chip--vivo">
-          <span class="panel-metricas__punto-vivo"></span>
+        <span class="editorial__estado editorial__estado--verde editorial__estado--vivo">
+          <span class="editorial__estado__punto" aria-hidden="true"></span>
           {{ "panelMetricas.sesionViva" | translate }}
         </span>
       }
       @if (metrica && !metrica.sesionActiva) {
-        <span class="panel-metricas__chip panel-metricas__chip--caido">
-          <i class="fa-solid fa-plug-circle-xmark"></i>
+        <span class="editorial__estado editorial__estado--rojo">
+          <span class="editorial__estado__punto" aria-hidden="true"></span>
           {{ "panelMetricas.reconectando" | translate }}
         </span>
       }
     </header>
 
-    <section class="panel-metricas__rejilla">
-      <article class="tarjeta-metrica">
-        <header class="tarjeta-metrica__cabecera">
-          <i class="fa-solid fa-microchip tarjeta-metrica__icono"></i>
-          <span class="tarjeta-metrica__etiqueta">{{ "panelMetricas.tarjetas.cpu" | translate }}</span>
-        </header>
-        <strong class="tarjeta-metrica__valor">{{ metrica?.cpuPorcentaje?.toFixed(1) || 0 }}<small class="tarjeta-metrica__unidad">%</small></strong>
-        <section class="barra-progreso" [class]="obtenerClaseColorBarra(metrica?.cpuPorcentaje || 0)">
-          <span class="barra-progreso__relleno" [style.width.%]="metrica?.cpuPorcentaje || 0"></span>
-        </section>
-        <span class="tarjeta-metrica__nota">{{ "panelMetricas.tarjetas.carga" | translate }} {{ metrica?.cargaPromedio?.toFixed(2) || "0.00" }}</span>
+    <section class="editorial__vitales editorial__vitales--compacta">
+      <article class="editorial__vitales__dato">
+        <span class="editorial__vitales__etiqueta">{{ "panelMetricas.tarjetas.cpu" | translate }}</span>
+        <span class="editorial__vitales__cifra">{{ metrica?.cpuPorcentaje?.toFixed(1) || 0 }}<small class="panel-metricas__unidad">%</small></span>
+        <span class="editorial__vitales__barra" aria-hidden="true">
+          <span class="editorial__vitales__barra__relleno editorial__vitales__barra__relleno--{{ obtenerColorBarra(metrica?.cpuPorcentaje || 0) }}" [style.width.%]="metrica?.cpuPorcentaje || 0"></span>
+        </span>
+        <span class="editorial__vitales__nota">{{ "panelMetricas.tarjetas.carga" | translate }} {{ metrica?.cargaPromedio?.toFixed(2) || "0.00" }}</span>
       </article>
 
-      <article class="tarjeta-metrica">
-        <header class="tarjeta-metrica__cabecera">
-          <i class="fa-solid fa-memory tarjeta-metrica__icono"></i>
-          <span class="tarjeta-metrica__etiqueta">{{ "panelMetricas.tarjetas.ram" | translate }}</span>
-        </header>
-        <strong class="tarjeta-metrica__valor">{{ porcentajeRam() }}<small class="tarjeta-metrica__unidad">%</small></strong>
-        <section class="barra-progreso" [class]="obtenerClaseColorBarra(porcentajeRam())">
-          <span class="barra-progreso__relleno" [style.width.%]="porcentajeRam()"></span>
-        </section>
-        <span class="tarjeta-metrica__nota">{{ metrica?.ramUsadaMb }} MB / {{ metrica?.ramTotalMb }} MB</span>
+      <article class="editorial__vitales__dato">
+        <span class="editorial__vitales__etiqueta">{{ "panelMetricas.tarjetas.ram" | translate }}</span>
+        <span class="editorial__vitales__cifra">{{ porcentajeRam() }}<small class="panel-metricas__unidad">%</small></span>
+        <span class="editorial__vitales__barra" aria-hidden="true">
+          <span class="editorial__vitales__barra__relleno editorial__vitales__barra__relleno--{{ obtenerColorBarra(porcentajeRam()) }}" [style.width.%]="porcentajeRam()"></span>
+        </span>
+        <span class="editorial__vitales__nota">{{ metrica?.ramUsadaMb }} MB / {{ metrica?.ramTotalMb }} MB</span>
       </article>
 
-      <article class="tarjeta-metrica">
-        <header class="tarjeta-metrica__cabecera">
-          <i class="fa-solid fa-hard-drive tarjeta-metrica__icono"></i>
-          <span class="tarjeta-metrica__etiqueta">{{ "panelMetricas.tarjetas.disco" | translate }}</span>
-        </header>
-        <strong class="tarjeta-metrica__valor">{{ metrica?.discoUsadoPorcentaje || 0 }}<small class="tarjeta-metrica__unidad">%</small></strong>
-        <section class="barra-progreso" [class]="obtenerClaseColorBarra(metrica?.discoUsadoPorcentaje || 0)">
-          <span class="barra-progreso__relleno" [style.width.%]="metrica?.discoUsadoPorcentaje || 0"></span>
-        </section>
-        <span class="tarjeta-metrica__nota">{{ metrica?.discoUsadoGb }} GB / {{ metrica?.discoTotalGb }} GB</span>
+      <article class="editorial__vitales__dato">
+        <span class="editorial__vitales__etiqueta">{{ "panelMetricas.tarjetas.disco" | translate }}</span>
+        <span class="editorial__vitales__cifra">{{ metrica?.discoUsadoPorcentaje || 0 }}<small class="panel-metricas__unidad">%</small></span>
+        <span class="editorial__vitales__barra" aria-hidden="true">
+          <span class="editorial__vitales__barra__relleno editorial__vitales__barra__relleno--{{ obtenerColorBarra(metrica?.discoUsadoPorcentaje || 0) }}" [style.width.%]="metrica?.discoUsadoPorcentaje || 0"></span>
+        </span>
+        <span class="editorial__vitales__nota">{{ metrica?.discoUsadoGb }} GB / {{ metrica?.discoTotalGb }} GB</span>
       </article>
     </section>
 
     <section class="panel-metricas__listas">
-      <article class="lista-recursos">
-        <header class="lista-recursos__cabecera">
-          <i class="fa-solid fa-globe lista-recursos__icono"></i>
-          <h4 class="lista-recursos__titulo">{{ "panelMetricas.webs.titulo" | translate }}</h4>
-          <span class="lista-recursos__contador">{{ metrica?.webDesplegadas?.length || 0 }}</span>
+      <article class="panel-metricas__recurso">
+        <header class="panel-metricas__recurso__cabecera">
+          <h4 class="panel-metricas__recurso__titulo">{{ "panelMetricas.webs.titulo" | translate }}</h4>
+          <span class="panel-metricas__recurso__contador">{{ metrica?.webDesplegadas?.length || 0 }}</span>
         </header>
         @if (metrica && metrica.webDesplegadas.length > 0) {
-          <ul class="lista-recursos__lista">
+          <ul class="panel-metricas__recurso__lista">
             @for (web of metrica.webDesplegadas; track web) {
-              <li class="lista-recursos__item">
-                <span class="lista-recursos__punto"></span>
+              <li class="panel-metricas__recurso__item">
+                <span class="panel-metricas__recurso__punto" aria-hidden="true"></span>
                 {{ web }}
               </li>
             }
           </ul>
         }
         @if (!metrica || metrica.webDesplegadas.length === 0) {
-          <p class="lista-recursos__vacio">{{ "panelMetricas.webs.vacio" | translate }}</p>
+          <p class="panel-metricas__recurso__vacio">{{ "panelMetricas.webs.vacio" | translate }}</p>
         }
       </article>
 
-      <article class="lista-recursos">
-        <header class="lista-recursos__cabecera">
-          <i class="fa-brands fa-docker lista-recursos__icono"></i>
-          <h4 class="lista-recursos__titulo">{{ "panelMetricas.docker.titulo" | translate }}</h4>
-          <span class="lista-recursos__contador">{{ metrica?.containersDocker?.length || 0 }}</span>
+      <article class="panel-metricas__recurso">
+        <header class="panel-metricas__recurso__cabecera">
+          <h4 class="panel-metricas__recurso__titulo">{{ "panelMetricas.docker.titulo" | translate }}</h4>
+          <span class="panel-metricas__recurso__contador">{{ metrica?.containersDocker?.length || 0 }}</span>
         </header>
         @if (metrica && metrica.containersDocker.length > 0) {
-          <ul class="lista-recursos__lista">
+          <ul class="panel-metricas__recurso__lista">
             @for (contenedor of metrica.containersDocker; track contenedor) {
-              <li class="lista-recursos__item">
-                <span class="lista-recursos__punto"></span>
+              <li class="panel-metricas__recurso__item">
+                <span class="panel-metricas__recurso__punto" aria-hidden="true"></span>
                 {{ contenedor }}
               </li>
             }
           </ul>
         }
         @if (!metrica || metrica.containersDocker.length === 0) {
-          <p class="lista-recursos__vacio">{{ "panelMetricas.docker.vacio" | translate }}</p>
+          <p class="panel-metricas__recurso__vacio">{{ "panelMetricas.docker.vacio" | translate }}</p>
         }
       </article>
     </section>

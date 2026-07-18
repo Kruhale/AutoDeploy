@@ -136,19 +136,19 @@ describe("PanelMetricasServidor", function() {
     expect(component.tiempoEncendidoTexto()).toBe("5m");
   });
 
-  it("obtenerClaseColorBarra: critico si porcentaje >= 85", function() {
-    expect(component.obtenerClaseColorBarra(85)).toBe("barra-progreso--critico");
-    expect(component.obtenerClaseColorBarra(99)).toBe("barra-progreso--critico");
+  it("obtenerColorBarra: rojo si porcentaje >= 85", function() {
+    expect(component.obtenerColorBarra(85)).toBe("rojo");
+    expect(component.obtenerColorBarra(99)).toBe("rojo");
   });
 
-  it("obtenerClaseColorBarra: alerta si porcentaje >= 65 y < 85", function() {
-    expect(component.obtenerClaseColorBarra(65)).toBe("barra-progreso--alerta");
-    expect(component.obtenerClaseColorBarra(80)).toBe("barra-progreso--alerta");
+  it("obtenerColorBarra: naranja si porcentaje >= 65 y < 85", function() {
+    expect(component.obtenerColorBarra(65)).toBe("naranja");
+    expect(component.obtenerColorBarra(80)).toBe("naranja");
   });
 
-  it("obtenerClaseColorBarra: normal por defecto", function() {
-    expect(component.obtenerClaseColorBarra(0)).toBe("barra-progreso--normal");
-    expect(component.obtenerClaseColorBarra(40)).toBe("barra-progreso--normal");
+  it("obtenerColorBarra: verde por defecto", function() {
+    expect(component.obtenerColorBarra(0)).toBe("verde");
+    expect(component.obtenerColorBarra(40)).toBe("verde");
   });
 
   it("ngOnDestroy: no falla al invocarse", function() {

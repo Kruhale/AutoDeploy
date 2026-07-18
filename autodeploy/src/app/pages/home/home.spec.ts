@@ -31,7 +31,7 @@ describe("Home", function() {
   it("renderiza secciones principales (hero, features, pricing, cta)", function() {
     const elemento: HTMLElement = fixture.nativeElement;
     expect(elemento.querySelector("#features")).not.toBeNull();
-    expect(elemento.querySelector("#how-it-works")).not.toBeNull();
+    expect(elemento.querySelector("#como-funciona")).not.toBeNull();
     expect(elemento.querySelector("#pricing")).not.toBeNull();
   });
 

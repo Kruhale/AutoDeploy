@@ -158,16 +158,16 @@ describe("CampanaNotificaciones", function() {
     expect(console.error).toHaveBeenCalled();
   });
 
-  it("obtenerIconoPorTipo devuelve el icono correspondiente", function() {
-    expect(componente.obtenerIconoPorTipo("servidor_desconectado")).toBe("fa-server");
-    expect(componente.obtenerIconoPorTipo("deployment")).toBe("fa-rocket");
-    expect(componente.obtenerIconoPorTipo("error_critico")).toBe("fa-triangle-exclamation");
-    expect(componente.obtenerIconoPorTipo("ssl_vencido")).toBe("fa-shield");
-    expect(componente.obtenerIconoPorTipo("cambio_configuracion")).toBe("fa-gear");
+  it("obtenerColorPorTipo devuelve el color correspondiente", function() {
+    expect(componente.obtenerColorPorTipo("servidor_desconectado")).toBe("rojo");
+    expect(componente.obtenerColorPorTipo("deployment")).toBe("verde");
+    expect(componente.obtenerColorPorTipo("error_critico")).toBe("rojo");
+    expect(componente.obtenerColorPorTipo("ssl_vencido")).toBe("naranja");
+    expect(componente.obtenerColorPorTipo("cambio_configuracion")).toBe("neutro");
   });
 
-  it("obtenerIconoPorTipo devuelve fa-bell para tipos desconocidos", function() {
-    expect(componente.obtenerIconoPorTipo("desconocido")).toBe("fa-bell");
+  it("obtenerColorPorTipo devuelve neutro para tipos desconocidos", function() {
+    expect(componente.obtenerColorPorTipo("desconocido")).toBe("neutro");
   });
 
   it("alClickFueraDelPanel no hace nada cuando la campana esta cerrada", function() {

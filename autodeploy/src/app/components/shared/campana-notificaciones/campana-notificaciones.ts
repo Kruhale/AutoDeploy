@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, signal, HostListener, ElementRef, inject } from "@angular/core";
-import { CommonModule } from "@angular/common";
+import { DatePipe } from "@angular/common";
 import { TranslateModule } from "@ngx-translate/core";
 import { NotificacionService, Notificacion } from "../../../services/notificacion.service";
 import { UsuarioService } from "../../../services/usuario.service";
@@ -8,7 +8,7 @@ import { Subscription } from "rxjs";
 @Component({
 	selector: "app-campana-notificaciones",
 	standalone: true,
-	imports: [CommonModule, TranslateModule],
+	imports: [DatePipe, TranslateModule],
 	templateUrl: "./campana-notificaciones.html",
 	styleUrl: "./campana-notificaciones.scss"
 })
@@ -94,14 +94,14 @@ export class CampanaNotificaciones implements OnInit, OnDestroy {
 		}
 	}
 
-	obtenerIconoPorTipo(tipo: string): string {
-		const iconosPorTipo: { [key: string]: string } = {
-			"servidor_desconectado": "fa-server",
-			"deployment": "fa-rocket",
-			"error_critico": "fa-triangle-exclamation",
-			"ssl_vencido": "fa-shield",
-			"cambio_configuracion": "fa-gear"
+	obtenerColorPorTipo(tipo: string): string {
+		const coloresPorTipo: { [key: string]: string } = {
+			"servidor_desconectado": "rojo",
+			"deployment": "verde",
+			"error_critico": "rojo",
+			"ssl_vencido": "naranja",
+			"cambio_configuracion": "neutro"
 		};
-		return iconosPorTipo[tipo] || "fa-bell";
+		return coloresPorTipo[tipo] || "neutro";
 	}
 }

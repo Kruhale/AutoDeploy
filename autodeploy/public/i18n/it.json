@@ -970,7 +970,7 @@
       "deploymentsSuffix": " deploy/mese",
       "aiIncluded": "Assistente IA incluso",
       "aiNotAvailable": "Assistente IA non disponibile",
-      "supportSuffix": " supporto"
+      "unServidor": "1 server"
     },
     "precioMoneda": "€",
     "precioPeriodo": "/mese",
@@ -985,13 +985,6 @@
       "titulo": "Metodo di pagamento",
       "descripcion": "Carta memorizzata cifrata da Stripe — il nostro server non la vede mai.",
       "addMethod": "Aggiungi metodo"
-    },
-    "tarjetaFantasma": {
-      "marca": "VISA",
-      "cardholder": "Titolare",
-      "cardholderValor": "— · —",
-      "expires": "Scadenza",
-      "expiresValor": "··/··"
     },
     "metodoPagoVacio": {
       "titulo": "Nessun metodo di pagamento configurato",
@@ -1021,7 +1014,23 @@
       "deployments": "Deploy di questo ciclo",
       "customDomains": "Domini personalizzati"
     },
-    "stripeComingSoon": "Integrazione con Stripe in arrivo"
+    "stripeComingSoon": "Integrazione con Stripe in arrivo",
+    "planes": {
+      "free": {
+        "descripcion": "Per sviluppatori che esplorano la piattaforma."
+      },
+      "pro": {
+        "descripcion": "Per team con applicazioni in produzione."
+      },
+      "business": {
+        "descripcion": "Per infrastrutture che scalano senza limiti."
+      }
+    },
+    "soporte": {
+      "community": "Supporto della community",
+      "priority": "Supporto prioritario",
+      "dedicated": "Supporto dedicato"
+    }
   },
   "networking": {
     "sello": "Pannello · Rete · SSL",

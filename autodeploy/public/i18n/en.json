@@ -970,7 +970,7 @@
       "deploymentsSuffix": " deployments/month",
       "aiIncluded": "AI Assistant included",
       "aiNotAvailable": "AI Assistant not available",
-      "supportSuffix": " support"
+      "unServidor": "1 server"
     },
     "precioMoneda": "€",
     "precioPeriodo": "/month",
@@ -985,13 +985,6 @@
       "titulo": "Payment method",
       "descripcion": "Card stored encrypted by Stripe — our server never sees it.",
       "addMethod": "Add method"
-    },
-    "tarjetaFantasma": {
-      "marca": "VISA",
-      "cardholder": "Cardholder",
-      "cardholderValor": "— · —",
-      "expires": "Expires",
-      "expiresValor": "··/··"
     },
     "metodoPagoVacio": {
       "titulo": "No payment method configured",
@@ -1021,7 +1014,23 @@
       "deployments": "Deployments this cycle",
       "customDomains": "Custom domains"
     },
-    "stripeComingSoon": "Stripe integration coming soon"
+    "stripeComingSoon": "Stripe integration coming soon",
+    "planes": {
+      "free": {
+        "descripcion": "For developers exploring the platform."
+      },
+      "pro": {
+        "descripcion": "For teams shipping production apps."
+      },
+      "business": {
+        "descripcion": "For scaling infrastructure without limits."
+      }
+    },
+    "soporte": {
+      "community": "Community support",
+      "priority": "Priority support",
+      "dedicated": "Dedicated support"
+    }
   },
   "networking": {
     "sello": "Workspace · Networking · SSL",

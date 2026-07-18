@@ -1,7 +1,7 @@
 import { Component, signal, computed, Signal, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { HttpClient } from "@angular/common/http";
-import { DatePipe, TitleCasePipe, UpperCasePipe } from "@angular/common";
+import { DatePipe, UpperCasePipe } from "@angular/common";
 import { TranslateModule, TranslateService } from "@ngx-translate/core";
 import { PlanService, PLANES, Plan } from "../../services/plan.service";
 import { ServidorService, ServidorRemoto } from "../../services/servidor.service";
@@ -35,7 +35,7 @@ const MS_POR_DIA = 86400000;
 
 @Component({
   selector: "app-billing",
-  imports: [DatePipe, TitleCasePipe, UpperCasePipe, TranslateModule],
+  imports: [DatePipe, UpperCasePipe, TranslateModule],
   templateUrl: "./billing.html",
   styleUrl: "./billing.scss"
 })

@@ -1,929 +1,282 @@
-.pagina-billing {
+// Facturacion "Libro de cuentas": el marco editorial viene del sistema
+// compartido; aqui vive lo propio — el bloque-contrato del plan, la nota de
+// metodo de pago, las columnas del ledger de facturas y el pie con codigo.
+
+// ---------------------------------------------------------------------------
+// Contrato en vigor: doble filete arriba, clausulas con guion, precio tabular
+
+.pagina-billing__contrato {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-size-5xl);
-  width: 100%;
-  animation: billing-entrar 620ms cubic-bezier(0.16, 1, 0.3, 1);
+  border-top: 2px solid var(--texto-claro);
+  border-bottom: 1px solid var(--borde-normal);
+}
 
-  // Cabecera de billing con titulo a la izquierda y CTA a la derecha
-  &__cabecera {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: flex-end;
-    gap: var(--spacing-size-3xl);
-    padding-bottom: var(--spacing-size-2xl);
-    border-bottom: 1px solid var(--borde-normal);
+.pagina-billing__contrato__cabecera {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-size-l);
+  padding: 0.7rem 0.25rem; /* 11px 4px */
+  border-bottom: 1px solid var(--borde-suave);
+}
 
-    @media (max-width: 720px) {
-      grid-template-columns: minmax(0, 1fr);
-      align-items: flex-start;
-    }
+.pagina-billing__contrato__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
 
-    &__izquierda {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-    }
-  }
+.pagina-billing__contrato__etiqueta::before {
+  content: "— ";
+  color: var(--amarillo-normal);
+}
 
-  &__sello {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-family: var(--font-mono);
-    font-size: var(--font-size-xs);
-    font-weight: var(--font-weight-semibold);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    color: var(--texto-apagado);
+.pagina-billing__contrato__numero {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
 
-    &__punto {
-      width: 0.45rem;
-      height: 0.45rem;
-      border-radius: 50%;
-      background-color: var(--amarillo-normal);
-      @media (prefers-reduced-motion: no-preference) {
-        animation: billing-respirar 2.4s ease-in-out infinite;
-      }
-    }
-  }
+.pagina-billing__contrato__cuerpo {
+  display: flex;
+  align-items: stretch;
+  gap: var(--spacing-size-3xl);
+  padding: var(--spacing-size-2xl) 0.25rem;
+}
 
-  &__titulo {
-    font-family: var(--font-secondary);
-    font-size: clamp(2.5rem, 5vw, 3.75rem);
-    font-weight: var(--font-weight-bold);
-    letter-spacing: -0.045em;
-    line-height: 1;
-    color: var(--texto-claro);
+.pagina-billing__contrato__info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-m);
+}
 
-    &__punto {
-      color: var(--amarillo-normal);
-      margin-left: 0.05em;
-    }
-  }
+.pagina-billing__contrato__nombre {
+  font-family: var(--font-secondary);
+  font-size: 2.4rem; /* 38px */
+  font-weight: var(--font-weight-bold);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--texto-claro);
+}
 
-  &__subtitulo {
-    font-size: var(--font-size-md);
-    color: var(--texto-medio);
-    letter-spacing: -0.005em;
-    margin-top: 0.15rem;
-  }
+.pagina-billing__contrato__descripcion {
+  font-size: var(--font-size-md);
+  color: var(--texto-medio);
+  max-width: 34rem;
+  line-height: var(--line-height-normal);
+}
 
-  &__cta-principal {
-    display: inline-flex;
-    align-items: center;
-    gap: var(--spacing-size-l);
-    padding: 0.85rem 1.1rem 0.85rem 0.85rem;
-    background-color: var(--amarillo-normal);
-    color: var(--fondo-oscuro);
-    border: none;
-    border-radius: var(--radius-full);
-    font-family: var(--font-secondary);
-    cursor: pointer;
-    transition:
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+.pagina-billing__contrato__clausulas {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem; /* 7px */
+  margin-top: var(--spacing-size-s);
+  list-style: none;
+}
 
-    &:hover {
-      background-color: var(--amarillo-normal-hover);
-      transform: translateY(-1px);
-    }
+.pagina-billing__contrato__clausula {
+  font-size: var(--font-size-sm);
+  color: var(--texto-medio);
+}
 
-    &:active {
-      transform: scale(0.98);
-    }
+.pagina-billing__contrato__clausula::before {
+  content: "— ";
+  color: var(--amarillo-normal);
+}
 
-    &:focus-visible {
-      outline: 2px solid var(--amarillo-normal);
-      outline-offset: 3px;
-    }
+.pagina-billing__contrato__precio {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--spacing-size-xl);
+  padding-left: var(--spacing-size-3xl);
+  border-left: 1px solid var(--borde-suave);
+  text-align: right;
+}
 
-    &__icono {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2rem;
-      height: 2rem;
-      border-radius: 50%;
-      background-color: hsla(0, 0%, 0%, 0.18);
-      font-size: 0.75rem;
-    }
+.pagina-billing__contrato__importe {
+  font-family: var(--font-mono);
+  font-size: 3.4rem; /* 54px */
+  font-weight: var(--font-weight-normal);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--texto-claro);
+  font-variant-numeric: tabular-nums;
+  border-bottom: 2px solid var(--amarillo-normal);
+  padding-bottom: 0.5rem; /* 8px */
+}
 
-    &__texto {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.1;
-    }
+.pagina-billing__contrato__importe__moneda {
+  font-size: 1.4rem; /* 22px */
+  color: var(--texto-medio);
+  margin-right: 0.2rem; /* 3px */
+}
 
-    &__principal {
-      font-size: var(--font-size-md);
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: -0.01em;
-    }
+.pagina-billing__contrato__importe__periodo {
+  font-size: 0.85rem; /* 14px */
+  color: var(--texto-apagado);
+  margin-left: 0.3rem; /* 5px */
+}
 
-    &__secundario {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      opacity: 0.65;
-    }
-  }
+.pagina-billing__contrato__renovacion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem; /* 5px */
+}
 
-  // Tarjeta grande del plan actual (gratuito / pro) con su precio y caracteristicas
-  &__plan {
-    position: relative;
-    display: grid;
-    grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
-    gap: var(--spacing-size-4xl);
-    padding: var(--spacing-size-3xl);
-    background-color: hsla(40, 33.33%, 91.37%, 0.025);
-    border: 1px solid var(--borde-normal);
-    border-radius: var(--radius-2xl);
-    overflow: hidden;
+.pagina-billing__contrato__renovacion__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.6rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+}
 
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      width: 3px;
-      background: linear-gradient(180deg, var(--amarillo-normal), var(--naranja-normal));
-    }
+.pagina-billing__contrato__renovacion__fecha {
+  font-family: var(--font-mono);
+  font-size: 0.95rem; /* 15px */
+  letter-spacing: 0.08em;
+  color: var(--texto-claro);
+  font-variant-numeric: tabular-nums;
+}
 
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(50% 50% at 90% 100%, hsla(41, 68%, 56%, 0.07), transparent 60%);
-      pointer-events: none;
-    }
+.pagina-billing__contrato__renovacion__detalle {
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+}
 
-    > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    @media (max-width: 960px) {
-      grid-template-columns: minmax(0, 1fr);
-      gap: var(--spacing-size-2xl);
-    }
-
-    &__columna-info {
-      display: flex;
-      flex-direction: column;
-      gap: 0.65rem;
-      padding-left: var(--spacing-size-s);
-    }
-
-    &__etiqueta {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      font-weight: var(--font-weight-bold);
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--texto-apagado);
-    }
-
-    &__nombre {
-      font-family: var(--font-secondary);
-      font-size: clamp(2.25rem, 4vw, 3.25rem);
-      font-weight: var(--font-weight-bold);
-      letter-spacing: -0.04em;
-      line-height: 0.98;
-      color: var(--texto-claro);
-    }
-
-    &__descripcion {
-      font-size: 0.95rem;
-      color: var(--texto-medio);
-      line-height: 1.55;
-      letter-spacing: -0.005em;
-      max-width: 32rem;
-      margin-top: 0.15rem;
-    }
-
-    &__features {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.65rem 1.5rem;
-      margin-top: 0.85rem;
-      padding-top: 1.1rem;
-      border-top: 1px solid var(--borde-suave);
-
-      @media (max-width: 720px) {
-        grid-template-columns: 1fr;
-      }
-
-      &__item {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.65rem;
-        font-size: 0.85rem;
-        color: var(--texto-claro);
-        letter-spacing: -0.005em;
-      }
-
-      &__icono {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.45rem;
-        height: 1.45rem;
-        border-radius: 50%;
-        background-color: var(--amarillo-transparente-008);
-        border: 1px solid var(--amarillo-transparente-030);
-        color: var(--amarillo-normal);
-        font-size: 0.65rem;
-        flex-shrink: 0;
-      }
-    }
-
-    &__columna-precio {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: var(--spacing-size-xl);
-      padding-left: var(--spacing-size-xl);
-      border-left: 1px solid var(--borde-suave);
-
-      @media (max-width: 960px) {
-        border-left: none;
-        padding-left: 0;
-        align-items: flex-start;
-        padding-top: var(--spacing-size-l);
-        border-top: 1px solid var(--borde-suave);
-      }
-    }
-
-    &__price {
-      display: inline-flex;
-      align-items: flex-start;
-      font-family: var(--font-secondary);
-      font-size: clamp(3rem, 6vw, 5rem);
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: -0.055em;
-      line-height: 0.85;
-      color: var(--amarillo-normal);
-      font-variant-numeric: tabular-nums;
-
-      &__moneda {
-        font-size: 0.55em;
-        margin-top: 0.2em;
-        margin-right: 0.05em;
-        color: var(--amarillo-normal);
-        opacity: 0.7;
-      }
-
-      &__periodo {
-        font-family: var(--font-mono);
-        font-size: 0.18em;
-        color: var(--texto-apagado);
-        margin-top: 0.55em;
-        margin-left: 0.15em;
-        letter-spacing: 0.04em;
-        align-self: flex-end;
-      }
-    }
-
-    &__marca {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      font-weight: var(--font-weight-bold);
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--texto-apagado);
-      text-align: right;
-
-      @media (max-width: 960px) {
-        text-align: left;
-      }
-    }
-
-    &__renovacion {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.18rem;
-      padding-top: 1rem;
-      border-top: 1px dashed var(--borde-suave);
-      width: 100%;
-
-      @media (max-width: 960px) {
-        align-items: flex-start;
-      }
-
-      &__etiqueta {
-        font-family: var(--font-mono);
-        font-size: 0.6rem;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--texto-apagado);
-      }
-
-      &__fecha {
-        font-family: var(--font-secondary);
-        font-size: 1.15rem;
-        font-weight: var(--font-weight-semibold);
-        letter-spacing: -0.015em;
-        color: var(--texto-claro);
-      }
-
-      &__detalle {
-        font-family: var(--font-mono);
-        font-size: 0.65rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--texto-medio);
-      }
-    }
-  }
-
-  // Cabecera de cada bloque dentro de billing (numerito, titulo, descripcion)
-  &__seccion {
-    display: flex;
+@media (max-width: 880px) {
+  .pagina-billing__contrato__cuerpo {
     flex-direction: column;
   }
 
-  &__cabecera-seccion {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: baseline;
-    gap: var(--spacing-size-xl);
-    margin-bottom: var(--spacing-size-xl);
-
-    &__indice {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.18em;
-      color: var(--texto-apagado);
-      padding: 0.12rem 0.5rem;
-      border: 1px solid var(--borde-normal);
-      border-radius: var(--radius-full);
-      align-self: flex-start;
-      margin-top: 0.35rem;
-    }
-
-    &__texto {
-      display: flex;
-      flex-direction: column;
-      gap: 0.2rem;
-      max-width: 44rem;
-    }
-
-    &__titulo {
-      font-family: var(--font-secondary);
-      font-size: clamp(1.4rem, 2.2vw, 1.85rem);
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: -0.03em;
-      color: var(--texto-claro);
-      line-height: 1.05;
-    }
-
-    &__descripcion {
-      font-size: var(--font-size-md);
-      color: var(--texto-medio);
-      line-height: var(--line-height-normal);
-    }
-  }
-
-  &__boton-ghost {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.55rem 1rem;
-    background-color: transparent;
-    border: 1px solid var(--borde-normal);
-    border-radius: var(--radius-full);
-    color: var(--texto-claro);
-    font-family: var(--font-secondary);
-    font-size: 0.85rem;
-    font-weight: var(--font-weight-medium);
-    letter-spacing: -0.005em;
-    cursor: pointer;
-    transition:
-      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-    align-self: flex-start;
-    margin-top: 0.35rem;
-
-    &:hover {
-      border-color: hsla(40, 33.33%, 91.37%, 0.22);
-      background-color: hsla(40, 20%, 92%, 0.04);
-      transform: translateY(-1px);
-    }
-
-    &:active {
-      transform: scale(0.98);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--amarillo-normal);
-      outline-offset: 2px;
-    }
-  }
-
-  // Las 3 barras de progreso del uso del plan (servidores, dominios, almacenamiento)
-  &__uso {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0;
-
-    @media (max-width: 960px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  &__uso-item {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    padding: var(--spacing-size-l) var(--spacing-size-2xl) var(--spacing-size-l) 0;
-    border-right: 1px solid var(--borde-suave);
-
-    &:not(:first-child) {
-      padding-left: var(--spacing-size-2xl);
-    }
-
-    &:last-child {
-      border-right: none;
-      padding-right: 0;
-    }
-
-    @media (max-width: 960px) {
-      border-right: none;
-      border-bottom: 1px solid var(--borde-suave);
-      padding: var(--spacing-size-l) 0;
-
-      &:not(:first-child) {
-        padding-left: 0;
-      }
-    }
-
-    &__etiqueta {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      font-weight: var(--font-weight-bold);
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--texto-apagado);
-    }
-
-    &__valor {
-      font-family: var(--font-secondary);
-      font-size: clamp(2rem, 3.5vw, 2.75rem);
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: -0.045em;
-      line-height: 0.95;
-      color: var(--texto-claro);
-      font-variant-numeric: tabular-nums;
-    }
-
-    &__detalle {
-      font-family: var(--font-mono);
-      font-size: 0.65rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--texto-medio);
-      margin-bottom: 0.4rem;
-    }
-
-    &__barra {
-      position: relative;
-      display: block;
-      width: 100%;
-      height: 0.25rem;
-      background-color: hsla(40, 33.33%, 91.37%, 0.05);
-      border-radius: 999px;
-      overflow: hidden;
-
-      &__relleno {
-        position: absolute;
-        inset: 0 auto 0 0;
-        background: linear-gradient(90deg, var(--amarillo-normal), var(--naranja-normal));
-        border-radius: 999px;
-        transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
-      }
-    }
-  }
-
-  // Mensaje informativo del metodo de pago actual (ej: "no tienes tarjeta guardada")
-  &__mensaje {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.55rem;
-    padding: 0.7rem 1rem;
-    background-color: var(--amarillo-transparente-008);
-    border: 1px solid var(--amarillo-transparente-030);
-    border-radius: var(--radius-m);
-    font-size: 0.85rem;
-    color: var(--amarillo-normal);
-    margin-bottom: var(--spacing-size-l);
-    align-self: flex-start;
-
-    &__punto {
-      width: 0.45rem;
-      height: 0.45rem;
-      border-radius: 50%;
-      background-color: var(--amarillo-normal);
-      @media (prefers-reduced-motion: no-preference) {
-        animation: billing-respirar 1.8s ease-in-out infinite;
-      }
-    }
-  }
-
-  &__metodo-pago-vacio {
-    display: grid;
-    grid-template-columns: 22rem minmax(0, 1fr);
-    gap: var(--spacing-size-3xl);
-    padding: var(--spacing-size-2xl);
-    border: 1px dashed var(--borde-normal);
-    border-radius: var(--radius-xl);
-    align-items: center;
-
-    @media (max-width: 960px) {
-      grid-template-columns: minmax(0, 1fr);
-    }
-
-    &__texto {
-      display: flex;
-      flex-direction: column;
-      gap: 0.4rem;
-      align-items: flex-start;
-    }
-
-    &__titulo {
-      font-family: var(--font-secondary);
-      font-size: 1.25rem;
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: -0.02em;
-      color: var(--texto-claro);
-    }
-
-    &__detalle {
-      font-size: 0.9rem;
-      color: var(--texto-medio);
-      line-height: 1.6;
-      max-width: 32rem;
-    }
-
-    &__boton {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      margin-top: 0.5rem;
-      padding: 0.6rem 1.1rem;
-      background-color: var(--amarillo-normal);
-      color: var(--fondo-oscuro);
-      border: none;
-      border-radius: var(--radius-full);
-      font-family: var(--font-secondary);
-      font-size: 0.875rem;
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: -0.005em;
-      cursor: pointer;
-      transition:
-        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        gap var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-
-      &:hover {
-        background-color: var(--amarillo-normal-hover);
-        transform: translateY(-1px);
-        gap: 0.7rem;
-      }
-
-      &:active {
-        transform: scale(0.98);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--amarillo-normal);
-        outline-offset: 3px;
-      }
-    }
-  }
-
-  &__tarjeta-fantasma {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    height: 12rem;
-    padding: 1.4rem 1.5rem;
-    background: linear-gradient(135deg, hsl(28, 8%, 14%), hsl(30, 6%, 9%));
-    border: 1px solid var(--borde-normal);
-    border-radius: var(--radius-xl);
-    overflow: hidden;
-    box-shadow: 0 1.25rem 2rem hsla(0, 0%, 0%, 0.35), inset 0 1px 0 hsla(0, 0%, 100%, 0.04);
-
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(60% 50% at 100% 0%, hsla(41, 68%, 56%, 0.08), transparent 60%);
-      pointer-events: none;
-    }
-
-    > * {
-      position: relative;
-      z-index: 1;
-    }
-
-    &__cabecera {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    &__chip {
-      width: 2.5rem;
-      height: 1.85rem;
-      border-radius: 0.4rem;
-      background: linear-gradient(135deg, hsl(40, 12%, 28%), hsl(35, 8%, 20%));
-      border: 1px solid hsla(40, 33.33%, 91.37%, 0.08);
-    }
-
-    &__marca {
-      font-family: var(--font-secondary);
-      font-size: 0.95rem;
-      font-weight: var(--font-weight-bold);
-      letter-spacing: -0.02em;
-      color: var(--texto-apagado);
-      opacity: 0.5;
-    }
-
-    &__numero {
-      font-family: var(--font-mono);
-      font-size: 1.05rem;
-      letter-spacing: 0.22em;
-      color: var(--texto-apagado);
-      opacity: 0.55;
-    }
-
-    &__pie {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      gap: var(--spacing-size-l);
-
-      &__bloque {
-        display: flex;
-        flex-direction: column;
-        gap: 0.15rem;
-      }
-
-      &__etiqueta {
-        font-family: var(--font-mono);
-        font-size: 0.55rem;
-        letter-spacing: 0.22em;
-        text-transform: uppercase;
-        color: var(--texto-apagado);
-        opacity: 0.6;
-      }
-
-      &__valor {
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
-        letter-spacing: 0.06em;
-        color: var(--texto-medio);
-        opacity: 0.7;
-      }
-    }
-  }
-
-  // Estado vacio de la tabla de facturas (cuando aun no hay ninguna)
-  &__vacio-invoices {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr);
-    align-items: center;
-    gap: var(--spacing-size-2xl);
-    padding: var(--spacing-size-3xl);
-    border: 1px dashed var(--borde-normal);
-    border-radius: var(--radius-xl);
-
-    &__icono {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 3.5rem;
-      height: 3.5rem;
-      border-radius: 50%;
-      border: 1px solid var(--borde-normal);
-      background-color: hsla(40, 20%, 92%, 0.025);
-      color: var(--texto-apagado);
-      font-size: 1.15rem;
-    }
-
-    &__texto {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    &__titulo {
-      font-family: var(--font-secondary);
-      font-size: 1.15rem;
-      font-weight: var(--font-weight-semibold);
-      letter-spacing: -0.015em;
-      color: var(--texto-claro);
-    }
-
-    &__detalle {
-      font-size: 0.9rem;
-      color: var(--texto-medio);
-      line-height: 1.55;
-      max-width: 38rem;
-    }
-  }
-
-  &__tabla {
-    display: flex;
-    flex-direction: column;
-    border-top: 1px solid var(--borde-normal);
-
-    &__cabecera,
-    &__fila {
-      display: grid;
-      grid-template-columns: 7rem minmax(0, 1fr) 7rem 8rem 2.5rem;
-      align-items: center;
-      gap: var(--spacing-size-l);
-      padding: var(--spacing-size-l) var(--spacing-size-m);
-
-      @media (max-width: 720px) {
-        grid-template-columns: 1fr;
-        gap: 0.4rem;
-      }
-    }
-
-    &__cabecera {
-      border-bottom: 1px solid var(--borde-normal);
-      padding-top: 0;
-      padding-bottom: var(--spacing-size-m);
-    }
-
-    &__fila {
-      border-bottom: 1px solid var(--borde-suave);
-      transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-
-      &:hover {
-        background-color: hsla(40, 20%, 92%, 0.025);
-      }
-
-      &:focus-within {
-        outline: 2px solid var(--amarillo-normal);
-        outline-offset: -2px;
-      }
-    }
-
-    &__th {
-      font-family: var(--font-mono);
-      font-size: 0.6rem;
-      font-weight: var(--font-weight-bold);
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: var(--texto-apagado);
-
-      &--importe {
-        text-align: right;
-      }
-
-      &--fecha,
-      &--importe,
-      &--estado,
-      &--acciones {
-        @media (max-width: 720px) {
-          display: none;
-        }
-      }
-    }
-
-    &__td {
-      font-size: var(--font-size-sm);
-      color: var(--texto-claro);
-      letter-spacing: -0.005em;
-
-      &--mono {
-        font-family: var(--font-mono);
-        font-size: 0.75rem;
-        color: var(--texto-medio);
-        letter-spacing: 0.04em;
-      }
-
-      &--importe {
-        text-align: right;
-        font-weight: var(--font-weight-semibold);
-        color: var(--texto-claro);
-      }
-    }
-
-    &__descarga {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 2rem;
-      height: 2rem;
-      border: 1px solid var(--borde-normal);
-      border-radius: 50%;
-      color: var(--texto-apagado);
-      font-size: 0.7rem;
-      transition:
-        color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-
-      &:hover {
-        color: var(--amarillo-normal);
-        border-color: var(--amarillo-transparente-030);
-        background-color: var(--amarillo-transparente-008);
-        transform: translateY(-1px);
-      }
-
-      &:focus-visible {
-        outline: 2px solid var(--amarillo-normal);
-        outline-offset: 2px;
-      }
-    }
-  }
-
-  &__badge {
-    display: inline-flex;
-    padding: 0.2rem 0.55rem;
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    font-weight: var(--font-weight-bold);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    border-radius: var(--radius-full);
-    border: 1px solid transparent;
-
-    &--paid {
-      background: hsla(142.09, 70.56%, 45.29%, 0.08);
-      color: var(--verde-normal);
-      border-color: hsla(142.09, 70.56%, 45.29%, 0.28);
-    }
-
-    &--pending {
-      background: var(--amarillo-transparente-008);
-      color: var(--amarillo-normal);
-      border-color: var(--amarillo-transparente-030);
-    }
-
-    &--failed {
-      background: hsla(0, 79.17%, 60.59%, 0.08);
-      color: var(--rojo-normal);
-      border-color: hsla(0, 79.17%, 60.59%, 0.28);
-    }
-  }
-
-  // Pie de la pagina de billing con codigo de referencia y separador
-  &__pie {
-    display: flex;
-    align-items: center;
-    gap: var(--spacing-size-l);
-    padding: var(--spacing-size-l) 0 var(--spacing-size-xl);
-    margin-top: var(--spacing-size-xl);
+  .pagina-billing__contrato__precio {
+    padding-left: 0;
+    padding-top: var(--spacing-size-xl);
+    border-left: none;
     border-top: 1px solid var(--borde-suave);
-    font-family: var(--font-mono);
-    font-size: 0.6rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--texto-apagado);
-
-    &__codigo {
-      color: var(--texto-medio);
-    }
-
-    &__texto {
-      font-style: italic;
-      text-transform: none;
-      letter-spacing: 0.04em;
-    }
-
-    &__separador {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(90deg, var(--borde-suave), transparent, var(--borde-suave));
-    }
-
-    &__edicion {
-      color: var(--texto-medio);
-    }
+    text-align: left;
   }
 }
 
-@keyframes billing-entrar {
-  from { opacity: 0; transform: translateY(0.6rem); }
-  to   { opacity: 1; transform: translateY(0); }
+// ---------------------------------------------------------------------------
+// Nota de metodo de pago (aviso "en preparacion")
+
+.pagina-billing__nota {
+  margin-bottom: var(--spacing-size-l);
+  font-family: var(--font-mono);
+  font-size: 0.7rem; /* 11px */
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--amarillo-normal);
 }
 
-@keyframes billing-respirar {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%      { opacity: 0.55; transform: scale(0.82); }
+.pagina-billing__nota::before {
+  content: "— ";
+}
+
+// ---------------------------------------------------------------------------
+// Ledger de facturas: anchos de columna y boton de descarga
+
+.pagina-billing__col-fecha {
+  width: 6.5rem; /* 104px */
+  flex-shrink: 0;
+}
+
+.pagina-billing__col-importe {
+  width: 5.5rem; /* 88px */
+  flex-shrink: 0;
+}
+
+.pagina-billing__col-estado {
+  width: 7rem; /* 112px */
+  flex-shrink: 0;
+}
+
+.pagina-billing__col-accion {
+  width: 2rem; /* 32px */
+  flex-shrink: 0;
+}
+
+.pagina-billing__descarga {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 1.75rem; /* 28px */
+  background-color: transparent;
+  border: none;
+  border-radius: var(--radius-s);
+  color: var(--texto-apagado);
+  font-size: 0.75rem; /* 12px */
+  cursor: pointer;
+  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pagina-billing__descarga:hover:not(:disabled) {
+  color: var(--amarillo-normal);
+}
+
+.pagina-billing__descarga:focus-visible {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
+}
+
+.pagina-billing__descarga:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+// ---------------------------------------------------------------------------
+// Pie con codigo de referencia
+
+.pagina-billing__pie {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-size-l);
+  padding-top: var(--spacing-size-xl);
+  border-top: 1px solid var(--borde-suave);
+  flex-wrap: wrap;
+}
+
+.pagina-billing__pie__codigo {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
+}
+
+.pagina-billing__pie__separador {
+  width: 2rem; /* 32px */
+  height: 1px;
+  background-color: var(--borde-normal);
+}
+
+.pagina-billing__pie__texto {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  text-align: center;
+}
+
+.pagina-billing__pie__edicion {
+  font-family: var(--font-mono);
+  font-size: 0.62rem; /* 10px */
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--texto-apagado);
+  font-variant-numeric: tabular-nums;
 }

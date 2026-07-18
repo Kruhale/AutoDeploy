@@ -1,179 +1,158 @@
-<section class="pagina-billing">
+<section class="pagina-billing editorial">
 
-  <header class="pagina-billing__cabecera">
-    <section class="pagina-billing__cabecera__izquierda">
-      <p class="pagina-billing__sello">
-        <span class="pagina-billing__sello__punto" aria-hidden="true"></span>
+  <header class="editorial__cabecera">
+    <section class="editorial__cabecera__izquierda">
+      <p class="editorial__sello">
+        <span class="editorial__sello__punto" aria-hidden="true"></span>
         {{ "billing.sello" | translate }}
       </p>
-      <h1 class="pagina-billing__titulo">{{ "billing.titulo" | translate }}<span class="pagina-billing__titulo__punto" aria-hidden="true">.</span></h1>
-      <p class="pagina-billing__subtitulo">{{ "billing.subtitulo" | translate }}</p>
+      <h1 class="editorial__titulo">{{ "billing.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "billing.subtitulo" | translate }}</p>
     </section>
-    <button class="pagina-billing__cta-principal" type="button" (click)="navegarAPlanes()">
-      <span class="pagina-billing__cta-principal__icono" aria-hidden="true">
+    <button class="editorial__cta-principal" type="button" (click)="navegarAPlanes()">
+      <span class="editorial__cta-principal__icono" aria-hidden="true">
         <i class="fa-solid fa-arrow-up-right-from-square"></i>
       </span>
-      <span class="pagina-billing__cta-principal__texto">
-        <span class="pagina-billing__cta-principal__principal">{{ "billing.managePlanPrincipal" | translate }}</span>
-        <span class="pagina-billing__cta-principal__secundario">{{ "billing.managePlanSecundario" | translate }}</span>
+      <span class="editorial__cta-principal__texto">
+        <span class="editorial__cta-principal__principal">{{ "billing.managePlanPrincipal" | translate }}</span>
+        <span class="editorial__cta-principal__secundario">{{ "billing.managePlanSecundario" | translate }}</span>
       </span>
     </button>
   </header>
 
-  <section class="pagina-billing__plan">
-    <section class="pagina-billing__plan__columna-info">
-      <span class="pagina-billing__plan__etiqueta">{{ "billing.planEtiqueta" | translate }}</span>
-      <h2 class="pagina-billing__plan__nombre">{{ detallePlanActual().nombre }}</h2>
-      <p class="pagina-billing__plan__descripcion">{{ detallePlanActual().descripcion }}</p>
-      <ul class="pagina-billing__plan__features">
-        <li class="pagina-billing__plan__features__item">
-          <span class="pagina-billing__plan__features__icono" aria-hidden="true">
-            <i class="fa-solid fa-server"></i>
-          </span>
-          {{ detallePlanActual().limiteServidores === null ? ("billing.features.unlimitedServers" | translate) : detallePlanActual().limiteServidores + ("billing.features.serversSuffix" | translate) }}
-        </li>
-        <li class="pagina-billing__plan__features__item">
-          <span class="pagina-billing__plan__features__icono" aria-hidden="true">
-            <i class="fa-solid fa-rocket"></i>
-          </span>
-          {{ detallePlanActual().limiteDespliegues === null ? ("billing.features.unlimitedDeployments" | translate) : detallePlanActual().limiteDespliegues + ("billing.features.deploymentsSuffix" | translate) }}
-        </li>
-        <li class="pagina-billing__plan__features__item">
-          <span class="pagina-billing__plan__features__icono" aria-hidden="true">
-            <i class="fa-solid fa-robot"></i>
-          </span>
-          {{ (detallePlanActual().asistentIa ? "billing.features.aiIncluded" : "billing.features.aiNotAvailable") | translate }}
-        </li>
-        <li class="pagina-billing__plan__features__item">
-          <span class="pagina-billing__plan__features__icono" aria-hidden="true">
-            <i class="fa-solid fa-headset"></i>
-          </span>
-          {{ detallePlanActual().soporte | titlecase }}{{ "billing.features.supportSuffix" | translate }}
-        </li>
-      </ul>
-    </section>
+  <section class="pagina-billing__contrato">
+    <header class="pagina-billing__contrato__cabecera">
+      <span class="pagina-billing__contrato__etiqueta">{{ "billing.planEtiqueta" | translate }}</span>
+      <span class="pagina-billing__contrato__numero">№ {{ planService.planActual() | uppercase }}-{{ fechaProximoCobro() | date:"yyyy.MM":"":"en" }}</span>
+    </header>
+    <section class="pagina-billing__contrato__cuerpo">
+      <section class="pagina-billing__contrato__info">
+        <h2 class="pagina-billing__contrato__nombre">{{ detallePlanActual().nombre }}</h2>
+        <p class="pagina-billing__contrato__descripcion">{{ ("billing.planes." + detallePlanActual().id + ".descripcion") | translate }}</p>
+        <ul class="pagina-billing__contrato__clausulas">
+          <li class="pagina-billing__contrato__clausula">
+            @if (detallePlanActual().limiteServidores === null) {
+              {{ "billing.features.unlimitedServers" | translate }}
+            } @else if (detallePlanActual().limiteServidores === 1) {
+              {{ "billing.features.unServidor" | translate }}
+            } @else {
+              {{ detallePlanActual().limiteServidores }}{{ "billing.features.serversSuffix" | translate }}
+            }
+          </li>
+          <li class="pagina-billing__contrato__clausula">
+            {{ detallePlanActual().limiteDespliegues === null ? ("billing.features.unlimitedDeployments" | translate) : detallePlanActual().limiteDespliegues + ("billing.features.deploymentsSuffix" | translate) }}
+          </li>
+          <li class="pagina-billing__contrato__clausula">
+            {{ (detallePlanActual().asistentIa ? "billing.features.aiIncluded" : "billing.features.aiNotAvailable") | translate }}
+          </li>
+          <li class="pagina-billing__contrato__clausula">
+            {{ ("billing.soporte." + detallePlanActual().soporte) | translate }}
+          </li>
+        </ul>
+      </section>
 
-    <section class="pagina-billing__plan__columna-precio">
-      <span class="pagina-billing__plan__price">
-        <span class="pagina-billing__plan__price__moneda">{{ "billing.precioMoneda" | translate }}</span>{{ detallePlanActual().precio }}<small class="pagina-billing__plan__price__periodo">{{ "billing.precioPeriodo" | translate }}</small>
-      </span>
-      <p class="pagina-billing__plan__marca">{{ planService.planActual() | uppercase }}{{ "billing.edicionPrefijo" | translate }}{{ detallePlanActual().nombre }}</p>
-      <section class="pagina-billing__plan__renovacion">
-        <span class="pagina-billing__plan__renovacion__etiqueta">{{ "billing.nextCharge" | translate }}</span>
-        <span class="pagina-billing__plan__renovacion__fecha">{{ fechaProximoCobro() | date:"d MMM yyyy":"":"en" }}</span>
-        <span class="pagina-billing__plan__renovacion__detalle">{{ diasHastaProximoCobro() }}{{ "billing.daysRemaining" | translate }}</span>
+      <section class="pagina-billing__contrato__precio">
+        <span class="pagina-billing__contrato__importe">
+          <span class="pagina-billing__contrato__importe__moneda">{{ "billing.precioMoneda" | translate }}</span>{{ detallePlanActual().precio }}<small class="pagina-billing__contrato__importe__periodo">{{ "billing.precioPeriodo" | translate }}</small>
+        </span>
+        <section class="pagina-billing__contrato__renovacion">
+          <span class="pagina-billing__contrato__renovacion__etiqueta">{{ "billing.nextCharge" | translate }}</span>
+          <span class="pagina-billing__contrato__renovacion__fecha">{{ fechaProximoCobro() | date:"d MMM yyyy":"":"en" | uppercase }}</span>
+          <span class="pagina-billing__contrato__renovacion__detalle">{{ diasHastaProximoCobro() }}{{ "billing.daysRemaining" | translate }}</span>
+        </section>
       </section>
     </section>
   </section>
 
-  <section class="pagina-billing__seccion">
-    <header class="pagina-billing__cabecera-seccion">
-      <span class="pagina-billing__cabecera-seccion__indice">01</span>
-      <section class="pagina-billing__cabecera-seccion__texto">
-        <h2 class="pagina-billing__cabecera-seccion__titulo">{{ "billing.seccion01.titulo" | translate }}</h2>
-        <p class="pagina-billing__cabecera-seccion__descripcion">{{ "billing.seccion01.descripcion" | translate }}</p>
+  <section class="editorial__bloque">
+    <header class="editorial__bloque__cabecera">
+      <span class="editorial__bloque__indice">01</span>
+      <section class="editorial__bloque__texto">
+        <h2 class="editorial__bloque__titulo">{{ "billing.seccion01.titulo" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "billing.seccion01.descripcion" | translate }}</p>
       </section>
     </header>
-    <section class="pagina-billing__uso">
+    <section class="editorial__vitales editorial__vitales--compacta">
       @for (uso of resumenUso(); track uso.etiqueta) {
-        <article class="pagina-billing__uso-item">
-          <span class="pagina-billing__uso-item__etiqueta">{{ uso.etiqueta }}</span>
-          <span class="pagina-billing__uso-item__valor">{{ uso.valor }}</span>
-          <span class="pagina-billing__uso-item__detalle">{{ uso.detalle }}</span>
-          <span class="pagina-billing__uso-item__barra" aria-hidden="true">
-            <span class="pagina-billing__uso-item__barra__relleno" [style.width.%]="uso.porcentaje"></span>
+        <article class="editorial__vitales__dato">
+          <span class="editorial__vitales__etiqueta">{{ uso.etiqueta }}</span>
+          <span class="editorial__vitales__cifra">{{ uso.valor }}</span>
+          <span class="editorial__vitales__barra" aria-hidden="true">
+            <span class="editorial__vitales__barra__relleno" [style.width.%]="uso.porcentaje"></span>
           </span>
+          <span class="editorial__vitales__nota">{{ uso.detalle }}</span>
         </article>
       }
     </section>
   </section>
 
-  <section class="pagina-billing__seccion">
-    <header class="pagina-billing__cabecera-seccion">
-      <span class="pagina-billing__cabecera-seccion__indice">02</span>
-      <section class="pagina-billing__cabecera-seccion__texto">
-        <h2 class="pagina-billing__cabecera-seccion__titulo">{{ "billing.seccion02.titulo" | translate }}</h2>
-        <p class="pagina-billing__cabecera-seccion__descripcion">{{ "billing.seccion02.descripcion" | translate }}</p>
+  <section class="editorial__bloque">
+    <header class="editorial__bloque__cabecera">
+      <span class="editorial__bloque__indice">02</span>
+      <section class="editorial__bloque__texto">
+        <h2 class="editorial__bloque__titulo">{{ "billing.seccion02.titulo" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "billing.seccion02.descripcion" | translate }}</p>
       </section>
-      <button class="pagina-billing__boton-ghost" type="button" (click)="agregarMetodoPago()">
+      <button class="editorial__bloque__accion" type="button" (click)="agregarMetodoPago()">
         <i class="fa-solid fa-plus" aria-hidden="true"></i>
         {{ "billing.seccion02.addMethod" | translate }}
       </button>
     </header>
 
     @if (mensajeMetodoPago()) {
-      <p class="pagina-billing__mensaje">
-        <span class="pagina-billing__mensaje__punto" aria-hidden="true"></span>
-        {{ mensajeMetodoPago() }}
-      </p>
+      <p class="pagina-billing__nota" role="status">{{ mensajeMetodoPago() }}</p>
     }
 
-    <section class="pagina-billing__metodo-pago-vacio">
-      <section class="pagina-billing__tarjeta-fantasma" aria-hidden="true">
-        <section class="pagina-billing__tarjeta-fantasma__cabecera">
-          <span class="pagina-billing__tarjeta-fantasma__chip"></span>
-          <span class="pagina-billing__tarjeta-fantasma__marca">{{ "billing.tarjetaFantasma.marca" | translate }}</span>
-        </section>
-        <p class="pagina-billing__tarjeta-fantasma__numero">···· ···· ···· ····</p>
-        <section class="pagina-billing__tarjeta-fantasma__pie">
-          <span class="pagina-billing__tarjeta-fantasma__pie__bloque">
-            <span class="pagina-billing__tarjeta-fantasma__pie__etiqueta">{{ "billing.tarjetaFantasma.cardholder" | translate }}</span>
-            <span class="pagina-billing__tarjeta-fantasma__pie__valor">{{ "billing.tarjetaFantasma.cardholderValor" | translate }}</span>
-          </span>
-          <span class="pagina-billing__tarjeta-fantasma__pie__bloque">
-            <span class="pagina-billing__tarjeta-fantasma__pie__etiqueta">{{ "billing.tarjetaFantasma.expires" | translate }}</span>
-            <span class="pagina-billing__tarjeta-fantasma__pie__valor">{{ "billing.tarjetaFantasma.expiresValor" | translate }}</span>
-          </span>
-        </section>
-      </section>
-      <section class="pagina-billing__metodo-pago-vacio__texto">
-        <p class="pagina-billing__metodo-pago-vacio__titulo">{{ "billing.metodoPagoVacio.titulo" | translate }}</p>
-        <p class="pagina-billing__metodo-pago-vacio__detalle">{{ "billing.metodoPagoVacio.detalle" | translate }}</p>
-        <button class="pagina-billing__metodo-pago-vacio__boton" type="button" (click)="agregarMetodoPago()">
-          <span>{{ "billing.metodoPagoVacio.boton" | translate }}</span>
-          <span aria-hidden="true">→</span>
-        </button>
-      </section>
+    <section class="editorial__vacio">
+      <span class="editorial__vacio__icono" aria-hidden="true">
+        <i class="fa-regular fa-credit-card"></i>
+      </span>
+      <p class="editorial__vacio__titulo">{{ "billing.metodoPagoVacio.titulo" | translate }}</p>
+      <p class="editorial__vacio__detalle">{{ "billing.metodoPagoVacio.detalle" | translate }}</p>
     </section>
   </section>
 
-  <section class="pagina-billing__seccion">
-    <header class="pagina-billing__cabecera-seccion">
-      <span class="pagina-billing__cabecera-seccion__indice">03</span>
-      <section class="pagina-billing__cabecera-seccion__texto">
-        <h2 class="pagina-billing__cabecera-seccion__titulo">{{ "billing.seccion03.titulo" | translate }}</h2>
-        <p class="pagina-billing__cabecera-seccion__descripcion">{{ "billing.seccion03.descripcion" | translate }}</p>
+  <section class="editorial__bloque">
+    <header class="editorial__bloque__cabecera">
+      <span class="editorial__bloque__indice">03</span>
+      <section class="editorial__bloque__texto">
+        <h2 class="editorial__bloque__titulo">{{ "billing.seccion03.titulo" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "billing.seccion03.descripcion" | translate }}</p>
       </section>
     </header>
 
     @if (listaDeFacturas().length === 0) {
-      <section class="pagina-billing__vacio-invoices">
-        <span class="pagina-billing__vacio-invoices__icono" aria-hidden="true">
+      <section class="editorial__vacio">
+        <span class="editorial__vacio__icono" aria-hidden="true">
           <i class="fa-solid fa-file-invoice"></i>
         </span>
-        <section class="pagina-billing__vacio-invoices__texto">
-          <p class="pagina-billing__vacio-invoices__titulo">{{ "billing.facturasVacioTitulo" | translate }}</p>
-          <p class="pagina-billing__vacio-invoices__detalle">{{ "billing.facturasVacioDetalle" | translate }}</p>
-        </section>
+        <p class="editorial__vacio__titulo">{{ "billing.facturasVacioTitulo" | translate }}</p>
+        <p class="editorial__vacio__detalle">{{ "billing.facturasVacioDetalle" | translate }}</p>
       </section>
     } @else {
-      <section class="pagina-billing__tabla">
-        <header class="pagina-billing__tabla__cabecera">
-          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--fecha">{{ "billing.tabla.fecha" | translate }}</span>
-          <span class="pagina-billing__tabla__th">{{ "billing.tabla.descripcion" | translate }}</span>
-          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--importe">{{ "billing.tabla.importe" | translate }}</span>
-          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--estado">{{ "billing.tabla.estado" | translate }}</span>
-          <span class="pagina-billing__tabla__th pagina-billing__tabla__th--acciones" aria-hidden="true"></span>
+      <section class="editorial__ledger">
+        <header class="editorial__ledger__cabecera">
+          <span class="editorial__ledger__th pagina-billing__col-fecha">{{ "billing.tabla.fecha" | translate }}</span>
+          <span class="editorial__ledger__th editorial__ledger__celda--crece">{{ "billing.tabla.descripcion" | translate }}</span>
+          <span class="editorial__ledger__th pagina-billing__col-importe">{{ "billing.tabla.importe" | translate }}</span>
+          <span class="editorial__ledger__th pagina-billing__col-estado">{{ "billing.tabla.estado" | translate }}</span>
+          <span class="editorial__ledger__th pagina-billing__col-accion" aria-hidden="true"></span>
         </header>
         @for (factura of listaDeFacturas(); track factura.id) {
-          <article class="pagina-billing__tabla__fila">
-            <span class="pagina-billing__tabla__td pagina-billing__tabla__td--mono">{{ factura.fecha }}</span>
-            <span class="pagina-billing__tabla__td">{{ factura.concepto }}</span>
-            <span class="pagina-billing__tabla__td pagina-billing__tabla__td--mono pagina-billing__tabla__td--importe">{{ factura.importe }}</span>
-            <span class="pagina-billing__tabla__td">
-              <span class="pagina-billing__badge pagina-billing__badge--{{ factura.estado }}">{{ factura.estado }}</span>
+          <article class="editorial__ledger__fila">
+            <span class="editorial__ledger__celda editorial__ledger__celda--mono editorial__ledger__celda--apagada pagina-billing__col-fecha">{{ factura.fecha }}</span>
+            <span class="editorial__ledger__celda editorial__ledger__celda--crece">{{ factura.concepto }}</span>
+            <span class="editorial__ledger__celda editorial__ledger__celda--numero pagina-billing__col-importe">{{ factura.importe }}</span>
+            <span class="pagina-billing__col-estado">
+              <span class="editorial__estado"
+                    [class.editorial__estado--verde]="factura.estado === 'paid'"
+                    [class.editorial__estado--ambar]="factura.estado === 'pending'"
+                    [class.editorial__estado--rojo]="factura.estado === 'failed'">
+                <span class="editorial__estado__punto" aria-hidden="true"></span>
+                {{ "comun.estados." + factura.estado | translate }}
+              </span>
             </span>
-            <button class="pagina-billing__tabla__descarga" type="button" disabled [attr.aria-label]="'billing.tabla.descargaAria' | translate">
+            <button class="pagina-billing__descarga pagina-billing__col-accion" type="button" disabled [attr.aria-label]="'billing.tabla.descargaAria' | translate">
               <i class="fa-solid fa-arrow-down" aria-hidden="true"></i>
             </button>
           </article>

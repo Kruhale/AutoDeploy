@@ -185,7 +185,7 @@ html.tema-claro .planes__plan--destacado::after {
   font-size: 0.95rem;
   font-weight: var(--font-weight-semibold);
   color: var(--tinta);
-  transition: color 0.3s ease, gap 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color 0.3s ease, gap 0.35s var(--ease-suave);
 }
 
 .planes__plan__cta:hover {

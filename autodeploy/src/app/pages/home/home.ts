@@ -382,9 +382,7 @@ export class Home implements AfterViewInit, OnDestroy {
   // fila: el periodico se imprime mientras se lee. GSAP anima la variable
   // --traza (0 a 1) que el ::after de cada fila usa como scaleX.
   private dibujarReglasEditoriales(): void {
-    const filasConRegla = gsap.utils.toArray<HTMLElement>(
-      ".proceso__paso, .capacidades__fila, .proceso__pasos, .capacidades__lista, .cifras__lista, .planes__columnas"
-    );
+    const filasConRegla = gsap.utils.toArray<HTMLElement>(".proceso__paso, .capacidades__fila, .proceso__pasos, .capacidades__lista, .cifras__lista, .planes__columnas");
 
     filasConRegla.forEach(function (fila) {
       gsap.from(fila, {

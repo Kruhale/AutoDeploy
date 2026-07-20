@@ -30,7 +30,7 @@
     gap: var(--spacing-size-s);
     color: var(--texto-apagado);
     font-size: var(--font-size-sm);
-    transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-base) var(--ease-suave);
 
     &:hover {
       color: var(--texto-claro);
@@ -200,7 +200,7 @@
     border: 1px solid var(--borde-normal);
     pointer-events: none;
     opacity: 0;
-    transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-base) var(--ease-suave);
   }
 
   // Caja de informacion sobre la seguridad del pago (SSL, encriptado, etc) para dar confianza
@@ -251,7 +251,7 @@
     opacity: 0.9;
 
     @media (prefers-reduced-motion: no-preference) {
-      animation: pago-estampar 640ms cubic-bezier(0.16, 1, 0.3, 1) 200ms backwards;
+      animation: pago-estampar 640ms var(--ease-suave) 200ms backwards;
     }
 
     &::before {
@@ -319,7 +319,7 @@
   justify-content: space-between;
   overflow: hidden;
   box-shadow: var(--shadow-lg);
-  transition: background var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background var(--duration-slow) var(--ease-suave);
 
   &::before {
     content: "";
@@ -507,7 +507,7 @@
     color: var(--texto-claro);
     font-size: var(--font-size-md);
     font-family: var(--font-primary);
-    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-base) var(--ease-suave), box-shadow var(--duration-base) var(--ease-suave);
     outline: none;
 
     &:focus {
@@ -537,7 +537,7 @@
     cursor: pointer;
     padding: 0;
     font-size: var(--font-size-md);
-    transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: color var(--duration-base) var(--ease-suave);
 
     &:hover {
       color: var(--texto-claro);

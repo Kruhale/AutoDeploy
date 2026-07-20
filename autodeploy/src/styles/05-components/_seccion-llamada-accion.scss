@@ -136,7 +136,7 @@ html.tema-claro .cierre__eco {
   font-family: var(--font-secondary);
   font-size: 1.05rem;
   font-weight: var(--font-weight-semibold);
-  transition: background-color 0.35s ease, color 0.35s ease, gap 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color 0.35s ease, color 0.35s ease, gap 0.35s var(--ease-suave);
 }
 
 .cierre__cta:hover {

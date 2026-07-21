@@ -123,10 +123,10 @@
       justify-content: center;
       width: 2rem;
       height: 2rem;
-      background-color: hsla(191, 72%, 44%, 0.1);
-      border: 1px solid hsla(191, 72%, 44%, 0.28);
+      background-color: var(--amarillo-transparente-008);
+      border: 1px solid var(--amarillo-transparente-030);
       border-radius: 50%;
-      color: var(--cyan-normal);
+      color: var(--amarillo-normal);
       font-size: 0.7rem;
     }
 
@@ -515,7 +515,13 @@
       letter-spacing: 0.06em;
     }
 
-    &__origen,
+    &__origen {
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      color: var(--texto-claro);
+      word-break: break-all;
+    }
+
     &__destino {
       font-family: var(--font-mono);
       font-size: 0.82rem;

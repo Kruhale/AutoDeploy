@@ -190,21 +190,16 @@
     flex-direction: column;
     border-top: 1px solid var(--borde-normal);
 
-    // Cabecera y filas comparten el mismo reparto de columnas
-    &__cabecera,
-    &__fila {
+    // Cabecera fija arriba; se oculta en movil para liberar espacio.
+    // Cabecera y fila repiten el mismo reparto de columnas a proposito
+    // (regla del proyecto: cada selector con su propio bloque, sin agrupar).
+    &__cabecera {
       display: grid;
       grid-template-columns: 4.5rem 5rem 5.5rem 10rem minmax(0, 1fr) 2.5rem;
       align-items: center;
       gap: var(--spacing-size-l);
       padding: var(--spacing-size-l) var(--spacing-size-m);
-    }
-
-    // Cabecera fija arriba; se oculta en movil para liberar espacio
-    &__cabecera {
       border-bottom: 1px solid var(--borde-normal);
-      padding-top: var(--spacing-size-l);
-      padding-bottom: var(--spacing-size-l);
 
       @media (max-width: 960px) {
         display: none;
@@ -213,6 +208,11 @@
 
     // Fila de la tabla: en movil colapsa a una sola columna apilada
     &__fila {
+      display: grid;
+      grid-template-columns: 4.5rem 5rem 5.5rem 10rem minmax(0, 1fr) 2.5rem;
+      align-items: center;
+      gap: var(--spacing-size-l);
+      padding: var(--spacing-size-l) var(--spacing-size-m);
       border-bottom: 1px solid var(--borde-suave);
       transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
 

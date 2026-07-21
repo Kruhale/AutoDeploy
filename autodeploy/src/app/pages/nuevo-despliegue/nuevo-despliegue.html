@@ -180,13 +180,13 @@
     </section>
 
     @if (mensajeError()) {
-      <p class="nuevo-despliegue__alerta nuevo-despliegue__alerta--error">
-        <i class="fa-solid fa-circle-exclamation"></i> {{ mensajeError() }}
+      <p class="nuevo-despliegue__alerta nuevo-despliegue__alerta--error" role="alert">
+        <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> {{ mensajeError() }}
       </p>
     }
     @if (mensajeExito()) {
-      <p class="nuevo-despliegue__alerta nuevo-despliegue__alerta--exito">
-        <i class="fa-solid fa-circle-check"></i> {{ mensajeExito() }}
+      <p class="nuevo-despliegue__alerta nuevo-despliegue__alerta--exito" role="status">
+        <i class="fa-solid fa-circle-check" aria-hidden="true"></i> {{ mensajeExito() }}
       </p>
     }
   </section>

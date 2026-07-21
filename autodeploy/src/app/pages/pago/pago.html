@@ -151,8 +151,8 @@
                   (input)="formatearCvv($event)"
                   (blur)="validarCvv()"
                 >
-                <button class="campo__boton-ver" type="button" (click)="cvvVisible.set(!cvvVisible())">
-                  <i [class]="cvvVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'"></i>
+                <button class="campo__boton-ver" type="button" (click)="cvvVisible.set(!cvvVisible())" [attr.aria-pressed]="cvvVisible()" [attr.aria-label]="(cvvVisible() ? 'pago.ariaOcultarCvv' : 'pago.ariaMostrarCvv') | translate">
+                  <i [class]="cvvVisible() ? 'fa-solid fa-eye-slash' : 'fa-solid fa-eye'" aria-hidden="true"></i>
                 </button>
               </section>
               @if (errorCvv()) {

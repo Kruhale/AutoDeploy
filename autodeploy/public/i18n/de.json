@@ -657,7 +657,8 @@
       "metaActivos": "{{n}} aktiv",
       "vacio": "Noch keine Subdomains konfiguriert.",
       "sslActivo": "SSL aktiv",
-      "sslInactivo": "Kein SSL"
+      "sslInactivo": "Kein SSL",
+      "ariaEliminar": "Subdomain {{nombre}} löschen"
     },
     "aplicaciones": {
       "titulo": "Gehostete Anwendungen",
@@ -1283,7 +1284,9 @@
       "cvvLongitud": "Der CVV muss {{n}} Ziffern enthalten"
     },
     "estampaExito": "Genehmigt",
-    "estampaError": "Abgelehnt"
+    "estampaError": "Abgelehnt",
+    "ariaMostrarCvv": "CVV anzeigen",
+    "ariaOcultarCvv": "CVV verbergen"
   },
   "asistenteIa": {
     "sello": "AutoDeploy · KI-Copilot",
@@ -1348,7 +1351,8 @@
     },
     "hablanteAsistente": "Assistent",
     "hablanteTu": "Du",
-    "escribiendo": "Antwort wird verfasst"
+    "escribiendo": "Antwort wird verfasst",
+    "ariaEnviar": "Nachricht senden"
   },
   "apiDocs": {
     "sello": "API · Technische Referenz",

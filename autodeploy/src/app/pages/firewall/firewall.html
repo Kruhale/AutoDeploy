@@ -32,8 +32,8 @@
   }
 
   @if (mensajeError()) {
-    <p class="pagina-firewall__alerta">
-      <i class="fa-solid fa-circle-exclamation"></i> {{ mensajeError() }}
+    <p class="pagina-firewall__alerta" role="alert">
+      <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> {{ mensajeError() }}
     </p>
   }
 

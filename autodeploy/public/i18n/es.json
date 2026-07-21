@@ -657,7 +657,8 @@
       "metaActivos": "{{n}} activos",
       "vacio": "Aún no hay subdominios configurados.",
       "sslActivo": "SSL activo",
-      "sslInactivo": "Sin SSL"
+      "sslInactivo": "Sin SSL",
+      "ariaEliminar": "Eliminar el subdominio {{nombre}}"
     },
     "aplicaciones": {
       "titulo": "Aplicaciones alojadas",
@@ -1283,7 +1284,9 @@
       "cvvLongitud": "El CVV debe tener {{n}} dígitos"
     },
     "estampaExito": "Aceptado",
-    "estampaError": "Rechazado"
+    "estampaError": "Rechazado",
+    "ariaMostrarCvv": "Mostrar el CVV",
+    "ariaOcultarCvv": "Ocultar el CVV"
   },
   "asistenteIa": {
     "sello": "AutoDeploy · copiloto IA",
@@ -1348,7 +1351,8 @@
     },
     "hablanteAsistente": "Asistente",
     "hablanteTu": "Tú",
-    "escribiendo": "Redactando respuesta"
+    "escribiendo": "Redactando respuesta",
+    "ariaEnviar": "Enviar mensaje"
   },
   "apiDocs": {
     "sello": "API · Referencia técnica",

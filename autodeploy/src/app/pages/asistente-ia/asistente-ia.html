@@ -171,8 +171,8 @@
       name="mensajeEnEdicion"
       [placeholder]="'asistenteIa.placeholderEntrada' | translate"
       rows="1"></textarea>
-    <button class="asistente-ia__enviar" type="button" (click)="enviarMensaje()" [disabled]="asistenteService.estaEscribiendo() || !mensajeEnEdicion().trim()">
-      <i class="fa-solid fa-paper-plane"></i>
+    <button class="asistente-ia__enviar" type="button" (click)="enviarMensaje()" [attr.aria-label]="'asistenteIa.ariaEnviar' | translate" [disabled]="asistenteService.estaEscribiendo() || !mensajeEnEdicion().trim()">
+      <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
     </button>
   </footer>
 

@@ -73,11 +73,11 @@
       <section class="campo">
         <span class="campo__etiqueta" id="etiqueta-metodo-auth">{{ "onboarding.formulario.authMethod" | translate }}</span>
         <section class="toggle" role="group" aria-labelledby="etiqueta-metodo-auth">
-          <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'key'" (click)="cambiarMetodoAuth('key')">
-            <i class="fa-solid fa-key"></i> {{ "onboarding.formulario.authMethodKey" | translate }}
+          <button class="toggle__opcion" type="button" [class.toggle__opcion--activa]="metodoAutenticacion() === 'key'" [attr.aria-pressed]="metodoAutenticacion() === 'key'" (click)="cambiarMetodoAuth('key')">
+            <i class="fa-solid fa-key" aria-hidden="true"></i> {{ "onboarding.formulario.authMethodKey" | translate }}
           </button>
-          <button class="toggle__opcion" [class.toggle__opcion--activa]="metodoAutenticacion() === 'password'" (click)="cambiarMetodoAuth('password')">
-            <i class="fa-solid fa-lock"></i> {{ "onboarding.formulario.authMethodContrasena" | translate }}
+          <button class="toggle__opcion" type="button" [class.toggle__opcion--activa]="metodoAutenticacion() === 'password'" [attr.aria-pressed]="metodoAutenticacion() === 'password'" (click)="cambiarMetodoAuth('password')">
+            <i class="fa-solid fa-lock" aria-hidden="true"></i> {{ "onboarding.formulario.authMethodContrasena" | translate }}
           </button>
         </section>
       </section>

@@ -198,12 +198,12 @@
     align-items: flex-start;
     gap: var(--spacing-size-s);
     padding: var(--spacing-size-l);
-    background: rgba(59, 130, 246, 0.05);
-    border: 1px solid rgba(59, 130, 246, 0.15);
+    background: var(--amarillo-transparente-008);
+    border: 1px solid var(--amarillo-transparente-030);
     border-radius: var(--radius-m);
 
     &__icono {
-      color: var(--azul-normal);
+      color: var(--amarillo-normal);
       font-size: var(--font-size-md);
       margin-top: 0.125rem;
       flex-shrink: 0;

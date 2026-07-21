@@ -657,7 +657,8 @@
       "metaActivos": "{{n}} active",
       "vacio": "No subdomains configured yet.",
       "sslActivo": "SSL active",
-      "sslInactivo": "No SSL"
+      "sslInactivo": "No SSL",
+      "ariaEliminar": "Delete subdomain {{nombre}}"
     },
     "aplicaciones": {
       "titulo": "Hosted applications",
@@ -1283,7 +1284,9 @@
       "cvvLongitud": "The CVV must be {{n}} digits"
     },
     "estampaExito": "Approved",
-    "estampaError": "Declined"
+    "estampaError": "Declined",
+    "ariaMostrarCvv": "Show CVV",
+    "ariaOcultarCvv": "Hide CVV"
   },
   "asistenteIa": {
     "sello": "AutoDeploy · AI copilot",
@@ -1348,7 +1351,8 @@
     },
     "hablanteAsistente": "Assistant",
     "hablanteTu": "You",
-    "escribiendo": "Drafting reply"
+    "escribiendo": "Drafting reply",
+    "ariaEnviar": "Send message"
   },
   "apiDocs": {
     "sello": "API · Technical reference",

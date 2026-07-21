@@ -247,9 +247,11 @@
       font-weight: var(--font-weight-extrabold);
       flex-shrink: 0;
 
-      &--amarillo { background: hsla(41, 68%, 56%, 0.15); color: var(--amarillo-normal); }
-      &--cyan     { background: rgba(0, 212, 255, 0.15);  color: var(--cyan-normal); }
-      &--teal     { background: rgba(45, 175, 140, 0.15); color: var(--teal-normal); }
+      // El icono es decorativo (el estado real se muestra en su propio punto):
+      // un solo acento ambar, sin colores neon sueltos
+      &--amarillo { background: var(--amarillo-transparente-008); color: var(--amarillo-normal); }
+      &--cyan     { background: var(--amarillo-transparente-008); color: var(--amarillo-normal); }
+      &--teal     { background: var(--amarillo-transparente-008); color: var(--amarillo-normal); }
     }
 
     &__detalle {

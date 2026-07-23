@@ -11,75 +11,10 @@ app-cuenta {
   gap: var(--spacing-size-4xl);
   max-width: 80rem;
   width: 100%;
-  padding-left: 4.25rem;
+  padding-left: var(--spacing-size-xl);
   padding-right: var(--spacing-size-xl);
-  animation: cuenta-entrar 720ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: cuenta-entrar 720ms var(--ease-suave);
 }
-
-/* =====================================================
-   01 — ÍNDICE VERTICAL EDITORIAL (margen izquierdo)
-   ===================================================== */
-
-.cuenta__indice-vertical {
-  position: absolute;
-  top: var(--spacing-size-xl);
-  left: 0;
-  width: 3rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  gap: var(--spacing-size-3xl);
-  padding: var(--spacing-size-l) 0;
-  pointer-events: none;
-}
-
-/* La referencia va en mayusculas en sus tres apariciones: intencion de troquel */
-.cuenta__indice-vertical__codigo {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--texto-apagado);
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-
-.cuenta__indice-vertical__rotulo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.cuenta__indice-vertical__letra {
-  font-family: var(--font-secondary);
-  font-size: 0.7rem;
-  font-weight: var(--font-weight-bold);
-  letter-spacing: 0.08em;
-  color: var(--texto-medio);
-  text-transform: uppercase;
-}
-
-.cuenta__indice-vertical__bullet {
-  color: var(--amarillo-normal);
-  font-size: 0.65rem;
-  font-weight: var(--font-weight-extrabold);
-  margin: 0.2rem 0;
-}
-
-.cuenta__indice-vertical__estampa {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.32em;
-  color: var(--texto-apagado);
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-}
-
-/* =====================================================
-   02 — HERO EDITORIAL CON SPOTLIGHT CURSOR
-   ===================================================== */
 
 .cuenta__hero {
   position: relative;
@@ -105,7 +40,7 @@ app-cuenta {
   );
   pointer-events: none;
   z-index: 0;
-  transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__hero__grano {
@@ -118,48 +53,9 @@ app-cuenta {
   z-index: 0;
 }
 
-.cuenta__hero > *:not(.cuenta__hero__spotlight):not(.cuenta__hero__grano):not(.cuenta__estampa-plan) {
+.cuenta__hero > *:not(.cuenta__hero__spotlight):not(.cuenta__hero__grano) {
   position: relative;
   z-index: 1;
-}
-
-.cuenta__hero__capa-superior {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  padding-bottom: var(--spacing-size-xl);
-  border-bottom: 1px solid var(--borde-suave);
-}
-
-.cuenta__hero__sello {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--spacing-size-s);
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--texto-apagado);
-}
-
-.cuenta__hero__sello__circulo {
-  width: 0.45rem;
-  height: 0.45rem;
-  border-radius: 50%;
-  background-color: var(--amarillo-normal);
-  text-indent: -9999px;
-  overflow: hidden;
-  @media (prefers-reduced-motion: no-preference) {
-    animation: cuenta-respirar 2.6s ease-in-out infinite;
-  }
-}
-
-.cuenta__hero__fecha-edicion {
-  font-family: var(--font-mono);
-  font-size: var(--font-size-xs);
-  color: var(--texto-apagado);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
 }
 
 .cuenta__hero__bloque-principal {
@@ -238,7 +134,20 @@ app-cuenta {
 .cuenta__avatar__inicial {
   position: relative;
   z-index: 1;
-  text-shadow: 0 1px 0 hsla(0, 0%, 100%, 0.18);
+  // Blanco sobre el degradado propio de la cuenta (buen contraste en todos).
+  color: hsl(0, 0%, 100%);
+  text-shadow: 0 1px 3px hsla(230, 15%, 8%, 0.35);
+}
+
+// La foto subida cubre el circulo por encima de los halos.
+.cuenta__avatar__foto {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  z-index: 1;
 }
 
 .cuenta__avatar__estado {
@@ -361,45 +270,10 @@ app-cuenta {
   display: inline-flex;
   white-space: nowrap;
   width: max-content;
+  will-change: transform;
   @media (prefers-reduced-motion: no-preference) {
     animation: cuenta-marquee 46s linear infinite;
   }
-}
-
-/* Pausa en hover: WCAG 2.2.2 pide poder detener el movimiento */
-.cuenta__hero__marquee:hover .cuenta__hero__marquee__pista {
-  animation-play-state: paused;
-}
-
-.cuenta__hero__marquee__pista--pausada {
-  animation-play-state: paused;
-}
-
-/* Control real de pausa: el hover no sirve a quien navega con teclado */
-.cuenta__hero__marquee__pausa {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.75rem;      /* 28px */
-  height: 1.75rem;
-  flex-shrink: 0;
-  background-color: transparent;
-  border: 1px solid var(--borde-normal);
-  border-radius: 50%;
-  color: var(--texto-apagado);
-  font-size: 0.55rem;      /* 9px */
-  cursor: pointer;
-  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.cuenta__hero__marquee__pausa:hover {
-  color: var(--texto-claro);
-  border-color: hsla(40, 33.33%, 91.37%, 0.3);
-}
-
-.cuenta__hero__marquee__pausa:focus-visible {
-  outline: 2px solid var(--amarillo-normal);
-  outline-offset: 2px;
 }
 
 .cuenta__hero__marquee__texto {
@@ -411,64 +285,6 @@ app-cuenta {
   text-transform: uppercase;
   color: var(--texto-apagado);
   padding-right: 3.5rem;
-}
-
-/* =====================================================
-   02b — SELLO DE GOMA DEL PLAN (la firma del dosier)
-   ===================================================== */
-
-.cuenta__estampa-plan {
-  position: absolute;
-  top: 4.6rem;
-  right: 2.5rem;
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.2rem;
-  padding: 0.85rem 1.4rem;
-  border: 2px solid var(--amarillo-normal);
-  border-radius: var(--radius-m);
-  color: var(--amarillo-normal);
-  transform: rotate(-8deg);
-  opacity: 0.85;
-  pointer-events: none;
-  @media (prefers-reduced-motion: no-preference) {
-    animation: cuenta-estampar 640ms cubic-bezier(0.16, 1, 0.3, 1) 520ms backwards;
-  }
-}
-
-.cuenta__estampa-plan::before {
-  content: "";
-  position: absolute;
-  inset: 0.3rem;
-  border: 1px dashed var(--amarillo-normal);
-  border-radius: 0.3rem;      /* 5px */
-  opacity: 0.6;
-}
-
-.cuenta__estampa-plan__marca {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;      /* 9px */
-  letter-spacing: 0.34em;
-  text-transform: uppercase;
-  opacity: 0.8;
-}
-
-.cuenta__estampa-plan__plan {
-  font-family: var(--font-secondary);
-  font-size: 1.5rem;      /* 24px */
-  font-weight: var(--font-weight-extrabold);
-  letter-spacing: 0.14em;
-  line-height: 1;
-}
-
-.cuenta__estampa-plan__numero {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;      /* 9px */
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  opacity: 0.8;
 }
 
 /* =====================================================
@@ -688,7 +504,7 @@ app-cuenta {
   inset: 0 auto 0 0;
   background: linear-gradient(90deg, var(--amarillo-normal), var(--naranja-normal));
   border-radius: 999px;
-  transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 800ms var(--ease-suave);
 }
 
 .cuenta__tenure__progreso__marcador {
@@ -701,7 +517,7 @@ app-cuenta {
   border: 2px solid var(--fondo-normal);
   box-shadow: 0 0 0 1px hsla(41, 68%, 56%, 0.5);
   transform: translate(-50%, -50%);
-  transition: left 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: left 800ms var(--ease-suave);
   @media (prefers-reduced-motion: no-preference) {
     animation: cuenta-respirar-marcador 2.4s ease-in-out infinite;
   }
@@ -776,7 +592,7 @@ app-cuenta {
   font-size: 1.55rem;
   font-weight: var(--font-weight-medium);
   letter-spacing: -0.018em;
-  transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__campo-editorial__input:hover {
@@ -797,6 +613,107 @@ app-cuenta {
   font-size: var(--font-size-sm);
   color: var(--texto-apagado);
   letter-spacing: 0.01em;
+}
+
+/* Campo de foto de perfil: vista previa + subir/quitar */
+.cuenta__foto {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-l);
+}
+
+.cuenta__foto__preview {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+  overflow: hidden;
+}
+
+.cuenta__foto__iniciales {
+  font-family: var(--font-secondary);
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-bold);
+  color: hsl(0, 0%, 100%);
+  text-shadow: 0 1px 3px hsla(230, 15%, 8%, 0.35);
+}
+
+.cuenta__foto__img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.cuenta__foto__acciones {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.35rem;
+}
+
+.cuenta__foto__subir {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 0.95rem;
+  border: 1px solid var(--borde-normal);
+  border-radius: var(--radius-full);
+  color: var(--texto-claro);
+  font-family: var(--font-secondary);
+  font-size: 0.85rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  transition: border-color var(--duration-base) var(--ease-suave), background-color var(--duration-base) var(--ease-suave);
+}
+
+.cuenta__foto__subir:hover {
+  border-color: var(--amarillo-transparente-030);
+  background-color: hsla(40, 20%, 92%, 0.045);
+}
+
+.cuenta__foto__subir:focus-within {
+  outline: 2px solid var(--amarillo-normal);
+  outline-offset: 2px;
+}
+
+// Oculto a la vista pero enfocable con teclado: el label es el boton visible,
+// pero el input sigue en el orden de tabulacion (a diferencia de [hidden]).
+.cuenta__foto__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.cuenta__foto__quitar {
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--texto-apagado);
+  font-family: var(--font-secondary);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: color var(--duration-base) var(--ease-suave);
+}
+
+.cuenta__foto__quitar:hover {
+  color: var(--rojo-normal);
+}
+
+.cuenta__foto__pista {
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
 }
 
 .cuenta__acciones-formulario {
@@ -832,13 +749,29 @@ app-cuenta {
   padding: 0.6rem 1.3rem;
   border: 1px solid var(--amarillo-normal);
   border-radius: var(--radius-full);
+  overflow: hidden;
+  isolation: isolate;
   z-index: 1;
-  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color var(--duration-base) var(--ease-suave);
+}
+
+// La tinta del barrido: entra desde la izquierda cuando el boton se posa.
+.cuenta__boton-guardar__contenido::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  background-color: var(--amarillo-normal);
+  transform: translateX(-101%);
+  transition: transform var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__boton-guardar:hover:not(:disabled) .cuenta__boton-guardar__contenido {
-  background-color: var(--amarillo-normal);
   color: var(--fondo-oscuro);
+}
+
+.cuenta__boton-guardar:hover:not(:disabled) .cuenta__boton-guardar__contenido::before {
+  transform: translateX(0);
 }
 
 .cuenta__boton-guardar:focus-visible {
@@ -853,7 +786,7 @@ app-cuenta {
 .cuenta__boton-guardar__flecha {
   font-family: var(--font-mono);
   display: inline-block;
-  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__boton-guardar:hover:not(:disabled) .cuenta__boton-guardar__flecha {
@@ -882,7 +815,7 @@ app-cuenta {
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--verde-normal);
-  animation: cuenta-aparecer 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: cuenta-aparecer 420ms var(--ease-suave);
 }
 
 .cuenta__mensaje-estado--error {
@@ -927,7 +860,7 @@ app-cuenta {
   inset: 0 auto 0 0;
   width: var(--progreso-rail, 0%);
   background: linear-gradient(90deg, transparent, var(--amarillo-normal));
-  transition: width 800ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width 800ms var(--ease-suave);
 }
 
 .cuenta__nodo-plan {
@@ -943,7 +876,7 @@ app-cuenta {
   cursor: pointer;
   text-align: center;
   font-family: inherit;
-  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__nodo-plan:hover:not(.cuenta__nodo-plan--bloqueado) {
@@ -975,7 +908,7 @@ app-cuenta {
   border-radius: 50%;
   background-color: var(--fondo-oscuro);
   border: 1px solid var(--borde-normal);
-  transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color var(--duration-base) var(--ease-suave), background-color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__nodo-plan__bullet__nucleo {
@@ -983,7 +916,7 @@ app-cuenta {
   height: 0.65rem;
   border-radius: 50%;
   background-color: var(--texto-apagado);
-  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color var(--duration-base) var(--ease-suave), transform var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__nodo-plan:hover:not(.cuenta__nodo-plan--activo) .cuenta__nodo-plan__bullet {
@@ -1128,7 +1061,7 @@ app-cuenta {
   color: var(--texto-claro);
   letter-spacing: -0.005em;
   position: relative;
-  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__enlace-comparar__borde-izq {
@@ -1137,7 +1070,7 @@ app-cuenta {
   height: 1rem;
   background-color: var(--amarillo-normal);
   border-radius: 999px;
-  transition: height var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: height var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__enlace-comparar:hover .cuenta__enlace-comparar__borde-izq {
@@ -1147,7 +1080,7 @@ app-cuenta {
 .cuenta__enlace-comparar__flecha {
   font-family: var(--font-mono);
   color: var(--amarillo-normal);
-  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__enlace-comparar:hover .cuenta__enlace-comparar__flecha {
@@ -1176,7 +1109,7 @@ app-cuenta {
   font-weight: var(--font-weight-medium);
   letter-spacing: -0.005em;
   cursor: pointer;
-  transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color var(--duration-base) var(--ease-suave), background-color var(--duration-base) var(--ease-suave), transform var(--duration-base) var(--ease-suave);
   align-self: start;
   justify-self: end;
   margin-top: 0.25rem;
@@ -1206,7 +1139,7 @@ app-cuenta {
   background-color: hsla(40, 33.33%, 91.37%, 0.025);
   border: 1px solid var(--borde-normal);
   border-radius: var(--radius-xl);
-  animation: cuenta-aparecer 360ms cubic-bezier(0.16, 1, 0.3, 1);
+  animation: cuenta-aparecer 360ms var(--ease-suave);
 }
 
 .cuenta__campo-editorial__textarea {
@@ -1221,7 +1154,7 @@ app-cuenta {
   letter-spacing: 0.01em;
   line-height: 1.6;
   resize: vertical;
-  transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: border-color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__campo-editorial__textarea:focus {
@@ -1250,7 +1183,7 @@ app-cuenta {
   letter-spacing: -0.005em;
   cursor: pointer;
   padding: 0.5rem 0.75rem;
-  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__form-clave__cancelar:hover {
@@ -1302,7 +1235,7 @@ app-cuenta {
   gap: var(--spacing-size-l);
   padding: var(--spacing-size-l) 0;
   border-bottom: 1px solid var(--borde-suave);
-  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__clave:hover {
@@ -1369,7 +1302,7 @@ app-cuenta {
   color: var(--texto-apagado);
   font-size: 0.7rem;
   cursor: pointer;
-  transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color var(--duration-base) var(--ease-suave), border-color var(--duration-base) var(--ease-suave), background-color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__clave__eliminar:hover {
@@ -1395,7 +1328,7 @@ app-cuenta {
   gap: var(--spacing-size-l);
   padding: var(--spacing-size-l) var(--spacing-size-s);
   border-bottom: 1px solid var(--borde-suave);
-  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__toggle-fila:hover {
@@ -1462,7 +1395,7 @@ app-cuenta {
   border-radius: var(--radius-full);
   cursor: pointer;
   padding: 0;
-  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color var(--duration-base) var(--ease-suave), border-color var(--duration-base) var(--ease-suave);
   flex-shrink: 0;
 }
 
@@ -1486,7 +1419,7 @@ app-cuenta {
   border-radius: 50%;
   background-color: var(--texto-medio);
   margin-left: 0.2rem;
-  transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform var(--duration-base) var(--ease-suave), background-color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__interruptor--activo .cuenta__interruptor__circulo {
@@ -1524,15 +1457,16 @@ app-cuenta {
     overflow: hidden;
     padding: 0;
     background: transparent;
-    border: 1px solid var(--borde-normal);
+    // Borde tenue: el --borde-normal casi blanco fileteaba la tarjeta.
+    border: 1px solid var(--borde-suave);
     border-radius: var(--radius-xl);
     cursor: pointer;
     text-align: left;
     color: inherit;
     transition:
-      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      transform var(--duration-fast) cubic-bezier(0.16, 1, 0.3, 1),
-      box-shadow var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      border-color var(--duration-base) var(--ease-suave),
+      transform var(--duration-fast) var(--ease-suave),
+      box-shadow var(--duration-base) var(--ease-suave);
 
     &:hover {
       border-color: var(--amarillo-transparente-030);
@@ -1568,7 +1502,7 @@ app-cuenta {
       gap: 0.5rem;
       padding: var(--spacing-size-l) var(--spacing-size-xl);
       min-height: 6.5rem;
-      border-bottom: 1px solid var(--borde-suave);
+      border-bottom: 1px solid hsla(230, 15%, 10%, 0.22);
       overflow: hidden;
 
       &--oscuro {
@@ -1587,7 +1521,8 @@ app-cuenta {
       }
 
       &--claro {
-        background: linear-gradient(135deg, hsl(40, 18%, 96%), hsl(40, 12%, 91%));
+        // Papel apagado, no blanco: pegado al borde ya no crea filo claro.
+        background: linear-gradient(135deg, hsl(40, 14%, 86%), hsl(40, 10%, 78%));
 
         .cuenta__tema__opcion__barra {
           background: hsla(30, 10%, 12%, 0.18);
@@ -1641,9 +1576,9 @@ app-cuenta {
       color: var(--texto-medio);
       font-size: var(--font-size-md);
       transition:
-        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+        background-color var(--duration-base) var(--ease-suave),
+        color var(--duration-base) var(--ease-suave),
+        border-color var(--duration-base) var(--ease-suave);
     }
 
     &__texto {
@@ -1680,8 +1615,8 @@ app-cuenta {
       opacity: 0;
       transform: scale(0.6);
       transition:
-        opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+        opacity var(--duration-base) var(--ease-suave),
+        transform var(--duration-base) var(--ease-suave);
     }
   }
 }
@@ -1716,7 +1651,7 @@ app-cuenta {
   font-weight: var(--font-weight-medium);
   letter-spacing: -0.005em;
   z-index: 1;
-  transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: background-color var(--duration-base) var(--ease-suave), border-color var(--duration-base) var(--ease-suave);
 }
 
 .cuenta__boton-salida:hover .cuenta__boton-salida__contenido {
@@ -1744,7 +1679,7 @@ app-cuenta {
 
 .cuenta__boton-salida--cargando .cuenta__boton-salida__progreso {
   opacity: 1;
-  animation: cuenta-progreso-salida 1100ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: cuenta-progreso-salida 1100ms var(--ease-suave) forwards;
 }
 
 /* Con reduced-motion el hold sigue necesitando feedback: relleno inmediato sin barrido */
@@ -1792,19 +1727,6 @@ app-cuenta {
   background: linear-gradient(90deg, var(--borde-suave), transparent, var(--borde-suave));
 }
 
-.cuenta__pie__codigo {
-  color: var(--texto-medio);
-}
-
-/* currentColor para heredar la tinta del pie sin inventar otra variable */
-.cuenta__pie__barras {
-  width: 4rem;      /* 64px */
-  height: 1rem;      /* 16px */
-  background-image: repeating-linear-gradient(90deg, currentColor 0 1px, transparent 1px 3px, currentColor 3px 5px, transparent 5px 7px, currentColor 7px 8px, transparent 8px 11px);
-  opacity: 0.5;
-  flex-shrink: 0;
-}
-
 .cuenta__pie__notas {
   font-style: italic;
   text-transform: none;
@@ -1824,7 +1746,7 @@ app-cuenta {
 .cuenta--con-reveal .cuenta__bloque--visible {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 640ms cubic-bezier(0.16, 1, 0.3, 1), transform 640ms cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 640ms var(--ease-suave), transform 640ms var(--ease-suave);
 }
 
 /* El foco de teclado no puede aterrizar en controles invisibles: revelar al instante */
@@ -1836,15 +1758,15 @@ app-cuenta {
 /* Delays escalonados: el ojo lee retrato → overline → nombre en vez de recibirlo todo a la vez */
 @media (prefers-reduced-motion: no-preference) {
   .cuenta__avatar {
-    animation: cuenta-aparecer 620ms cubic-bezier(0.16, 1, 0.3, 1) 80ms backwards;
+    animation: cuenta-aparecer 620ms var(--ease-suave) 80ms backwards;
   }
 
   .cuenta__hero__titulo__overline {
-    animation: cuenta-aparecer 620ms cubic-bezier(0.16, 1, 0.3, 1) 160ms backwards;
+    animation: cuenta-aparecer 620ms var(--ease-suave) 160ms backwards;
   }
 
   .cuenta__hero__titulo__principal {
-    animation: cuenta-aparecer 620ms cubic-bezier(0.16, 1, 0.3, 1) 260ms backwards;
+    animation: cuenta-aparecer 620ms var(--ease-suave) 260ms backwards;
   }
 }
 
@@ -1958,13 +1880,9 @@ app-cuenta {
 
 @media (max-width: 72rem) {
   .cuenta {
-    padding-left: 3rem;
+    padding-left: var(--spacing-size-xl);
     gap: var(--spacing-size-3xl);
     padding-right: 0;
-  }
-
-  .cuenta__estampa-plan {
-    display: none;
   }
 
   .cuenta__hero__bloque-principal {
@@ -1989,17 +1907,8 @@ app-cuenta {
     padding-left: var(--spacing-size-l);
   }
 
-  .cuenta__indice-vertical {
-    display: none;
-  }
-
   .cuenta__hero {
     padding: var(--spacing-size-xl) var(--spacing-size-l);
-  }
-
-  .cuenta__hero__capa-superior {
-    flex-direction: column;
-    gap: var(--spacing-size-s);
   }
 
   .cuenta__hero__bloque-principal {

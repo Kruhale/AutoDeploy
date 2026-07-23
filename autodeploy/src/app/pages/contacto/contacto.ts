@@ -1,5 +1,6 @@
-import { Component, signal } from "@angular/core";
+import { Component, inject, signal } from "@angular/core";
 import { FormsModule } from "@angular/forms";
+import { HttpClient } from "@angular/common/http";
 import { TranslateModule } from "@ngx-translate/core";
 
 @Component({
@@ -8,38 +9,41 @@ import { TranslateModule } from "@ngx-translate/core";
   templateUrl: "./contacto.html",
 })
 export class Contacto {
+  private readonly http = inject(HttpClient);
+
   protected readonly nombreUsuario = signal<string>("");
   protected readonly emailUsuario = signal<string>("");
   protected readonly asuntoMensaje = signal<string>("");
   protected readonly cuerpoMensaje = signal<string>("");
   protected readonly enviado = signal<boolean>(false);
+  protected readonly error = signal<boolean>(false);
 
-  private readonly correoDestino = "contacto@autodeploy.dev";
-
+  // Antes componía un mailto (dependía del cliente de correo del visitante).
+  // Ahora envía el mensaje al backend, que lo reenvía a un webhook de Discord.
   enviarPorEmail(): void {
     const asuntoLimpio = this.asuntoMensaje().trim();
     const cuerpoLimpio = this.cuerpoMensaje().trim();
     const nombreLimpio = this.nombreUsuario().trim();
     const emailLimpio = this.emailUsuario().trim();
 
-    const formularioInvalido = asuntoLimpio === "" || cuerpoLimpio === "" || emailLimpio === "";
+    const formularioInvalido =
+      asuntoLimpio === "" || cuerpoLimpio === "" || emailLimpio === "";
     if (formularioInvalido) {
       return;
     }
 
-    const firmaUsuario = `\n\n---\n${nombreLimpio}\n${emailLimpio}`;
-    const cuerpoFinal = cuerpoLimpio + firmaUsuario;
-    const enlaceMailto = `mailto:${this.correoDestino}?subject=${encodeURIComponent(asuntoLimpio)}&body=${encodeURIComponent(cuerpoFinal)}`;
-
-    this.abrirEnlaceMailto(enlaceMailto);
-    this.enviado.set(true);
-  }
-
-  // Extraido a metodo aparte para que los tests puedan hacer spy. No se
-  // puede mockear window.location.href con spyOnProperty porque la
-  // propiedad no es configurable en navegadores modernos.
-  protected abrirEnlaceMailto(enlace: string): void {
-    window.location.href = enlace;
+    this.error.set(false);
+    this.http
+      .post("/api/contacto", {
+        nombre: nombreLimpio,
+        email: emailLimpio,
+        asunto: asuntoLimpio,
+        mensaje: cuerpoLimpio,
+      })
+      .subscribe({
+        next: () => this.enviado.set(true),
+        error: () => this.error.set(true),
+      });
   }
 
   resetearFormulario(): void {
@@ -48,5 +52,6 @@ export class Contacto {
     this.asuntoMensaje.set("");
     this.cuerpoMensaje.set("");
     this.enviado.set(false);
+    this.error.set(false);
   }
 }

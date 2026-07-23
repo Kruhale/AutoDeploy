@@ -44,6 +44,7 @@ public class SecurityConfig {
                 .requestMatchers(
                     "/api/usuarios/registro",
                     "/api/usuarios/login",
+                    "/api/contacto",
                     "/api/estado",
                     "/api/estado/**",
                     "/api/webhooks/**",

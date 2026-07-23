@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { HttpClientTestingModule } from "@angular/common/http/testing";
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from "@angular/common/http/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Contacto } from "./contacto";
@@ -81,7 +84,8 @@ describe("Contacto", function() {
     expect(protegido.enviado()).toBeFalse();
   });
 
-  it("enviarPorEmail compone enlace mailto y marca enviado en true", function() {
+  it("enviarPorEmail postea el mensaje a /api/contacto y marca enviado", function() {
+    const httpMock = TestBed.inject(HttpTestingController);
     const protegido = componente as unknown as {
       nombreUsuario: { set: (v: string) => void };
       emailUsuario: { set: (v: string) => void };
@@ -94,20 +98,15 @@ describe("Contacto", function() {
     protegido.asuntoMensaje.set("Asunto Test");
     protegido.cuerpoMensaje.set("Cuerpo Test");
 
-    // Espiamos el metodo `abrirEnlaceMailto` que el componente expone
-    // protected justo para que el test pueda interceptarlo sin tocar
-    // window.location.href (que no es configurable).
-    let enlaceCapturado = "";
-    const componenteConProtegido = componente as unknown as { abrirEnlaceMailto: (enlace: string) => void };
-    spyOn(componenteConProtegido, "abrirEnlaceMailto").and.callFake(function(enlace: string) {
-      enlaceCapturado = enlace;
-    });
-
     componente.enviarPorEmail();
-    expect(enlaceCapturado).toContain("mailto:contacto@autodeploy.dev");
-    expect(enlaceCapturado).toContain("subject=");
-    expect(enlaceCapturado).toContain("body=");
+
+    const req = httpMock.expectOne("/api/contacto");
+    expect(req.request.method).toBe("POST");
+    expect((req.request.body as { email: string }).email).toBe("alex@test.com");
+    req.flush({ ok: true });
+
     expect(protegido.enviado()).toBeTrue();
+    httpMock.verify();
   });
 
   it("resetearFormulario vacía todos los campos y enviado", function() {

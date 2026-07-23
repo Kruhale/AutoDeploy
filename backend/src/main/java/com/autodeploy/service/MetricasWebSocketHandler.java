@@ -79,6 +79,11 @@ public class MetricasWebSocketHandler extends TextWebSocketHandler {
         }
 
         String usuarioDuenio = servidor.getUsuarioId();
+        if (usuarioDuenio == null) {
+            // Servidor sin dueño asignado: nada que difundir (evita NPE en
+            // sesionesPorUsuario.get(null), que rompía la tarea programada).
+            return;
+        }
         Set<WebSocketSession> sesionesDelUsuario = sesionesPorUsuario.get(usuarioDuenio);
         if (sesionesDelUsuario == null || sesionesDelUsuario.isEmpty()) {
             return;

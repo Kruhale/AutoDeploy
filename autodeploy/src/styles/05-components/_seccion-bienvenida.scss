@@ -1,6 +1,6 @@
 // Landing editorial oscura: fondo casi negro sereno, tipografia monumental,
-// lineas de 1px como unica decoracion y UNA escena 3D fija detras de todo
-// cuya camara conduce el scroll (viaje continuo, no secciones apiladas).
+// lineas de 1px como unica decoracion. El hero es una terminal que se
+// despliega sola en bucle — el contrapunto vivo al titular "Sin terminal".
 .landing {
   --fondo-editorial: hsl(230, 8%, 4%);
   --tinta: hsl(40, 20%, 92%);
@@ -17,8 +17,8 @@
   --borde-suave: hsla(40, 20%, 92%, 0.05);
 
   position: relative;
-  // OJO: sin background-color aqui — un fondo opaco en .landing pintaria por
-  // encima del canvas (hijo con z-index negativo). El fondo vive en ::before.
+  // El fondo vive en ::before (fixed, cubre toda la ventana) y el velo radial
+  // en ::after, para que la vineta se superponga sin pintar sobre el contenido.
   color: var(--tinta);
   overflow-x: clip;
 }
@@ -31,14 +31,6 @@
   z-index: -3;
   pointer-events: none;
   background-color: var(--fondo-editorial);
-}
-
-// Escena 3D persistente detras de TODO el recorrido de la landing.
-.landing__lienzo {
-  position: fixed;
-  inset: 0;
-  z-index: -2;
-  pointer-events: none;
 }
 
 // Velo radial: oscurece los bordes para que el texto siempre respire encima.
@@ -112,12 +104,21 @@ html.tema-claro body:has(.landing) .banner-cookies {
   min-height: 100vh;
   min-height: 100svh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(2.5rem, 6vw, 6rem);
   padding: clamp(6rem, 14vh, 10rem) clamp(1.5rem, 6vw, 7rem) clamp(4rem, 8vh, 6rem);
   max-width: 100rem;
   margin: 0 auto;
   width: 100%;
+
+  // Bajo tablet la terminal baja debajo del titular en vez de al lado.
+  @media (max-width: 900px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+  }
 }
 
 .portada__contenido {
@@ -125,6 +126,22 @@ html.tema-claro body:has(.landing) .banner-cookies {
   flex-direction: column;
   align-items: flex-start;
   gap: clamp(1.5rem, 3vh, 2.5rem);
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 46rem;
+}
+
+// Terminal decorativa: panel de apoyo a la derecha del titular (debajo en movil).
+.portada__terminal {
+  display: block;
+  flex: 0 1 34%;
+  max-width: 30rem;
+  min-width: 0;
+
+  @media (max-width: 900px) {
+    width: 100%;
+    max-width: 40rem;
+  }
 }
 
 .portada__sello {
@@ -137,10 +154,12 @@ html.tema-claro body:has(.landing) .banner-cookies {
 
 .portada__titulo {
   font-family: var(--font-secondary);
-  font-size: clamp(3.5rem, 10.5vw, 9.5rem);
+  // Menor que el hero antiguo a pantalla completa: ahora comparte fila con la
+  // terminal, asi que cabe en su columna sin partirse (la mascara lo recortaria).
+  font-size: clamp(2.75rem, 6vw, 5.75rem);
   font-weight: var(--font-weight-bold);
-  line-height: 0.92;
-  letter-spacing: -0.05em;
+  line-height: 0.94;
+  letter-spacing: -0.045em;
   color: var(--tinta);
   display: flex;
   flex-direction: column;
@@ -233,40 +252,6 @@ html.tema-claro body:has(.landing) .banner-cookies {
 
 .portada__enlace:hover::after {
   transform: scaleX(1);
-}
-
-// Metadatos tecnicos verticales al borde derecho del hero: dan contrapeso
-// tipografico a la mitad derecha sin competir con el titular.
-.portada__metadatos {
-  position: absolute;
-  right: clamp(1.5rem, 4vw, 4rem);
-  top: 50%;
-  transform: translateY(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1.25rem;
-  writing-mode: vertical-rl;
-}
-
-.portada__metadatos__linea {
-  width: 1px;
-  height: 4rem;
-  background: linear-gradient(to bottom, transparent, var(--tinta-apagada));
-}
-
-.portada__metadatos__texto {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  letter-spacing: 0.3em;
-  color: var(--tinta-apagada);
-  white-space: nowrap;
-}
-
-@media (max-width: 960px) {
-  .portada__metadatos {
-    display: none;
-  }
 }
 
 .portada__scroll {

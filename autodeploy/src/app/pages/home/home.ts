@@ -8,27 +8,24 @@ import { ContadorAnimadoDirective } from "../../directives/contador-animado.dire
 import { BotonMagneticoDirective } from "../../directives/boton-magnetico.directive";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
-import { EscenaRedServidores } from "./escena-red-servidores";
+import { TerminalDespliegue } from "./terminal-despliegue";
 
 @Component({
   selector: "app-home",
-  imports: [RouterLink, ContadorAnimadoDirective, BotonMagneticoDirective, TranslateModule],
+  imports: [RouterLink, ContadorAnimadoDirective, BotonMagneticoDirective, TranslateModule, TerminalDespliegue],
   templateUrl: "./home.html",
   styleUrl: "./home.scss"
 })
 export class Home implements AfterViewInit, OnDestroy {
-  @ViewChild("lienzoFondo") lienzoFondo!: ElementRef<HTMLElement>;
   @ViewChild("tituloPortada") tituloPortada!: ElementRef<HTMLElement>;
   @ViewChild("textoManifiesto") textoManifiesto!: ElementRef<HTMLElement>;
 
   rutaEmpezar: Signal<string>;
   planActivo: Signal<string>;
 
-  private escenaDeFondo: EscenaRedServidores | null = null;
   private scrollSuave: Lenis | null = null;
   private idAnimacionScroll = 0;
   private movimientoScrollActivo = false;
-  private observadorDeTema: MutationObserver | null = null;
 
   constructor(
     private authService: AuthService,
@@ -49,26 +46,15 @@ export class Home implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.escenaDeFondo = new EscenaRedServidores(this.lienzoFondo.nativeElement);
-    this.escenaDeFondo.iniciar();
-    this.sincronizarTemaDeEscena();
     this.iniciarScrollSuave();
     this.iniciarMovimientoScroll();
   }
 
   ngOnDestroy(): void {
-    if (this.escenaDeFondo !== null) {
-      this.escenaDeFondo.destruir();
-      this.escenaDeFondo = null;
-    }
     if (this.scrollSuave !== null) {
       cancelAnimationFrame(this.idAnimacionScroll);
       this.scrollSuave.destroy();
       this.scrollSuave = null;
-    }
-    if (this.observadorDeTema !== null) {
-      this.observadorDeTema.disconnect();
-      this.observadorDeTema = null;
     }
     if (this.movimientoScrollActivo) {
       const disparadores = ScrollTrigger.getAll();
@@ -77,25 +63,6 @@ export class Home implements AfterViewInit, OnDestroy {
       });
       this.movimientoScrollActivo = false;
     }
-  }
-
-  // La escena 3D adopta la paleta del tema activo y reacciona en vivo al
-  // toggle (la clase .tema-claro vive en <html>, fuera de Angular).
-  private sincronizarTemaDeEscena(): void {
-    const componente = this;
-    const raizDelDocumento = document.documentElement;
-
-    function aplicarTemaActual(): void {
-      if (componente.escenaDeFondo !== null) {
-        const estaEnClaro = raizDelDocumento.classList.contains("tema-claro");
-        componente.escenaDeFondo.establecerTema(estaEnClaro);
-      }
-    }
-
-    aplicarTemaActual();
-
-    this.observadorDeTema = new MutationObserver(aplicarTemaActual);
-    this.observadorDeTema.observe(raizDelDocumento, { attributes: true, attributeFilter: ["class"] });
   }
 
   private iniciarScrollSuave(): void {
@@ -133,31 +100,12 @@ export class Home implements AfterViewInit, OnDestroy {
       });
     }
 
-    this.crearViajeDeCamara();
     this.ocultarHeaderAlBajar();
     this.revelarTituloDePortada();
     this.revelarManifiestoPorPalabras();
     this.revelarBloquesAlScroll();
 
     ScrollTrigger.refresh();
-  }
-
-  // El scroll completo de la landing (0 → 1) conduce la camara de la escena 3D:
-  // es lo que convierte la pagina en un viaje continuo en vez de bloques sueltos.
-  private crearViajeDeCamara(): void {
-    const componente = this;
-
-    ScrollTrigger.create({
-      trigger: ".landing",
-      start: "top top",
-      end: "bottom bottom",
-      scrub: true,
-      onUpdate: function (disparador) {
-        if (componente.escenaDeFondo !== null) {
-          componente.escenaDeFondo.establecerProgreso(disparador.progress);
-        }
-      }
-    });
   }
 
   // El header se esconde al bajar y reaparece al subir: los titulares

@@ -1,0 +1,27 @@
+<!-- Decorativo: refuerza en imagen lo que el titular ya dice en texto, por eso
+     aria-hidden. Un lector de pantalla no necesita el tecleo caracter a caracter. -->
+<figure class="terminal-despliegue" aria-hidden="true">
+  <figcaption class="terminal-despliegue__barra">
+    <span class="terminal-despliegue__semaforo">
+      <span class="terminal-despliegue__punto"></span>
+      <span class="terminal-despliegue__punto"></span>
+      <span class="terminal-despliegue__punto"></span>
+    </span>
+    <span class="terminal-despliegue__titulo">deploy · autodeploy</span>
+  </figcaption>
+
+  <section class="terminal-despliegue__cuerpo">
+    @for (linea of lineasEscritas(); track $index) {
+      <p class="terminal-despliegue__linea terminal-despliegue__linea--{{ linea.tipo }}">
+        <span class="terminal-despliegue__prefijo">{{ prefijoDeLinea(linea.tipo) }}</span>
+        <span class="terminal-despliegue__texto">{{ linea.texto }}</span>
+      </p>
+    }
+    @if (lineaEnCurso(); as actual) {
+      <p class="terminal-despliegue__linea terminal-despliegue__linea--{{ actual.tipo }}">
+        <span class="terminal-despliegue__prefijo">{{ prefijoDeLinea(actual.tipo) }}</span>
+        <span class="terminal-despliegue__texto">{{ actual.texto }}<span class="terminal-despliegue__cursor"></span></span>
+      </p>
+    }
+  </section>
+</figure>

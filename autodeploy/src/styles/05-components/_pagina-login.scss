@@ -26,15 +26,6 @@ html.tema-claro .pagina-login {
   --linea: hsla(230, 14%, 13%, 0.14);
 }
 
-// Algo mas tenue que en la home: aqui se rellena un formulario.
-.pagina-login__lienzo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.75;
-  pointer-events: none;
-}
-
 .pagina-login__velo {
   position: absolute;
   inset: 0;

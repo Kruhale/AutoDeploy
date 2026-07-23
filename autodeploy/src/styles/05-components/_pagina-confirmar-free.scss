@@ -29,17 +29,7 @@ html.tema-claro .confirmar-free {
   --linea: hsla(230, 14%, 13%, 0.14);
 }
 
-// Algo mas tenue que en la home: aqui hay una decision que leer y ningun
-// nodo brillante debe pisar el texto a brillo completo.
-.confirmar-free__lienzo {
-  position: absolute;
-  inset: 0;
-  z-index: 0;
-  opacity: 0.8;
-  pointer-events: none;
-}
-
-// Velo radial: oscurece los bordes para que el texto respire sobre la escena.
+// Velo radial: oscurece los bordes para que el texto siempre respire encima.
 .confirmar-free__velo {
   position: absolute;
   inset: 0;

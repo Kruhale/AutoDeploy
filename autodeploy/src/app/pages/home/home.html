@@ -1,8 +1,5 @@
 <main class="landing">
 
-  <!-- Escena 3D persistente: fija detras de todo, la camara viaja con el scroll -->
-  <section class="landing__lienzo" aria-hidden="true" #lienzoFondo></section>
-
   <!-- PORTADA -->
   <section class="portada">
     <header class="portada__contenido">
@@ -28,11 +25,9 @@
       </nav>
     </header>
 
-    <!-- Columna de metadatos tecnicos: contrapeso tipografico del lado derecho -->
-    <aside class="portada__metadatos" aria-hidden="true">
-      <span class="portada__metadatos__linea"></span>
-      <p class="portada__metadatos__texto">UBUNTU 24.04 · DOCKER · NGINX · SSL AUTO · SSH</p>
-    </aside>
+    <!-- Contrapeso del lado derecho: una terminal que se despliega sola en bucle,
+         el contrapunto vivo al titular "Sin terminal". -->
+    <app-terminal-despliegue class="portada__terminal"></app-terminal-despliegue>
 
     <p class="portada__scroll" aria-hidden="true">
       <span class="portada__scroll__texto">scroll</span>

@@ -1,0 +1,101 @@
+// Terminal decorativa del hero: teclea un log de despliegue en bucle. Vive
+// dentro de .landing, asi que hereda sus tokens (--tinta, --acento, --linea)
+// y cambia de tema sola. Un unico acento ambar: la linea "live" del final.
+.terminal-despliegue {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid var(--linea);
+  border-radius: var(--radius-l);
+  background-color: hsla(40, 33.33%, 91.37%, 0.025);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  box-shadow: 0 1.5rem 4rem hsla(230, 12%, 2%, 0.28);
+
+  &__barra {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0.7rem 1rem;
+    border-bottom: 1px solid var(--linea);
+  }
+
+  &__semaforo {
+    display: flex;
+    gap: 0.4rem;
+  }
+
+  &__punto {
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background-color: var(--tinta-apagada);
+    opacity: 0.5;
+  }
+
+  &__titulo {
+    font-size: 0.68rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--tinta-apagada);
+  }
+
+  &__cuerpo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    padding: 1.35rem 1.2rem;
+    min-height: 15.5rem;
+    font-size: 0.82rem;
+    line-height: 1.5;
+    overflow-x: auto;
+  }
+
+  &__linea {
+    display: flex;
+    gap: 0.55rem;
+    color: var(--tinta-suave);
+
+    &--comando {
+      color: var(--tinta);
+    }
+
+    &--final {
+      color: var(--acento);
+    }
+  }
+
+  // El prefijo ($ ↳ ●) hereda el color de su linea a proposito: el $ del comando
+  // sale en tinta y el ● del resultado en ambar, sin selectores anidados.
+  &__prefijo {
+    flex-shrink: 0;
+    width: 0.75rem;
+  }
+
+  &__texto {
+    white-space: pre;
+  }
+
+  &__cursor {
+    display: inline-block;
+    width: 0.45rem;
+    height: 1.05em;
+    margin-left: 0.15rem;
+    background-color: var(--acento);
+    vertical-align: text-bottom;
+
+    @media (prefers-reduced-motion: no-preference) {
+      animation: terminal-despliegue-parpadeo 1s step-end infinite;
+    }
+  }
+}
+
+@keyframes terminal-despliegue-parpadeo {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

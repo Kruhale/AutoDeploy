@@ -1,9 +1,8 @@
-import { Component, computed, Signal, AfterViewInit, OnDestroy, ViewChild, ElementRef } from "@angular/core";
+import { Component, computed, Signal } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { TranslateModule } from "@ngx-translate/core";
 import { AuthService } from "../../services/auth.service";
 import { UsuarioService } from "../../services/usuario.service";
-import { EscenaRedServidores } from "../home/escena-red-servidores";
 
 @Component({
   selector: "app-confirmar-free",
@@ -11,14 +10,10 @@ import { EscenaRedServidores } from "../home/escena-red-servidores";
   templateUrl: "./confirmar-free.html",
   styleUrl: "./confirmar-free.scss"
 })
-export class ConfirmarFree implements AfterViewInit, OnDestroy {
-  @ViewChild("lienzoFondo") lienzoFondo!: ElementRef<HTMLElement>;
-
+export class ConfirmarFree {
   estaLogueado: Signal<boolean>;
   planActual: Signal<string>;
   esBajada: Signal<boolean>;
-
-  private escenaDeFondo: EscenaRedServidores | null = null;
 
   constructor(
     private router: Router,
@@ -39,22 +34,6 @@ export class ConfirmarFree implements AfterViewInit, OnDestroy {
       const plan = componente.planActual();
       return componente.estaLogueado() && (plan === "pro" || plan === "business");
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.escenaDeFondo = new EscenaRedServidores(this.lienzoFondo.nativeElement);
-    this.escenaDeFondo.iniciar();
-
-    const raizDelDocumento = document.documentElement;
-    const estaEnTemaClaro = raizDelDocumento.classList.contains("tema-claro");
-    this.escenaDeFondo.establecerTema(estaEnTemaClaro);
-  }
-
-  ngOnDestroy(): void {
-    if (this.escenaDeFondo !== null) {
-      this.escenaDeFondo.destruir();
-      this.escenaDeFondo = null;
-    }
   }
 
   confirmar(): void {

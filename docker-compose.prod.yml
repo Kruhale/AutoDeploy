@@ -27,6 +27,7 @@ services:
       AUTODEPLOY_CIFRADO_CLAVE: ${AUTODEPLOY_CIFRADO_CLAVE}
       OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
       OPENROUTER_MODEL: ${OPENROUTER_MODEL:-google/gemini-2.5-pro}
+      DISCORD_CONTACTO_WEBHOOK: ${DISCORD_CONTACTO_WEBHOOK:-}
     volumes:
       - backend-logs:/var/log/autodeploy
     networks:

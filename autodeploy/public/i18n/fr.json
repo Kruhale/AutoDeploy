@@ -97,9 +97,9 @@
       "contacto": "Contact",
       "comunidad": "Communauté"
     },
-    "copyright": "© 2026 AutoDeployService · Infrastructure cloud d'entreprise",
+    "copyright": "© 2026 AutoDeploy · Infrastructure cloud d'entreprise",
     "ariaContenido": "Informations et liens du pied de page",
-    "ariaMarca": "À propos d'AutoDeployService",
+    "ariaMarca": "À propos d'AutoDeploy",
     "ariaInferior": "Copyright et réglages généraux",
     "ariaAjustes": "Langue et réseaux sociaux",
     "ariaRedes": "Réseaux sociaux"
@@ -760,7 +760,7 @@
       "applicationPort": "Port de l'application",
       "applicationPortPlaceholder": "3000",
       "dominio": "Domaine / sous-domaine",
-      "dominioPlaceholder": "monapp.autodeploy.sh",
+      "dominioPlaceholder": "monapp.autodeploy.dev",
       "nota": "Nous configurerons automatiquement une instance Nginx comme reverse proxy pour ce service."
     },
     "pie": {
@@ -842,9 +842,6 @@
     "errorNombreIp": "Le nom et l'IP sont obligatoires"
   },
   "cuenta": {
-    "refPrefix": "N°",
-    "estampa": "PRESSE · ARCHIVE",
-    "selloIssue": "Dossier personnel · Édition {{anio}}",
     "overlineFree": "Titulaire d'un plan Free",
     "overlinePaid": "Abonné à",
     "anonymous": "Anonyme",
@@ -877,7 +874,13 @@
       "displayNamePlaceholder": "Comment devons-nous vous appeler ?",
       "email": "Adresse e-mail",
       "emailPlaceholder": "vous@email.com",
-      "emailPista": "Utilisée uniquement pour la facturation et les alertes de sécurité."
+      "emailPista": "Utilisée uniquement pour la facturation et les alertes de sécurité.",
+      "foto": "Photo de profil",
+      "fotoSubir": "Choisir une photo",
+      "fotoSubiendo": "Envoi…",
+      "fotoQuitar": "Retirer",
+      "fotoPista": "PNG, JPG ou WebP. Recadrée en carré.",
+      "fotoError": "Impossible de traiter l'image"
     },
     "saving": "Enregistrement",
     "commitChanges": "Confirmer les modifications",
@@ -960,9 +963,7 @@
       "serversSuffix": "serveurs",
       "aiIncluded": "Assistant IA inclus",
       "supportSuffix": "support",
-      "enterpriseGrade": "Niveau entreprise",
-      "pausar": "Mettre en pause le bandeau d'informations",
-      "reanudar": "Relancer le bandeau d'informations"
+      "enterpriseGrade": "Niveau entreprise"
     }
   },
   "billing": {

@@ -97,9 +97,9 @@
       "contacto": "Kontakt",
       "comunidad": "Community"
     },
-    "copyright": "© 2026 AutoDeployService · Unternehmens-Cloud-Infrastruktur",
+    "copyright": "© 2026 AutoDeploy · Unternehmens-Cloud-Infrastruktur",
     "ariaContenido": "Footer-Informationen und Links",
-    "ariaMarca": "Über AutoDeployService",
+    "ariaMarca": "Über AutoDeploy",
     "ariaInferior": "Copyright und allgemeine Einstellungen",
     "ariaAjustes": "Sprache und soziale Netzwerke",
     "ariaRedes": "Soziale Netzwerke"
@@ -760,7 +760,7 @@
       "applicationPort": "Anwendungs-Port",
       "applicationPortPlaceholder": "3000",
       "dominio": "Domain / Subdomain",
-      "dominioPlaceholder": "meineapp.autodeploy.sh",
+      "dominioPlaceholder": "meineapp.autodeploy.dev",
       "nota": "Wir konfigurieren automatisch eine Nginx-Instanz als Reverse Proxy für diesen Dienst."
     },
     "pie": {
@@ -842,9 +842,6 @@
     "errorNombreIp": "Name und IP sind erforderlich"
   },
   "cuenta": {
-    "refPrefix": "N°",
-    "estampa": "PRESSE · ARCHIV",
-    "selloIssue": "Persönliches Dossier · Ausgabe {{anio}}",
     "overlineFree": "Inhaber eines Free-Plans",
     "overlinePaid": "Abonnent von",
     "anonymous": "Anonym",
@@ -877,7 +874,13 @@
       "displayNamePlaceholder": "Wie sollen wir Sie nennen?",
       "email": "E-Mail-Adresse",
       "emailPlaceholder": "sie@email.com",
-      "emailPista": "Wird ausschließlich für Abrechnungen und Sicherheitsbenachrichtigungen verwendet."
+      "emailPista": "Wird ausschließlich für Abrechnungen und Sicherheitsbenachrichtigungen verwendet.",
+      "foto": "Profilfoto",
+      "fotoSubir": "Foto hochladen",
+      "fotoSubiendo": "Wird hochgeladen…",
+      "fotoQuitar": "Entfernen",
+      "fotoPista": "PNG, JPG oder WebP. Auf ein Quadrat zugeschnitten.",
+      "fotoError": "Bild konnte nicht verarbeitet werden"
     },
     "saving": "Wird gespeichert",
     "commitChanges": "Änderungen übernehmen",
@@ -960,9 +963,7 @@
       "serversSuffix": "Server",
       "aiIncluded": "KI-Assistent inklusive",
       "supportSuffix": "Support",
-      "enterpriseGrade": "Enterprise-Niveau",
-      "pausar": "Informationslaufband anhalten",
-      "reanudar": "Informationslaufband fortsetzen"
+      "enterpriseGrade": "Enterprise-Niveau"
     }
   },
   "billing": {

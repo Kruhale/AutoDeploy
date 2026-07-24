@@ -97,9 +97,9 @@
       "contacto": "Contatti",
       "comunidad": "Community"
     },
-    "copyright": "© 2026 AutoDeployService · Infrastruttura cloud aziendale",
+    "copyright": "© 2026 AutoDeploy · Infrastruttura cloud aziendale",
     "ariaContenido": "Informazioni e link del piè di pagina",
-    "ariaMarca": "Su AutoDeployService",
+    "ariaMarca": "Su AutoDeploy",
     "ariaInferior": "Copyright e impostazioni generali",
     "ariaAjustes": "Lingua e social network",
     "ariaRedes": "Social network"
@@ -760,7 +760,7 @@
       "applicationPort": "Porta dell'applicazione",
       "applicationPortPlaceholder": "3000",
       "dominio": "Dominio / sottodominio",
-      "dominioPlaceholder": "miapp.autodeploy.sh",
+      "dominioPlaceholder": "miapp.autodeploy.dev",
       "nota": "Configureremo automaticamente un'istanza Nginx come reverse proxy per questo servizio."
     },
     "pie": {
@@ -842,9 +842,6 @@
     "errorNombreIp": "Il nome e l'IP sono obbligatori"
   },
   "cuenta": {
-    "refPrefix": "N°",
-    "estampa": "STAMPA · ARCHIVIO",
-    "selloIssue": "Dossier personale · Edizione {{anio}}",
     "overlineFree": "Titolare di piano Free",
     "overlinePaid": "Abbonato a",
     "anonymous": "Anonimo",
@@ -877,7 +874,13 @@
       "displayNamePlaceholder": "Come dovremmo chiamarti?",
       "email": "Indirizzo email",
       "emailPlaceholder": "tu@email.com",
-      "emailPista": "Utilizzato solo per la fatturazione e gli avvisi di sicurezza."
+      "emailPista": "Utilizzato solo per la fatturazione e gli avvisi di sicurezza.",
+      "foto": "Foto profilo",
+      "fotoSubir": "Carica foto",
+      "fotoSubiendo": "Caricamento…",
+      "fotoQuitar": "Rimuovi",
+      "fotoPista": "PNG, JPG o WebP. Ritagliata in un quadrato.",
+      "fotoError": "Impossibile elaborare l'immagine"
     },
     "saving": "Salvataggio",
     "commitChanges": "Conferma modifiche",
@@ -960,9 +963,7 @@
       "serversSuffix": "server",
       "aiIncluded": "Assistente IA incluso",
       "supportSuffix": "assistenza",
-      "enterpriseGrade": "Livello enterprise",
-      "pausar": "Metti in pausa il nastro informativo",
-      "reanudar": "Riprendi il nastro informativo"
+      "enterpriseGrade": "Livello enterprise"
     }
   },
   "billing": {

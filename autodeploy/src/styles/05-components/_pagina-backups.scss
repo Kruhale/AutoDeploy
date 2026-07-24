@@ -84,8 +84,8 @@
     cursor: pointer;
     padding: 0;
     transition:
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      background-color var(--duration-base) var(--ease-suave),
+      border-color var(--duration-base) var(--ease-suave);
     flex-shrink: 0;
 
     &:hover {
@@ -115,8 +115,8 @@
       background-color: var(--texto-medio);
       margin-left: 0.18rem;
       transition:
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+        transform var(--duration-base) var(--ease-suave),
+        background-color var(--duration-base) var(--ease-suave);
     }
   }
 
@@ -137,7 +137,7 @@
     background-color: var(--fondo-tarjeta);
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-l);
-    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-base) var(--ease-suave), transform var(--duration-base) var(--ease-suave);
 
     &:hover {
       border-color: var(--amarillo-transparente-030);
@@ -247,10 +247,10 @@
     cursor: pointer;
     white-space: nowrap;
     transition:
-      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      border-color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave),
+      color var(--duration-base) var(--ease-suave),
+      transform var(--duration-base) var(--ease-suave);
 
     &:hover:not(:disabled) {
       border-color: var(--amarillo-normal);

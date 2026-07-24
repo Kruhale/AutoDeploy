@@ -97,9 +97,9 @@
       "contacto": "Contact",
       "comunidad": "Community"
     },
-    "copyright": "© 2026 AutoDeployService · Enterprise cloud infrastructure",
+    "copyright": "© 2026 AutoDeploy · Enterprise cloud infrastructure",
     "ariaContenido": "Footer information and links",
-    "ariaMarca": "About AutoDeployService",
+    "ariaMarca": "About AutoDeploy",
     "ariaInferior": "Copyright and general settings",
     "ariaAjustes": "Language and social networks",
     "ariaRedes": "Social networks"
@@ -760,7 +760,7 @@
       "applicationPort": "Application port",
       "applicationPortPlaceholder": "3000",
       "dominio": "Domain / subdomain",
-      "dominioPlaceholder": "myapp.autodeploy.sh",
+      "dominioPlaceholder": "myapp.autodeploy.dev",
       "nota": "We'll automatically configure an Nginx instance as a reverse proxy for this service."
     },
     "pie": {
@@ -842,9 +842,6 @@
     "errorNombreIp": "Name and IP are required"
   },
   "cuenta": {
-    "refPrefix": "N°",
-    "estampa": "PRESS · ARCHIVE",
-    "selloIssue": "Personal dossier · Issue {{anio}}",
     "overlineFree": "Free plan holder",
     "overlinePaid": "Subscriber to",
     "anonymous": "Anonymous",
@@ -877,7 +874,13 @@
       "displayNamePlaceholder": "What should we call you?",
       "email": "Email address",
       "emailPlaceholder": "you@email.com",
-      "emailPista": "Only used for billing and security alerts."
+      "emailPista": "Only used for billing and security alerts.",
+      "foto": "Profile photo",
+      "fotoSubir": "Upload photo",
+      "fotoSubiendo": "Uploading…",
+      "fotoQuitar": "Remove",
+      "fotoPista": "PNG, JPG or WebP. Cropped to a square.",
+      "fotoError": "Could not process the image"
     },
     "saving": "Saving",
     "commitChanges": "Commit changes",
@@ -960,9 +963,7 @@
       "serversSuffix": "servers",
       "aiIncluded": "AI Assistant included",
       "supportSuffix": "support",
-      "enterpriseGrade": "Enterprise grade",
-      "pausar": "Pause the information ticker",
-      "reanudar": "Resume the information ticker"
+      "enterpriseGrade": "Enterprise grade"
     }
   },
   "billing": {

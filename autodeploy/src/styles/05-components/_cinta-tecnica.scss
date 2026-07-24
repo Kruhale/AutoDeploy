@@ -13,11 +13,6 @@
   will-change: transform;
 }
 
-// Cortesia (y WCAG 2.2.2): al posar el raton, la cinta se detiene.
-.cinta:hover .cinta__pista {
-  animation-play-state: paused;
-}
-
 // El desfile es continuo: dos grupos identicos y un bucle al -50% exacto.
 .cinta__grupo {
   display: block;

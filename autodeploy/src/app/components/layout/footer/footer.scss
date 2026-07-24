@@ -84,7 +84,7 @@
   display: inline-block;
   font-size: 0.9rem;
   color: hsl(40, 6%, 60%);
-  transition: color var(--duration-base) ease, transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color var(--duration-base) ease, transform var(--duration-base) var(--ease-suave);
 }
 
 .pie__columna__enlace:hover {

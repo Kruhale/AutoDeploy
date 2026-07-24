@@ -77,9 +77,9 @@
     letter-spacing: -0.005em;
     cursor: pointer;
     transition:
-      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      border-color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave),
+      transform var(--duration-base) var(--ease-suave);
 
     &:hover:not(:disabled) {
       border-color: hsla(0, 79.17%, 60.59%, 0.5);
@@ -131,7 +131,7 @@
     color: var(--texto-apagado);
     font-size: var(--font-size-sm);
     min-width: 12rem;
-    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-base) var(--ease-suave);
 
     &:focus-within {
       border-color: var(--amarillo-normal);
@@ -212,7 +212,7 @@
     background: hsla(40, 20%, 92%, 0.02);
     border: 1px solid var(--borde-suave);
     border-radius: var(--radius-l);
-    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-base) var(--ease-suave), background-color var(--duration-base) var(--ease-suave);
 
     &:hover {
       border-color: hsla(40, 20%, 92%, 0.12);
@@ -300,8 +300,8 @@
       font-size: var(--font-size-base);
       color: var(--texto-apagado);
       cursor: pointer;
-      transition: color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-                  background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      transition: color var(--duration-base) var(--ease-suave),
+                  background-color var(--duration-base) var(--ease-suave);
 
       &:hover {
         color: var(--texto-claro);
@@ -347,7 +347,7 @@
     border: 1px solid var(--borde-normal);
     border-radius: var(--radius-l);
     cursor: pointer;
-    transition: border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: border-color var(--duration-base) var(--ease-suave), transform var(--duration-base) var(--ease-suave);
 
     &:hover {
       border-color: hsla(40, 20%, 92%, 0.15);
@@ -518,7 +518,7 @@
     padding: var(--spacing-size-l) var(--spacing-size-2xl);
     border-top: 1px solid var(--borde-suave);
     background: hsla(40, 20%, 92%, 0.02);
-    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color var(--duration-base) var(--ease-suave);
 
     &:hover {
       background: hsla(40, 20%, 92%, 0.05);

@@ -97,9 +97,9 @@
       "contacto": "Contacto",
       "comunidad": "Comunidad"
     },
-    "copyright": "© 2026 AutoDeployService · Infraestructura cloud empresarial",
+    "copyright": "© 2026 AutoDeploy · Infraestructura cloud empresarial",
     "ariaContenido": "Información y enlaces del pie de página",
-    "ariaMarca": "Sobre AutoDeployService",
+    "ariaMarca": "Sobre AutoDeploy",
     "ariaInferior": "Copyright y ajustes generales",
     "ariaAjustes": "Idioma y redes sociales",
     "ariaRedes": "Redes sociales"
@@ -760,7 +760,7 @@
       "applicationPort": "Puerto de la aplicación",
       "applicationPortPlaceholder": "3000",
       "dominio": "Dominio / subdominio",
-      "dominioPlaceholder": "miapp.autodeploy.sh",
+      "dominioPlaceholder": "miapp.autodeploy.dev",
       "nota": "Configuraremos automáticamente una instancia Nginx como reverse proxy para este servicio."
     },
     "pie": {
@@ -842,9 +842,6 @@
     "errorNombreIp": "El nombre y la IP son obligatorios"
   },
   "cuenta": {
-    "refPrefix": "N°",
-    "estampa": "PRENSA · ARCHIVO",
-    "selloIssue": "Dossier personal · Edición {{anio}}",
     "overlineFree": "Titular de plan Free",
     "overlinePaid": "Suscriptor a",
     "anonymous": "Anónimo",
@@ -877,7 +874,13 @@
       "displayNamePlaceholder": "¿Cómo deberíamos llamarte?",
       "email": "Dirección de email",
       "emailPlaceholder": "tu@email.com",
-      "emailPista": "Solo se usa para facturación y avisos de seguridad."
+      "emailPista": "Solo se usa para facturación y avisos de seguridad.",
+      "foto": "Foto de perfil",
+      "fotoSubir": "Subir foto",
+      "fotoSubiendo": "Subiendo…",
+      "fotoQuitar": "Quitar",
+      "fotoPista": "PNG, JPG o WebP. Se recorta a un cuadrado.",
+      "fotoError": "No se pudo procesar la imagen"
     },
     "saving": "Guardando",
     "commitChanges": "Confirmar cambios",
@@ -960,9 +963,7 @@
       "serversSuffix": "servidores",
       "aiIncluded": "Asistente IA incluido",
       "supportSuffix": "soporte",
-      "enterpriseGrade": "Grado empresarial",
-      "pausar": "Pausar la cinta de información",
-      "reanudar": "Reanudar la cinta de información"
+      "enterpriseGrade": "Grado empresarial"
     }
   },
   "billing": {

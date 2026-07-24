@@ -28,7 +28,7 @@
   &__enlace {
     color: var(--amarillo-normal);
     font-weight: var(--font-weight-medium);
-    transition: opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: opacity var(--duration-base) var(--ease-suave);
 
     &:hover,
     &:focus-visible {
@@ -56,7 +56,7 @@
     font-weight: var(--font-weight-semibold);
     border-radius: var(--radius-m);
     cursor: pointer;
-    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1), transform var(--duration-fast) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color var(--duration-base) var(--ease-suave), transform var(--duration-fast) var(--ease-suave);
     border: none;
 
     &:active {

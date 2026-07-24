@@ -36,12 +36,11 @@ const DIAS_REFERENCIA_ANIVERSARIO = 365;
 export class Cuenta implements AfterViewInit, OnDestroy {
   readonly planes = PLANES;
   readonly anioActual = new Date().getFullYear();
-  readonly letrasIndiceVertical = ["Y", "O", "U", "R"];
-  readonly letrasIndiceCuenta = ["A", "C", "C", "O", "U", "N", "T"];
 
   nombreEditable = signal("");
   emailEditable = signal("");
   guardando = signal(false);
+  subiendoFoto = signal(false);
   mensajeGuardado = signal("");
   cancelando = signal(false);
   progresoSalidaActivo = signal(false);
@@ -51,7 +50,6 @@ export class Cuenta implements AfterViewInit, OnDestroy {
   nombreNuevaClave = signal("");
   contenidoNuevaClave = signal("");
 
-  cintaPausada = signal(false);
 
   notificacionesEmail = signal(true);
   notificacionesAlertasCriticas = signal(true);
@@ -59,7 +57,6 @@ export class Cuenta implements AfterViewInit, OnDestroy {
 
   versionIdioma = signal(0);
 
-  inicialDelNombre: Signal<string>;
   detallePlanActual: Signal<Plan>;
   resumenDeCuenta: Signal<FilaResumen[]>;
   fechaCreacionCuenta: Signal<Date | null>;
@@ -109,12 +106,6 @@ export class Cuenta implements AfterViewInit, OnDestroy {
       componente.versionIdioma.update(function (v) {
         return v + 1;
       });
-    });
-
-    this.inicialDelNombre = computed(function () {
-      const nombre = componente.usuarioService.nombre();
-      if (!nombre) return "?";
-      return nombre.charAt(0).toUpperCase();
     });
 
     this.detallePlanActual = computed(function () {
@@ -317,9 +308,87 @@ export class Cuenta implements AfterViewInit, OnDestroy {
     }
   }
 
-  alternarPausaCinta(): void {
-    this.cintaPausada.update(function (valorActual) {
-      return !valorActual;
+  // El usuario elige una imagen: se valida, se reescala a un cuadrado de
+  // 256px (recorte centrado) y se envia como data URL al backend.
+  async manejarSeleccionFoto(evento: Event): Promise<void> {
+    const entrada = evento.target as HTMLInputElement;
+    const archivo = entrada.files && entrada.files[0];
+    if (!archivo) {
+      return;
+    }
+
+    const esImagen = archivo.type.startsWith("image/");
+    const tamanoMaximo = 5 * 1024 * 1024;
+    if (!esImagen || archivo.size > tamanoMaximo) {
+      this.mensajeGuardado.set(this.translate.instant("cuenta.formulario.fotoError"));
+      entrada.value = "";
+      return;
+    }
+
+    this.subiendoFoto.set(true);
+    try {
+      const dataUrlOriginal = await this.leerArchivoComoDataUrl(archivo);
+      const dataUrlCuadrada = await this.reescalarImagenACuadrado(dataUrlOriginal, 256);
+      await this.usuarioService.actualizarFoto(dataUrlCuadrada);
+      this.mensajeGuardado.set(this.translate.instant("comun.guardado"));
+    } catch (error) {
+      this.mensajeGuardado.set(this.translate.instant("cuenta.formulario.fotoError"));
+    } finally {
+      this.subiendoFoto.set(false);
+      entrada.value = "";
+      const componente = this;
+      setTimeout(function () {
+        componente.mensajeGuardado.set("");
+      }, 2400);
+    }
+  }
+
+  async quitarFoto(): Promise<void> {
+    this.subiendoFoto.set(true);
+    try {
+      await this.usuarioService.actualizarFoto("");
+    } catch (error) {
+      this.mensajeGuardado.set(this.translate.instant("cuenta.formulario.fotoError"));
+    } finally {
+      this.subiendoFoto.set(false);
+    }
+  }
+
+  private leerArchivoComoDataUrl(archivo: File): Promise<string> {
+    return new Promise(function (resolver, rechazar) {
+      const lector = new FileReader();
+      lector.onload = function () {
+        resolver(lector.result as string);
+      };
+      lector.onerror = function () {
+        rechazar(new Error("No se pudo leer el archivo"));
+      };
+      lector.readAsDataURL(archivo);
+    });
+  }
+
+  private reescalarImagenACuadrado(dataUrl: string, lado: number): Promise<string> {
+    return new Promise(function (resolver, rechazar) {
+      const imagen = new Image();
+      imagen.onload = function () {
+        const lienzo = document.createElement("canvas");
+        lienzo.width = lado;
+        lienzo.height = lado;
+        const contexto = lienzo.getContext("2d");
+        if (!contexto) {
+          rechazar(new Error("Canvas no disponible"));
+          return;
+        }
+        const ladoRecorte = Math.min(imagen.width, imagen.height);
+        const origenX = (imagen.width - ladoRecorte) / 2;
+        const origenY = (imagen.height - ladoRecorte) / 2;
+        contexto.drawImage(imagen, origenX, origenY, ladoRecorte, ladoRecorte, 0, 0, lado, lado);
+        resolver(lienzo.toDataURL("image/jpeg", 0.85));
+      };
+      imagen.onerror = function () {
+        rechazar(new Error("No se pudo cargar la imagen"));
+      };
+      imagen.src = dataUrl;
     });
   }
 
@@ -473,7 +542,10 @@ export class Cuenta implements AfterViewInit, OnDestroy {
 
   private extraerFechaCreacionDelId(): Date | null {
     const idCompleto = this.usuarioService.usuarioId();
-    if (!idCompleto || idCompleto.length < 8) return null;
+    // Solo un ObjectId real de Mongo lleva la fecha en sus primeros 4 bytes;
+    // con cualquier otro id la conversion daria fechas absurdas (1970).
+    const esObjectIdValido = /^[0-9a-f]{24}$/i.test(idCompleto);
+    if (!esObjectIdValido) return null;
     const timestampHex = idCompleto.substring(0, 8);
     const timestampSegundos = parseInt(timestampHex, 16);
     if (isNaN(timestampSegundos) || timestampSegundos <= 0) return null;

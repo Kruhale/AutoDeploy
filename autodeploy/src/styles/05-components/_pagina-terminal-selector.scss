@@ -14,7 +14,7 @@
     border-bottom: 1px solid var(--borde-suave);
     text-decoration: none;
     color: inherit;
-    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color var(--duration-base) var(--ease-suave);
 
     &:hover {
       background-color: hsla(40, 20%, 92%, 0.035);
@@ -48,9 +48,9 @@
       color: var(--texto-medio);
       font-size: 0.85rem;
       transition:
-        background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+        background-color var(--duration-base) var(--ease-suave),
+        border-color var(--duration-base) var(--ease-suave),
+        color var(--duration-base) var(--ease-suave);
     }
 
     &__info {
@@ -97,8 +97,8 @@
       font-size: 1rem;
       color: var(--texto-apagado);
       transition:
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+        transform var(--duration-base) var(--ease-suave),
+        color var(--duration-base) var(--ease-suave);
     }
   }
 }

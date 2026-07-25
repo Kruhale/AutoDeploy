@@ -140,6 +140,10 @@ export class UsuarioService {
     }
 
     this.guardarEnSesion(respuesta.data);
+    // Hidratacion inicial: el idioma guardado en la cuenta se aplica al entrar.
+    if (respuesta.data.idioma) {
+      this.idiomaService.aplicarIdiomaDelUsuario(respuesta.data.idioma);
+    }
     return respuesta.data;
   }
 
@@ -159,6 +163,10 @@ export class UsuarioService {
     }
 
     this.guardarEnSesion(respuesta.data);
+    // Hidratacion inicial: el idioma guardado en la cuenta se aplica al entrar.
+    if (respuesta.data.idioma) {
+      this.idiomaService.aplicarIdiomaDelUsuario(respuesta.data.idioma);
+    }
     return respuesta.data;
   }
 
@@ -318,9 +326,10 @@ export class UsuarioService {
     this.email.set(datos.email);
     this.plan.set(datos.plan || "free");
 
+    // Solo se anota: aplicar aqui el idioma del backend pisaria la eleccion
+    // que el usuario acaba de hacer cada vez que guarda perfil o sube foto.
     if (datos.idioma) {
       sessionStorage.setItem("idioma", datos.idioma);
-      this.idiomaService.aplicarIdiomaDelUsuario(datos.idioma);
     }
 
   }

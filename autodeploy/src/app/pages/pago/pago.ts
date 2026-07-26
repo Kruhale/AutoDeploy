@@ -24,6 +24,7 @@ interface DatosPlanInfo {
 export class Pago implements OnInit {
   planSeleccionado = signal('pro');
   estadoPago = signal<EstadoPago>('formulario');
+  formularioCompleto = signal(false);
 
   numeroTarjeta = signal('');
   nombreTitular = signal('');
@@ -240,14 +241,14 @@ export class Pago implements OnInit {
   }
 
   private comprobarFormularioCompleto(): void {
-    const botonPagar = document.querySelector<HTMLButtonElement>('.pago__boton-pagar');
-    if (!botonPagar) return;
+    // El boton se deshabilita via signal: el querySelector anterior apuntaba a
+    // una clase que ya no existe y el formulario invalido se podia enviar.
     const formularioValido =
       this.comprobacionNumero &&
       this.comprobacionNombre &&
       this.comprobacionFecha &&
       this.comprobacionCvv;
-    botonPagar.disabled = !formularioValido;
+    this.formularioCompleto.set(formularioValido);
   }
 
   private pasaAlgoritmoLuhn(numero: string): boolean {

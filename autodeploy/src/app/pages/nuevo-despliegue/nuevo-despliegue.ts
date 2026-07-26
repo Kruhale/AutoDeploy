@@ -150,12 +150,24 @@ export class NuevoDespliegue implements OnInit {
     return (bytes / (1024 * 1024)).toFixed(1) + " MB";
   }
 
+  // La alerta vive bajo el formulario y el boton de lanzar arriba del todo:
+  // sin el scroll el aviso de validacion quedaba fuera de pantalla.
+  private mostrarErrorYEnfocar(clave: string): void {
+    this.mensajeError.set(this.translate.instant(clave));
+    setTimeout(function () {
+      const alerta = document.getElementById("nuevo-despliegue-alerta");
+      if (alerta) {
+        alerta.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 60);
+  }
+
   lanzarDespliegue(): void {
     this.mensajeError.set("");
     this.mensajeExito.set("");
 
     if (!this.servidorDestinoId()) {
-      this.mensajeError.set(this.translate.instant("nuevoDespliegue.errores.elegirServidor"));
+      this.mostrarErrorYEnfocar("nuevoDespliegue.errores.elegirServidor");
       return;
     }
 
@@ -168,11 +180,11 @@ export class NuevoDespliegue implements OnInit {
 
   private lanzarDespliegueGit(): void {
     if (!this.repositorioUrl()) {
-      this.mensajeError.set(this.translate.instant("nuevoDespliegue.errores.repositorioRequerido"));
+      this.mostrarErrorYEnfocar("nuevoDespliegue.errores.repositorioRequerido");
       return;
     }
     if (!this.directorioRemotoGit().trim()) {
-      this.mensajeError.set(this.translate.instant("nuevoDespliegue.errores.directorioRequerido"));
+      this.mostrarErrorYEnfocar("nuevoDespliegue.errores.directorioRequerido");
       return;
     }
 
@@ -209,7 +221,7 @@ export class NuevoDespliegue implements OnInit {
       return;
     }
     if (!this.directorioRemotoZip().trim()) {
-      this.mensajeError.set(this.translate.instant("nuevoDespliegue.errores.directorioRequerido"));
+      this.mostrarErrorYEnfocar("nuevoDespliegue.errores.directorioRequerido");
       return;
     }
 

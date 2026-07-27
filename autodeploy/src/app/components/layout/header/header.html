@@ -33,15 +33,15 @@
     </header>
 
     <nav class="panel-menu__nav">
-      <a class="panel-menu__enlace" href="#features" (click)="cerrarMenuMovil()">
+      <a class="panel-menu__enlace" routerLink="/" fragment="features" (click)="cerrarMenuMovil()">
         <span class="panel-menu__enlace__numero">01</span>
         <span class="panel-menu__enlace__texto">{{ "header.nav.features" | translate }}</span>
       </a>
-      <a class="panel-menu__enlace" href="#como-funciona" (click)="cerrarMenuMovil()">
+      <a class="panel-menu__enlace" routerLink="/" fragment="como-funciona" (click)="cerrarMenuMovil()">
         <span class="panel-menu__enlace__numero">02</span>
         <span class="panel-menu__enlace__texto">{{ "header.nav.comoFunciona" | translate }}</span>
       </a>
-      <a class="panel-menu__enlace" href="#pricing" (click)="cerrarMenuMovil()">
+      <a class="panel-menu__enlace" routerLink="/" fragment="pricing" (click)="cerrarMenuMovil()">
         <span class="panel-menu__enlace__numero">03</span>
         <span class="panel-menu__enlace__texto">{{ "header.nav.precios" | translate }}</span>
       </a>

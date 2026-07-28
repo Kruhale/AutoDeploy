@@ -49,4 +49,8 @@ export class ActividadService {
       })
     );
   }
+
+  limpiar(): void {
+    this.actividadesRecientes.set([]);
+  }
 }

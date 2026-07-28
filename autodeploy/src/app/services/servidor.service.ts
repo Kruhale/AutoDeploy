@@ -111,4 +111,8 @@ export class ServidorService {
         })
       );
   }
+
+  limpiar(): void {
+    this.servidores.set([]);
+  }
 }

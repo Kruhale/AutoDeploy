@@ -195,4 +195,11 @@ export class NotificacionService {
       this.conteoNoLeidas.update((contador) => Math.max(0, contador - 1));
     }
   }
+
+  limpiar(): void {
+    this.desconectarWebSocket();
+    this.notificacionesDelUsuario.set([]);
+    this.notificacionesNoLeidas.set([]);
+    this.conteoNoLeidas.set(0);
+  }
 }

@@ -143,4 +143,23 @@ describe("Onboarding", function() {
     expect(component.estadoConexion()).toBe("error");
     expect(component.conectando()).toBeFalse();
   }));
+
+  it("conectarServidor con puerto no numerico marca error y no llama backend", function() {
+    component.nombreServidor.set("Servidor");
+    component.direccionIp.set("1.2.3.4");
+    component.puertoSsh.set("abc");
+    component.conectarServidor();
+    expect(component.estadoConexion()).toBe("error");
+    expect(component.mensajeEstado()).toBe("onboarding.errorPuerto");
+    httpMock.expectNone("/api/servidores");
+  });
+
+  it("conectarServidor con puerto fuera de rango no llama backend", function() {
+    component.nombreServidor.set("Servidor");
+    component.direccionIp.set("1.2.3.4");
+    component.puertoSsh.set("70000");
+    component.conectarServidor();
+    expect(component.estadoConexion()).toBe("error");
+    httpMock.expectNone("/api/servidores");
+  });
 });

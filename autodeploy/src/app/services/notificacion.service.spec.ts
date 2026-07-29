@@ -139,4 +139,14 @@ describe("NotificacionService", function() {
   it("obtenerNotificacionesRecibidas: devuelve un Observable", function() {
     expect(service.obtenerNotificacionesRecibidas()).toBeDefined();
   });
+
+  it("limpiar vacia notificaciones y conteo sin websocket abierto", function() {
+    service.notificacionesDelUsuario.set([notif("n1"), notif("n2")]);
+    service.notificacionesNoLeidas.set([notif("n1")]);
+    service.conteoNoLeidas.set(2);
+    service.limpiar();
+    expect(service.notificacionesDelUsuario()).toEqual([]);
+    expect(service.notificacionesNoLeidas()).toEqual([]);
+    expect(service.conteoNoLeidas()).toBe(0);
+  });
 });

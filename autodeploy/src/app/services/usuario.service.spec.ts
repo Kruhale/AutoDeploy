@@ -2,6 +2,7 @@ import { TestBed } from "@angular/core/testing";
 import { HttpClientTestingModule, HttpTestingController } from "@angular/common/http/testing";
 import { TranslateModule } from "@ngx-translate/core";
 import { UsuarioService } from "./usuario.service";
+import { PlanService } from "./plan.service";
 
 describe("UsuarioService", function() {
   let servicio: UsuarioService;
@@ -232,5 +233,37 @@ describe("UsuarioService", function() {
     peticion.flush({ success: false, message: "Email duplicado", data: null });
 
     await expectAsync(promesa).toBeRejectedWithError("Email duplicado");
+  });
+
+  it("login sincroniza el plan del PlanService con el de la cuenta", async function() {
+    const planService = TestBed.inject(PlanService);
+    const promesa = servicio.login("marta@local.test", "clave-test");
+    const peticion = httpMock.expectOne("/api/usuarios/login");
+    peticion.flush({ success: true, message: "OK", data: { id: "507f1f77bcf86cd799439011", nombre: "Marta", email: "marta@local.test", token: "jwt", plan: "business" } });
+    await promesa;
+    expect(planService.planActual()).toBe("business");
+    expect(sessionStorage.getItem("plan")).toBe("business");
+  });
+
+  it("limpiar resetea el plan a free y deja el storage sin sesion", async function() {
+    const planService = TestBed.inject(PlanService);
+    const promesa = servicio.login("marta@local.test", "clave-test");
+    httpMock.expectOne("/api/usuarios/login").flush({ success: true, message: "OK", data: { id: "507f1f77bcf86cd799439011", nombre: "Marta", email: "marta@local.test", token: "jwt", plan: "pro" } });
+    await promesa;
+    servicio.limpiar();
+    expect(planService.planActual()).toBe("free");
+    expect(sessionStorage.getItem("token")).toBeNull();
+    expect(sessionStorage.getItem("usuarioId")).toBeNull();
+    expect(sessionStorage.getItem("plan")).toBeNull();
+    expect(servicio.usuarioId()).toBe("");
+  });
+
+  it("las iniciales del avatar salen del nombre y el degradado es estable", function() {
+    servicio.nombre.set("Marta Sandoval");
+    servicio.email.set("marta@local.test");
+    expect(servicio.iniciales()).toBe("MS");
+    const primerDegradado = servicio.avatarGradiente();
+    expect(primerDegradado).toContain("linear-gradient");
+    expect(servicio.avatarGradiente()).toBe(primerDegradado);
   });
 });

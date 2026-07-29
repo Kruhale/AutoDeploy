@@ -2,7 +2,15 @@ import { TestBed } from "@angular/core/testing";
 import { HttpClient, HttpErrorResponse, provideHttpClient, withInterceptors } from "@angular/common/http";
 import { HttpTestingController, provideHttpClientTesting } from "@angular/common/http/testing";
 import { Router } from "@angular/router";
+import { TranslateModule } from "@ngx-translate/core";
 import { jwtInterceptor } from "./jwt.interceptor";
+import { AuthService } from "../services/auth.service";
+import { UsuarioService } from "../services/usuario.service";
+import { PlanService } from "../services/plan.service";
+import { ServidorService } from "../services/servidor.service";
+import { ActividadService } from "../services/actividad.service";
+import { NotificacionService } from "../services/notificacion.service";
+import { AsistenteIaService } from "../services/asistente-ia.service";
 
 describe("jwtInterceptor", function() {
   let http: HttpClient;
@@ -13,6 +21,7 @@ describe("jwtInterceptor", function() {
     sessionStorage.clear();
 
     TestBed.configureTestingModule({
+      imports: [TranslateModule.forRoot()],
       providers: [
         provideHttpClient(withInterceptors([jwtInterceptor])),
         provideHttpClientTesting(),
@@ -136,5 +145,54 @@ describe("jwtInterceptor", function() {
     });
 
     httpMock.expectOne("/api/usuarios/login").flush({}, { status: 401, statusText: "Unauthorized" });
+  });
+
+  it("ante 401 resetea los signals de usuario, plan y auth (no solo el storage)", function(done) {
+    sessionStorage.setItem("token", "viejo");
+    const usuarioService = TestBed.inject(UsuarioService);
+    const planService = TestBed.inject(PlanService);
+    const authService = TestBed.inject(AuthService);
+    usuarioService.usuarioId.set("u1");
+    usuarioService.nombre.set("Pepe");
+    planService.planActual.set("business");
+    authService.estaLogueado.set(true);
+
+    http.get("/api/servidores").subscribe({
+      next: () => done.fail("no debería pasar"),
+      error: function() {
+        expect(usuarioService.usuarioId()).toBe("");
+        expect(usuarioService.nombre()).toBe("");
+        expect(planService.planActual()).toBe("free");
+        expect(authService.estaLogueado()).toBeFalse();
+        done();
+      }
+    });
+
+    httpMock.expectOne("/api/servidores").flush({}, { status: 401, statusText: "Unauthorized" });
+  });
+
+  it("ante 401 vacia las caches de servidores, actividad, notificaciones y chat IA", function(done) {
+    sessionStorage.setItem("token", "viejo");
+    const servidorService = TestBed.inject(ServidorService);
+    const actividadService = TestBed.inject(ActividadService);
+    const notificacionService = TestBed.inject(NotificacionService);
+    const asistenteService = TestBed.inject(AsistenteIaService);
+    servidorService.servidores.set([{ id: "s1" } as any]);
+    actividadService.actividadesRecientes.set([{ id: "a1" } as any]);
+    notificacionService.conteoNoLeidas.set(4);
+    asistenteService.historialMensajes.set([{ texto: "hola" } as any]);
+
+    http.get("/api/servidores").subscribe({
+      next: () => done.fail("no debería pasar"),
+      error: function() {
+        expect(servidorService.servidores()).toEqual([]);
+        expect(actividadService.actividadesRecientes()).toEqual([]);
+        expect(notificacionService.conteoNoLeidas()).toBe(0);
+        expect(asistenteService.historialMensajes()).toEqual([]);
+        done();
+      }
+    });
+
+    httpMock.expectOne("/api/servidores").flush({}, { status: 401, statusText: "Unauthorized" });
   });
 });

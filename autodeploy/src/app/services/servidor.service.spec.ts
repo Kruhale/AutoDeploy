@@ -188,4 +188,12 @@ describe("ServidorService", function() {
     const peticionCarga = httpMock.expectOne("/api/servidores");
     peticionCarga.flush({ success: true, message: "OK", data: [servidorEjemplo] });
   });
+
+  it("limpiar vacia la cache de servidores", function() {
+    servicio.servidores.set([servidorEjemplo as any]);
+    expect(servicio.cantidadServidores()).toBe(1);
+    servicio.limpiar();
+    expect(servicio.servidores()).toEqual([]);
+    expect(servicio.cantidadServidores()).toBe(0);
+  });
 });

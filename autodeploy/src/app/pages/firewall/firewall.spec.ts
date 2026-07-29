@@ -276,4 +276,33 @@ describe("Firewall", function() {
     tick(3000);
     expect(componente.mensajeError()).toBe("");
   }));
+
+  it("agregarRegla con puerto no numerico avisa puertoInvalido y no postea", fakeAsync(function() {
+    inicializarConServidores();
+    componente.nuevoPuerto.set("abc");
+    componente.agregarRegla();
+    expect(componente.mensajeError()).toBe("firewall.mensajes.puertoInvalido");
+    httpMock.expectNone("/api/firewall/regla");
+    tick(3000);
+    expect(componente.mensajeError()).toBe("");
+  }));
+
+  it("agregarRegla con puerto fuera de rango avisa puertoInvalido y no postea", fakeAsync(function() {
+    inicializarConServidores();
+    componente.nuevoPuerto.set("70000");
+    componente.agregarRegla();
+    expect(componente.mensajeError()).toBe("firewall.mensajes.puertoInvalido");
+    httpMock.expectNone("/api/firewall/regla");
+    tick(3000);
+  }));
+
+  it("agregarRegla con puerto valido postea la regla", function() {
+    inicializarConServidores();
+    componente.nuevoPuerto.set("8080");
+    componente.agregarRegla();
+    const peticion = httpMock.expectOne("/api/firewall/regla");
+    expect(peticion.request.body.puerto).toBe("8080");
+    peticion.flush({ success: true, message: "OK", data: {} });
+    httpMock.expectOne("/api/firewall/servidor/srv-1").flush({ success: true, message: "OK", data: [reglaFake] });
+  });
 });

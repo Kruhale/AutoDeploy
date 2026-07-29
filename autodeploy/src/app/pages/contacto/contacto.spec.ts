@@ -131,4 +131,63 @@ describe("Contacto", function() {
     expect(protegido.cuerpoMensaje()).toBe("");
     expect(protegido.enviado()).toBeFalse();
   });
+
+  it("enviarPorEmail con email sin formato marca emailInvalido y no postea", function() {
+    const httpMock = TestBed.inject(HttpTestingController);
+    const protegido = componente as unknown as {
+      asuntoMensaje: { set: (v: string) => void };
+      cuerpoMensaje: { set: (v: string) => void };
+      emailUsuario: { set: (v: string) => void };
+      claveError: () => string;
+    };
+    protegido.asuntoMensaje.set("asunto");
+    protegido.cuerpoMensaje.set("cuerpo");
+    protegido.emailUsuario.set("no-es-un-email");
+    componente.enviarPorEmail();
+    expect(protegido.claveError()).toBe("contacto.emailInvalido");
+    httpMock.expectNone("/api/contacto");
+  });
+
+  it("enviarPorEmail no permite doble envio mientras esta en curso", function() {
+    const httpMock = TestBed.inject(HttpTestingController);
+    const protegido = componente as unknown as {
+      nombreUsuario: { set: (v: string) => void };
+      asuntoMensaje: { set: (v: string) => void };
+      cuerpoMensaje: { set: (v: string) => void };
+      emailUsuario: { set: (v: string) => void };
+      enviando: () => boolean;
+    };
+    protegido.nombreUsuario.set("Marta");
+    protegido.asuntoMensaje.set("asunto");
+    protegido.cuerpoMensaje.set("cuerpo");
+    protegido.emailUsuario.set("marta@local.test");
+    componente.enviarPorEmail();
+    componente.enviarPorEmail();
+    const peticiones = httpMock.match("/api/contacto");
+    expect(peticiones.length).toBe(1);
+    expect(protegido.enviando()).toBeTrue();
+    peticiones[0].flush({});
+    expect(protegido.enviando()).toBeFalse();
+  });
+
+  it("enviarPorEmail marca contacto.error si el backend falla", function() {
+    const httpMock = TestBed.inject(HttpTestingController);
+    const protegido = componente as unknown as {
+      nombreUsuario: { set: (v: string) => void };
+      asuntoMensaje: { set: (v: string) => void };
+      cuerpoMensaje: { set: (v: string) => void };
+      emailUsuario: { set: (v: string) => void };
+      claveError: () => string;
+      enviando: () => boolean;
+    };
+    protegido.nombreUsuario.set("Marta");
+    protegido.asuntoMensaje.set("asunto");
+    protegido.cuerpoMensaje.set("cuerpo");
+    protegido.emailUsuario.set("marta@local.test");
+    componente.enviarPorEmail();
+    const peticion = httpMock.expectOne("/api/contacto");
+    peticion.error(new ProgressEvent("net"), { status: 500, statusText: "fail" });
+    expect(protegido.claveError()).toBe("contacto.error");
+    expect(protegido.enviando()).toBeFalse();
+  });
 });

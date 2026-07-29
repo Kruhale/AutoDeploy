@@ -235,6 +235,7 @@
       "tituloLinea1": "Tu servidor.",
       "tituloLinea2": "Sin terminal.",
       "cue": "desliza",
+      "figuraPie": "Registro de despliegue · captura en directo",
       "cap2Linea1": "Menos comandos,",
       "cap2Linea2": "más control.",
       "cap3Linea1": "Despliega",
@@ -839,7 +840,8 @@
       "conectado": "Conectado",
       "fallido": "Conexión fallida"
     },
-    "errorNombreIp": "El nombre y la IP son obligatorios"
+    "errorNombreIp": "El nombre y la IP son obligatorios",
+    "errorPuerto": "El puerto SSH debe ser un número entre 1 y 65535"
   },
   "cuenta": {
     "overlineFree": "Titular de plan Free",
@@ -1097,6 +1099,8 @@
       "placeholderDestino": "A: https://nuevo.ejemplo.com",
       "codigo301": "301 (permanente)",
       "codigo302": "302 (temporal)",
+      "ariaCodigo": "Código de redirección",
+      "ariaServidor": "Servidor de la redirección",
       "guardando": "Guardando",
       "agregar": "Añadir",
       "cargando": "Cargando…",
@@ -1168,7 +1172,8 @@
       "errorAgregar": "No se pudo añadir la regla",
       "errorEliminar": "No se pudo eliminar la regla",
       "sinServidor": "Conecta un servidor antes de añadir reglas",
-      "puertoObligatorio": "Indica el puerto de la regla"
+      "puertoObligatorio": "Indica el puerto de la regla",
+      "puertoInvalido": "Puerto inválido: usa un número entre 1 y 65535"
     }
   },
   "backups": {
@@ -1197,6 +1202,7 @@
       "errorCronInstalar": "No se pudo instalar el cron",
       "errorCronEliminar": "No se pudo eliminar el cron",
       "errorIniciar": "No se pudo iniciar la copia",
+      "sinServidor": "Conecta un servidor antes de crear copias",
       "errorEliminar": "No se pudo eliminar la copia",
       "errorRestaurar": "No se pudo restaurar la copia",
       "restoreIniciado": "Restauración iniciada · aparecerá en breve un instantánea de seguridad previo"
@@ -1499,6 +1505,8 @@
     "titulo": "Hablemos",
     "subtitulo": "¿Tienes una duda, una sugerencia o un problema? Escríbenos por el canal que prefieras y te respondemos lo antes posible.",
     "respuestaEn": "Tiempo de respuesta",
+    "emailInvalido": "Escribe un email válido",
+    "error": "No se pudo enviar el mensaje. Inténtalo de nuevo.",
     "formulario": {
       "titulo": "Enviar un mensaje",
       "nombre": "Nombre",

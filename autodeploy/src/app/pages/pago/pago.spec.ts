@@ -344,26 +344,18 @@ describe("Pago", function() {
     expect(componente.estadoPago()).toBe("formulario");
   });
 
-  it("comprobarFormularioCompleto: desactiva el boton si no hay validaciones", function() {
-    const botonFalso = document.createElement("button");
-    botonFalso.className = "pago__boton-pagar";
-    document.body.appendChild(botonFalso);
+  it("comprobarFormularioCompleto: el formulario queda incompleto si faltan validaciones", function() {
     componente.numeroTarjeta.set("4111 1111 1111 1111");
     componente.validarNumero();
-    expect(botonFalso.disabled).toBeTrue();
-    document.body.removeChild(botonFalso);
+    expect(componente.formularioCompleto()).toBeFalse();
   });
 
-  it("comprobarFormularioCompleto: activa el boton cuando todas las validaciones pasan", function() {
-    const botonFalso = document.createElement("button");
-    botonFalso.className = "pago__boton-pagar";
-    document.body.appendChild(botonFalso);
+  it("comprobarFormularioCompleto: se completa cuando todas las validaciones pasan", function() {
     componente.comprobacionNombre = true;
     componente.comprobacionFecha = true;
     componente.comprobacionCvv = true;
     componente.numeroTarjeta.set("4111 1111 1111 1111");
     componente.validarNumero();
-    expect(botonFalso.disabled).toBeFalse();
-    document.body.removeChild(botonFalso);
+    expect(componente.formularioCompleto()).toBeTrue();
   });
 });

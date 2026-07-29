@@ -8,6 +8,10 @@ import { UsuarioService } from "../../services/usuario.service";
 import { PlanService } from "../../services/plan.service";
 import { AuthService } from "../../services/auth.service";
 import { ThemeService } from "../../services/theme.service";
+import { ServidorService } from "../../services/servidor.service";
+import { ActividadService } from "../../services/actividad.service";
+import { NotificacionService } from "../../services/notificacion.service";
+import { AsistenteIaService } from "../../services/asistente-ia.service";
 
 describe("Cuenta", function () {
   let fixture: ComponentFixture<Cuenta>;
@@ -496,5 +500,62 @@ describe("Cuenta", function () {
     const translate = TestBed.inject(TranslateService);
     translate.use("en");
     expect(componente.versionIdioma()).toBeGreaterThanOrEqual(versionPrevia);
+  });
+
+  it("cerrarSesion limpia las caches de servidores, actividad, notificaciones y chat IA", async function() {
+    await flushPeticionesUsuario("507f1f77bcf86cd799439011");
+    spyOn(router, "navigate").and.returnValue(Promise.resolve(true));
+    const servidorService = TestBed.inject(ServidorService);
+    const actividadService = TestBed.inject(ActividadService);
+    const notificacionService = TestBed.inject(NotificacionService);
+    const asistenteService = TestBed.inject(AsistenteIaService);
+    servidorService.servidores.set([{ id: "s1" } as any]);
+    actividadService.actividadesRecientes.set([{ id: "a1" } as any]);
+    notificacionService.conteoNoLeidas.set(3);
+    asistenteService.historialMensajes.set([{ texto: "hola" } as any]);
+    componente.cerrarSesion();
+    expect(servidorService.servidores()).toEqual([]);
+    expect(actividadService.actividadesRecientes()).toEqual([]);
+    expect(notificacionService.conteoNoLeidas()).toBe(0);
+    expect(asistenteService.historialMensajes()).toEqual([]);
+  });
+
+  it("alternarNotificacion sin preferencias cargadas reintenta la carga y no escribe", async function() {
+    await flushPeticionesUsuario("507f1f77bcf86cd799439011");
+    componente.prefsCargadas.set(false);
+    await componente.alternarNotificacion("criticas");
+    const reintentoClaves = httpMock.expectOne("/api/usuarios/507f1f77bcf86cd799439011/claves-ssh");
+    reintentoClaves.flush({ success: true, message: "OK", data: [] });
+    await esperarMacrotask();
+    const reintentoPrefs = httpMock.expectOne("/api/usuarios/507f1f77bcf86cd799439011/notificaciones");
+    reintentoPrefs.flush({ success: true, message: "OK", data: { email: true, alertasCriticas: true, eventosDespliegue: true } });
+    await esperarMacrotask();
+    expect(componente.notificacionesAlertasCriticas()).toBeTrue();
+    expect(componente.prefsCargadas()).toBeTrue();
+  });
+
+  it("alternarNotificacion con preferencias cargadas persiste el estado completo", async function() {
+    await flushPeticionesUsuario("507f1f77bcf86cd799439011");
+    componente.prefsCargadas.set(true);
+    const promesa = componente.alternarNotificacion("criticas");
+    await esperarMacrotask();
+    const peticion = httpMock.expectOne("/api/usuarios/507f1f77bcf86cd799439011/notificaciones");
+    expect(peticion.request.method).toBe("PUT");
+    expect(peticion.request.body.alertasCriticas).toBeFalse();
+    peticion.flush({ success: true, message: "OK", data: {} });
+    await promesa;
+  });
+
+  it("guardarCambios marca guardadoConError cuando el backend falla", async function() {
+    await flushPeticionesUsuario("507f1f77bcf86cd799439011");
+    componente.nombreEditable.set("Nombre Nuevo");
+    componente.emailEditable.set("nuevo@test.com");
+    const promesa = componente.guardarCambios();
+    await esperarMacrotask();
+    const peticion = httpMock.expectOne("/api/usuarios/507f1f77bcf86cd799439011");
+    peticion.error(new ProgressEvent("net"), { status: 500, statusText: "fail" });
+    await promesa;
+    expect(componente.guardadoConError()).toBeTrue();
+    expect(componente.mensajeGuardado()).not.toBe("");
   });
 });

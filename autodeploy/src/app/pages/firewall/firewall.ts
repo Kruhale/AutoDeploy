@@ -168,6 +168,12 @@ export class Firewall implements OnInit {
       this.mostrarErrorTemporal("firewall.mensajes.puertoObligatorio");
       return;
     }
+    const puertoNumero = parseInt(puerto, 10);
+    const puertoInvalido = !/^\d+$/.test(puerto.trim()) || puertoNumero < 1 || puertoNumero > 65535;
+    if (puertoInvalido) {
+      this.mostrarErrorTemporal("firewall.mensajes.puertoInvalido");
+      return;
+    }
 
     this.guardando.set(true);
     const componente = this;

@@ -47,4 +47,11 @@ describe("ActividadService", function() {
       { id: "a-1", tipo: "info", mensaje: "Algo paso", icono: "fa-info", fechaCreacion: "2026-05-22" }
     ]);
   }));
+
+  it("limpiar vacia la cache de actividad", function() {
+    servicio.actividadesRecientes.set([{ id: "a1" } as any]);
+    servicio.limpiar();
+    expect(servicio.actividadesRecientes()).toEqual([]);
+    expect(servicio.sinActividad()).toBeTrue();
+  });
 });

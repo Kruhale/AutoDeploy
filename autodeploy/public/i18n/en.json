@@ -235,6 +235,7 @@
       "tituloLinea1": "Your server.",
       "tituloLinea2": "No terminal.",
       "cue": "scroll",
+      "figuraPie": "Deployment log · live capture",
       "cap2Linea1": "Fewer commands,",
       "cap2Linea2": "more control.",
       "cap3Linea1": "Deploy",
@@ -839,7 +840,8 @@
       "conectado": "Connected",
       "fallido": "Connection failed"
     },
-    "errorNombreIp": "Name and IP are required"
+    "errorNombreIp": "Name and IP are required",
+    "errorPuerto": "SSH port must be a number between 1 and 65535"
   },
   "cuenta": {
     "overlineFree": "Free plan holder",
@@ -1097,6 +1099,8 @@
       "placeholderDestino": "To: https://new.example.com",
       "codigo301": "301 (permanent)",
       "codigo302": "302 (temporary)",
+      "ariaCodigo": "Redirect status code",
+      "ariaServidor": "Redirect server",
       "guardando": "Saving",
       "agregar": "Add",
       "cargando": "Loading…",
@@ -1168,7 +1172,8 @@
       "errorAgregar": "Could not add the rule",
       "errorEliminar": "Could not remove the rule",
       "sinServidor": "Connect a server before adding rules",
-      "puertoObligatorio": "Enter the rule port"
+      "puertoObligatorio": "Enter the rule port",
+      "puertoInvalido": "Invalid port: use a number between 1 and 65535"
     }
   },
   "backups": {
@@ -1197,6 +1202,7 @@
       "errorCronInstalar": "Could not install the cron",
       "errorCronEliminar": "Could not remove the cron",
       "errorIniciar": "Could not start the backup",
+      "sinServidor": "Connect a server before creating backups",
       "errorEliminar": "Could not delete the backup",
       "errorRestaurar": "Could not restore the backup",
       "restoreIniciado": "Restore started · a pre-restore safety snapshot will appear shortly"
@@ -1499,6 +1505,8 @@
     "titulo": "Let's talk",
     "subtitulo": "Got a question, a suggestion, or a problem? Write to us through the channel you prefer and we'll get back to you as soon as possible.",
     "respuestaEn": "Response time",
+    "emailInvalido": "Enter a valid email address",
+    "error": "The message could not be sent. Please try again.",
     "formulario": {
       "titulo": "Send a message",
       "nombre": "Name",

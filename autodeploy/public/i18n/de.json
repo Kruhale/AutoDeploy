@@ -235,6 +235,7 @@
       "tituloLinea1": "Dein Server.",
       "tituloLinea2": "Ohne Terminal.",
       "cue": "scrollen",
+      "figuraPie": "Deployment-Protokoll · Live-Mitschnitt",
       "cap2Linea1": "Weniger Befehle,",
       "cap2Linea2": "mehr Kontrolle.",
       "cap3Linea1": "Deploye",
@@ -839,7 +840,8 @@
       "conectado": "Verbunden",
       "fallido": "Verbindung fehlgeschlagen"
     },
-    "errorNombreIp": "Name und IP sind erforderlich"
+    "errorNombreIp": "Name und IP sind erforderlich",
+    "errorPuerto": "Der SSH-Port muss eine Zahl zwischen 1 und 65535 sein"
   },
   "cuenta": {
     "overlineFree": "Inhaber eines Free-Plans",
@@ -1097,6 +1099,8 @@
       "placeholderDestino": "Nach: https://neu.beispiel.com",
       "codigo301": "301 (permanent)",
       "codigo302": "302 (temporär)",
+      "ariaCodigo": "Weiterleitungscode",
+      "ariaServidor": "Server der Weiterleitung",
       "guardando": "Wird gespeichert",
       "agregar": "Hinzufügen",
       "cargando": "Lädt…",
@@ -1168,7 +1172,8 @@
       "errorAgregar": "Die Regel konnte nicht hinzugefügt werden",
       "errorEliminar": "Die Regel konnte nicht gelöscht werden",
       "sinServidor": "Verbinde zuerst einen Server, um Regeln hinzuzufügen",
-      "puertoObligatorio": "Gib den Port der Regel an"
+      "puertoObligatorio": "Gib den Port der Regel an",
+      "puertoInvalido": "Ungültiger Port: Zahl zwischen 1 und 65535 verwenden"
     }
   },
   "backups": {
@@ -1197,6 +1202,7 @@
       "errorCronInstalar": "Der Cron konnte nicht installiert werden",
       "errorCronEliminar": "Der Cron konnte nicht entfernt werden",
       "errorIniciar": "Die Sicherung konnte nicht gestartet werden",
+      "sinServidor": "Verbinde zuerst einen Server, um Backups zu erstellen",
       "errorEliminar": "Die Sicherung konnte nicht gelöscht werden",
       "errorRestaurar": "Die Sicherung konnte nicht wiederhergestellt werden",
       "restoreIniciado": "Wiederherstellung gestartet · ein vorheriger Sicherungs-Momentaufnahme erscheint in Kürze"
@@ -1499,6 +1505,8 @@
     "titulo": "Lassen Sie uns reden",
     "subtitulo": "Haben Sie eine Frage, einen Vorschlag oder ein Problem? Schreiben Sie uns über Ihren bevorzugten Kanal und wir antworten Ihnen so schnell wie möglich.",
     "respuestaEn": "Antwortzeit",
+    "emailInvalido": "Gib eine gültige E-Mail-Adresse ein",
+    "error": "Die Nachricht konnte nicht gesendet werden. Bitte erneut versuchen.",
     "formulario": {
       "titulo": "Nachricht senden",
       "nombre": "Name",

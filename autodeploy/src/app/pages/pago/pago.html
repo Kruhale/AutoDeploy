@@ -170,7 +170,7 @@
             class="boton--primario pagina-pago__boton-pagar"
             type="button"
             (click)="procesarPago()"
-            [disabled]="estadoPago() === 'procesando'"
+            [disabled]="!formularioCompleto() || estadoPago() === 'procesando'"
           >
             @if (estadoPago() === "procesando") {
             {{ "pago.procesando" | translate }}

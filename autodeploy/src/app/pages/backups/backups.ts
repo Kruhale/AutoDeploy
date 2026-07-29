@@ -172,7 +172,14 @@ export class Backups implements OnInit, OnDestroy {
 
   crearBackup(): void {
     const servidorId = this.servidorSeleccionadoId();
-    if (!servidorId) return;
+    if (!servidorId) {
+      const componente = this;
+      this.mensajeError.set(this.translate.instant("backups.mensajes.sinServidor"));
+      setTimeout(function () {
+        componente.mensajeError.set("");
+      }, 3000);
+      return;
+    }
 
     this.creandoBackup.set(true);
     const componente = this;

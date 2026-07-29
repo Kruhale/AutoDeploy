@@ -16,7 +16,8 @@ export class Contacto {
   protected readonly asuntoMensaje = signal<string>("");
   protected readonly cuerpoMensaje = signal<string>("");
   protected readonly enviado = signal<boolean>(false);
-  protected readonly error = signal<boolean>(false);
+  protected readonly enviando = signal<boolean>(false);
+  protected readonly claveError = signal<string>("");
 
   // Antes componía un mailto (dependía del cliente de correo del visitante).
   // Ahora envía el mensaje al backend, que lo reenvía a un webhook de Discord.
@@ -26,13 +27,24 @@ export class Contacto {
     const nombreLimpio = this.nombreUsuario().trim();
     const emailLimpio = this.emailUsuario().trim();
 
+    if (this.enviando()) {
+      return;
+    }
+
     const formularioInvalido =
       asuntoLimpio === "" || cuerpoLimpio === "" || emailLimpio === "";
     if (formularioInvalido) {
       return;
     }
 
-    this.error.set(false);
+    const emailValido = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailLimpio);
+    if (!emailValido) {
+      this.claveError.set("contacto.emailInvalido");
+      return;
+    }
+
+    this.claveError.set("");
+    this.enviando.set(true);
     this.http
       .post("/api/contacto", {
         nombre: nombreLimpio,
@@ -41,8 +53,14 @@ export class Contacto {
         mensaje: cuerpoLimpio,
       })
       .subscribe({
-        next: () => this.enviado.set(true),
-        error: () => this.error.set(true),
+        next: () => {
+          this.enviando.set(false);
+          this.enviado.set(true);
+        },
+        error: () => {
+          this.enviando.set(false);
+          this.claveError.set("contacto.error");
+        },
       });
   }
 
@@ -52,6 +70,7 @@ export class Contacto {
     this.asuntoMensaje.set("");
     this.cuerpoMensaje.set("");
     this.enviado.set(false);
-    this.error.set(false);
+    this.enviando.set(false);
+    this.claveError.set("");
   }
 }

@@ -202,4 +202,12 @@ describe("AsistenteIaService", function() {
 
     await expectAsync(promesa).toBeRejectedWithError("Error al hablar con el asistente");
   });
+
+  it("limpiar vacia el historial y el estado de escritura", function() {
+    servicio.historialMensajes.set([{ texto: "hola" } as any]);
+    servicio.estaEscribiendo.set(true);
+    servicio.limpiar();
+    expect(servicio.historialMensajes()).toEqual([]);
+    expect(servicio.estaEscribiendo()).toBeFalse();
+  });
 });

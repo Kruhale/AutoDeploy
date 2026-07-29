@@ -2,6 +2,7 @@ import { Injectable, signal, computed, Signal, inject } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
 import { firstValueFrom } from "rxjs";
 import { IdiomaService } from "./idioma.service";
+import { PlanService, PlanId } from "./plan.service";
 
 // Paleta del avatar generado: cada cuenta recibe uno de estos degradados de
 // forma determinista (por hash del nombre+email), asi que su avatar es siempre
@@ -89,6 +90,7 @@ export class UsuarioService {
   avatarGradiente: Signal<string>;
 
   private idiomaService = inject(IdiomaService);
+  private planService = inject(PlanService);
 
   constructor(private http: HttpClient) {
     const servicio = this;
@@ -140,6 +142,10 @@ export class UsuarioService {
     }
 
     this.guardarEnSesion(respuesta.data);
+    // Hidratacion inicial: el idioma guardado en la cuenta se aplica al entrar.
+    if (respuesta.data.idioma) {
+      this.idiomaService.aplicarIdiomaDelUsuario(respuesta.data.idioma);
+    }
     return respuesta.data;
   }
 
@@ -159,6 +165,10 @@ export class UsuarioService {
     }
 
     this.guardarEnSesion(respuesta.data);
+    // Hidratacion inicial: el idioma guardado en la cuenta se aplica al entrar.
+    if (respuesta.data.idioma) {
+      this.idiomaService.aplicarIdiomaDelUsuario(respuesta.data.idioma);
+    }
     return respuesta.data;
   }
 
@@ -272,6 +282,9 @@ export class UsuarioService {
   }
 
   limpiar(): void {
+    // Primero se resetea el plan (escribe en sessionStorage) y despues se vacia
+    // todo: asi el storage queda limpio de verdad tras cerrar sesion.
+    this.planService.activarPlan("free");
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("usuarioId");
     sessionStorage.removeItem("nombre");
@@ -295,7 +308,9 @@ export class UsuarioService {
     sessionStorage.setItem("usuarioId", datos.id);
     sessionStorage.setItem("nombre", datos.nombre);
     sessionStorage.setItem("email", datos.email);
-    sessionStorage.setItem("plan", datos.plan || "free");
+    // activarPlan guarda en sessionStorage y ademas sincroniza el signal del
+    // PlanService: sin esto, el plan del usuario anterior seguia pintado en la UI.
+    this.planService.activarPlan((datos.plan || "free") as PlanId);
 
     if (datos.fechaFinSuscripcion) {
       sessionStorage.setItem("fechaFinSuscripcion", datos.fechaFinSuscripcion);
@@ -317,11 +332,6 @@ export class UsuarioService {
     this.nombre.set(datos.nombre);
     this.email.set(datos.email);
     this.plan.set(datos.plan || "free");
-
-    if (datos.idioma) {
-      sessionStorage.setItem("idioma", datos.idioma);
-      this.idiomaService.aplicarIdiomaDelUsuario(datos.idioma);
-    }
 
   }
 }

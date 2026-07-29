@@ -175,4 +175,9 @@ export class AsistenteIaService {
 
     return mensajesParaBackend;
   }
+
+  limpiar(): void {
+    this.historialMensajes.set([]);
+    this.estaEscribiendo.set(false);
+  }
 }

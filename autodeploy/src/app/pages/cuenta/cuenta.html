@@ -187,7 +187,7 @@
       @if (mensajeGuardado()) {
         <span
           class="cuenta__mensaje-estado"
-          [class.cuenta__mensaje-estado--error]="mensajeGuardado() === 'Error'">
+          [class.cuenta__mensaje-estado--error]="guardadoConError()">
           <span class="cuenta__mensaje-estado__punto" aria-hidden="true"></span>
           {{ mensajeGuardado() }}
         </span>
@@ -301,7 +301,7 @@
         </section>
         <section class="cuenta__form-clave__acciones">
           <button class="cuenta__form-clave__cancelar" type="button" (click)="cancelarFormularioClave()">{{ "cuenta.formClave.cancelar" | translate }}</button>
-          <button class="cuenta__boton-guardar" type="button" (click)="agregarClaveSsh()">
+          <button class="cuenta__boton-guardar" type="button" (click)="agregarClaveSsh()" [disabled]="agregandoClave()">
             <span class="cuenta__boton-guardar__contenido">
               <span class="cuenta__boton-guardar__texto">{{ "cuenta.formClave.addKey" | translate }}</span>
               <span class="cuenta__boton-guardar__flecha" aria-hidden="true">→</span>

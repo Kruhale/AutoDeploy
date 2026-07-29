@@ -46,6 +46,14 @@ export class Onboarding {
       return;
     }
 
+    const puertoNumero = parseInt(this.puertoSsh(), 10);
+    const puertoInvalido = isNaN(puertoNumero) || puertoNumero < 1 || puertoNumero > 65535;
+    if (puertoInvalido) {
+      this.estadoConexion.set("error");
+      this.mensajeEstado.set(this.translate.instant("onboarding.errorPuerto"));
+      return;
+    }
+
     this.conectando.set(true);
     this.estadoConexion.set("testing");
     this.mensajeEstado.set(this.translate.instant("onboarding.estado.probando"));
@@ -53,7 +61,7 @@ export class Onboarding {
     const peticion: PeticionConexionSsh = {
       nombre: nombre,
       direccionIp: ip,
-      puertoSsh: parseInt(this.puertoSsh(), 10),
+      puertoSsh: puertoNumero,
       usuarioSsh: this.usuarioSsh(),
       metodoAutenticacion: this.metodoAutenticacion(),
       password: this.passwordServidor(),

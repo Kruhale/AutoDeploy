@@ -118,7 +118,7 @@
       </section>
       <section class="pagina-firewall__formulario__acciones">
         <button class="pagina-firewall__form-cancelar" type="button" (click)="cancelarFormulario()">{{ "firewall.cancelar" | translate }}</button>
-        <button class="editorial__cta-principal" type="button" (click)="agregarRegla()">
+        <button class="editorial__cta-principal" type="button" (click)="agregarRegla()" [disabled]="guardando()">
           <span class="editorial__cta-principal__texto">
             <span class="editorial__cta-principal__principal">{{ "firewall.aplicar" | translate }}</span>
           </span>

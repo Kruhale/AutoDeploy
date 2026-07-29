@@ -1,0 +1,223 @@
+// — 05 · Planes: tres columnas limpias separadas por lineas; el plan destacado
+// solo se distingue por el acento ambar, sin tarjetas glass ni badges ruidosos.
+.planes {
+  scroll-margin-top: 6rem;
+  padding: clamp(6rem, 16vh, 11rem) clamp(1.5rem, 6vw, 7rem);
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+.planes__cabecera {
+  margin-bottom: clamp(3.5rem, 8vh, 6rem);
+}
+
+.planes__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  margin-bottom: 1.5rem;
+}
+
+.planes__titulo {
+  // Misma voz serif que el titular de portada (pareja tipografica real).
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 4.5rem);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  color: var(--tinta);
+  max-width: 56rem;
+  text-wrap: balance;
+}
+
+.planes__columnas {
+  // 1 = reglas dibujadas; GSAP las anima de 0 a 1 al entrar la seccion.
+  --traza: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+// Las reglas superior e inferior se dibujan a la vez, como el resto.
+.planes__columnas::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--linea);
+  transform: scaleX(var(--traza));
+  transform-origin: left;
+}
+
+.planes__columnas::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--linea);
+  transform: scaleX(var(--traza));
+  transform-origin: left;
+}
+
+.planes__plan {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: clamp(2.5rem, 5vh, 3.5rem) clamp(1.5rem, 3vw, 3rem);
+}
+
+.planes__plan + .planes__plan {
+  border-left: 1px solid var(--linea);
+}
+
+.planes__plan--destacado {
+  position: relative;
+  overflow: hidden;
+  background-color: hsla(42, 62%, 62%, 0.04);
+  box-shadow: inset 0 1px 0 var(--acento), inset 0 -1px 0 var(--acento);
+}
+
+// Un barrido de luz cruza el plan destacado cada ~9s: el mismo idioma que
+// el cristal del panel del hero.
+.planes__plan--destacado::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 42%, hsla(40, 30%, 96%, 0.05) 50%, transparent 58%);
+  transform: translateX(-120%);
+}
+
+html.tema-claro .planes__plan--destacado::after {
+  background: linear-gradient(115deg, transparent 42%, hsla(38, 70%, 45%, 0.05) 50%, transparent 58%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .planes__plan--destacado::after {
+    animation: planes-destacado-brillo 9s var(--ease-suave) infinite;
+  }
+}
+
+@keyframes planes-destacado-brillo {
+  0% {
+    transform: translateX(-120%);
+  }
+  30% {
+    transform: translateX(120%);
+  }
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+.planes__plan__nombre {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+.planes__plan__badge {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  color: var(--acento);
+  border: 1px solid hsla(42, 62%, 62%, 0.4);
+  border-radius: var(--radius-full);
+  padding: 0.25rem 0.7rem;
+  // El pill no engorda la fila del nombre: las tres columnas de planes
+  // comparten linea base (sin esto, Pro baja ~5px y la rejilla canta).
+  margin-block: -0.35rem;
+}
+
+.planes__plan__precio {
+  font-family: var(--font-secondary);
+  font-size: clamp(3rem, 5.5vw, 5rem);
+  font-weight: var(--font-weight-light);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--tinta);
+}
+
+.planes__plan__periodo {
+  font-size: 1rem;
+  font-weight: var(--font-weight-regular);
+  color: var(--tinta-apagada);
+  margin-left: 0.35rem;
+}
+
+.planes__plan__descripcion {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--tinta-suave);
+  min-height: 3.2em;
+}
+
+.planes__plan__lista {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid var(--linea);
+}
+
+.planes__plan__item {
+  font-size: 0.9rem;
+  color: var(--tinta-suave);
+  padding: 0.85rem 0;
+  border-bottom: 1px solid var(--linea);
+}
+
+.planes__plan__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: auto;
+  padding-top: 1.5rem;
+  font-family: var(--font-secondary);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--tinta);
+  transition: color 0.3s ease, gap 0.35s var(--ease-suave);
+}
+
+.planes__plan__cta:hover {
+  color: var(--acento);
+  gap: 1rem;
+}
+
+.planes__plan__cta:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+.planes__plan__cta--actual {
+  color: var(--tinta-apagada);
+  cursor: default;
+  background: none;
+  border: 0;
+  justify-content: flex-start;
+  font-family: var(--font-secondary);
+}
+
+.planes__plan--destacado .planes__plan__cta {
+  color: var(--acento);
+}
+
+@media (max-width: 900px) {
+  .planes__columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .planes__plan + .planes__plan {
+    border-left: 0;
+    border-top: 1px solid var(--linea);
+  }
+}

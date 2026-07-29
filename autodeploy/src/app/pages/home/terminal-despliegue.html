@@ -1,0 +1,30 @@
+<!-- El tecleo caracter a caracter y la barra tecnica son decorativos
+     (aria-hidden), pero el pie de figura si es contenido: queda accesible. -->
+<figure class="terminal-despliegue">
+  <p class="terminal-despliegue__barra" aria-hidden="true">
+    <span class="terminal-despliegue__ruta">~/deploys/miapp</span>
+    <span class="terminal-despliegue__sesion">bash · 80×24</span>
+    @if (mostrarTimer()) {
+      <span class="terminal-despliegue__timer">{{ segundosFormateados() }}</span>
+    }
+  </p>
+
+  <section class="terminal-despliegue__cuerpo" aria-hidden="true">
+    @for (linea of lineasEscritas(); track $index) {
+      <p class="terminal-despliegue__linea terminal-despliegue__linea--{{ linea.tipo }}">
+        <span class="terminal-despliegue__numero">{{ numeroDeLinea($index) }}</span>
+        <span class="terminal-despliegue__prefijo">{{ prefijoDeLinea(linea.tipo) }}</span>
+        <span class="terminal-despliegue__texto">{{ linea.texto }}</span>
+      </p>
+    }
+    @if (lineaEnCurso(); as actual) {
+      <p class="terminal-despliegue__linea terminal-despliegue__linea--{{ actual.tipo }}">
+        <span class="terminal-despliegue__numero">{{ numeroDeLinea(lineasEscritas().length) }}</span>
+        <span class="terminal-despliegue__prefijo">{{ prefijoDeLinea(actual.tipo) }}</span>
+        <span class="terminal-despliegue__texto">{{ actual.texto }}<span class="terminal-despliegue__cursor"></span></span>
+      </p>
+    }
+  </section>
+
+  <figcaption class="terminal-despliegue__pie">{{ "home.hero.figuraPie" | translate }}</figcaption>
+</figure>

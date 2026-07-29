@@ -1,0 +1,124 @@
+// — 03 · Capacidades: filas editoriales full-width separadas por lineas de 1px.
+.capacidades {
+  scroll-margin-top: 6rem;
+  padding: clamp(6rem, 16vh, 11rem) clamp(1.5rem, 6vw, 7rem);
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+.capacidades__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  margin-bottom: clamp(2.5rem, 6vh, 4rem);
+}
+
+.capacidades__lista {
+  // 1 = regla dibujada; GSAP la anima de 0 a 1 al entrar la lista.
+  --traza: 1;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+// La regla de apertura se dibuja de izquierda a derecha, como las filas.
+.capacidades__lista::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--linea);
+  transform: scaleX(var(--traza));
+  transform-origin: left;
+}
+
+.capacidades__fila {
+  // 1 = regla dibujada; GSAP la anima de 0 a 1 al entrar la fila.
+  --traza: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(4rem, 0.2fr) minmax(0, 0.9fr) minmax(0, 1.1fr);
+  align-items: baseline;
+  gap: clamp(1.25rem, 3.5vw, 3.5rem);
+  padding: clamp(2rem, 5vh, 3.25rem) 0;
+  transition: padding-left 0.5s var(--ease-suave);
+}
+
+// La regla inferior es un trazo que se dibuja de izquierda a derecha:
+// el periodico se imprime mientras se lee.
+.capacidades__fila::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--linea);
+  transform: scaleX(var(--traza));
+  transform-origin: left;
+  transition: background-color 0.4s ease;
+}
+
+// Al pasar el raton la fila se desplaza un poco y su titulo toma el acento:
+// el unico "efecto" es tipografico, sin tarjetas ni sombras.
+.capacidades__fila:hover {
+  padding-left: 1.25rem;
+}
+
+.capacidades__fila:hover::after {
+  background-color: hsla(42, 62%, 62%, 0.35);
+}
+
+.capacidades__fila:hover .capacidades__fila__titulo {
+  color: var(--acento);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .capacidades__fila {
+    transition: none;
+  }
+
+  .capacidades__fila:hover {
+    padding-left: 0;
+  }
+}
+
+.capacidades__fila__numero {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--tinta-apagada);
+  transition: color 0.4s ease;
+}
+
+// El numero acompania al titulo: la fila entera responde con la misma voz.
+.capacidades__fila:hover .capacidades__fila__numero {
+  color: var(--acento);
+}
+
+.capacidades__fila__titulo {
+  font-family: var(--font-secondary);
+  font-size: clamp(1.75rem, 3.2vw, 3rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--tinta);
+  transition: color 0.4s ease;
+}
+
+.capacidades__fila__descripcion {
+  font-size: clamp(0.95rem, 1.1vw, 1.05rem);
+  line-height: 1.7;
+  color: var(--tinta-suave);
+  max-width: 34rem;
+}
+
+@media (max-width: 820px) {
+  .capacidades__fila {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.9rem;
+  }
+}

@@ -1,0 +1,42 @@
+// Cinta tecnica: marquesina editorial entre capitulos de la landing — el
+// vocabulario del oficio desfilando despacio entre dos reglas de 1px.
+.cinta {
+  overflow: hidden;
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+  padding: 1.1rem 0;
+}
+
+.cinta__pista {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+// El desfile es continuo: dos grupos identicos y un bucle al -50% exacto.
+.cinta__grupo {
+  display: block;
+  flex-shrink: 0;
+  padding-right: 3.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--tinta-apagada);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cinta__pista {
+    animation: cinta-desfilar 46s linear infinite;
+  }
+}
+
+@keyframes cinta-desfilar {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

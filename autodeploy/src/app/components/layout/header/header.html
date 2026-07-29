@@ -1,0 +1,61 @@
+<header class="cabecera">
+  <a class="cabecera__logo" routerLink="/">
+    <img class="cabecera__logo__imagen" src="logo-128.webp" alt="AutoDeploy" width="32" height="32" decoding="async" fetchpriority="high">
+    <span class="cabecera__logo__texto">Auto<span class="cabecera__logo__texto--acento">Deploy</span></span>
+  </a>
+
+  <menu class="cabecera__acciones" [attr.aria-label]="'header.aria.acciones' | translate">
+    <button type="button" class="cabecera__tema" (click)="themeService.alternarTema()" [attr.aria-label]="themeService.temaActual() === 'oscuro' ? ('header.aria.temaClaro' | translate) : ('header.aria.temaOscuro' | translate)">
+      @if (themeService.temaActual() === 'oscuro') {
+        <i class="fa-solid fa-sun"></i>
+      } @else {
+        <i class="fa-solid fa-moon"></i>
+      }
+    </button>
+
+    <button type="button" class="cabecera__menu" (click)="alternarMenuMovil()" [attr.aria-label]="'header.aria.menu' | translate" [attr.aria-expanded]="menuMovilAbierto()">
+      <span class="cabecera__menu__texto">{{ "header.panelMovil.titulo" | translate }}</span>
+      <span class="cabecera__menu__icono" aria-hidden="true">{{ menuMovilAbierto() ? "×" : "+" }}</span>
+      @if (!menuMovilAbierto() && authService.estaLogueado() && contadorSinLeer() > 0) {
+        <span class="cabecera__menu__punto" aria-hidden="true"></span>
+      }
+    </button>
+  </menu>
+</header>
+
+@if (menuMovilAbierto()) {
+  <aside class="panel-menu" role="dialog" aria-modal="true" [attr.aria-label]="'header.panelMovil.titulo' | translate">
+    <header class="panel-menu__cabecera">
+      <span class="panel-menu__marca">— AutoDeploy</span>
+      <button class="panel-menu__cerrar" (click)="cerrarMenuMovil()" [attr.aria-label]="'header.aria.cerrarMenu' | translate">
+        <span aria-hidden="true">×</span>
+      </button>
+    </header>
+
+    <nav class="panel-menu__nav">
+      <a class="panel-menu__enlace" routerLink="/" fragment="features" (click)="cerrarMenuMovil()">
+        <span class="panel-menu__enlace__numero">01</span>
+        <span class="panel-menu__enlace__texto">{{ "header.nav.features" | translate }}</span>
+      </a>
+      <a class="panel-menu__enlace" routerLink="/" fragment="como-funciona" (click)="cerrarMenuMovil()">
+        <span class="panel-menu__enlace__numero">02</span>
+        <span class="panel-menu__enlace__texto">{{ "header.nav.comoFunciona" | translate }}</span>
+      </a>
+      <a class="panel-menu__enlace" routerLink="/" fragment="pricing" (click)="cerrarMenuMovil()">
+        <span class="panel-menu__enlace__numero">03</span>
+        <span class="panel-menu__enlace__texto">{{ "header.nav.precios" | translate }}</span>
+      </a>
+    </nav>
+
+    <footer class="panel-menu__pie">
+      @if (authService.estaLogueado()) {
+        <a class="panel-menu__accion" routerLink="/app/cuenta" (click)="cerrarMenuMovil()">{{ "header.cuenta" | translate }}</a>
+      } @else {
+        <a class="panel-menu__accion" routerLink="/login" (click)="cerrarMenuMovil()">{{ "header.login" | translate }}</a>
+      }
+      <a class="panel-menu__accion panel-menu__accion--destacada" routerLink="/app" (click)="cerrarMenuMovil()">
+        {{ "header.botonApp" | translate }} <span aria-hidden="true">→</span>
+      </a>
+    </footer>
+  </aside>
+}

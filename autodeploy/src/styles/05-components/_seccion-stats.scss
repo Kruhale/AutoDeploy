@@ -1,0 +1,88 @@
+// — 04 · Cifras: tres numeros monumentales, sin cajas ni brillos.
+.cifras {
+  padding: clamp(5rem, 12vh, 8rem) clamp(1.5rem, 6vw, 7rem);
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+.cifras__eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--tinta-apagada);
+  margin-bottom: clamp(2.5rem, 6vh, 4rem);
+}
+
+.cifras__lista {
+  // 1 = regla dibujada; GSAP la anima de 0 a 1 al entrar la seccion.
+  --traza: 1;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(2rem, 5vw, 5rem);
+  padding-top: clamp(2.5rem, 6vh, 4rem);
+}
+
+// La regla de apertura se dibuja de izquierda a derecha, como las filas.
+.cifras__lista::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--linea);
+  transform: scaleX(var(--traza));
+  transform-origin: left;
+}
+
+// El sufijo de la cifra (+, %) es puntuacion editorial: va en ambar.
+.cifras__sufijo {
+  color: var(--acento);
+}
+
+.cifras__item {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+// Separadores verticales de 1px entre cifras: estructura editorial, no flotan.
+.cifras__item + .cifras__item {
+  border-left: 1px solid var(--linea);
+  padding-left: clamp(2rem, 4vw, 4rem);
+}
+
+.cifras__numero {
+  font-family: var(--font-secondary);
+  font-size: clamp(3.5rem, 7.5vw, 7rem);
+  font-weight: var(--font-weight-light);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: var(--tinta);
+  font-variant-numeric: tabular-nums;
+}
+
+.cifras__etiqueta {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  max-width: 14rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 720px) {
+  .cifras__lista {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .cifras__item + .cifras__item {
+    border-left: 0;
+    border-top: 1px solid var(--linea);
+    padding-left: 0;
+    padding-top: 2rem;
+  }
+}

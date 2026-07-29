@@ -1,0 +1,117 @@
+<main class="pagina-recursos">
+  <section class="pagina-recursos__hero">
+    <section class="pagina-recursos__hero__izquierda">
+      <span class="pagina-recursos__sello">
+        <span class="pagina-recursos__sello__punto"></span>
+        {{ "apiDocs.sello" | translate }}
+      </span>
+      <h1 class="pagina-recursos__titulo">{{ "apiDocs.titulo" | translate }}</h1>
+      <p class="pagina-recursos__subtitulo">{{ "apiDocs.subtitulo" | translate }}</p>
+    </section>
+    <section class="pagina-recursos__hero__derecha">
+      <p class="pagina-recursos__hero__meta">{{ "apiDocs.version" | translate }}</p>
+      <p class="pagina-recursos__hero__meta-valor">v1.0.0</p>
+    </section>
+  </section>
+
+  <section class="pagina-recursos__bento">
+    <article class="pagina-recursos__tarjeta pagina-recursos__tarjeta--grande">
+      <header class="pagina-recursos__tarjeta__cabecera">
+        <span class="pagina-recursos__tarjeta__indice">01</span>
+        <h2 class="pagina-recursos__tarjeta__titulo">{{ "apiDocs.autenticacion.titulo" | translate }}</h2>
+      </header>
+      <p class="pagina-recursos__tarjeta__texto">{{ "apiDocs.autenticacion.descripcion" | translate }}</p>
+      <pre class="pagina-recursos__codigo"><code>curl -X POST https://autodeploy.dev/api/auth/login \
+  -H "Content-Type: application/json" \
+  -d '&#123;"email":"usuario&#64;example.com","password":"********"&#125;'</code></pre>
+    </article>
+
+    <article class="pagina-recursos__tarjeta">
+      <header class="pagina-recursos__tarjeta__cabecera">
+        <span class="pagina-recursos__tarjeta__indice">02</span>
+        <h2 class="pagina-recursos__tarjeta__titulo">{{ "apiDocs.endpoints.titulo" | translate }}</h2>
+      </header>
+      <p class="pagina-recursos__tarjeta__texto">{{ "apiDocs.endpoints.descripcion" | translate }}</p>
+      <ul class="pagina-recursos__lista-endpoints">
+        <li class="pagina-recursos__endpoint">
+          <span class="pagina-recursos__endpoint__metodo pagina-recursos__endpoint__metodo--get">GET</span>
+          <code>/api/servidores</code>
+        </li>
+        <li class="pagina-recursos__endpoint">
+          <span class="pagina-recursos__endpoint__metodo pagina-recursos__endpoint__metodo--post">POST</span>
+          <code>/api/despliegues</code>
+        </li>
+        <li class="pagina-recursos__endpoint">
+          <span class="pagina-recursos__endpoint__metodo pagina-recursos__endpoint__metodo--put">PUT</span>
+          <code>/api/firewall/&#123;id&#125;</code>
+        </li>
+        <li class="pagina-recursos__endpoint">
+          <span class="pagina-recursos__endpoint__metodo pagina-recursos__endpoint__metodo--delete">DEL</span>
+          <code>/api/backups/&#123;id&#125;</code>
+        </li>
+      </ul>
+    </article>
+
+    <article class="pagina-recursos__tarjeta">
+      <header class="pagina-recursos__tarjeta__cabecera">
+        <span class="pagina-recursos__tarjeta__indice">03</span>
+        <h2 class="pagina-recursos__tarjeta__titulo">{{ "apiDocs.respuestas.titulo" | translate }}</h2>
+      </header>
+      <p class="pagina-recursos__tarjeta__texto">{{ "apiDocs.respuestas.descripcion" | translate }}</p>
+      <ul class="pagina-recursos__lista-codigos">
+        <li class="pagina-recursos__codigo-respuesta">
+          <span class="pagina-recursos__codigo-respuesta__numero pagina-recursos__codigo-respuesta__numero--ok">200</span>
+          <span>{{ "apiDocs.respuestas.codigo200" | translate }}</span>
+        </li>
+        <li class="pagina-recursos__codigo-respuesta">
+          <span class="pagina-recursos__codigo-respuesta__numero pagina-recursos__codigo-respuesta__numero--aviso">401</span>
+          <span>{{ "apiDocs.respuestas.codigo401" | translate }}</span>
+        </li>
+        <li class="pagina-recursos__codigo-respuesta">
+          <span class="pagina-recursos__codigo-respuesta__numero pagina-recursos__codigo-respuesta__numero--error">404</span>
+          <span>{{ "apiDocs.respuestas.codigo404" | translate }}</span>
+        </li>
+        <li class="pagina-recursos__codigo-respuesta">
+          <span class="pagina-recursos__codigo-respuesta__numero pagina-recursos__codigo-respuesta__numero--error">500</span>
+          <span>{{ "apiDocs.respuestas.codigo500" | translate }}</span>
+        </li>
+      </ul>
+    </article>
+
+    <article class="pagina-recursos__tarjeta pagina-recursos__tarjeta--ancha">
+      <header class="pagina-recursos__tarjeta__cabecera">
+        <span class="pagina-recursos__tarjeta__indice">04</span>
+        <h2 class="pagina-recursos__tarjeta__titulo">{{ "apiDocs.websockets.titulo" | translate }}</h2>
+      </header>
+      <p class="pagina-recursos__tarjeta__texto">{{ "apiDocs.websockets.descripcion" | translate }}</p>
+      <ul class="pagina-recursos__lista-endpoints">
+        <li class="pagina-recursos__endpoint">
+          <span class="pagina-recursos__endpoint__metodo pagina-recursos__endpoint__metodo--ws">WS</span>
+          <code>/ws/terminal</code>
+          <span class="pagina-recursos__endpoint__detalle">{{ "apiDocs.websockets.terminal" | translate }}</span>
+        </li>
+        <li class="pagina-recursos__endpoint">
+          <span class="pagina-recursos__endpoint__metodo pagina-recursos__endpoint__metodo--ws">WS</span>
+          <code>/ws/metricas</code>
+          <span class="pagina-recursos__endpoint__detalle">{{ "apiDocs.websockets.metricas" | translate }}</span>
+        </li>
+        <li class="pagina-recursos__endpoint">
+          <span class="pagina-recursos__endpoint__metodo pagina-recursos__endpoint__metodo--ws">WS</span>
+          <code>/ws/notificaciones/&#123;usuarioId&#125;</code>
+          <span class="pagina-recursos__endpoint__detalle">{{ "apiDocs.websockets.notificaciones" | translate }}</span>
+        </li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="pagina-recursos__llamada-final">
+    <h2 class="pagina-recursos__llamada-final__titulo">{{ "apiDocs.llamadaFinal.titulo" | translate }}</h2>
+    <p class="pagina-recursos__llamada-final__texto">{{ "apiDocs.llamadaFinal.texto" | translate }}</p>
+    <button type="button" class="pagina-recursos__boton" (click)="abrirSwagger()">
+      {{ "apiDocs.llamadaFinal.boton" | translate }}
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M7 17L17 7M17 7H8M17 7V16"></path>
+      </svg>
+    </button>
+  </section>
+</main>

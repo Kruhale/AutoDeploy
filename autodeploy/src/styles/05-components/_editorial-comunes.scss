@@ -1,0 +1,386 @@
+@use "../01-tools/mixins" as *;
+
+// Estilos compartidos por todas las paginas internas (cuenta, billing, dashboard, etc)
+
+.editorial {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-size-5xl);
+  width: 100%;
+
+  // Entrada orquestada: cada bloque directo sube y se revela con un pequeno
+  // desfase, en vez de aparecer todo el panel de golpe. Solo con movimiento
+  // permitido; si el usuario pide reducirlo, no se genera nada.
+  @media (prefers-reduced-motion: no-preference) {
+    & > * {
+      animation: editorial-entrar var(--duration-entrada) var(--ease-suave) both;
+    }
+
+    & > *:nth-child(1) { animation-delay: 40ms; }
+    & > *:nth-child(2) { animation-delay: 130ms; }
+    & > *:nth-child(3) { animation-delay: 220ms; }
+    & > *:nth-child(4) { animation-delay: 310ms; }
+    & > *:nth-child(5) { animation-delay: 400ms; }
+    & > *:nth-child(6) { animation-delay: 490ms; }
+    & > *:nth-child(7) { animation-delay: 580ms; }
+    & > *:nth-child(n + 8) { animation-delay: 660ms; }
+  }
+
+  // Cabecera grande de la pagina: titulo a la izquierda y boton de accion a la derecha
+  &__cabecera {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: flex-end;
+    gap: var(--spacing-size-3xl);
+    padding-bottom: var(--spacing-size-2xl);
+    border-bottom: 1px solid var(--borde-normal);
+
+    @media (max-width: 720px) {
+      grid-template-columns: minmax(0, 1fr);
+      align-items: flex-start;
+    }
+
+    &--simple {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    &__izquierda {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+  }
+
+  &__sello {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--texto-apagado);
+
+    &__punto {
+      width: 0.45rem;
+      height: 0.45rem;
+      border-radius: 50%;
+      background-color: var(--amarillo-normal);
+      @media (prefers-reduced-motion: no-preference) {
+        animation: editorial-respirar 2.4s ease-in-out infinite;
+      }
+      &--verde   { background-color: var(--verde-normal); }
+      &--cyan    { background-color: var(--cyan-normal); }
+      &--rojo    { background-color: var(--rojo-normal); }
+      &--naranja { background-color: var(--naranja-normal); }
+      &--azul    { background-color: var(--azul-normal); }
+    }
+  }
+
+  &__titulo {
+    // La voz serif de la marca tambien dentro de la app: una sola web.
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 5vw, 3.75rem);
+    font-weight: 400;
+    letter-spacing: -0.028em;
+    line-height: 1.02;
+    color: var(--texto-claro);
+
+    &__punto {
+      color: var(--amarillo-normal);
+      margin-left: 0.05em;
+    }
+  }
+
+  &__subtitulo {
+    font-size: var(--font-size-md);
+    color: var(--texto-medio);
+    letter-spacing: -0.005em;
+    margin-top: 0.15rem;
+    max-width: 48rem;
+  }
+
+  // Boton de accion principal: outline tipo pill, como los CTA de la landing
+  &__cta-principal {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-size-l);
+    padding: 0.85rem 1.1rem 0.85rem 0.85rem;
+    font-family: var(--font-secondary);
+    text-decoration: none;
+    @include boton-barrido;
+
+    // El circulo del icono crece un pelin cuando la tinta lo alcanza
+    &:hover .editorial__cta-principal__icono {
+      transform: scale(1.12);
+    }
+
+    &--separado {
+      margin-top: var(--spacing-size-m);
+    }
+
+    &__icono {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      border: 1px solid currentColor;
+      font-size: 0.75rem;
+      transition: transform var(--duration-slow) var(--ease-vaiven);
+    }
+
+    &__texto {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.1;
+    }
+
+    &__principal {
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: -0.01em;
+    }
+
+    &__secundario {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      opacity: 0.65;
+    }
+  }
+
+  // Cada bloque/seccion de la pagina con su numerito, titulo, descripcion y boton de accion
+  &__bloque {
+    display: flex;
+    flex-direction: column;
+
+    &__cabecera {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr) auto;
+      align-items: baseline;
+      gap: var(--spacing-size-xl);
+      margin-bottom: var(--spacing-size-xl);
+
+      @media (max-width: 720px) {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    // Eyebrow "— 05" en vez de chip pildora, mismo lenguaje que la landing
+    &__indice {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.18em;
+      color: var(--texto-apagado);
+      align-self: flex-start;
+      margin-top: 0.5rem;
+
+      &::before {
+        content: "— ";
+        color: var(--amarillo-normal);
+      }
+    }
+
+    &__texto {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      max-width: 44rem;
+    }
+
+    &__titulo {
+      font-family: var(--font-display);
+      font-size: clamp(1.5rem, 2.3vw, 1.95rem);
+      font-weight: 400;
+      letter-spacing: -0.015em;
+      color: var(--texto-claro);
+      line-height: 1.05;
+
+      em {
+        font-style: italic;
+        color: var(--amarillo-normal);
+        font-weight: var(--font-weight-medium);
+      }
+    }
+
+    &__descripcion {
+      font-size: var(--font-size-md);
+      color: var(--texto-medio);
+      line-height: var(--line-height-normal);
+    }
+
+    &__meta {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.16em;
+      color: var(--texto-apagado);
+      text-transform: uppercase;
+      align-self: center;
+      white-space: nowrap;
+    }
+
+    &__accion {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.95rem;
+      background-color: transparent;
+      border: 1px solid var(--borde-normal);
+      border-radius: var(--radius-full);
+      color: var(--texto-claro);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      transition:
+        border-color var(--duration-base) var(--ease-suave),
+        color var(--duration-base) var(--ease-suave),
+        box-shadow var(--duration-base) var(--ease-suave),
+        transform var(--duration-fast) var(--ease-suave);
+      align-self: center;
+      white-space: nowrap;
+
+      i {
+        font-size: 0.7rem;
+        color: var(--amarillo-normal);
+        transition: transform var(--duration-base) var(--ease-suave);
+      }
+
+      &:hover {
+        border-color: var(--amarillo-normal);
+        color: var(--amarillo-normal);
+        transform: translateY(-1px);
+        box-shadow: 0 0.4rem 1rem hsla(230, 8%, 3%, 0.25);
+      }
+
+      &:hover i {
+        transform: scale(1.18);
+      }
+
+      &:active {
+        transform: scale(0.96);
+      }
+
+      &:focus-visible {
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  // Boton secundario "fantasma": transparente con borde, se rellena suave al pasar por encima
+  &__boton-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 1rem;
+    background-color: transparent;
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-full);
+    color: var(--texto-claro);
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      border-color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave),
+      box-shadow var(--duration-base) var(--ease-suave),
+      transform var(--duration-fast) var(--ease-suave);
+    align-self: flex-start;
+    margin-top: 0.35rem;
+
+    &:hover:not(:disabled) {
+      border-color: hsla(40, 33.33%, 91.37%, 0.24);
+      background-color: hsla(40, 20%, 92%, 0.045);
+      transform: translateY(-1px);
+      box-shadow: 0 0.4rem 1rem hsla(230, 8%, 3%, 0.25);
+    }
+
+    &:active:not(:disabled) {
+      transform: scale(0.96);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+  }
+
+  // Mensaje que se muestra cuando no hay nada que enseñar (ej: "todavia no tienes servidores")
+  &__vacio {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+    padding: var(--spacing-size-6xl) 0;
+    text-align: center;
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-xl);
+
+    &__icono {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      border: 1px solid var(--borde-normal);
+      background-color: hsla(40, 20%, 92%, 0.025);
+      color: var(--texto-apagado);
+      font-size: 1.15rem;
+      margin-bottom: 0.4rem;
+    }
+
+    &__titulo {
+      font-family: var(--font-secondary);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+      color: var(--texto-claro);
+      letter-spacing: -0.005em;
+    }
+
+    &__detalle {
+      font-size: var(--font-size-sm);
+      color: var(--texto-apagado);
+      max-width: 24rem;
+      line-height: var(--line-height-normal);
+    }
+  }
+
+  // Pie de pagina con un codigo de referencia, texto y separador con degradado
+}
+
+// Animaciones que solo se usan en estos bloques editoriales
+// Entrada editorial: sube desde mas abajo y se enfoca desde un leve desenfoque
+// para un aterrizaje mas suave y premium que un simple fade.
+@keyframes editorial-entrar {
+  from {
+    opacity: 0;
+    transform: translateY(1.4rem);
+    filter: blur(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes editorial-respirar {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.55; transform: scale(0.82); }
+}

@@ -1,0 +1,5 @@
+// El aspecto vive en 05-components/_editorial-datos.scss (.editorial__modal)
+// para compartir el lenguaje editorial y evitar duplicar estilos scoped.
+:host {
+	display: block;
+}

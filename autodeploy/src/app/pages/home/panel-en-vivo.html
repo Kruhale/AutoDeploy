@@ -1,0 +1,68 @@
+<!-- Composicion en capas: una ventana satelite de logs asoma detras, la
+     ventana principal de cristal delante, y un toast de exito entra cuando
+     el despliegue llega a "live". Todo decorativo-animado (aria-hidden):
+     el hero ya se comunica con el titular y la descripcion. -->
+<figure class="panel-en-vivo" aria-hidden="true">
+
+  <aside class="panel-en-vivo__satelite" aria-hidden="true">
+    <p class="panel-en-vivo__satelite__titulo">logs · en directo</p>
+    <p class="panel-en-vivo__satelite__linea">[09:41:02] npm ci · 214 paquetes</p>
+    <p class="panel-en-vivo__satelite__linea">[09:41:19] imagen miapp:latest lista</p>
+    <p class="panel-en-vivo__satelite__linea">[09:41:22] certificado renovado ✓</p>
+  </aside>
+
+  <section class="panel-en-vivo__ventana" aria-hidden="true">
+    <p class="panel-en-vivo__barra">
+      <span class="panel-en-vivo__direccion">panel.autodeploy.dev</span>
+      <span class="panel-en-vivo__conexion"><span class="panel-en-vivo__conexion__punto"></span>conectado</span>
+    </p>
+
+    <section class="panel-en-vivo__cuerpo">
+
+      <article class="panel-en-vivo__servidor">
+        <p class="panel-en-vivo__etiqueta">srv-01 · fráncfort</p>
+        <p class="panel-en-vivo__nombre">Ubuntu 24.04<span class="panel-en-vivo__estado">● activo</span></p>
+
+        <section class="panel-en-vivo__metrica">
+          <span class="panel-en-vivo__metrica__nombre">cpu</span>
+          <svg class="panel-en-vivo__grafica" viewBox="0 0 100 24" preserveAspectRatio="none">
+            <polyline [attr.points]="puntosDeLaGrafica()" fill="none" stroke="currentColor" stroke-width="1.5" />
+          </svg>
+          <span class="panel-en-vivo__metrica__valor">{{ cargaDeCpu() }}%</span>
+        </section>
+
+        <section class="panel-en-vivo__metrica">
+          <span class="panel-en-vivo__metrica__nombre">ram</span>
+          <span class="panel-en-vivo__barra-ram">
+            <span class="panel-en-vivo__barra-ram__avance"></span>
+          </span>
+          <span class="panel-en-vivo__metrica__valor">41%</span>
+        </section>
+
+        <p class="panel-en-vivo__uptime">uptime 99.98% · 3 servicios ok</p>
+      </article>
+
+      <article class="panel-en-vivo__despliegue">
+        <p class="panel-en-vivo__etiqueta">despliegue #128</p>
+        <ol class="panel-en-vivo__pipeline">
+          @for (paso of pasos; track paso.etiqueta) {
+            <li class="panel-en-vivo__paso panel-en-vivo__paso--{{ estadoDelPaso($index) }}">
+              <span class="panel-en-vivo__paso__senal"></span>
+              <span class="panel-en-vivo__paso__etiqueta">{{ paso.etiqueta }}</span>
+              <span class="panel-en-vivo__paso__detalle">{{ paso.detalle }}</span>
+              <span class="panel-en-vivo__paso__duracion">{{ paso.duracion }}</span>
+            </li>
+          }
+        </ol>
+      </article>
+
+    </section>
+  </section>
+
+  <p class="panel-en-vivo__toast" [class.panel-en-vivo__toast--visible]="toastVisible()" aria-hidden="true">
+    <span class="panel-en-vivo__toast__senal">✓</span>
+    <span class="panel-en-vivo__toast__texto">miapp.tudominio.dev · en producción</span>
+    <span class="panel-en-vivo__toast__tiempo">12.4s</span>
+  </p>
+
+</figure>

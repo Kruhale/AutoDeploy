@@ -1,0 +1,191 @@
+// Todas las variables CSS del proyecto. El tema claro las sobreescribe al final del archivo.
+
+:root {
+  /* Fondos editoriales: el mismo negro azulado sereno que la landing */
+  --fondo-normal: hsl(230, 8%, 5%);
+  --fondo-oscuro: hsl(230, 8%, 4%);
+  --fondo-tarjeta: hsl(230, 6%, 9%);
+  --fondo-negro: hsl(230, 8%, 3%);
+  --fondo-negro-medio: hsl(230, 7%, 7%);
+  --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
+  --negro-cta: hsl(230, 8%, 6%);
+
+  /* Acento de marca: ámbar sereno alineado con la home (antes amarillo neón). */
+  --amarillo-normal: hsl(41, 68%, 56%);
+  --amarillo-normal-hover: hsl(39, 70%, 48%);
+
+  /* Tinta editorial: tres niveles segun la importancia */
+  --texto-claro: hsl(40, 20%, 92%);
+  --texto-medio: hsl(40, 6%, 62%);
+  --texto-apagado: hsl(40, 5%, 52%);
+
+  /* Lineas de 1px para separar zonas, como en la landing */
+  --borde-normal: hsla(40, 20%, 92%, 0.09);
+  --borde-suave: hsla(40, 20%, 92%, 0.05);
+
+  /* Colores de estado: ok, error, aviso, info */
+  --verde-normal: hsl(142.09, 70.56%, 45.29%);
+  --rojo-normal: hsl(0, 79.17%, 60.59%);
+  --rojo-critico: hsl(0, 72.13%, 50.59%);
+  --naranja-normal: hsl(37.69, 92.13%, 50.2%);
+  /* Los antiguos acentos decorativos (azul/cyan/teal) se unifican en el ámbar:
+     la home usa un solo acento; verde/rojo/naranja siguen siendo estados. */
+  --azul-normal: var(--amarillo-normal);
+  --cyan-normal: var(--amarillo-normal);
+  --teal-normal: var(--amarillo-normal);
+
+  /* Versiones translucidas para fondos suaves (hovers, badges) */
+  --amarillo-transparente-008: hsla(41, 68%, 56%, 0.08);
+  --amarillo-transparente-030: hsla(41, 68%, 56%, 0.3);
+  --cyan-transparente-008: hsla(41, 68%, 56%, 0.08);
+  --negro-transparente-020: hsla(0, 0%, 0%, 0.2);
+  --negro-transparente-040: hsla(0, 0%, 0%, 0.4);
+
+  /* Tipografias y tamaños de letra de toda la web */
+  --font-primary: 'Outfit', sans-serif;
+  --font-secondary: 'Outfit', sans-serif;
+  /* Serif editorial SOLO para titulares de la landing: da la voz de "revista
+     tecnica" que una unica sans geometrica no puede dar */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+
+  --font-size-xs: 0.625rem;
+  --font-size-sm: 0.6875rem;
+  --font-size-md: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.25rem;
+  --font-size-xl: 1.5rem;
+  --font-size-2xl: 1.75rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+  --font-size-5xl: 3.5rem;
+  --font-size-6xl: 4.5rem;
+  --font-size-7xl: 5.5rem;
+  --font-size-8xl: 7rem;
+  --font-size-9xl: 8.5rem;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  /* Espaciado: paddings, margins y gaps en una escala de xxs a 8xl */
+  --spacing-size-xxs: 0.25rem;
+  --spacing-size-xs: 0.375rem;
+  --spacing-size-s: 0.5rem;
+  --spacing-size-sm: 0.625rem;
+  --spacing-size-m: 0.75rem;
+  --spacing-size-ml: 0.875rem;
+  --spacing-size-l: 1rem;
+  --spacing-size-xl: 1.25rem;
+  --spacing-size-2xl: 1.5rem;
+  --spacing-size-3xl: 2rem;
+  --spacing-size-4xl: 2.5rem;
+  --spacing-size-5xl: 3rem;
+  --spacing-size-6xl: 4rem;
+  --spacing-size-7xl: 5rem;
+  --spacing-size-8xl: 6rem;
+
+  /* Esquinas redondeadas: de casi cuadrado a totalmente redondo */
+  /* Radios planos de estilo editorial (antes tarjetas muy redondeadas). */
+  --radius-xs: 0.125rem;
+  --radius-s: 0.1875rem;
+  --radius-m: 0.3125rem;
+  --radius-l: 0.375rem;
+  --radius-xl: 0.5rem;
+  --radius-2xl: 0.5rem;
+  --radius-3xl: 0.625rem;
+  --radius-4xl: 0.75rem;
+  --radius-full: 9999px;
+
+  /* Sombras para dar profundidad a tarjetas y modales */
+  --shadow-sm: 0 0.0625rem 0.1875rem hsla(0, 0%, 0%, 0.2);
+  --shadow-md: 0 0.5rem 1.25rem hsla(0, 0%, 0%, 0.2);
+  --shadow-lg: 0 0.5rem 1.5rem hsla(0, 0%, 0%, 0.4);
+  /* Sin glows de color: elevación neutra sutil, como la home. */
+  --shadow-glow-amarillo: none;
+  --shadow-hover-amarillo: 0 0.75rem 2rem hsla(0, 0%, 0%, 0.35);
+  --shadow-hover-cyan: 0 0.75rem 2rem hsla(0, 0%, 0%, 0.35);
+
+  /* Velocidad de las transiciones. Subidas respecto a antes: el movimiento
+     demasiado corto se siente brusco; lo editorial pide calma. */
+  --duration-fast: 260ms;
+  --duration-base: 440ms;
+  --duration-slow: 620ms;
+  /* Entradas y reveals: tramos largos para que el movimiento se lea sereno */
+  --duration-entrada: 820ms;
+  --duration-reveal: 860ms;
+
+  /* Curvas de aceleracion con nombre, para no repetir cubic-bezier a mano */
+  --ease-suave: cubic-bezier(0.16, 1, 0.3, 1);        /* expo-out: frena lento, ideal en entradas */
+  --ease-salida: cubic-bezier(0.4, 0, 0.9, 0.3);      /* acelera al salir, mas corto que la entrada */
+  --ease-vaiven: cubic-bezier(0.34, 1.3, 0.64, 1);    /* un puntito de rebote, para sellos y confirmaciones */
+
+  /* Velocidad del spinner. Se ralentiza si el usuario activa "reducir movimiento" */
+  --duration-spinner: 0.8s;
+
+  /* Capas: que cosa va por encima de que (sidebar, cabecera, dropdowns, modales, toast) */
+  --z-sidebar: 50;
+  --z-header: 100;
+  --z-dropdown: 200;
+  --z-modal: 300;
+  --z-toast: 400;
+
+  /* Ancho de la barra lateral del panel */
+  --sidebar-ancho: 16.25rem;
+
+  /* Fondo de la cabecera con un toque translucido para que se vea el blur */
+  --fondo-cabecera: hsla(230, 8%, 5%, 0.9);
+}
+
+/* Cuando el usuario pide reducir movimiento: ralentiza el spinner para no marear */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-spinner: 1.5s;
+  }
+}
+
+/* Tema claro: sobreescribe los colores cuando el ThemeService activa modo claro */
+
+.tema-claro {
+  /* Papel editorial: el mismo claro que la landing */
+  --fondo-normal: hsl(40, 30%, 95%);
+  --fondo-oscuro: hsl(40, 26%, 91%);
+  --fondo-tarjeta: hsl(40, 33%, 97%);
+  --fondo-negro: hsl(40, 22%, 88%);
+  --fondo-negro-medio: hsl(40, 26%, 93%);
+  --fondo-cta-claro: hsl(34, 17.65%, 83.73%);
+
+  /* Tinta oscura sobre papel */
+  --texto-claro: hsl(230, 14%, 13%);
+  --texto-medio: hsl(230, 7%, 38%);
+  --texto-apagado: hsl(230, 6%, 44%);
+
+  /* Un punto mas marcados que en oscuro: el papel se come los hairlines */
+  --borde-normal: hsla(230, 14%, 13%, 0.17);
+  --borde-suave: hsla(230, 14%, 13%, 0.09);
+
+  /* Ambar profundo: el de 56% se queda corto de contraste sobre papel */
+  --amarillo-normal: hsl(38, 78%, 34%);
+  --amarillo-normal-hover: hsl(38, 80%, 28%);
+  --amarillo-transparente-008: hsla(38, 78%, 34%, 0.08);
+  --amarillo-transparente-030: hsla(38, 78%, 34%, 0.3);
+
+  /* El rojo de estado al 60% se quedaba en 3,4:1 sobre fondos claros */
+  --rojo-normal: hsl(0, 70%, 44%);
+
+  --fondo-cabecera: hsla(40, 30%, 95%, 0.92);
+
+  --shadow-sm: 0 0.0625rem 0.1875rem hsla(0, 0%, 0%, 0.06);
+  --shadow-md: 0 0.5rem 1.25rem hsla(0, 0%, 0%, 0.08);
+  --shadow-lg: 0 0.5rem 1.5rem hsla(0, 0%, 0%, 0.12);
+  --shadow-glow-amarillo: none;
+  --shadow-hover-amarillo: 0 0.75rem 2rem hsla(30, 10%, 20%, 0.14);
+  --shadow-hover-cyan: 0 0.75rem 2rem hsla(30, 10%, 20%, 0.14);
+}

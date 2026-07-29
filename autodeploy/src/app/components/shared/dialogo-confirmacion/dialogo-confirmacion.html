@@ -1,0 +1,15 @@
+<section class="editorial__modal" (click)="emitirCancelar()" (keydown.escape)="emitirCancelar()" (keydown.tab)="manejarTabulacion($event)" (keydown.shift.tab)="manejarTabulacion($event)">
+  <article class="editorial__modal__caja" role="dialog" aria-modal="true" aria-labelledby="dialogo-confirmacion-titulo" aria-describedby="dialogo-confirmacion-mensaje" (click)="$event.stopPropagation()">
+    <header class="editorial__modal__cabecera">
+      <section class="editorial__modal__titular">
+        <span class="editorial__modal__indice">{{ "comun.dialogoIndice" | translate }}</span>
+        <h2 class="editorial__modal__titulo" id="dialogo-confirmacion-titulo">{{ titulo() | translate }}</h2>
+      </section>
+    </header>
+    <p class="editorial__modal__texto" id="dialogo-confirmacion-mensaje">{{ mensaje() | translate }}</p>
+    <section class="editorial__modal__acciones">
+      <button class="editorial__boton-ghost" id="dialogo-boton-cancelar" type="button" (click)="emitirCancelar()">{{ "comun.cancelar" | translate }}</button>
+      <button class="editorial__modal__confirmar" id="dialogo-boton-confirmar" type="button" [class.editorial__modal__confirmar--peligro]="peligro()" (click)="emitirConfirmar()">{{ textoConfirmar() | translate }}</button>
+    </section>
+  </article>
+</section>

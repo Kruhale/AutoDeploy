@@ -1,0 +1,117 @@
+@use "../01-tools/mixins" as *;
+
+// Propiedades comunes a todas las variantes de botón. Se extiende con
+// %placeholder para no generar selectores extra en el CSS final.
+//
+// La transicion separa el transform (relieve/press) en un tramo mas corto
+// para que el clic se sienta tactil e inmediato, mientras el color y la
+// sombra rellenan mas despacio. El icono interior se desplaza un pelin al
+// pasar por encima para dar vida.
+%boton-base {
+  @include flex-centro;
+  gap: 0.5rem;
+  padding: 0.625rem 1.5rem;
+  font-size: var(--font-size-md);
+  border-radius: var(--radius-l);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-base) var(--ease-suave),
+    border-color var(--duration-base) var(--ease-suave),
+    color var(--duration-base) var(--ease-suave),
+    box-shadow var(--duration-base) var(--ease-suave),
+    transform var(--duration-fast) var(--ease-suave);
+
+  i {
+    transition: transform var(--duration-base) var(--ease-suave);
+  }
+
+  &:hover i {
+    transform: translateX(2px);
+  }
+}
+
+.boton {
+  // Outline ambar, el mismo lenguaje que los CTA de la landing.
+  &--primario {
+    @extend %boton-base;
+    @include boton-barrido;
+    font-weight: var(--font-weight-bold);
+
+    &:disabled {
+      @include disabled;
+    }
+  }
+
+  &--secundario {
+    @extend %boton-base;
+    background: hsla(40, 20%, 92%, 0.03);
+    color: var(--texto-claro);
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid var(--borde-normal);
+
+    &:hover {
+      border-color: hsla(40, 20%, 92%, 0.2);
+      background: hsla(40, 20%, 92%, 0.07);
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: scale(0.96);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+    &:disabled {
+      @include disabled;
+    }
+  }
+
+  &--ghost {
+    @extend %boton-base;
+    background: transparent;
+    color: var(--texto-medio);
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid var(--borde-normal);
+
+    &:hover {
+      color: var(--texto-claro);
+      border-color: hsla(40, 20%, 92%, 0.2);
+      background: hsla(40, 20%, 92%, 0.04);
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: scale(0.96);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+    &:disabled {
+      @include disabled;
+    }
+  }
+
+  &--peligro {
+    @extend %boton-base;
+    background: rgba(239, 68, 68, 0.08);
+    color: var(--rojo-normal);
+    font-weight: var(--font-weight-semibold);
+    border: 1px solid rgba(239, 68, 68, 0.15);
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.3);
+      transform: translateY(-1px);
+    }
+    &:active {
+      transform: scale(0.96);
+    }
+    &:focus-visible {
+      outline: 2px solid var(--rojo-normal);
+      outline-offset: 2px;
+    }
+    &:disabled {
+      @include disabled;
+    }
+  }
+}

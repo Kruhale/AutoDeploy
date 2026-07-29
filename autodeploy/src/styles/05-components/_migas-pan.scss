@@ -1,0 +1,32 @@
+.migas-pan {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: var(--font-size-sm);
+  color: var(--texto-apagado);
+
+  &__enlace {
+    color: var(--texto-apagado);
+    transition: color var(--duration-base) var(--ease-suave);
+
+    &:hover,
+    &:focus-visible {
+      color: var(--texto-claro);
+      outline: none;
+    }
+
+    &:focus-visible {
+      text-decoration: underline;
+      text-underline-offset: 0.25rem;
+    }
+  }
+
+  &__separador {
+    color: var(--texto-apagado);
+  }
+
+  &__actual {
+    color: var(--texto-claro);
+    font-weight: var(--font-weight-semibold);
+  }
+}

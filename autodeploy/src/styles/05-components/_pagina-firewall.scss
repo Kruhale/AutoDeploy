@@ -1,0 +1,289 @@
+.pagina-firewall {
+  // Atajos rapidos arriba del formulario: pills con puerto + nombre del servicio (HTTP, SSH, etc)
+  &__presets {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+
+    &__etiqueta {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--texto-apagado);
+    }
+
+    &__lista {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+  }
+
+  // Cada pill clickable. Al pulsarla rellena el formulario con ese preset
+  &__preset {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.5rem 0.95rem;
+    background-color: hsla(40, 33.33%, 91.37%, 0.025);
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-full);
+    color: var(--texto-claro);
+    font-family: var(--font-secondary);
+    font-size: 0.85rem;
+    font-weight: var(--font-weight-medium);
+    letter-spacing: -0.005em;
+    cursor: pointer;
+    transition:
+      border-color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave),
+      box-shadow var(--duration-base) var(--ease-suave),
+      transform var(--duration-fast) var(--ease-suave);
+
+    &:hover {
+      border-color: var(--amarillo-transparente-030);
+      background-color: var(--amarillo-transparente-008);
+      transform: translateY(-2px);
+      box-shadow: 0 0.4rem 1rem hsla(230, 8%, 3%, 0.25);
+    }
+
+    &:active {
+      transform: translateY(0) scale(0.96);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+
+    // Al pasar por encima el badge del puerto crece un pelin
+    &:hover .pagina-firewall__preset__puerto {
+      transform: scale(1.08);
+    }
+
+    // Numero del puerto (ej: "22") en amarillo dentro de un mini badge
+    &__puerto {
+      transition: transform var(--duration-base) var(--ease-vaiven);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.12em;
+      color: var(--amarillo-normal);
+      padding: 0.15rem 0.45rem;
+      background-color: var(--amarillo-transparente-008);
+      border: 1px solid var(--amarillo-transparente-030);
+      border-radius: var(--radius-s);
+    }
+
+    // Nombre del servicio (ej: "SSH") al lado del puerto
+    &__nombre {
+      color: var(--texto-medio);
+    }
+  }
+
+  // Formulario para crear una regla nueva del cortafuegos (entra con animacion)
+  &__formulario {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-size-xl);
+    padding: var(--spacing-size-xl);
+    background-color: hsla(40, 33.33%, 91.37%, 0.025);
+    border: 1px solid var(--borde-normal);
+    border-radius: var(--radius-xl);
+    animation: editorial-entrar 360ms var(--ease-suave);
+
+    // Cabecera del formulario: numero + titulo + descripcion
+    &__cabecera {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      align-items: baseline;
+      gap: var(--spacing-size-l);
+    }
+
+    // Numero redondeado que indica el paso (ej: "01")
+    &__indice {
+      font-family: var(--font-mono);
+      font-size: 0.95rem;
+      color: var(--amarillo-normal);
+      padding: 0.05rem 0.5rem;
+      border: 1px solid var(--amarillo-transparente-030);
+      border-radius: var(--radius-full);
+      font-weight: var(--font-weight-bold);
+    }
+
+    &__texto {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    &__titulo {
+      font-family: var(--font-secondary);
+      font-size: 1.15rem;
+      font-weight: var(--font-weight-semibold);
+      letter-spacing: -0.015em;
+      color: var(--texto-claro);
+    }
+
+    &__descripcion {
+      font-size: 0.85rem;
+      color: var(--texto-medio);
+    }
+
+    // 4 columnas iguales para los inputs; en pantalla pequeña pasan a una sola columna
+    &__campos {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: var(--spacing-size-l);
+
+      @media (max-width: 960px) {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    // Input que ocupa las 4 columnas (ej: el campo "descripcion")
+    &__campo-ancho {
+      grid-column: span 4;
+
+      @media (max-width: 960px) {
+        grid-column: 1;
+      }
+    }
+
+    // Pie del formulario con los botones cancelar y guardar
+    &__acciones {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: var(--spacing-size-l);
+    }
+  }
+
+  // Boton "cancelar" del formulario: sin fondo, solo texto apagado
+  &__form-cancelar {
+    background: none;
+    border: none;
+    color: var(--texto-apagado);
+    font-family: var(--font-secondary);
+    font-size: 0.9rem;
+    font-weight: var(--font-weight-medium);
+    cursor: pointer;
+    padding: 0.5rem 0.75rem;
+    letter-spacing: -0.005em;
+    transition: color var(--duration-base) var(--ease-suave);
+
+    &:hover {
+      color: var(--texto-claro);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: 2px;
+    }
+  }
+
+  // Tabla de reglas activas con cabecera y filas en cuadricula
+  &__tabla {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--borde-normal);
+
+    // Cabecera fija arriba; se oculta en movil para liberar espacio.
+    // Cabecera y fila repiten el mismo reparto de columnas a proposito
+    // (regla del proyecto: cada selector con su propio bloque, sin agrupar).
+    &__cabecera {
+      display: grid;
+      grid-template-columns: 4.5rem 5rem 5.5rem 10rem minmax(0, 1fr) 2.5rem;
+      align-items: center;
+      gap: var(--spacing-size-l);
+      padding: var(--spacing-size-l) var(--spacing-size-m);
+      border-bottom: 1px solid var(--borde-normal);
+
+      @media (max-width: 960px) {
+        display: none;
+      }
+    }
+
+    // Fila de la tabla: en movil colapsa a una sola columna apilada
+    &__fila {
+      display: grid;
+      grid-template-columns: 4.5rem 5rem 5.5rem 10rem minmax(0, 1fr) 2.5rem;
+      align-items: center;
+      gap: var(--spacing-size-l);
+      padding: var(--spacing-size-l) var(--spacing-size-m);
+      border-bottom: 1px solid var(--borde-suave);
+      transition: background-color var(--duration-base) var(--ease-suave);
+
+      &:hover {
+        background-color: hsla(40, 20%, 92%, 0.025);
+      }
+
+      &:focus-within {
+        outline: 2px solid var(--amarillo-normal);
+        outline-offset: -2px;
+      }
+
+      @media (max-width: 960px) {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+      }
+    }
+
+    // Estilo de los titulos de columna (TIPO, PUERTO, etc): mono y en mayusculas
+    &__th {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      font-weight: var(--font-weight-bold);
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--texto-apagado);
+    }
+
+    // Celda normal de la tabla. La variante --mono se usa para puertos y rangos IP
+    &__td {
+      font-size: 0.875rem;
+      color: var(--texto-claro);
+      letter-spacing: -0.005em;
+
+      &--mono {
+        font-family: var(--font-mono);
+        font-size: 0.78rem;
+        color: var(--texto-medio);
+        letter-spacing: 0.04em;
+      }
+    }
+  }
+
+
+  // Boton redondito de "eliminar regla". Al pasar por encima se pone en rojo
+  &__eliminar {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    background-color: transparent;
+    border: 1px solid var(--borde-normal);
+    border-radius: 50%;
+    color: var(--texto-apagado);
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition:
+      color var(--duration-base) var(--ease-suave),
+      border-color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave);
+
+    &:hover {
+      color: var(--rojo-normal);
+      border-color: hsla(0, 79.17%, 60.59%, 0.38);
+      background-color: hsla(0, 79.17%, 60.59%, 0.08);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--rojo-normal);
+      outline-offset: 2px;
+    }
+  }
+}

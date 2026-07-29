@@ -1,0 +1,279 @@
+<section class="pagina-networking editorial">
+
+  <header class="editorial__cabecera">
+    <section class="editorial__cabecera__izquierda">
+      <p class="editorial__sello">
+        <span class="editorial__sello__punto editorial__sello__punto--cyan" aria-hidden="true"></span>
+        {{ "networking.sello" | translate }}
+      </p>
+      <h1 class="editorial__titulo">{{ "networking.titulo" | translate }}<span class="editorial__titulo__punto" aria-hidden="true">.</span></h1>
+      <p class="editorial__subtitulo">{{ "networking.subtitulo" | translate }}</p>
+    </section>
+    <button class="editorial__cta-principal" type="button" (click)="mostrarFormularioAgregar()">
+      <span class="editorial__cta-principal__icono" aria-hidden="true">
+        <i class="fa-solid fa-plus"></i>
+      </span>
+      <span class="editorial__cta-principal__texto">
+        <span class="editorial__cta-principal__principal">{{ "networking.ctaPrincipal" | translate }}</span>
+        <span class="editorial__cta-principal__secundario">{{ "networking.ctaSecundario" | translate }}</span>
+      </span>
+    </button>
+  </header>
+
+  @if (mostrarFormulario()) {
+    <section class="pagina-networking__formulario">
+      <header class="pagina-networking__formulario__cabecera">
+        <span class="pagina-networking__formulario__indice">+</span>
+        <section class="pagina-networking__formulario__texto">
+          <h2 class="pagina-networking__formulario__titulo">{{ "networking.formularioTitulo" | translate }}</h2>
+          <p class="pagina-networking__formulario__descripcion">{{ "networking.formularioDescripcion" | translate }}</p>
+        </section>
+      </header>
+      <section class="pagina-networking__formulario__campos">
+        <section class="campo">
+          <label class="campo__etiqueta" for="campo-nuevo-dominio">
+            <span class="campo__etiqueta__numero" aria-hidden="true">i</span>
+            {{ "networking.dominio" | translate }}
+          </label>
+          <input class="campo__input" id="campo-nuevo-dominio" type="text" [placeholder]="'networking.dominioPlaceholder' | translate" [ngModel]="nuevoDominio()" (ngModelChange)="nuevoDominio.set($event)">
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta" for="campo-servidor-dominio">
+            <span class="campo__etiqueta__numero" aria-hidden="true">ii</span>
+            {{ "networking.servidor" | translate }}
+          </label>
+          <select class="campo__select" id="campo-servidor-dominio" [ngModel]="nuevoServidorId()" (ngModelChange)="nuevoServidorId.set($event)">
+            @for (servidor of listaServidores(); track servidor.id) {
+              <option [value]="servidor.id">{{ servidor.nombre }} ({{ servidor.direccionIp }})</option>
+            }
+          </select>
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta" for="campo-tipo-dominio">
+            <span class="campo__etiqueta__numero" aria-hidden="true">iii</span>
+            {{ "networking.tipo" | translate }}
+          </label>
+          <select class="campo__select" id="campo-tipo-dominio" [ngModel]="nuevoTipo()" (ngModelChange)="nuevoTipo.set($event)">
+            <option value="primary">{{ "networking.tipoPrimary" | translate }}</option>
+            <option value="subdomain">{{ "networking.tipoSubdomain" | translate }}</option>
+          </select>
+        </section>
+        <section class="campo">
+          <label class="campo__etiqueta" for="campo-destino-dominio">
+            <span class="campo__etiqueta__numero" aria-hidden="true">iv</span>
+            {{ "networking.destino" | translate }}
+          </label>
+          <input class="campo__input" id="campo-destino-dominio" type="text" [placeholder]="'networking.destinoPlaceholder' | translate" [ngModel]="nuevoDestino()" (ngModelChange)="nuevoDestino.set($event)">
+        </section>
+      </section>
+      <section class="pagina-networking__formulario__acciones">
+        <button class="pagina-networking__form-cancelar" type="button" (click)="cancelarFormulario()" [disabled]="guardando()">{{ "networking.cancelar" | translate }}</button>
+        <button class="editorial__cta-principal" type="button" (click)="agregarDominio()" [disabled]="guardando() || !nuevoDominio() || !nuevoServidorId()">
+          <span class="editorial__cta-principal__texto">
+            <span class="editorial__cta-principal__principal">{{ guardando() ? ("networking.guardando" | translate) : ("networking.agregar" | translate) }}</span>
+          </span>
+        </button>
+      </section>
+    </section>
+  }
+
+  <section class="editorial__bloque">
+    <header class="editorial__bloque__cabecera">
+      <span class="editorial__bloque__indice">01</span>
+      <section class="editorial__bloque__texto">
+        <h2 class="editorial__bloque__titulo">{{ "networking.dominios" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "networking.dominiosDescripcion" | translate }}</p>
+      </section>
+    </header>
+
+    @if (cargando()) {
+      <section class="editorial__vacio">
+        <p class="editorial__teletipo">{{ "networking.cargandoDominios" | translate }}</p>
+      </section>
+    } @else if (listaDeDominios().length === 0 && !mostrarFormulario()) {
+      <section class="editorial__vacio">
+        <span class="editorial__vacio__icono" aria-hidden="true">
+          <i class="fa-solid fa-globe"></i>
+        </span>
+        <p class="editorial__vacio__titulo">{{ "networking.vacioTitulo" | translate }}</p>
+        <p class="editorial__vacio__detalle">{{ "networking.vacioDetalle" | translate }}</p>
+      </section>
+    } @else if (listaDeDominios().length > 0) {
+      <section class="pagina-networking__lista">
+        @for (dominio of listaDeDominios(); track dominio.id) {
+          <article class="pagina-networking__dominio">
+            <span class="pagina-networking__dominio__icono" aria-hidden="true">
+              <i class="fa-solid fa-globe"></i>
+            </span>
+            <section class="pagina-networking__dominio__info">
+              <span class="pagina-networking__dominio__nombre">{{ dominio.nombre }}</span>
+              <span class="pagina-networking__dominio__tipo">{{ "comun.estados." + dominio.tipo | translate }} · {{ dominio.servidorNombre }}{{ dominio.destino ? " → " + dominio.destino : "" }}</span>
+            </section>
+            <section class="pagina-networking__dominio__ssl">
+              @if (dominio.sslActivo) {
+                <span class="editorial__estado editorial__estado--verde">
+                  <span class="editorial__estado__punto" aria-hidden="true"></span>
+                  {{ "networking.sslActivo" | translate }}
+                </span>
+              } @else {
+                <span class="editorial__estado">
+                  <span class="editorial__estado__punto" aria-hidden="true"></span>
+                  {{ "networking.sslInactivo" | translate }}
+                </span>
+              }
+            </section>
+            <button class="pagina-networking__dominio__eliminar" type="button" (click)="eliminarDominio(dominio.id)" [attr.aria-label]="'networking.ariaEliminarDominio' | translate: { nombre: dominio.nombre }">
+              <i class="fa-solid fa-trash" aria-hidden="true"></i>
+            </button>
+          </article>
+        }
+      </section>
+    }
+  </section>
+
+  <section class="editorial__bloque">
+    <header class="editorial__bloque__cabecera">
+      <span class="editorial__bloque__indice">02</span>
+      <section class="editorial__bloque__texto">
+        <h2 class="editorial__bloque__titulo">{{ "networking.accionesTitulo" | translate }}</h2>
+        <p class="editorial__bloque__descripcion">{{ "networking.accionesDescripcion" | translate }}</p>
+      </section>
+    </header>
+
+    @if (mensajeAccion()) {
+      <p class="pagina-networking__mensaje" role="status">
+        <span class="pagina-networking__mensaje__punto" aria-hidden="true"></span>
+        {{ mensajeAccion() }}
+      </p>
+    }
+
+    <section class="pagina-networking__acciones">
+      <button class="pagina-networking__accion" type="button" (click)="renovarSsl()" [disabled]="procesandoSsl()">
+        <span class="pagina-networking__accion__icono" aria-hidden="true">
+          <i class="fa-solid fa-rotate"></i>
+        </span>
+        <section class="pagina-networking__accion__cuerpo">
+          <span class="pagina-networking__accion__titulo">{{ procesandoSsl() ? ("networking.renovando" | translate) : ("networking.renovarTitulo" | translate) }}</span>
+          <span class="pagina-networking__accion__detalle">{{ "networking.renovarDetalle" | translate }}</span>
+        </section>
+        <span class="pagina-networking__accion__flecha" aria-hidden="true">→</span>
+      </button>
+      <button class="pagina-networking__accion" type="button" (click)="verRegistrosDns()">
+        <span class="pagina-networking__accion__icono" aria-hidden="true">
+          <i class="fa-solid fa-list"></i>
+        </span>
+        <section class="pagina-networking__accion__cuerpo">
+          <span class="pagina-networking__accion__titulo">{{ "networking.dnsTitulo" | translate }}</span>
+          <span class="pagina-networking__accion__detalle">{{ "networking.dnsDetalle" | translate }}</span>
+        </section>
+        <span class="pagina-networking__accion__flecha" aria-hidden="true">→</span>
+      </button>
+      <button class="pagina-networking__accion" type="button" (click)="configurarRedirecciones()">
+        <span class="pagina-networking__accion__icono" aria-hidden="true">
+          <i class="fa-solid fa-arrow-right-arrow-left"></i>
+        </span>
+        <section class="pagina-networking__accion__cuerpo">
+          <span class="pagina-networking__accion__titulo">{{ "networking.redirectsTitulo" | translate }}</span>
+          <span class="pagina-networking__accion__detalle">{{ "networking.redirectsDetalle" | translate }}</span>
+        </section>
+        <span class="pagina-networking__accion__flecha" aria-hidden="true">→</span>
+      </button>
+    </section>
+  </section>
+
+
+  @if (panelDnsAbierto()) {
+    <section class="pagina-networking__modal" (click)="cerrarPanelDns()" (keydown.escape)="cerrarPanelDns()" (keydown.tab)="manejarTabulacionModal($event, 'modal-dns-caja')" (keydown.shift.tab)="manejarTabulacionModal($event, 'modal-dns-caja')">
+      <article class="pagina-networking__modal__caja" id="modal-dns-caja" role="dialog" aria-modal="true" aria-labelledby="modal-dns-titulo" (click)="$event.stopPropagation()">
+        <header class="pagina-networking__modal__cabecera">
+          <section class="pagina-networking__modal__titulo-zona">
+            <span class="pagina-networking__modal__indice">{{ "networking.modalDns.indice" | translate }}</span>
+            <h2 class="pagina-networking__modal__titulo" id="modal-dns-titulo">{{ "networking.modalDns.titulo" | translate }}</h2>
+          </section>
+          <button class="pagina-networking__modal__cerrar" type="button" (click)="cerrarPanelDns()" [attr.aria-label]="'networking.modalDns.ariaCerrar' | translate">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </header>
+        <section class="pagina-networking__modal__busqueda">
+          <input class="campo__input" id="campo-consulta-dns" type="text" [placeholder]="'networking.modalDns.placeholder' | translate" [attr.aria-label]="'networking.modalDns.placeholder' | translate" [ngModel]="dominioConsultando()" (ngModelChange)="dominioConsultando.set($event)" (keydown.enter)="ejecutarConsultaDns()">
+          <button class="editorial__cta-principal" type="button" (click)="ejecutarConsultaDns()" [disabled]="cargandoDns() || !dominioConsultando()">
+            @if (cargandoDns()) { {{ "networking.modalDns.resolviendo" | translate }} } @else { <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i> {{ "networking.modalDns.lookup" | translate }} }
+          </button>
+        </section>
+        @if (registrosDns()) {
+          <section class="pagina-networking__modal__cuerpo">
+            @for (fila of filasRegistrosDns(); track fila.tipo) {
+              <article class="pagina-networking__dns-fila">
+                <span class="pagina-networking__dns-tipo">{{ fila.tipo }}</span>
+                @if (fila.valores.length > 0) {
+                  <section class="pagina-networking__dns-valores">
+                    @for (valor of fila.valores; track valor) {
+                      <span class="pagina-networking__dns-valor">{{ valor }}</span>
+                    }
+                  </section>
+                } @else {
+                  <span class="pagina-networking__dns-vacio">{{ "networking.modalDns.sinRegistros" | translate }}</span>
+                }
+              </article>
+            }
+          </section>
+        }
+      </article>
+    </section>
+  }
+
+  @if (panelRedirectsAbierto()) {
+    <section class="pagina-networking__modal" (click)="cerrarPanelRedirects()" (keydown.escape)="cerrarPanelRedirects()" (keydown.tab)="manejarTabulacionModal($event, 'modal-redirects-caja')" (keydown.shift.tab)="manejarTabulacionModal($event, 'modal-redirects-caja')">
+      <article class="pagina-networking__modal__caja" id="modal-redirects-caja" role="dialog" aria-modal="true" aria-labelledby="modal-redirects-titulo" (click)="$event.stopPropagation()">
+        <header class="pagina-networking__modal__cabecera">
+          <section class="pagina-networking__modal__titulo-zona">
+            <span class="pagina-networking__modal__indice">{{ "networking.modalRedirects.indice" | translate }}</span>
+            <h2 class="pagina-networking__modal__titulo" id="modal-redirects-titulo">{{ "networking.modalRedirects.titulo" | translate }}</h2>
+          </section>
+          <button class="pagina-networking__modal__cerrar" type="button" (click)="cerrarPanelRedirects()" [attr.aria-label]="'networking.modalDns.ariaCerrar' | translate">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </header>
+        <section class="pagina-networking__redirects-form">
+          @if (listaServidores().length > 1) {
+            <select class="campo__input" [attr.aria-label]="'networking.modalRedirects.ariaServidor' | translate" [ngModel]="servidorRedireccion()" (ngModelChange)="servidorRedireccion.set($event); cargarRedirecciones()">
+              @for (servidor of listaServidores(); track servidor.id) {
+                <option [value]="servidor.id">{{ servidor.nombre }}</option>
+              }
+            </select>
+          }
+          <input class="campo__input" id="campo-origen-redireccion" type="text" [placeholder]="'networking.modalRedirects.placeholderOrigen' | translate" [attr.aria-label]="'networking.modalRedirects.placeholderOrigen' | translate" [ngModel]="hostOrigenNuevo()" (ngModelChange)="hostOrigenNuevo.set($event)">
+          <input class="campo__input" type="text" [placeholder]="'networking.modalRedirects.placeholderDestino' | translate" [attr.aria-label]="'networking.modalRedirects.placeholderDestino' | translate" [ngModel]="urlDestinoNueva()" (ngModelChange)="urlDestinoNueva.set($event)">
+          <select class="campo__input" [attr.aria-label]="'networking.modalRedirects.ariaCodigo' | translate" [ngModel]="codigoRedireccion()" (ngModelChange)="codigoRedireccion.set($event)">
+            <option [ngValue]="301">{{ "networking.modalRedirects.codigo301" | translate }}</option>
+            <option [ngValue]="302">{{ "networking.modalRedirects.codigo302" | translate }}</option>
+          </select>
+          <button class="editorial__cta-principal" type="button" (click)="crearRedireccion()" [disabled]="guardandoRedireccion() || !hostOrigenNuevo() || !urlDestinoNueva()">
+            <i class="fa-solid fa-plus"></i> {{ guardandoRedireccion() ? ("networking.modalRedirects.guardando" | translate) : ("networking.modalRedirects.agregar" | translate) }}
+          </button>
+        </section>
+
+        @if (cargandoRedirecciones()) {
+          <p class="editorial__teletipo">{{ "networking.modalRedirects.cargando" | translate }}</p>
+        } @else if (listaRedirecciones().length === 0) {
+          <p class="pagina-networking__redirects-vacio">{{ "networking.modalRedirects.vacio" | translate }}</p>
+        } @else {
+          <section class="pagina-networking__redirects-lista">
+            @for (redir of listaRedirecciones(); track redir.id) {
+              <article class="pagina-networking__redirect">
+                <span class="pagina-networking__redirect__codigo">{{ redir.codigoEstado }}</span>
+                <span class="pagina-networking__redirect__origen">{{ redir.hostOrigen }}</span>
+                <span class="pagina-networking__redirect__flecha">→</span>
+                <span class="pagina-networking__redirect__destino">{{ redir.urlDestino }}</span>
+                <button class="pagina-networking__dominio__eliminar" type="button" (click)="eliminarRedireccion(redir.id)" [attr.aria-label]="'networking.modalRedirects.ariaEliminar' | translate: { origen: redir.hostOrigen }">
+                  <i class="fa-solid fa-trash" aria-hidden="true"></i>
+                </button>
+              </article>
+            }
+          </section>
+        }
+      </article>
+    </section>
+  }
+
+</section>

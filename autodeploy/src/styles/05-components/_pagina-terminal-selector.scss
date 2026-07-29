@@ -1,0 +1,104 @@
+.pagina-terminal-selector {
+  &__lista {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--borde-normal);
+  }
+
+  &__servidor {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: var(--spacing-size-l);
+    padding: var(--spacing-size-l) var(--spacing-size-m);
+    border-bottom: 1px solid var(--borde-suave);
+    text-decoration: none;
+    color: inherit;
+    transition: background-color var(--duration-base) var(--ease-suave);
+
+    &:hover {
+      background-color: hsla(40, 20%, 92%, 0.035);
+
+      .pagina-terminal-selector__servidor__icono {
+        background-color: var(--amarillo-transparente-008);
+        border-color: var(--amarillo-transparente-030);
+        color: var(--amarillo-normal);
+      }
+
+      .pagina-terminal-selector__servidor__flecha {
+        transform: translateX(0.3rem);
+        color: var(--amarillo-normal);
+      }
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--amarillo-normal);
+      outline-offset: -2px;
+    }
+
+    &__icono {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      background-color: hsla(40, 20%, 92%, 0.04);
+      border: 1px solid var(--borde-normal);
+      color: var(--texto-medio);
+      font-size: 0.85rem;
+      transition:
+        background-color var(--duration-base) var(--ease-suave),
+        border-color var(--duration-base) var(--ease-suave),
+        color var(--duration-base) var(--ease-suave);
+    }
+
+    &__info {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      min-width: 0;
+    }
+
+    &__nombre {
+      font-family: var(--font-secondary);
+      font-size: var(--font-size-md);
+      font-weight: var(--font-weight-semibold);
+      color: var(--texto-claro);
+      letter-spacing: -0.005em;
+    }
+
+    &__ip {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      color: var(--texto-apagado);
+    }
+
+    &__derecha {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--spacing-size-l);
+    }
+
+    &__usuario {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--texto-medio);
+
+      small {
+        color: var(--texto-apagado);
+      }
+    }
+
+    &__flecha {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      color: var(--texto-apagado);
+      transition:
+        transform var(--duration-base) var(--ease-suave),
+        color var(--duration-base) var(--ease-suave);
+    }
+  }
+}

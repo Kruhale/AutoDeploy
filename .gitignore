@@ -1,0 +1,71 @@
+# Secretos - NUNCA subir al repo
+.env
+.env.local
+.env*.local
+
+# Node y Angular
+node_modules/
+dist/
+autodeploy/dist/
+.angular/
+
+# Artefactos de build del backend
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.m2/
+**/.m2/
+
+# Web de demo: el ZIP se genera con `zip -r demo-web.zip demo-web/*`,
+# no se versiona porque es un artefacto.
+/demo-web.zip
+
+# Tests y reportes de cobertura
+coverage/
+playwright-report/
+test-results/
+backend/target/surefire-reports/
+
+# Logs
+*.log
+logs/
+
+# Sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.env.production.local
+.env.test.local
+
+# Entorno local de pruebas SSH (no producto)
+test-vps/
+
+# Reports generados por Lighthouse (regenerar localmente con `lighthouse`)
+docs/assets/capturas/accesibilidad/*.report.html
+docs/assets/capturas/accesibilidad/*.report.json
+
+# Artefactos de sesiones de captura
+.playwright-mcp/
+/*.png
+
+# Artefactos locales que no van al repo publico
+docs/assets/cobertura/
+revision/
+demo-web/
+
+# Backup del .git corrupto (incidente de disco jul 2026), no versionar
+.git-backup-corrupto/

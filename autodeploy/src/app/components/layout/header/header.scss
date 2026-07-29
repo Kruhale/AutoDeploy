@@ -1,0 +1,381 @@
+@use "../../../../styles/00-settings/css-variables" as *;
+
+/* Header ultra-minimo (estilo igloo.inc): solo logo y boton MENU sobre una
+   linea de 1px. Toda la navegacion vive en un panel a pantalla completa. */
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-size-2xl);
+  height: 4.25rem;
+  padding: 0 clamp(1.5rem, 6vw, 7rem);
+  background: linear-gradient(hsla(230, 8%, 4%, 0.92), hsla(230, 8%, 4%, 0.72));
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid hsla(40, 20%, 92%, 0.08);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-header);
+  transition: transform 0.45s var(--ease-suave);
+}
+
+/* Oculta al bajar, reaparece al subir (lo alterna home.ts con el scroll). */
+.cabecera--oculta {
+  transform: translateY(-100%);
+}
+
+:host-context(.tema-claro) .cabecera {
+  background: linear-gradient(hsla(40, 30%, 95%, 0.94), hsla(40, 30%, 95%, 0.8));
+  border-bottom-color: hsla(230, 14%, 13%, 0.12);
+}
+
+.cabecera__logo {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-shrink: 0;
+}
+
+.cabecera__logo__imagen {
+  height: 1.85rem;
+  width: auto;
+}
+
+.cabecera__logo__texto {
+  font-family: var(--font-secondary);
+  font-size: 1.125rem;
+  font-weight: var(--font-weight-bold);
+  color: hsl(40, 20%, 92%);
+  letter-spacing: -0.025em;
+  white-space: nowrap;
+}
+
+:host-context(.tema-claro) .cabecera__logo__texto {
+  color: hsl(230, 14%, 13%);
+}
+
+.cabecera__logo__texto--acento {
+  color: var(--amarillo-normal);
+}
+
+:host-context(.tema-claro) .cabecera__logo__texto--acento {
+  color: hsl(38, 78%, 36%);
+}
+
+.cabecera__acciones {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-size-l);
+  flex-shrink: 0;
+}
+
+.cabecera__tema {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: none;
+  border: 1px solid hsla(40, 20%, 92%, 0.14);
+  color: hsl(40, 6%, 60%);
+  cursor: pointer;
+  font-size: 0.8125rem;
+  transition: color var(--duration-base) ease, border-color var(--duration-base) ease;
+}
+
+// Area tactil de 44px (WCAG 2.5.8) sin agrandar el circulo visual de 32.
+.cabecera__tema::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 2.75rem;
+  height: 2.75rem;
+  transform: translate(-50%, -50%);
+}
+
+.cabecera__tema:hover {
+  color: hsl(42, 62%, 62%);
+  border-color: hsla(42, 62%, 62%, 0.5);
+}
+
+:host-context(.tema-claro) .cabecera__tema {
+  border-color: hsla(230, 14%, 13%, 0.16);
+  color: hsl(230, 6%, 42%);
+}
+
+:host-context(.tema-claro) .cabecera__tema:hover {
+  color: hsl(38, 78%, 36%);
+  border-color: hsla(38, 78%, 36%, 0.5);
+}
+
+/* Boton MENU: texto mono + signo que rota de + a x. */
+.cabecera__menu {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.65rem;
+  background: none;
+  border: 0;
+  padding: 0.4rem 0;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: hsl(40, 20%, 92%);
+  transition: color var(--duration-base) ease;
+}
+
+.cabecera__menu:hover {
+  color: hsl(42, 62%, 62%);
+}
+
+:host-context(.tema-claro) .cabecera__menu {
+  color: hsl(230, 14%, 13%);
+}
+
+:host-context(.tema-claro) .cabecera__menu:hover {
+  color: hsl(38, 78%, 36%);
+}
+
+.cabecera__menu__icono {
+  font-size: 1.1rem;
+  font-weight: var(--font-weight-regular);
+  line-height: 1;
+  transition: transform 0.35s var(--ease-suave);
+}
+
+.cabecera__menu:hover .cabecera__menu__icono {
+  transform: rotate(90deg);
+}
+
+.cabecera__menu__punto {
+  position: absolute;
+  top: 0;
+  right: -0.65rem;
+  width: 0.4rem;
+  height: 0.4rem;
+  border-radius: 50%;
+  background-color: hsl(42, 62%, 62%);
+}
+
+/* ------------------------------------------------ PANEL A PANTALLA COMPLETA */
+
+.panel-menu {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-toast) + 10);
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem clamp(1.5rem, 6vw, 7rem) clamp(2rem, 5vh, 3.5rem);
+  background-color: hsla(230, 8%, 4%, 0.97);
+  backdrop-filter: blur(18px);
+  animation: panel-menu-entrar 0.45s var(--ease-suave);
+}
+
+:host-context(.tema-claro) .panel-menu {
+  background-color: hsla(40, 30%, 95%, 0.97);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel-menu {
+    animation: none;
+  }
+}
+
+.panel-menu__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 4.25rem;
+  border-bottom: 1px solid hsla(40, 20%, 92%, 0.08);
+}
+
+:host-context(.tema-claro) .panel-menu__cabecera {
+  border-bottom-color: hsla(230, 14%, 13%, 0.12);
+}
+
+.panel-menu__marca {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: hsl(42, 62%, 62%);
+}
+
+:host-context(.tema-claro) .panel-menu__marca {
+  color: hsl(38, 78%, 36%);
+}
+
+.panel-menu__cerrar {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-size: 1.75rem;
+  font-weight: var(--font-weight-light);
+  line-height: 1;
+  color: hsl(40, 6%, 60%);
+  transition: color var(--duration-base) ease, transform 0.35s var(--ease-suave);
+}
+
+.panel-menu__cerrar:hover {
+  color: hsl(42, 62%, 62%);
+  transform: rotate(90deg);
+}
+
+:host-context(.tema-claro) .panel-menu__cerrar {
+  color: hsl(230, 6%, 42%);
+}
+
+.panel-menu__nav {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1;
+}
+
+/* Enlaces monumentales numerados: la navegacion ES la pieza central. */
+.panel-menu__enlace {
+  display: flex;
+  align-items: baseline;
+  gap: clamp(1rem, 3vw, 2.5rem);
+  padding: clamp(1rem, 3vh, 1.75rem) 0;
+  border-bottom: 1px solid hsla(40, 20%, 92%, 0.08);
+  animation: panel-menu-subir 0.6s var(--ease-suave) backwards;
+}
+
+.panel-menu__enlace:nth-child(1) { animation-delay: 0.08s; }
+.panel-menu__enlace:nth-child(2) { animation-delay: 0.16s; }
+.panel-menu__enlace:nth-child(3) { animation-delay: 0.24s; }
+
+:host-context(.tema-claro) .panel-menu__enlace {
+  border-bottom-color: hsla(230, 14%, 13%, 0.12);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel-menu__enlace {
+    animation: none;
+  }
+}
+
+.panel-menu__enlace__numero {
+  font-family: var(--font-mono);
+  font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+  color: hsl(40, 4%, 42%);
+}
+
+:host-context(.tema-claro) .panel-menu__enlace__numero {
+  color: hsl(230, 5%, 54%);
+}
+
+.panel-menu__enlace__texto {
+  font-family: var(--font-secondary);
+  font-size: clamp(2.25rem, 6.5vw, 5rem);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  color: hsl(40, 20%, 92%);
+  transition: color var(--duration-base) ease, transform 0.4s var(--ease-suave);
+}
+
+:host-context(.tema-claro) .panel-menu__enlace__texto {
+  color: hsl(230, 14%, 13%);
+}
+
+.panel-menu__enlace:hover .panel-menu__enlace__texto {
+  color: hsl(42, 62%, 62%);
+  transform: translateX(0.75rem);
+}
+
+:host-context(.tema-claro) .panel-menu__enlace:hover .panel-menu__enlace__texto {
+  color: hsl(38, 78%, 36%);
+}
+
+.panel-menu__enlace:focus-visible {
+  outline: 2px solid hsl(42, 62%, 62%);
+  outline-offset: 4px;
+}
+
+.panel-menu__pie {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+  padding-top: clamp(1.5rem, 4vh, 2.5rem);
+}
+
+.panel-menu__accion {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: hsl(40, 6%, 60%);
+  transition: color var(--duration-base) ease;
+}
+
+.panel-menu__accion:hover {
+  color: hsl(40, 20%, 92%);
+}
+
+.panel-menu__accion--destacada {
+  color: hsl(42, 62%, 62%);
+}
+
+.panel-menu__accion--destacada:hover {
+  color: hsl(42, 70%, 72%);
+}
+
+:host-context(.tema-claro) .panel-menu__accion {
+  color: hsl(230, 6%, 42%);
+}
+
+:host-context(.tema-claro) .panel-menu__accion:hover {
+  color: hsl(230, 14%, 13%);
+}
+
+:host-context(.tema-claro) .panel-menu__accion--destacada,
+:host-context(.tema-claro) .panel-menu__accion--destacada:hover {
+  color: hsl(38, 78%, 36%);
+}
+
+@keyframes panel-menu-entrar {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes panel-menu-subir {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: $breakpoint-md) {
+  .cabecera {
+    padding: 0 1.25rem;
+  }
+
+  .panel-menu {
+    padding: 0.5rem 1.25rem 2rem;
+  }
+
+  .panel-menu__pie {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+// El wordmark se conserva reducido: el glifo solo no identifica la marca
+// en el primer viewport que ve un usuario movil.
+@media (max-width: $breakpoint-sm) {
+  .cabecera__logo__texto {
+    font-size: 0.95rem;
+  }
+}

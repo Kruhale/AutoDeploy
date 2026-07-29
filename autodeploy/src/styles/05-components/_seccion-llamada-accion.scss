@@ -1,0 +1,177 @@
+// Cierre: un titular enorme centrado y un unico CTA. Nada mas.
+.cierre {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(1.5rem, 4vh, 2.5rem);
+  text-align: center;
+  padding: clamp(9rem, 26vh, 16rem) clamp(1.5rem, 6vw, 7rem);
+  max-width: 100rem;
+  margin: 0 auto;
+}
+
+// Alba ambar tras el titular final: la misma luz que emite el panel del hero
+// cierra la pagina — el eco que ata el final con el principio.
+.cierre::before {
+  content: "";
+  position: absolute;
+  inset: 10% 15%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(55% 48% at 50% 40%, hsla(42, 62%, 58%, 0.06) 0%, transparent 70%);
+}
+
+html.tema-claro .cierre::before {
+  background: radial-gradient(55% 48% at 50% 40%, hsla(38, 70%, 45%, 0.08) 0%, transparent 70%);
+}
+
+// El alba respira despacio: la luz del final esta viva, como el panel del hero.
+@media (prefers-reduced-motion: no-preference) {
+  .cierre::before {
+    animation: cierre-alba-respirar 8s ease-in-out infinite;
+  }
+}
+
+@keyframes cierre-alba-respirar {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+// Ecos del hero: dos fichas fantasma flotando tras el titular final — la
+// infraestructura sigue viva, ya ordenada (el deploy #129 ya salio bien).
+.cierre__eco {
+  position: absolute;
+  padding: 0.55rem 0.8rem;
+  border: 1px solid var(--linea);
+  border-radius: var(--radius-m);
+  background-color: hsla(40, 33%, 91%, 0.02);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.08em;
+  color: var(--tinta-apagada);
+  opacity: 0.55;
+  white-space: nowrap;
+}
+
+html.tema-claro .cierre__eco {
+  background-color: hsla(40, 30%, 97%, 0.6);
+}
+
+.cierre__eco--izquierda {
+  left: 7%;
+  top: 15%;
+  rotate: -3deg;
+}
+
+.cierre__eco--derecha {
+  right: 7%;
+  bottom: 13%;
+  rotate: 2deg;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .cierre__eco {
+    animation: cierre-eco-flotar 9s ease-in-out infinite;
+  }
+
+  .cierre__eco--derecha {
+    animation-duration: 11s;
+    animation-delay: -3.5s;
+  }
+}
+
+@keyframes cierre-eco-flotar {
+  0% {
+    translate: 0 0;
+  }
+  50% {
+    translate: 0 -0.5rem;
+  }
+  100% {
+    translate: 0 0;
+  }
+}
+
+@media (max-width: 900px) {
+  .cierre__eco {
+    display: none;
+  }
+}
+
+.cierre__titulo {
+  // Misma voz serif que el titular de portada (pareja tipografica real).
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 8.5vw, 7.5rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1;
+  color: var(--tinta);
+  text-wrap: balance;
+}
+
+.cierre__descripcion {
+  font-size: clamp(1rem, 1.25vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--tinta-suave);
+  max-width: 32rem;
+}
+
+.cierre__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-top: 1rem;
+  padding: 1.2rem 2.6rem;
+  border: 1px solid var(--acento);
+  border-radius: var(--radius-full);
+  color: var(--acento);
+  font-family: var(--font-secondary);
+  font-size: 1.05rem;
+  font-weight: var(--font-weight-semibold);
+  transition: background-color 0.35s ease, color 0.35s ease, gap 0.35s var(--ease-suave);
+}
+
+.cierre__cta:hover {
+  background-color: var(--acento);
+  color: hsl(230, 8%, 6%);
+  gap: 1.2rem;
+}
+
+.cierre__cta:focus-visible {
+  outline: 2px solid var(--acento);
+  outline-offset: 4px;
+}
+
+// Firma "texto en dos capas": al hover el rotulo sube y entra su copia.
+.cierre__cta__texto {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.cierre__cta__capa {
+  display: block;
+  transition: transform var(--duration-base) var(--ease-suave);
+}
+
+.cierre__cta__capa--doble {
+  position: absolute;
+  inset: 0;
+  transform: translateY(110%);
+}
+
+.cierre__cta:hover .cierre__cta__capa {
+  transform: translateY(-110%);
+}
+
+.cierre__cta:hover .cierre__cta__capa--doble {
+  transform: translateY(0);
+}

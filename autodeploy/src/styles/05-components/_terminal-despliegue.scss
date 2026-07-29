@@ -1,0 +1,151 @@
+// Terminal del hero como "listing" de revista tecnica, no tarjeta SaaS:
+// hairline sin sombra (el borde se intensifica al hover, patron Linear),
+// numeros de linea en gutter, timer con numeros tabulares y pie de figura.
+// Vive dentro de .landing: hereda sus tokens y cambia de tema sola.
+.terminal-despliegue {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--linea);
+  border-radius: var(--radius-l);
+  background-color: hsla(40, 33.33%, 91.37%, 0.025);
+  overflow: hidden;
+  font-family: var(--font-mono);
+  transition: border-color var(--duration-base) var(--ease-suave);
+}
+
+.terminal-despliegue:hover {
+  border-color: var(--tinta-apagada);
+}
+
+.terminal-despliegue__barra {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  padding: 0.7rem 1.1rem;
+  border-bottom: 1px solid var(--linea);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  color: var(--tinta-apagada);
+}
+
+.terminal-despliegue__ruta {
+  color: var(--tinta-suave);
+}
+
+.terminal-despliegue__sesion {
+  margin-left: auto;
+}
+
+// En movil estrecho "bash · 80×24" se parte en varias lineas: fuera.
+@media (max-width: 480px) {
+  .terminal-despliegue__sesion {
+    display: none;
+  }
+}
+
+// Cronometro del despliegue: tabulares para que los digitos no bailen.
+.terminal-despliegue__timer {
+  font-variant-numeric: tabular-nums;
+  color: var(--tinta-suave);
+  min-width: 3.2rem;
+  text-align: right;
+}
+
+// Sin la sesion visible, el timer hereda su hueco a la derecha.
+@media (max-width: 480px) {
+  .terminal-despliegue__timer {
+    margin-left: auto;
+  }
+}
+
+.terminal-despliegue__cuerpo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 1.35rem 1.1rem;
+  min-height: 14.5rem;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  overflow-x: auto;
+}
+
+// Apilada bajo la entradilla, la figura no puede comerse el fold movil.
+@media (max-width: 900px) {
+  .terminal-despliegue__cuerpo {
+    min-height: 11rem;
+    padding: 1.1rem 1.1rem;
+  }
+}
+
+.terminal-despliegue__linea {
+  display: flex;
+  gap: 0.6rem;
+  color: var(--tinta-suave);
+}
+
+.terminal-despliegue__linea--comando {
+  color: var(--tinta);
+}
+
+.terminal-despliegue__linea--final {
+  color: var(--acento);
+}
+
+// Gutter de numeros de linea, siempre apagado sea cual sea la linea.
+.terminal-despliegue__numero {
+  flex-shrink: 0;
+  width: 1.1rem;
+  color: var(--tinta-apagada);
+  opacity: 0.55;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+// El prefijo ($ ↳ ●) hereda el color de su linea a proposito: el $ del comando
+// sale en tinta y el ● del resultado en ambar.
+.terminal-despliegue__prefijo {
+  flex-shrink: 0;
+  width: 0.75rem;
+}
+
+.terminal-despliegue__texto {
+  white-space: pre;
+}
+
+.terminal-despliegue__cursor {
+  display: inline-block;
+  width: 0.45rem;
+  height: 1.05em;
+  margin-left: 0.15rem;
+  background-color: var(--acento);
+  vertical-align: text-bottom;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .terminal-despliegue__cursor {
+    animation: terminal-despliegue-parpadeo 1s step-end infinite;
+  }
+}
+
+// Pie de figura: la terminal se lee como "fig. 01" de una publicacion.
+.terminal-despliegue__pie {
+  padding: 0.65rem 1.1rem;
+  border-top: 1px solid var(--linea);
+  font-size: 0.65rem;
+  letter-spacing: 0.06em;
+  color: var(--tinta-apagada);
+  font-style: normal;
+}
+
+@keyframes terminal-despliegue-parpadeo {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}

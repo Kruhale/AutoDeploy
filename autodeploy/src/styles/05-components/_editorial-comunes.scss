@@ -1,3 +1,5 @@
+@use "../01-tools/mixins" as *;
+
 // Estilos compartidos por todas las paginas internas (cuenta, billing, dashboard, etc)
 
 .editorial {
@@ -105,39 +107,13 @@
     align-items: center;
     gap: var(--spacing-size-l);
     padding: 0.85rem 1.1rem 0.85rem 0.85rem;
-    background-color: transparent;
-    color: var(--amarillo-normal);
-    border: 1px solid var(--amarillo-normal);
-    border-radius: var(--radius-full);
     font-family: var(--font-secondary);
-    cursor: pointer;
     text-decoration: none;
-    transition:
-      color var(--duration-base) var(--ease-suave),
-      background-color var(--duration-base) var(--ease-suave),
-      box-shadow var(--duration-base) var(--ease-suave),
-      transform var(--duration-fast) var(--ease-suave);
+    @include boton-barrido;
 
-    &:hover {
-      background-color: var(--amarillo-normal);
-      color: var(--fondo-oscuro);
-      transform: translateY(-2px);
-      box-shadow: 0 0.6rem 1.4rem hsla(230, 8%, 3%, 0.35);
-    }
-
-    // El circulo del icono crece un pelin al pasar por encima
+    // El circulo del icono crece un pelin cuando la tinta lo alcanza
     &:hover .editorial__cta-principal__icono {
       transform: scale(1.12);
-    }
-
-    &:active {
-      transform: translateY(0) scale(0.96);
-      box-shadow: 0 0.15rem 0.4rem hsla(230, 8%, 3%, 0.3);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--amarillo-normal);
-      outline-offset: 3px;
     }
 
     &--separado {

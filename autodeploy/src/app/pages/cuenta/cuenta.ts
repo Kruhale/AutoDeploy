@@ -8,6 +8,11 @@ import { AuthService } from "../../services/auth.service";
 import { PlanService, PLANES, PlanId, Plan } from "../../services/plan.service";
 import { UsuarioService } from "../../services/usuario.service";
 import { ThemeService } from "../../services/theme.service";
+import { IdiomaService } from "../../services/idioma.service";
+import { ServidorService } from "../../services/servidor.service";
+import { ActividadService } from "../../services/actividad.service";
+import { NotificacionService } from "../../services/notificacion.service";
+import { AsistenteIaService } from "../../services/asistente-ia.service";
 import { SelectorIdioma } from "../../components/shared/selector-idioma/selector-idioma";
 
 interface FilaResumen {
@@ -36,13 +41,13 @@ const DIAS_REFERENCIA_ANIVERSARIO = 365;
 export class Cuenta implements AfterViewInit, OnDestroy {
   readonly planes = PLANES;
   readonly anioActual = new Date().getFullYear();
-  readonly letrasIndiceVertical = ["Y", "O", "U", "R"];
-  readonly letrasIndiceCuenta = ["A", "C", "C", "O", "U", "N", "T"];
 
   nombreEditable = signal("");
   emailEditable = signal("");
   guardando = signal(false);
+  subiendoFoto = signal(false);
   mensajeGuardado = signal("");
+  guardadoConError = signal(false);
   cancelando = signal(false);
   progresoSalidaActivo = signal(false);
 
@@ -50,16 +55,16 @@ export class Cuenta implements AfterViewInit, OnDestroy {
   mostrarFormularioClave = signal(false);
   nombreNuevaClave = signal("");
   contenidoNuevaClave = signal("");
+  agregandoClave = signal(false);
 
-  cintaPausada = signal(false);
 
   notificacionesEmail = signal(true);
   notificacionesAlertasCriticas = signal(true);
   notificacionesDespliegues = signal(true);
+  prefsCargadas = signal(false);
 
   versionIdioma = signal(0);
 
-  inicialDelNombre: Signal<string>;
   detallePlanActual: Signal<Plan>;
   resumenDeCuenta: Signal<FilaResumen[]>;
   fechaCreacionCuenta: Signal<Date | null>;
@@ -96,7 +101,12 @@ export class Cuenta implements AfterViewInit, OnDestroy {
     readonly themeService: ThemeService,
     private router: Router,
     private elemento: ElementRef<HTMLElement>,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private idiomaService: IdiomaService,
+    private servidorService: ServidorService,
+    private actividadService: ActividadService,
+    private notificacionService: NotificacionService,
+    private asistenteIaService: AsistenteIaService
   ) {
     this.nombreEditable.set(this.usuarioService.nombre());
     this.emailEditable.set(this.usuarioService.email());
@@ -109,12 +119,6 @@ export class Cuenta implements AfterViewInit, OnDestroy {
       componente.versionIdioma.update(function (v) {
         return v + 1;
       });
-    });
-
-    this.inicialDelNombre = computed(function () {
-      const nombre = componente.usuarioService.nombre();
-      if (!nombre) return "?";
-      return nombre.charAt(0).toUpperCase();
     });
 
     this.detallePlanActual = computed(function () {
@@ -302,12 +306,15 @@ export class Cuenta implements AfterViewInit, OnDestroy {
 
     this.guardando.set(true);
     this.mensajeGuardado.set("");
+    this.guardadoConError.set(false);
 
     try {
       await this.usuarioService.actualizarPerfil(nombre, email);
       this.mensajeGuardado.set(this.translate.instant("comun.guardado"));
+      this.guardadoConError.set(false);
     } catch (error: any) {
       this.mensajeGuardado.set(this.translate.instant("comun.error"));
+      this.guardadoConError.set(true);
     } finally {
       this.guardando.set(false);
       const componente = this;
@@ -317,9 +324,91 @@ export class Cuenta implements AfterViewInit, OnDestroy {
     }
   }
 
-  alternarPausaCinta(): void {
-    this.cintaPausada.update(function (valorActual) {
-      return !valorActual;
+  // El usuario elige una imagen: se valida, se reescala a un cuadrado de
+  // 256px (recorte centrado) y se envia como data URL al backend.
+  async manejarSeleccionFoto(evento: Event): Promise<void> {
+    const entrada = evento.target as HTMLInputElement;
+    const archivo = entrada.files && entrada.files[0];
+    if (!archivo) {
+      return;
+    }
+
+    const esImagen = archivo.type.startsWith("image/");
+    const tamanoMaximo = 5 * 1024 * 1024;
+    if (!esImagen || archivo.size > tamanoMaximo) {
+      this.mensajeGuardado.set(this.translate.instant("cuenta.formulario.fotoError"));
+      this.guardadoConError.set(true);
+      entrada.value = "";
+      return;
+    }
+
+    this.subiendoFoto.set(true);
+    try {
+      const dataUrlOriginal = await this.leerArchivoComoDataUrl(archivo);
+      const dataUrlCuadrada = await this.reescalarImagenACuadrado(dataUrlOriginal, 256);
+      await this.usuarioService.actualizarFoto(dataUrlCuadrada);
+      this.mensajeGuardado.set(this.translate.instant("comun.guardado"));
+      this.guardadoConError.set(false);
+    } catch (error) {
+      this.mensajeGuardado.set(this.translate.instant("cuenta.formulario.fotoError"));
+      this.guardadoConError.set(true);
+    } finally {
+      this.subiendoFoto.set(false);
+      entrada.value = "";
+      const componente = this;
+      setTimeout(function () {
+        componente.mensajeGuardado.set("");
+      }, 2400);
+    }
+  }
+
+  async quitarFoto(): Promise<void> {
+    this.subiendoFoto.set(true);
+    try {
+      await this.usuarioService.actualizarFoto("");
+    } catch (error) {
+      this.mensajeGuardado.set(this.translate.instant("cuenta.formulario.fotoError"));
+      this.guardadoConError.set(true);
+    } finally {
+      this.subiendoFoto.set(false);
+    }
+  }
+
+  private leerArchivoComoDataUrl(archivo: File): Promise<string> {
+    return new Promise(function (resolver, rechazar) {
+      const lector = new FileReader();
+      lector.onload = function () {
+        resolver(lector.result as string);
+      };
+      lector.onerror = function () {
+        rechazar(new Error("No se pudo leer el archivo"));
+      };
+      lector.readAsDataURL(archivo);
+    });
+  }
+
+  private reescalarImagenACuadrado(dataUrl: string, lado: number): Promise<string> {
+    return new Promise(function (resolver, rechazar) {
+      const imagen = new Image();
+      imagen.onload = function () {
+        const lienzo = document.createElement("canvas");
+        lienzo.width = lado;
+        lienzo.height = lado;
+        const contexto = lienzo.getContext("2d");
+        if (!contexto) {
+          rechazar(new Error("Canvas no disponible"));
+          return;
+        }
+        const ladoRecorte = Math.min(imagen.width, imagen.height);
+        const origenX = (imagen.width - ladoRecorte) / 2;
+        const origenY = (imagen.height - ladoRecorte) / 2;
+        contexto.drawImage(imagen, origenX, origenY, ladoRecorte, ladoRecorte, 0, 0, lado, lado);
+        resolver(lienzo.toDataURL("image/jpeg", 0.85));
+      };
+      imagen.onerror = function () {
+        rechazar(new Error("No se pudo cargar la imagen"));
+      };
+      imagen.src = dataUrl;
     });
   }
 
@@ -350,6 +439,13 @@ export class Cuenta implements AfterViewInit, OnDestroy {
     this.cancelarSalida();
     this.usuarioService.limpiar();
     this.authService.logout();
+    // Cada servicio con cache guarda datos del usuario saliente: sin esta
+    // limpieza, otra persona en la misma pestana veria servidores, actividad,
+    // notificaciones y hasta el chat de IA de la sesion anterior.
+    this.servidorService.limpiar();
+    this.actividadService.limpiar();
+    this.notificacionService.limpiar();
+    this.asistenteIaService.limpiar();
     this.router.navigate(["/"]);
   }
 
@@ -369,16 +465,21 @@ export class Cuenta implements AfterViewInit, OnDestroy {
     if (!nombre || !contenido) {
       return;
     }
+    if (this.agregandoClave()) {
+      return;
+    }
+    this.agregandoClave.set(true);
+    const idiomaFechas = this.idiomaService.idiomaActual();
 
     try {
       const claveGuardada = await this.usuarioService.agregarClaveSsh(nombre, contenido);
       const fechaTexto = claveGuardada.fechaCreacion
-        ? new Date(claveGuardada.fechaCreacion).toLocaleDateString("en", {
+        ? new Date(claveGuardada.fechaCreacion).toLocaleDateString(idiomaFechas, {
             day: "2-digit",
             month: "short",
             year: "numeric"
           })
-        : new Date().toLocaleDateString("en", { day: "2-digit", month: "short", year: "numeric" });
+        : new Date().toLocaleDateString(idiomaFechas, { day: "2-digit", month: "short", year: "numeric" });
       const nueva: ClaveSsh = {
         id: claveGuardada.id,
         nombre: claveGuardada.nombre,
@@ -391,10 +492,13 @@ export class Cuenta implements AfterViewInit, OnDestroy {
       this.cancelarFormularioClave();
     } catch (error) {
       this.mensajeGuardado.set(this.translate.instant("comun.error"));
+      this.guardadoConError.set(true);
       const componente = this;
       setTimeout(function () {
         componente.mensajeGuardado.set("");
       }, 2500);
+    } finally {
+      this.agregandoClave.set(false);
     }
   }
 
@@ -408,6 +512,7 @@ export class Cuenta implements AfterViewInit, OnDestroy {
       });
     } catch (error) {
       this.mensajeGuardado.set(this.translate.instant("comun.error"));
+      this.guardadoConError.set(true);
       const componente = this;
       setTimeout(function () {
         componente.mensajeGuardado.set("");
@@ -416,6 +521,13 @@ export class Cuenta implements AfterViewInit, OnDestroy {
   }
 
   async alternarNotificacion(tipo: "email" | "criticas" | "despliegues"): Promise<void> {
+    // Sin las preferencias reales cargadas, guardar pisaria el backend con los
+    // valores por defecto (true): se reintenta la carga y no se toca nada.
+    if (!this.prefsCargadas()) {
+      this.cargarClavesYNotificaciones();
+      return;
+    }
+
     if (tipo === "email")
       this.notificacionesEmail.update(function (v) {
         return !v;
@@ -446,9 +558,10 @@ export class Cuenta implements AfterViewInit, OnDestroy {
 
     try {
       const claves = await this.usuarioService.listarClavesSsh();
+      const idiomaFechas = this.idiomaService.idiomaActual();
       const adaptadas: ClaveSsh[] = (claves || []).map(function (c) {
         const fechaTexto = c.fechaCreacion
-          ? new Date(c.fechaCreacion).toLocaleDateString("en", {
+          ? new Date(c.fechaCreacion).toLocaleDateString(idiomaFechas, {
               day: "2-digit",
               month: "short",
               year: "numeric"
@@ -466,6 +579,7 @@ export class Cuenta implements AfterViewInit, OnDestroy {
       this.notificacionesEmail.set(prefs.email);
       this.notificacionesAlertasCriticas.set(prefs.alertasCriticas);
       this.notificacionesDespliegues.set(prefs.eventosDespliegue);
+      this.prefsCargadas.set(true);
     } catch (error) {
       // Silencio intencional
     }
@@ -473,7 +587,10 @@ export class Cuenta implements AfterViewInit, OnDestroy {
 
   private extraerFechaCreacionDelId(): Date | null {
     const idCompleto = this.usuarioService.usuarioId();
-    if (!idCompleto || idCompleto.length < 8) return null;
+    // Solo un ObjectId real de Mongo lleva la fecha en sus primeros 4 bytes;
+    // con cualquier otro id la conversion daria fechas absurdas (1970).
+    const esObjectIdValido = /^[0-9a-f]{24}$/i.test(idCompleto);
+    if (!esObjectIdValido) return null;
     const timestampHex = idCompleto.substring(0, 8);
     const timestampSegundos = parseInt(timestampHex, 16);
     if (isNaN(timestampSegundos) || timestampSegundos <= 0) return null;

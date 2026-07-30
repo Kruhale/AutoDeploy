@@ -88,7 +88,7 @@
       </span>
       <section class="terminal-interactiva__controles">
         @if (listaDeServidores().length > 0) {
-          <select class="terminal-interactiva__selector" (change)="cambiarServidor($event)" [disabled]="terminalService.estadoConexion() === 'conectado' || terminalService.estadoConexion() === 'conectando'">
+          <select class="terminal-interactiva__selector" [attr.aria-label]="'logsTerminal.terminal.selectorPlaceholder' | translate" (change)="cambiarServidor($event)" [disabled]="terminalService.estadoConexion() === 'conectado' || terminalService.estadoConexion() === 'conectando'">
             <option value="">{{ "logsTerminal.terminal.selectorPlaceholder" | translate }}</option>
             @for (servidor of listaDeServidores(); track servidor.id) {
               <option [value]="servidor.id" [selected]="servidor.id === servidorSeleccionadoId()">

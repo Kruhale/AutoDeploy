@@ -1,37 +1,19 @@
 <section class="cuenta">
 
-  <aside class="cuenta__indice-vertical" aria-hidden="true">
-    <span class="cuenta__indice-vertical__codigo">{{ "cuenta.refPrefix" | translate }} {{ anioActual }}.{{ idTruncado() }}</span>
-    <span class="cuenta__indice-vertical__rotulo">
-      @for (letra of letrasIndiceVertical; track $index) {
-        <span class="cuenta__indice-vertical__letra">{{ letra }}</span>
-      }
-      <span class="cuenta__indice-vertical__bullet">/</span>
-      @for (letra of letrasIndiceCuenta; track $index) {
-        <span class="cuenta__indice-vertical__letra">{{ letra }}</span>
-      }
-    </span>
-    <span class="cuenta__indice-vertical__estampa">{{ "cuenta.estampa" | translate }}</span>
-  </aside>
-
   <header class="cuenta__hero">
     <span class="cuenta__hero__spotlight" aria-hidden="true"></span>
     <span class="cuenta__hero__grano" aria-hidden="true"></span>
 
-    <section class="cuenta__hero__capa-superior">
-      <p class="cuenta__hero__sello">
-        <span class="cuenta__hero__sello__circulo" aria-hidden="true">·</span>
-        <span class="cuenta__hero__sello__texto">{{ "cuenta.selloIssue" | translate: { anio: anioActual } }}</span>
-      </p>
-      <p class="cuenta__hero__fecha-edicion">{{ fechaCreacionCuenta() | date:"EEEE, d MMM yyyy":"":"en" }}</p>
-    </section>
-
     <section class="cuenta__hero__bloque-principal">
       <section class="cuenta__hero__columna-retrato">
-        <article class="cuenta__avatar" [attr.data-plan]="planService.planActual()">
+        <article class="cuenta__avatar" [attr.data-plan]="planService.planActual()" [style.background]="usuarioService.fotoPerfil() ? null : usuarioService.avatarGradiente()">
           <span class="cuenta__avatar__halo" aria-hidden="true"></span>
           <span class="cuenta__avatar__halo cuenta__avatar__halo--secundario" aria-hidden="true"></span>
-          <span class="cuenta__avatar__inicial">{{ inicialDelNombre() }}</span>
+          @if (usuarioService.fotoPerfil()) {
+            <img class="cuenta__avatar__foto" [src]="usuarioService.fotoPerfil()" alt="">
+          } @else {
+            <span class="cuenta__avatar__inicial">{{ usuarioService.iniciales() }}</span>
+          }
           <span class="cuenta__avatar__estado" aria-hidden="true"></span>
         </article>
         <ul class="cuenta__credenciales">
@@ -49,7 +31,7 @@
           </li>
           <li class="cuenta__credenciales__fila">
             <span class="cuenta__credenciales__clave">{{ "cuenta.credenciales.memberSince" | translate }}</span>
-            <span class="cuenta__credenciales__valor">{{ fechaCreacionCuenta() | date:"d MMM yyyy":"":"en" }}</span>
+            <span class="cuenta__credenciales__valor">{{ (fechaCreacionCuenta() | date:"d MMM yyyy":"":"en") || ("comun.guion" | translate) }}</span>
           </li>
         </ul>
       </section>
@@ -62,28 +44,14 @@
       </section>
     </section>
 
-    <span class="cuenta__estampa-plan" aria-hidden="true">
-      <span class="cuenta__estampa-plan__marca">AutoDeploy</span>
-      <span class="cuenta__estampa-plan__plan">{{ detallePlanActual().nombre | uppercase }}</span>
-      <span class="cuenta__estampa-plan__numero">Nº {{ anioActual }}·{{ idTruncado() || "0000" }}</span>
-    </span>
-
     <section class="cuenta__hero__marquee">
       <span class="cuenta__hero__marquee__ventana" aria-hidden="true">
-        <span class="cuenta__hero__marquee__pista" [class.cuenta__hero__marquee__pista--pausada]="cintaPausada()">
+        <span class="cuenta__hero__marquee__pista">
           <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
           <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
           <span class="cuenta__hero__marquee__texto">{{ textoMarqueePlan() }}</span>
         </span>
       </span>
-      <button
-        class="cuenta__hero__marquee__pausa"
-        type="button"
-        (click)="alternarPausaCinta()"
-        [attr.aria-label]="(cintaPausada() ? 'cuenta.marquee.reanudar' : 'cuenta.marquee.pausar') | translate"
-        [attr.aria-pressed]="cintaPausada()">
-        <i class="fa-solid" [class.fa-pause]="!cintaPausada()" [class.fa-play]="cintaPausada()" aria-hidden="true"></i>
-      </button>
     </section>
   </header>
 
@@ -177,6 +145,31 @@
           (ngModelChange)="emailEditable.set($event)">
         <p class="cuenta__campo-editorial__pista">{{ "cuenta.formulario.emailPista" | translate }}</p>
       </section>
+      <section class="cuenta__campo-editorial">
+        <p class="cuenta__campo-editorial__etiqueta">
+          <span class="cuenta__campo-editorial__numero">iii</span>
+          {{ "cuenta.formulario.foto" | translate }}
+        </p>
+        <section class="cuenta__foto">
+          <span class="cuenta__foto__preview" [style.background]="usuarioService.fotoPerfil() ? null : usuarioService.avatarGradiente()" aria-hidden="true">
+            @if (usuarioService.fotoPerfil()) {
+              <img class="cuenta__foto__img" [src]="usuarioService.fotoPerfil()" alt="">
+            } @else {
+              <span class="cuenta__foto__iniciales">{{ usuarioService.iniciales() }}</span>
+            }
+          </span>
+          <section class="cuenta__foto__acciones">
+            <label class="cuenta__foto__subir">
+              <input class="cuenta__foto__input" type="file" accept="image/png,image/jpeg,image/webp" [disabled]="subiendoFoto()" (change)="manejarSeleccionFoto($event)">
+              {{ subiendoFoto() ? ("cuenta.formulario.fotoSubiendo" | translate) : ("cuenta.formulario.fotoSubir" | translate) }}
+            </label>
+            @if (usuarioService.fotoPerfil()) {
+              <button type="button" class="cuenta__foto__quitar" [disabled]="subiendoFoto()" (click)="quitarFoto()">{{ "cuenta.formulario.fotoQuitar" | translate }}</button>
+            }
+            <p class="cuenta__foto__pista">{{ "cuenta.formulario.fotoPista" | translate }}</p>
+          </section>
+        </section>
+      </section>
     </section>
 
     <section class="cuenta__acciones-formulario">
@@ -194,7 +187,7 @@
       @if (mensajeGuardado()) {
         <span
           class="cuenta__mensaje-estado"
-          [class.cuenta__mensaje-estado--error]="mensajeGuardado() === 'Error'">
+          [class.cuenta__mensaje-estado--error]="guardadoConError()">
           <span class="cuenta__mensaje-estado__punto" aria-hidden="true"></span>
           {{ mensajeGuardado() }}
         </span>
@@ -308,7 +301,7 @@
         </section>
         <section class="cuenta__form-clave__acciones">
           <button class="cuenta__form-clave__cancelar" type="button" (click)="cancelarFormularioClave()">{{ "cuenta.formClave.cancelar" | translate }}</button>
-          <button class="cuenta__boton-guardar" type="button" (click)="agregarClaveSsh()">
+          <button class="cuenta__boton-guardar" type="button" (click)="agregarClaveSsh()" [disabled]="agregandoClave()">
             <span class="cuenta__boton-guardar__contenido">
               <span class="cuenta__boton-guardar__texto">{{ "cuenta.formClave.addKey" | translate }}</span>
               <span class="cuenta__boton-guardar__flecha" aria-hidden="true">→</span>
@@ -533,8 +526,6 @@
   </section>
 
   <footer class="cuenta__pie">
-    <span class="cuenta__pie__barras" aria-hidden="true"></span>
-    <span class="cuenta__pie__codigo">{{ idTruncado() }}</span>
     <span class="cuenta__pie__separador" aria-hidden="true"></span>
     <span class="cuenta__pie__notas">{{ "cuenta.pieNotas" | translate }}</span>
     <span class="cuenta__pie__separador" aria-hidden="true"></span>

@@ -88,7 +88,11 @@
             ></textarea>
           </section>
 
-          <button type="submit" class="pagina-recursos__boton">
+          @if (claveError()) {
+            <p class="pagina-contacto__error" role="alert">{{ claveError() | translate }}</p>
+          }
+
+          <button type="submit" class="pagina-recursos__boton" [disabled]="enviando()">
             {{ "contacto.formulario.enviar" | translate }}
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M3 12l18-9-4 18-4-8-10-1z"></path>

@@ -164,6 +164,7 @@
     }
     <textarea
       class="asistente-ia__textarea"
+      [attr.aria-label]="'asistenteIa.placeholderEntrada' | translate"
       #areaEntrada
       [ngModel]="mensajeEnEdicion()"
       (ngModelChange)="mensajeEnEdicion.set($event)"

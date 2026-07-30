@@ -15,7 +15,7 @@
   position: sticky;
   top: 0;
   z-index: var(--z-header);
-  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.45s var(--ease-suave);
 }
 
 /* Oculta al bajar, reaparece al subir (lo alterna home.ts con el scroll). */
@@ -145,7 +145,7 @@
   font-size: 1.1rem;
   font-weight: var(--font-weight-regular);
   line-height: 1;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.35s var(--ease-suave);
 }
 
 .cabecera__menu:hover .cabecera__menu__icono {
@@ -173,7 +173,7 @@
   padding: 1.25rem clamp(1.5rem, 6vw, 7rem) clamp(2rem, 5vh, 3.5rem);
   background-color: hsla(230, 8%, 4%, 0.97);
   backdrop-filter: blur(18px);
-  animation: panel-menu-entrar 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: panel-menu-entrar 0.45s var(--ease-suave);
 }
 
 :host-context(.tema-claro) .panel-menu {
@@ -218,7 +218,7 @@
   font-weight: var(--font-weight-light);
   line-height: 1;
   color: hsl(40, 6%, 60%);
-  transition: color var(--duration-base) ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color var(--duration-base) ease, transform 0.35s var(--ease-suave);
 }
 
 .panel-menu__cerrar:hover {
@@ -244,7 +244,7 @@
   gap: clamp(1rem, 3vw, 2.5rem);
   padding: clamp(1rem, 3vh, 1.75rem) 0;
   border-bottom: 1px solid hsla(40, 20%, 92%, 0.08);
-  animation: panel-menu-subir 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  animation: panel-menu-subir 0.6s var(--ease-suave) backwards;
 }
 
 .panel-menu__enlace:nth-child(1) { animation-delay: 0.08s; }
@@ -278,7 +278,7 @@
   letter-spacing: -0.04em;
   line-height: 1;
   color: hsl(40, 20%, 92%);
-  transition: color var(--duration-base) ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: color var(--duration-base) ease, transform 0.4s var(--ease-suave);
 }
 
 :host-context(.tema-claro) .panel-menu__enlace__texto {

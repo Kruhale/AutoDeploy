@@ -45,7 +45,7 @@
   align-items: baseline;
   gap: clamp(1.25rem, 3.5vw, 3.5rem);
   padding: clamp(2rem, 5vh, 3.25rem) 0;
-  transition: padding-left 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: padding-left 0.5s var(--ease-suave);
 }
 
 // La regla inferior es un trazo que se dibuja de izquierda a derecha:

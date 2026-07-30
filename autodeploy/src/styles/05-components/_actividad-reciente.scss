@@ -23,7 +23,7 @@
     gap: var(--spacing-size-m);
     padding: var(--spacing-size-s);
     border-radius: var(--radius-m);
-    transition: background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: background-color var(--duration-base) var(--ease-suave);
 
     &:hover {
       background-color: hsla(40, 20%, 92%, 0.04);

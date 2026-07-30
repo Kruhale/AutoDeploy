@@ -70,7 +70,7 @@ html.tema-claro .confirmar-free__velo {
   color: var(--tinta-apagada);
   transition-property: color, transform;
   transition-duration: 0.25s;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-timing-function: var(--ease-suave);
 }
 
 .confirmar-free__volver:hover {
@@ -350,7 +350,7 @@ html.tema-claro .confirmar-free__velo {
   transform-origin: left;
   transition-property: transform;
   transition-duration: 0.4s;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-timing-function: var(--ease-suave);
 }
 
 .confirmar-free__cancelar:hover {
@@ -386,7 +386,7 @@ html.tema-claro .confirmar-free__velo {
   color: var(--acento);
   transition-property: background-color, color, gap, transform;
   transition-duration: 0.35s;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-timing-function: var(--ease-suave);
 }
 
 html.tema-claro .confirmar-free__cta {
@@ -432,7 +432,7 @@ html.tema-claro .confirmar-free__cta--aviso:hover {
   font-size: 0.8rem;          /* 13px */
   transition-property: transform;
   transition-duration: 0.35s;
-  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-timing-function: var(--ease-suave);
 }
 
 .confirmar-free__cta:hover .confirmar-free__cta__flecha {
@@ -445,29 +445,29 @@ html.tema-claro .confirmar-free__cta--aviso:hover {
 
   .confirmar-free__plan__nombre {
     transform: translateY(110%);
-    animation: confirmarFreeSubir 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    animation: confirmarFreeSubir 0.9s var(--ease-suave) 0.15s forwards;
   }
 
   .confirmar-free__plan__precio {
     transform: translateY(110%);
-    animation: confirmarFreeSubir 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.28s forwards;
+    animation: confirmarFreeSubir 0.9s var(--ease-suave) 0.28s forwards;
   }
 
   .confirmar-free__eyebrow {
     opacity: 0;
-    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+    animation: confirmarFreeAparecer 0.7s var(--ease-suave) 0.1s forwards;
   }
 
   .confirmar-free__plan__resumen {
     opacity: 0;
     transform: translateY(0.6rem);
-    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+    animation: confirmarFreeAparecer 0.7s var(--ease-suave) 0.45s forwards;
   }
 
   .confirmar-free__item {
     opacity: 0;
     transform: translateY(0.6rem);
-    animation: confirmarFreeAparecer 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: confirmarFreeAparecer 0.6s var(--ease-suave) forwards;
   }
 
   .confirmar-free__item:nth-child(1) { animation-delay: 0.5s; }
@@ -478,19 +478,19 @@ html.tema-claro .confirmar-free__cta--aviso:hover {
   .confirmar-free__titulo {
     opacity: 0;
     transform: translateY(0.6rem);
-    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.4s forwards;
+    animation: confirmarFreeAparecer 0.7s var(--ease-suave) 0.4s forwards;
   }
 
   .confirmar-free__descripcion {
     opacity: 0;
     transform: translateY(0.6rem);
-    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+    animation: confirmarFreeAparecer 0.7s var(--ease-suave) 0.5s forwards;
   }
 
   .confirmar-free__paso {
     opacity: 0;
     transform: translateY(0.6rem);
-    animation: confirmarFreeAparecer 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation: confirmarFreeAparecer 0.6s var(--ease-suave) forwards;
   }
 
   .confirmar-free__paso:nth-child(1) { animation-delay: 0.6s; }
@@ -500,12 +500,12 @@ html.tema-claro .confirmar-free__cta--aviso:hover {
   .confirmar-free__perdidas {
     opacity: 0;
     transform: translateY(0.6rem);
-    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards;
+    animation: confirmarFreeAparecer 0.7s var(--ease-suave) 0.6s forwards;
   }
 
   .confirmar-free__acciones {
     opacity: 0;
-    animation: confirmarFreeAparecer 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.85s forwards;
+    animation: confirmarFreeAparecer 0.7s var(--ease-suave) 0.85s forwards;
   }
 }
 

@@ -236,15 +236,15 @@
         </header>
         <section class="pagina-networking__redirects-form">
           @if (listaServidores().length > 1) {
-            <select class="campo__input" [ngModel]="servidorRedireccion()" (ngModelChange)="servidorRedireccion.set($event); cargarRedirecciones()">
+            <select class="campo__input" [attr.aria-label]="'networking.modalRedirects.ariaServidor' | translate" [ngModel]="servidorRedireccion()" (ngModelChange)="servidorRedireccion.set($event); cargarRedirecciones()">
               @for (servidor of listaServidores(); track servidor.id) {
                 <option [value]="servidor.id">{{ servidor.nombre }}</option>
               }
             </select>
           }
           <input class="campo__input" id="campo-origen-redireccion" type="text" [placeholder]="'networking.modalRedirects.placeholderOrigen' | translate" [attr.aria-label]="'networking.modalRedirects.placeholderOrigen' | translate" [ngModel]="hostOrigenNuevo()" (ngModelChange)="hostOrigenNuevo.set($event)">
-          <input class="campo__input" type="text" [placeholder]="'networking.modalRedirects.placeholderDestino' | translate" [ngModel]="urlDestinoNueva()" (ngModelChange)="urlDestinoNueva.set($event)">
-          <select class="campo__input" [ngModel]="codigoRedireccion()" (ngModelChange)="codigoRedireccion.set($event)">
+          <input class="campo__input" type="text" [placeholder]="'networking.modalRedirects.placeholderDestino' | translate" [attr.aria-label]="'networking.modalRedirects.placeholderDestino' | translate" [ngModel]="urlDestinoNueva()" (ngModelChange)="urlDestinoNueva.set($event)">
+          <select class="campo__input" [attr.aria-label]="'networking.modalRedirects.ariaCodigo' | translate" [ngModel]="codigoRedireccion()" (ngModelChange)="codigoRedireccion.set($event)">
             <option [ngValue]="301">{{ "networking.modalRedirects.codigo301" | translate }}</option>
             <option [ngValue]="302">{{ "networking.modalRedirects.codigo302" | translate }}</option>
           </select>

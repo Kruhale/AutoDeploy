@@ -88,7 +88,7 @@ export class LogsTerminal implements OnDestroy {
     const hora = (actividad.fechaCreacion || "").substring(11, 19);
 
     return {
-      hora: hora || new Date().toLocaleTimeString().substring(0, 8),
+      hora: hora || new Date().toLocaleTimeString("es-ES", { hour12: false }),
       nivel: nivel,
       mensaje: actividad.mensaje,
       esDestacado: nivel === "error" || nivel === "crit"

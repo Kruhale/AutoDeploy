@@ -97,9 +97,9 @@
       "contacto": "Contatti",
       "comunidad": "Community"
     },
-    "copyright": "© 2026 AutoDeployService · Infrastruttura cloud aziendale",
+    "copyright": "© 2026 AutoDeploy · Infrastruttura cloud aziendale",
     "ariaContenido": "Informazioni e link del piè di pagina",
-    "ariaMarca": "Su AutoDeployService",
+    "ariaMarca": "Su AutoDeploy",
     "ariaInferior": "Copyright e impostazioni generali",
     "ariaAjustes": "Lingua e social network",
     "ariaRedes": "Social network"
@@ -235,6 +235,7 @@
       "tituloLinea1": "Il tuo server.",
       "tituloLinea2": "Senza terminale.",
       "cue": "scorri",
+      "figuraPie": "Registro di deployment · cattura dal vivo",
       "cap2Linea1": "Meno comandi,",
       "cap2Linea2": "più controllo.",
       "cap3Linea1": "Distribuisci",
@@ -760,7 +761,7 @@
       "applicationPort": "Porta dell'applicazione",
       "applicationPortPlaceholder": "3000",
       "dominio": "Dominio / sottodominio",
-      "dominioPlaceholder": "miapp.autodeploy.sh",
+      "dominioPlaceholder": "miapp.autodeploy.dev",
       "nota": "Configureremo automaticamente un'istanza Nginx come reverse proxy per questo servizio."
     },
     "pie": {
@@ -839,12 +840,10 @@
       "conectado": "Connesso",
       "fallido": "Connessione fallita"
     },
-    "errorNombreIp": "Il nome e l'IP sono obbligatori"
+    "errorNombreIp": "Il nome e l'IP sono obbligatori",
+    "errorPuerto": "La porta SSH deve essere un numero tra 1 e 65535"
   },
   "cuenta": {
-    "refPrefix": "N°",
-    "estampa": "STAMPA · ARCHIVIO",
-    "selloIssue": "Dossier personale · Edizione {{anio}}",
     "overlineFree": "Titolare di piano Free",
     "overlinePaid": "Abbonato a",
     "anonymous": "Anonimo",
@@ -877,7 +876,13 @@
       "displayNamePlaceholder": "Come dovremmo chiamarti?",
       "email": "Indirizzo email",
       "emailPlaceholder": "tu@email.com",
-      "emailPista": "Utilizzato solo per la fatturazione e gli avvisi di sicurezza."
+      "emailPista": "Utilizzato solo per la fatturazione e gli avvisi di sicurezza.",
+      "foto": "Foto profilo",
+      "fotoSubir": "Carica foto",
+      "fotoSubiendo": "Caricamento…",
+      "fotoQuitar": "Rimuovi",
+      "fotoPista": "PNG, JPG o WebP. Ritagliata in un quadrato.",
+      "fotoError": "Impossibile elaborare l'immagine"
     },
     "saving": "Salvataggio",
     "commitChanges": "Conferma modifiche",
@@ -960,9 +965,7 @@
       "serversSuffix": "server",
       "aiIncluded": "Assistente IA incluso",
       "supportSuffix": "assistenza",
-      "enterpriseGrade": "Livello enterprise",
-      "pausar": "Metti in pausa il nastro informativo",
-      "reanudar": "Riprendi il nastro informativo"
+      "enterpriseGrade": "Livello enterprise"
     }
   },
   "billing": {
@@ -1096,6 +1099,8 @@
       "placeholderDestino": "A: https://nuovo.esempio.com",
       "codigo301": "301 (permanente)",
       "codigo302": "302 (temporaneo)",
+      "ariaCodigo": "Codice di redirect",
+      "ariaServidor": "Server del redirect",
       "guardando": "Salvataggio",
       "agregar": "Aggiungi",
       "cargando": "Caricamento…",
@@ -1167,7 +1172,8 @@
       "errorAgregar": "Impossibile aggiungere la regola",
       "errorEliminar": "Impossibile eliminare la regola",
       "sinServidor": "Collega un server prima di aggiungere regole",
-      "puertoObligatorio": "Indica la porta della regola"
+      "puertoObligatorio": "Indica la porta della regola",
+      "puertoInvalido": "Porta non valida: usa un numero tra 1 e 65535"
     }
   },
   "backups": {
@@ -1196,6 +1202,7 @@
       "errorCronInstalar": "Impossibile installare il cron",
       "errorCronEliminar": "Impossibile rimuovere il cron",
       "errorIniciar": "Impossibile avviare il backup",
+      "sinServidor": "Collega un server prima di creare backup",
       "errorEliminar": "Impossibile eliminare il backup",
       "errorRestaurar": "Impossibile ripristinare il backup",
       "restoreIniciado": "Ripristino avviato · a breve apparirà uno istantanea di sicurezza precedente"
@@ -1498,6 +1505,8 @@
     "titulo": "Parliamone",
     "subtitulo": "Hai una domanda, un suggerimento o un problema? Scrivici sul canale che preferisci e ti risponderemo il prima possibile.",
     "respuestaEn": "Tempo di risposta",
+    "emailInvalido": "Inserisci un'email valida",
+    "error": "Impossibile inviare il messaggio. Riprova.",
     "formulario": {
       "titulo": "Invia un messaggio",
       "nombre": "Nome",

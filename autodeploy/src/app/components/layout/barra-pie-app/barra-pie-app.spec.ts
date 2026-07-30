@@ -40,4 +40,10 @@ describe("BarraPieApp", function() {
     const primerSelector = metadata?.selectors?.[0]?.[0];
     expect(primerSelector).toBe("app-barra-pie-app");
   });
+
+  it("el copyright usa el anio actual, no uno fijo", function() {
+    expect(component.anioActual).toBe(new Date().getFullYear());
+    const texto = (fixture.nativeElement as HTMLElement).textContent || "";
+    expect(texto).toContain(String(component.anioActual));
+  });
 });

@@ -97,9 +97,9 @@
       "contacto": "Contact",
       "comunidad": "Communauté"
     },
-    "copyright": "© 2026 AutoDeployService · Infrastructure cloud d'entreprise",
+    "copyright": "© 2026 AutoDeploy · Infrastructure cloud d'entreprise",
     "ariaContenido": "Informations et liens du pied de page",
-    "ariaMarca": "À propos d'AutoDeployService",
+    "ariaMarca": "À propos d'AutoDeploy",
     "ariaInferior": "Copyright et réglages généraux",
     "ariaAjustes": "Langue et réseaux sociaux",
     "ariaRedes": "Réseaux sociaux"
@@ -235,6 +235,7 @@
       "tituloLinea1": "Votre serveur.",
       "tituloLinea2": "Sans terminal.",
       "cue": "défiler",
+      "figuraPie": "Journal de déploiement · capture en direct",
       "cap2Linea1": "Moins de commandes,",
       "cap2Linea2": "plus de contrôle.",
       "cap3Linea1": "Déployez",
@@ -760,7 +761,7 @@
       "applicationPort": "Port de l'application",
       "applicationPortPlaceholder": "3000",
       "dominio": "Domaine / sous-domaine",
-      "dominioPlaceholder": "monapp.autodeploy.sh",
+      "dominioPlaceholder": "monapp.autodeploy.dev",
       "nota": "Nous configurerons automatiquement une instance Nginx comme reverse proxy pour ce service."
     },
     "pie": {
@@ -839,12 +840,10 @@
       "conectado": "Connecté",
       "fallido": "Connexion échouée"
     },
-    "errorNombreIp": "Le nom et l'IP sont obligatoires"
+    "errorNombreIp": "Le nom et l'IP sont obligatoires",
+    "errorPuerto": "Le port SSH doit être un nombre entre 1 et 65535"
   },
   "cuenta": {
-    "refPrefix": "N°",
-    "estampa": "PRESSE · ARCHIVE",
-    "selloIssue": "Dossier personnel · Édition {{anio}}",
     "overlineFree": "Titulaire d'un plan Free",
     "overlinePaid": "Abonné à",
     "anonymous": "Anonyme",
@@ -877,7 +876,13 @@
       "displayNamePlaceholder": "Comment devons-nous vous appeler ?",
       "email": "Adresse e-mail",
       "emailPlaceholder": "vous@email.com",
-      "emailPista": "Utilisée uniquement pour la facturation et les alertes de sécurité."
+      "emailPista": "Utilisée uniquement pour la facturation et les alertes de sécurité.",
+      "foto": "Photo de profil",
+      "fotoSubir": "Choisir une photo",
+      "fotoSubiendo": "Envoi…",
+      "fotoQuitar": "Retirer",
+      "fotoPista": "PNG, JPG ou WebP. Recadrée en carré.",
+      "fotoError": "Impossible de traiter l'image"
     },
     "saving": "Enregistrement",
     "commitChanges": "Confirmer les modifications",
@@ -960,9 +965,7 @@
       "serversSuffix": "serveurs",
       "aiIncluded": "Assistant IA inclus",
       "supportSuffix": "support",
-      "enterpriseGrade": "Niveau entreprise",
-      "pausar": "Mettre en pause le bandeau d'informations",
-      "reanudar": "Relancer le bandeau d'informations"
+      "enterpriseGrade": "Niveau entreprise"
     }
   },
   "billing": {
@@ -1096,6 +1099,8 @@
       "placeholderDestino": "Vers : https://nouveau.exemple.com",
       "codigo301": "301 (permanente)",
       "codigo302": "302 (temporaire)",
+      "ariaCodigo": "Code de redirection",
+      "ariaServidor": "Serveur de la redirection",
       "guardando": "Enregistrement",
       "agregar": "Ajouter",
       "cargando": "Chargement…",
@@ -1167,7 +1172,8 @@
       "errorAgregar": "Impossible d'ajouter la règle",
       "errorEliminar": "Impossible de supprimer la règle",
       "sinServidor": "Connectez un serveur avant d'ajouter des règles",
-      "puertoObligatorio": "Indiquez le port de la règle"
+      "puertoObligatorio": "Indiquez le port de la règle",
+      "puertoInvalido": "Port invalide : utilisez un nombre entre 1 et 65535"
     }
   },
   "backups": {
@@ -1196,6 +1202,7 @@
       "errorCronInstalar": "Impossible d'installer le cron",
       "errorCronEliminar": "Impossible de supprimer le cron",
       "errorIniciar": "Impossible de démarrer la sauvegarde",
+      "sinServidor": "Connectez un serveur avant de créer des sauvegardes",
       "errorEliminar": "Impossible de supprimer la sauvegarde",
       "errorRestaurar": "Impossible de restaurer la sauvegarde",
       "restoreIniciado": "Restauration lancée · un instantané de sécurité préalable apparaîtra sous peu"
@@ -1473,7 +1480,7 @@
       "apiDescripcion": "Points d'accès HTTP de la plateforme",
       "baseDeDatos": "Base de données",
       "baseDeDatosDescripcion": "MongoDB · persistance principale",
-      "websocketTerminal": "WebSocket de terminal",
+      "websocketTerminal": "WebSocket du terminal",
       "websocketTerminalDescripcion": "Connexion SSH interactive",
       "websocketMetricas": "WebSocket de métriques",
       "websocketMetricasDescripcion": "Flux de télémétrie en direct",
@@ -1498,6 +1505,8 @@
     "titulo": "Parlons-en",
     "subtitulo": "Vous avez une question, une suggestion ou un problème ? Écrivez-nous sur le canal que vous préférez et nous vous répondrons dans les meilleurs délais.",
     "respuestaEn": "Temps de réponse",
+    "emailInvalido": "Saisissez un e-mail valide",
+    "error": "Le message n'a pas pu être envoyé. Réessayez.",
     "formulario": {
       "titulo": "Envoyer un message",
       "nombre": "Nom",

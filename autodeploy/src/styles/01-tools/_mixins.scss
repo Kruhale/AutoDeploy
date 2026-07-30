@@ -135,7 +135,7 @@
   @each $prop in $propiedades {
     $resultado: list.append(
       $resultado,
-      #{$prop} var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
+      #{$prop} var(--duration-base) var(--ease-suave),
       $separator: comma
     );
   }
@@ -169,5 +169,49 @@
   &:focus-visible::after {
     transform: scaleX(1);
     transform-origin: left;
+  }
+}
+
+// Boton firma "barrido de tinta": pill con borde ambar; al posar el cursor la
+// tinta entra deslizandose desde la izquierda y el rotulo pasa a oscuro.
+// El relleno vive en ::before para que el barrido sea puro transform (GPU).
+@mixin boton-barrido {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: transparent;
+  color: var(--amarillo-normal);
+  border: 1px solid var(--amarillo-normal);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition:
+    color var(--duration-base) var(--ease-suave),
+    transform var(--duration-fast) var(--ease-suave);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    z-index: -1;
+    background-color: var(--amarillo-normal);
+    transform: translateX(-101%);
+    transition: transform var(--duration-base) var(--ease-suave);
+  }
+
+  &:hover:not(:disabled) {
+    color: var(--fondo-oscuro);
+  }
+
+  &:hover:not(:disabled)::before {
+    transform: translateX(0);
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--amarillo-normal);
+    outline-offset: 3px;
   }
 }

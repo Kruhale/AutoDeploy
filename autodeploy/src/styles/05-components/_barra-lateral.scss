@@ -13,7 +13,7 @@
   flex-shrink: 0;
   overflow-y: auto;
   overflow-x: hidden;
-  transition: width var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
+  transition: width var(--duration-slow) var(--ease-suave);
 
   // Línea decorativa vertical sutil al borde derecho
   &::after {
@@ -34,7 +34,7 @@
     height: 100vh;
     z-index: var(--z-sidebar);
     transform: translateX(-100%);
-    transition: transform var(--duration-slow) cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform var(--duration-slow) var(--ease-suave);
     box-shadow: var(--shadow-lg);
   }
 
@@ -129,8 +129,8 @@
     cursor: pointer;
     border-radius: var(--radius-m);
     transition:
-      color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave);
 
     // Línea acento izquierda — invisible hasta hover/active
     &::before {
@@ -143,7 +143,7 @@
       background-color: var(--amarillo-normal);
       border-radius: 0 2px 2px 0;
       transform: translateY(-50%);
-      transition: height var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      transition: height var(--duration-base) var(--ease-suave);
     }
 
     &:hover {
@@ -190,7 +190,7 @@
       text-align: center;
       font-size: 0.9rem;
       flex-shrink: 0;
-      transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform var(--duration-base) var(--ease-suave);
     }
 
     &__texto {
@@ -207,8 +207,8 @@
       opacity: 0;
       transform: scale(0.6);
       transition:
-        opacity var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+        opacity var(--duration-base) var(--ease-suave),
+        transform var(--duration-base) var(--ease-suave);
       flex-shrink: 0;
     }
   }
@@ -251,8 +251,8 @@
     cursor: pointer;
     text-align: left;
     transition:
-      color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave);
 
     &:hover {
       color: var(--texto-claro);
@@ -272,7 +272,7 @@
       width: 1.125rem;
       text-align: center;
       font-size: 0.75rem;
-      transition: transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform var(--duration-base) var(--ease-suave);
     }
 
     &__texto {
@@ -291,9 +291,9 @@
     border-radius: var(--radius-l);
     cursor: pointer;
     transition:
-      transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      border-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-      background-color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+      transform var(--duration-base) var(--ease-suave),
+      border-color var(--duration-base) var(--ease-suave),
+      background-color var(--duration-base) var(--ease-suave);
 
     &:hover {
       transform: translateY(-1px);
@@ -329,11 +329,32 @@
 
     &__avatar {
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       width: 2.25rem;
       height: 2.25rem;
       border-radius: 50%;
       background: var(--amarillo-normal);
       flex-shrink: 0;
+
+      &__iniciales {
+        font-family: var(--font-secondary);
+        font-size: 0.8rem;
+        font-weight: var(--font-weight-bold);
+        letter-spacing: -0.01em;
+        color: hsl(0, 0%, 100%);
+      }
+
+      // La foto sube por encima del degradado, recortada al circulo.
+      &__foto {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+      }
 
       &__estado {
         position: absolute;
@@ -382,8 +403,8 @@
       font-size: 0.7rem;
       color: var(--texto-apagado);
       transition:
-        color var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1),
-        transform var(--duration-base) cubic-bezier(0.16, 1, 0.3, 1);
+        color var(--duration-base) var(--ease-suave),
+        transform var(--duration-base) var(--ease-suave);
     }
   }
 

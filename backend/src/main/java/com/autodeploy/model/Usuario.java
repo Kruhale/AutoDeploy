@@ -26,6 +26,7 @@ public class Usuario {
     private String plan;
     private String rol;
     private String idioma;
+    private String fotoPerfil;
     private LocalDateTime fechaInicioSuscripcion;
     private LocalDateTime fechaFinSuscripcion;
     private List<ClaveSshUsuario> clavesSsh = new ArrayList<>();
@@ -92,4 +93,7 @@ public class Usuario {
 
     public String getIdioma() { return idioma != null ? idioma : "es"; }
     public void setIdioma(String idioma) { this.idioma = idioma; }
+
+    public String getFotoPerfil() { return fotoPerfil; }
+    public void setFotoPerfil(String fotoPerfil) { this.fotoPerfil = fotoPerfil; }
 }

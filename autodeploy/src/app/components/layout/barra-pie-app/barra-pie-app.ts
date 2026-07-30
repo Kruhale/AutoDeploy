@@ -8,4 +8,6 @@ import { SelectorIdioma } from "../../shared/selector-idioma/selector-idioma";
   templateUrl: "./barra-pie-app.html",
   styleUrl: "./barra-pie-app.scss"
 })
-export class BarraPieApp {}
+export class BarraPieApp {
+  readonly anioActual = new Date().getFullYear();
+}

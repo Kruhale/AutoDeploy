@@ -168,7 +168,7 @@ class DtosTest {
     @DisplayName("LoginResponse: accessors completos")
     void loginResponse_accessors() {
         java.time.LocalDateTime fecha = java.time.LocalDateTime.of(2026, 6, 1, 0, 0);
-        LoginResponse r = new LoginResponse("u-1", "Pepe", "p@x.com", "jwt-token", "pro", fecha, "es");
+        LoginResponse r = new LoginResponse("u-1", "Pepe", "p@x.com", "jwt-token", "pro", fecha, "es", null);
         assertThat(r.id()).isEqualTo("u-1");
         assertThat(r.nombre()).isEqualTo("Pepe");
         assertThat(r.email()).isEqualTo("p@x.com");
@@ -176,6 +176,7 @@ class DtosTest {
         assertThat(r.plan()).isEqualTo("pro");
         assertThat(r.fechaFinSuscripcion()).isEqualTo(fecha);
         assertThat(r.idioma()).isEqualTo("es");
+        assertThat(r.fotoPerfil()).isNull();
     }
 
     @Test

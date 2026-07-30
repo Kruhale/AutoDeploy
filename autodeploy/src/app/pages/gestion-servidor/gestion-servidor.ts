@@ -221,6 +221,7 @@ export class GestionServidor implements OnInit, OnDestroy {
   }
 
   reiniciarServidor(): void {
+    if (this.reiniciando()) return;
     this.reiniciando.set(true);
     this.servidorEstado.set("warning");
 

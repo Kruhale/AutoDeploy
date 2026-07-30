@@ -180,7 +180,7 @@
     </section>
 
     @if (mensajeError()) {
-      <p class="nuevo-despliegue__alerta nuevo-despliegue__alerta--error" role="alert">
+      <p id="nuevo-despliegue-alerta" class="nuevo-despliegue__alerta nuevo-despliegue__alerta--error" role="alert">
         <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> {{ mensajeError() }}
       </p>
     }

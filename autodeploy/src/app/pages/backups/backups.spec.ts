@@ -299,4 +299,14 @@ describe("Backups", function () {
     tick(4000);
     expect(componente.mensajeError()).toBe("");
   }));
+
+  it("crearBackup sin servidor muestra el aviso y no llama al backend", fakeAsync(function () {
+    fixture.detectChanges();
+    httpMock.expectOne("/api/servidores").flush({ success: true, message: "OK", data: [] });
+    componente.crearBackup();
+    expect(componente.mensajeError()).toBe("backups.mensajes.sinServidor");
+    httpMock.expectNone("/api/backups");
+    tick(3000);
+    expect(componente.mensajeError()).toBe("");
+  }));
 });
